@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Client Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--g2:rgba(53,50,48,.6);--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--B);background:var(--g);color:var(--iv);cursor:none;display:flex}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am)}
+#cur-ring{width:34px;height:34px;border:1.5px solid var(--am);opacity:.5;transition:all .1s ease}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* SIDEBAR */
+.sidebar{width:240px;flex-shrink:0;background:rgba(30,28,27,1);border-right:1px solid var(--cr30);display:flex;flex-direction:column;height:100%;overflow-y:auto}
+.sb-logo{padding:28px 24px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;gap:12px}
+.sb-logo-mark{width:32px;height:32px;background:var(--am);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;font-weight:800;color:var(--g)}
+.sb-logo-text{font-family:var(--D);font-size:16px;font-weight:800;color:var(--iv)}
+.sb-logo-text em{color:var(--am);font-style:normal}
+.sb-client{padding:20px 24px;border-bottom:1px solid var(--cr30)}
+.sb-client-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);margin-bottom:6px}
+.sb-client-name{font-family:var(--D);font-size:14px;font-weight:700;color:var(--iv)}
+.sb-client-plan{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);background:var(--am10);border:1px solid rgba(211,143,44,.3);padding:2px 8px;border-radius:1px;margin-top:4px}
+.sb-nav{padding:16px 0;flex:1}
+.sb-nav-section{padding:8px 24px 4px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-top:8px}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;font-size:13px;font-weight:400;color:var(--iv60);text-decoration:none;transition:all .2s;position:relative;border-left:2px solid transparent;margin:1px 0}
+.sb-link:hover{color:var(--iv);background:var(--iv05)}
+.sb-link.active{color:var(--iv);background:var(--am10);border-left-color:var(--am)}
+.sb-link-icon{width:16px;height:16px;opacity:.6;flex-shrink:0}
+.sb-link.active .sb-link-icon{opacity:1}
+.sb-badge{margin-left:auto;background:var(--em);color:var(--iv);font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px;min-width:18px;text-align:center}
+.sb-bottom{padding:20px 24px;border-top:1px solid var(--cr30)}
+.sb-back-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.sb-back-link:hover{color:var(--iv60)}
+
+/* MAIN AREA */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:68px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between;padding:0 36px;flex-shrink:0;background:rgba(53,50,48,.4);backdrop-filter:blur(10px)}
+.topbar-left h1{font-family:var(--D);font-size:20px;font-weight:700;color:var(--iv);letter-spacing:-.01em}
+.topbar-left p{font-size:12px;color:var(--iv30);font-weight:300;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-notif{position:relative;width:36px;height:36px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;cursor:none;transition:border-color .2s}
+.topbar-notif:hover{border-color:var(--am)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--em);border:1.5px solid var(--g)}
+.topbar-notif svg{width:16px;height:16px;stroke:var(--iv60);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--am);display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:13px;font-weight:800;color:var(--g);cursor:none}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:36px}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--cr30);border-radius:2px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--iv05);border:1px solid var(--cr30);border-radius:2px;padding:24px;position:relative;overflow:hidden;transition:border-color .3s}
+.stat-card:hover{border-color:var(--am)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--am);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.stat-card:hover::before{transform:scaleX(1)}
+.stat-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);margin-bottom:12px}
+.stat-val{font-family:var(--D);font-size:36px;font-weight:800;color:var(--iv);line-height:1;letter-spacing:-.02em}
+.stat-val em{color:var(--am);font-style:normal}
+.stat-sub{font-size:11px;color:var(--iv30);margin-top:6px;font-weight:300}
+.stat-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:3px 8px;border-radius:8px;margin-top:8px}
+.badge-pending{background:rgba(211,143,44,.15);color:var(--am);border:1px solid rgba(211,143,44,.25)}
+.badge-approved{background:rgba(255,255,235,.08);color:var(--iv60);border:1px solid var(--cr30)}
+.badge-alert{background:rgba(212,89,56,.15);color:var(--em);border:1px solid rgba(212,89,56,.25)}
+
+/* LOWER GRID */
+.lower-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+
+/* UPCOMING POSTS */
+.panel{background:var(--iv05);border:1px solid var(--cr30);border-radius:2px;overflow:hidden}
+.panel-header{padding:20px 24px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--D);font-size:14px;font-weight:700;color:var(--iv);letter-spacing:-.01em}
+.panel-action{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--am);text-decoration:none;transition:opacity .2s}
+.panel-action:hover{opacity:.7}
+.post-item{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--cr30);transition:background .2s;cursor:none}
+.post-item:last-child{border-bottom:none}
+.post-item:hover{background:var(--iv05)}
+.post-thumb{width:48px;height:48px;border-radius:2px;background:var(--cr30);flex-shrink:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.post-thumb-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr30) 1px,transparent 1px),linear-gradient(90deg,var(--cr30) 1px,transparent 1px);background-size:12px 12px}
+.post-thumb-icon{font-size:10px;color:var(--iv30);position:relative;z-index:1}
+.post-info{flex:1;min-width:0}
+.post-platform{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.platform-dot{width:5px;height:5px;border-radius:50%;background:var(--am)}
+.platform-name{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--iv30)}
+.post-title{font-size:13px;color:var(--iv);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-date{font-size:11px;color:var(--iv30);margin-top:2px}
+.post-status{flex-shrink:0}
+.status-pill{font-size:10px;font-weight:500;letter-spacing:.06em;padding:4px 10px;border-radius:8px;white-space:nowrap}
+.sp-pending{background:rgba(211,143,44,.15);color:var(--am);border:1px solid rgba(211,143,44,.25)}
+.sp-approved{background:rgba(255,255,235,.08);color:var(--iv60);border:1px solid var(--cr30)}
+.sp-needs{background:rgba(212,89,56,.12);color:var(--em);border:1px solid rgba(212,89,56,.2)}
+.sp-draft{background:var(--cr15);color:var(--iv30);border:1px solid var(--cr30)}
+
+/* ACTIVITY FEED */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:14px 24px;border-bottom:1px solid var(--cr30)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;background:var(--cr30);flex-shrink:0;margin-top:4px}
+.activity-dot.am{background:var(--am)}
+.activity-dot.em{background:var(--em)}
+.activity-info{flex:1}
+.activity-text{font-size:13px;color:var(--iv60);font-weight:300;line-height:1.5}
+.activity-text strong{color:var(--iv);font-weight:400}
+.activity-time{font-size:11px;color:var(--iv30);margin-top:3px}
+
+/* QUICK ACTIONS */
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.qa-btn{background:var(--iv05);border:1px solid var(--cr30);border-radius:2px;padding:20px;display:flex;flex-direction:column;gap:10px;text-decoration:none;transition:all .25s;cursor:none}
+.qa-btn:hover{border-color:var(--am);background:var(--am10)}
+.qa-btn:hover .qa-icon{color:var(--am)}
+.qa-icon{font-size:18px;color:var(--iv30);transition:color .25s}
+.qa-label{font-family:var(--D);font-size:13px;font-weight:600;color:var(--iv);line-height:1.2}
+.qa-sub{font-size:11px;color:var(--iv30);font-weight:300}
+
+/* CALENDAR MINI */
+.mini-cal{padding:20px 24px}
+.mini-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mini-cal-month{font-family:var(--D);font-size:14px;font-weight:700;color:var(--iv)}
+.mini-cal-nav{display:flex;gap:4px}
+.cal-nav-btn{width:26px;height:26px;border:1px solid var(--cr30);border-radius:1px;background:transparent;color:var(--iv30);font-size:12px;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cal-nav-btn:hover{border-color:var(--am);color:var(--am)}
+.mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-head{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--iv30);text-align:center;padding:4px 0}
+.cal-day{height:32px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--iv60);border-radius:1px;transition:all .2s;position:relative;cursor:none}
+.cal-day:hover{background:var(--iv05);color:var(--iv)}
+.cal-day.today{background:var(--am);color:var(--g);font-weight:600}
+.cal-day.has-post::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--am)}
+.cal-day.today.has-post::after{background:var(--g)}
+.cal-day.other-month{color:var(--iv30);opacity:.4}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div class="grain"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">FF</div>
+    <div class="sb-logo-text">Frame<em>Flow</em></div>
+  </div>
+  <div class="sb-client">
+    <div class="sb-client-label">Logged in as</div>
+    <div class="sb-client-name">Acadia Bakes</div>
+    <div class="sb-client-plan">Social Pro Plan</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-nav-section">Overview</div>
+    <a href="#" class="sb-link active">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+      Dashboard
+    </a>
+    <div class="sb-nav-section">Content</div>
+    <a href="frameflow-calendar.html" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="13" rx="1.5"/><path d="M1 6h14M5 1v2M11 1v2"/></svg>
+      Schedule
+    </a>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2zM2 6h12M6 6v8"/></svg>
+      Content Library
+    </a>
+    <a href="frameflow-approvals.html" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M5 8l2 2 4-4"/></svg>
+      Approvals
+      <span class="sb-badge">3</span>
+    </a>
+    <div class="sb-nav-section">Communication</div>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10c0 .6-.4 1-1 1H4l-2.5 2.5V3c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v7z"/></svg>
+      Messages
+      <span class="sb-badge">1</span>
+    </a>
+    <div class="sb-nav-section">Account</div>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      Settings
+    </a>
+  </div>
+  <div class="sb-bottom">
+    <a href="frameflow-login.html" class="sb-back-link">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2L4 8l6 6"/></svg>
+      Sign Out
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Good morning, Acadia Bakes 👋</h1>
+      <p>Friday, July 4, 2025 · 3 posts pending your approval</p>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-notif">
+        <div class="notif-dot"></div>
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="topbar-avatar">AB</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Scheduled This Month</div>
+        <div class="stat-val">24</div>
+        <div class="stat-sub">Posts across all platforms</div>
+        <div class="stat-badge badge-approved">On Track</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Approval</div>
+        <div class="stat-val"><em>3</em></div>
+        <div class="stat-sub">Posts need your review</div>
+        <div class="stat-badge badge-pending">Action Needed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Published This Month</div>
+        <div class="stat-val">11</div>
+        <div class="stat-sub">of 24 scheduled posts</div>
+        <div class="stat-badge badge-approved">Live</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Next Deadline</div>
+        <div class="stat-val">Jul<em>7</em></div>
+        <div class="stat-sub">3 days to approve posts</div>
+        <div class="stat-badge badge-alert">Due Soon</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions">
+      <a href="frameflow-calendar.html" class="qa-btn">
+        <div class="qa-icon">◫</div>
+        <div class="qa-label">View Monthly Calendar</div>
+        <div class="qa-sub">See all scheduled posts for July</div>
+      </a>
+      <a href="frameflow-approvals.html" class="qa-btn">
+        <div class="qa-icon">✓</div>
+        <div class="qa-label">Review Pending Posts</div>
+        <div class="qa-sub">3 posts need your approval</div>
+      </a>
+      <a href="#" class="qa-btn">
+        <div class="qa-icon">✉</div>
+        <div class="qa-label">Message FrameFlow</div>
+        <div class="qa-sub">1 unread message from your team</div>
+      </a>
+    </div>
+
+    <!-- LOWER GRID -->
+    <div class="lower-grid" style="margin-top:20px">
+      <!-- UPCOMING POSTS -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Upcoming Posts This Week</div>
+          <a href="frameflow-calendar.html" class="panel-action">View All →</a>
+        </div>
+        <div class="post-item">
+          <div class="post-thumb"><div class="post-thumb-grid"></div><div class="post-thumb-icon">IG</div></div>
+          <div class="post-info">
+            <div class="post-platform"><div class="platform-dot"></div><span class="platform-name">Instagram</span></div>
+            <div class="post-title">Summer Sourdough Collection Drop 🌾</div>
+            <div class="post-date">Fri, Jul 4 · 10:00 AM</div>
+          </div>
+          <div class="post-status"><span class="status-pill sp-pending">Pending</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-thumb"><div class="post-thumb-grid"></div><div class="post-thumb-icon">FB</div></div>
+          <div class="post-info">
+            <div class="post-platform"><div class="platform-dot" style="background:var(--em)"></div><span class="platform-name">Facebook</span></div>
+            <div class="post-title">Weekend Special: Croissant & Latte Deal</div>
+            <div class="post-date">Sat, Jul 5 · 8:30 AM</div>
+          </div>
+          <div class="post-status"><span class="status-pill sp-pending">Pending</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-thumb"><div class="post-thumb-grid"></div><div class="post-thumb-icon">TK</div></div>
+          <div class="post-info">
+            <div class="post-platform"><div class="platform-dot" style="background:var(--iv30)"></div><span class="platform-name">TikTok</span></div>
+            <div class="post-title">Behind-the-scenes: Early morning bake 🎬</div>
+            <div class="post-date">Sun, Jul 6 · 9:00 AM</div>
+          </div>
+          <div class="post-status"><span class="status-pill sp-pending">Pending</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-thumb"><div class="post-thumb-grid"></div><div class="post-thumb-icon">IG</div></div>
+          <div class="post-info">
+            <div class="post-platform"><div class="platform-dot"></div><span class="platform-name">Instagram</span></div>
+            <div class="post-title">Customer Spotlight: @janesmith_eats</div>
+            <div class="post-date">Mon, Jul 7 · 12:00 PM</div>
+          </div>
+          <div class="post-status"><span class="status-pill sp-approved">Approved</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-thumb"><div class="post-thumb-grid"></div><div class="post-thumb-icon">IG</div></div>
+          <div class="post-info">
+            <div class="post-platform"><div class="platform-dot"></div><span class="platform-name">Instagram</span></div>
+            <div class="post-title">July Hours & Holiday Closures Update</div>
+            <div class="post-date">Tue, Jul 8 · 2:00 PM</div>
+          </div>
+          <div class="post-status"><span class="status-pill sp-draft">Draft</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- MINI CALENDAR -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">July 2025</div>
+            <a href="frameflow-calendar.html" class="panel-action">Full View →</a>
+          </div>
+          <div class="mini-cal">
+            <div class="mini-cal-grid">
+              <div class="cal-day-head">Su</div><div class="cal-day-head">Mo</div><div class="cal-day-head">Tu</div><div class="cal-day-head">We</div><div class="cal-day-head">Th</div><div class="cal-day-head">Fr</div><div class="cal-day-head">Sa</div>
+              <div class="cal-day other-month">29</div><div class="cal-day other-month">30</div><div class="cal-day">1</div><div class="cal-day has-post">2</div><div class="cal-day has-post">3</div><div class="cal-day today has-post">4</div><div class="cal-day has-post">5</div>
+              <div class="cal-day has-post">6</div><div class="cal-day has-post">7</div><div class="cal-day">8</div><div class="cal-day has-post">9</div><div class="cal-day">10</div><div class="cal-day has-post">11</div><div class="cal-day">12</div>
+              <div class="cal-day">13</div><div class="cal-day has-post">14</div><div class="cal-day has-post">15</div><div class="cal-day">16</div><div class="cal-day has-post">17</div><div class="cal-day">18</div><div class="cal-day has-post">19</div>
+              <div class="cal-day">20</div><div class="cal-day has-post">21</div><div class="cal-day">22</div><div class="cal-day has-post">23</div><div class="cal-day">24</div><div class="cal-day has-post">25</div><div class="cal-day has-post">26</div>
+              <div class="cal-day">27</div><div class="cal-day has-post">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day has-post">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent Activity</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot am"></div>
+            <div class="activity-info">
+              <div class="activity-text">FrameFlow uploaded <strong>3 new posts</strong> for your approval</div>
+              <div class="activity-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div class="activity-info">
+              <div class="activity-text">You approved <strong>Post #19 — Customer Spotlight</strong></div>
+              <div class="activity-time">Yesterday, 4:30 PM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot em"></div>
+            <div class="activity-info">
+              <div class="activity-text">You requested edits on <strong>Post #18 — Caption update</strong></div>
+              <div class="activity-time">Yesterday, 3:00 PM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot am"></div>
+            <div class="activity-info">
+              <div class="activity-text">FrameFlow published <strong>Post #17 — Summer Menu</strong> on Instagram</div>
+              <div class="activity-time">Wed, Jul 2 · 10:01 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+</script>
+</body>
+</html>

@@ -1,26 +1,209 @@
 @import "tailwindcss";
 
+/* ─── Theme variables (dark = default) ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface:       #353230;
+  --surface-alt:   #ffffeb;
+  --on-surface:    #ffffeb;
+  --on-surface-60: rgba(255, 255, 235, 0.6);
+  --on-surface-30: rgba(255, 255, 235, 0.3);
+  --on-surface-10: rgba(255, 255, 235, 0.1);
+  --on-surface-05: rgba(255, 255, 235, 0.05);
+  --on-alt:        #353230;
+  --on-alt-80:     rgba(53, 50, 48, 0.8);
+  --on-alt-20:     rgba(53, 50, 48, 0.2);
+  --border-subtle: rgba(137, 47, 42, 0.3);
+  --border-faint:  rgba(137, 47, 42, 0.15);
+}
+
+[data-theme="light"] {
+  --surface:       #ffffeb;
+  --surface-alt:   #353230;
+  --on-surface:    #353230;
+  --on-surface-60: rgba(53, 50, 48, 0.6);
+  --on-surface-30: rgba(53, 50, 48, 0.3);
+  --on-surface-10: rgba(53, 50, 48, 0.1);
+  --on-surface-05: rgba(53, 50, 48, 0.05);
+  --on-alt:        #ffffeb;
+  --on-alt-80:     rgba(255, 255, 235, 0.8);
+  --on-alt-20:     rgba(255, 255, 235, 0.2);
+  --border-subtle: rgba(137, 47, 42, 0.2);
+  --border-faint:  rgba(137, 47, 42, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand constants — never change */
+  --color-graphite: #353230;
+  --color-graphite-80: rgba(53, 50, 48, 0.8);
+  --color-graphite-20: rgba(53, 50, 48, 0.2);
+  --color-ivory: #ffffeb;
+  --color-ivory-60: rgba(255, 255, 235, 0.6);
+  --color-ivory-30: rgba(255, 255, 235, 0.3);
+  --color-ivory-10: rgba(255, 255, 235, 0.1);
+  --color-ivory-05: rgba(255, 255, 235, 0.05);
+  --color-amber: #d38f2c;
+  --color-amber-20: rgba(211, 143, 44, 0.2);
+  --color-amber-10: rgba(211, 143, 44, 0.1);
+  --color-ember: #d45938;
+  --color-ember-15: rgba(212, 89, 56, 0.15);
+  --color-crimson: #892f2a;
+  --color-crimson-30: rgba(137, 47, 42, 0.3);
+  --color-crimson-15: rgba(137, 47, 42, 0.15);
+
+  /* Semantic theme tokens — swapped by [data-theme] */
+  --color-surface:       var(--surface);
+  --color-surface-alt:   var(--surface-alt);
+  --color-on-surface:    var(--on-surface);
+  --color-on-surface-60: var(--on-surface-60);
+  --color-on-surface-30: var(--on-surface-30);
+  --color-on-surface-10: var(--on-surface-10);
+  --color-on-surface-05: var(--on-surface-05);
+  --color-on-alt:        var(--on-alt);
+  --color-on-alt-80:     var(--on-alt-80);
+  --color-on-alt-20:     var(--on-alt-20);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-faint:  var(--border-faint);
+
+  --font-display: "Syne", sans-serif;
+  --font-body: "Outfit", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  overflow-x: hidden;
+}
+
+/* ─── Theme transition ─── */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    fill 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Grain overlay */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-amber);
+  z-index: 200;
+  width: 0%;
+  transition: width 0.05s linear;
+}
+
+/* Custom cursor */
+.custom-cursor {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  top: -100px;
+  left: -100px;
+}
+
+.cursor-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--color-amber);
+  transition: width 0.2s, height 0.2s;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--color-amber);
+  opacity: 0.6;
+  transition: all 0.12s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: 2px;
+}
+
+/* Ticker animation */
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 22s linear infinite;
+}
+
+/* Orb float animation */
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.04);
+  }
+}
+
+.animate-orb {
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.animate-orb-reverse {
+  animation: orbFloat 10s ease-in-out infinite reverse;
+}
+
+/* Pulse animation */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease infinite;
+}
+
+/* Toggle icon animation */
+@keyframes theme-icon-in {
+  from {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-icon-animate {
+  animation: theme-icon-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

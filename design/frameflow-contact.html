@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Contact</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--B);background:var(--g);color:var(--iv);overflow-x:hidden;cursor:none}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am);transition:width .2s,height .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid var(--am);opacity:.6;transition:all .12s ease}
+body:has(a:hover,button:hover) #cur{width:20px;height:20px}
+body:has(a:hover,button:hover) #cur-ring{width:60px;height:60px;opacity:.25}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--am);z-index:9998;width:0%}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:76px;transition:background .4s,backdrop-filter .4s,border-bottom .4s}
+nav.scrolled{background:rgba(53,50,48,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--cr30)}
+.nav-logo{font-family:var(--D);font-size:20px;font-weight:800;color:var(--iv);text-decoration:none}
+.nav-logo em{color:var(--am);font-style:normal}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:13px;font-weight:400;color:var(--iv60);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:2px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--am);transition:width .3s}
+.nav-links a:hover{color:var(--iv)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--iv)}
+.nav-btn{font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g);background:var(--am);padding:11px 24px;border-radius:1px;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:#e09f3a}
+
+/* CONTACT HERO */
+.contact-hero{min-height:50vh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px 52px 60px;position:relative;overflow:hidden;border-bottom:1px solid var(--cr30)}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 80% at 10% 90%,black 0%,transparent 70%)}
+.hero-orb{position:absolute;width:600px;height:600px;border-radius:50%;background:var(--am10);top:-200px;right:-100px;filter:blur(100px);animation:orbFloat 8s ease-in-out infinite;pointer-events:none}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+.contact-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--am);margin-bottom:20px;opacity:0;display:flex;align-items:center;gap:10px}
+.contact-eyebrow::before{content:'';width:28px;height:1px;background:var(--am)}
+.contact-title{font-family:var(--D);font-size:clamp(60px,10vw,120px);font-weight:800;letter-spacing:-.04em;line-height:.9;color:var(--iv);margin-bottom:28px;opacity:0;transform:translateY(24px)}
+.contact-title em{color:var(--am);font-style:italic}
+.contact-email-link{font-family:var(--D);font-size:clamp(18px,2.5vw,28px);font-weight:600;color:var(--am);text-decoration:none;letter-spacing:-.01em;opacity:0;display:inline-flex;align-items:center;gap:14px;transition:gap .3s}
+.contact-email-link:hover{gap:20px}
+.contact-email-link::after{content:'↗';font-size:0.7em;transition:transform .3s}
+.contact-email-link:hover::after{transform:rotate(0deg) translate(3px,-3px)}
+
+/* MAIN GRID */
+.contact-main{display:grid;grid-template-columns:1.2fr 1fr;min-height:700px}
+
+/* FORM SIDE */
+.form-side{padding:72px 64px;background:var(--g);border-right:1px solid var(--cr30)}
+.form-label-top{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:36px;display:flex;align-items:center;gap:10px}
+.form-label-top::after{content:'';flex:1;height:1px;background:var(--cr30)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.form-group{margin-bottom:28px}
+.form-group.full{grid-column:1/-1}
+.form-field-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--iv30);margin-bottom:8px;display:block;transition:color .2s}
+.form-group:focus-within .form-field-label{color:var(--am)}
+.form-input,.form-select,.form-textarea{width:100%;background:transparent;border:none;border-bottom:1px solid var(--cr30);padding:12px 0;font-family:var(--B);font-size:14px;font-weight:300;color:var(--iv);outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;border-radius:0}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--iv30)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-bottom-color:var(--am)}
+.form-select{cursor:pointer;color:var(--iv30)}
+.form-select option{background:var(--g);color:var(--iv)}
+.form-textarea{resize:none;min-height:120px;padding-top:8px}
+.form-submit{margin-top:8px;width:100%;background:var(--am);color:var(--g);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:18px 36px;border:none;border-radius:1px;cursor:none;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.form-submit:hover{background:#e09f3a;transform:translateY(-2px)}
+.form-submit .arr{transition:transform .3s}
+.form-submit:hover .arr{transform:translateX(4px)}
+.form-success{display:none;text-align:center;padding:48px 0;flex-direction:column;align-items:center;gap:16px}
+.form-success.show{display:flex}
+.success-icon{width:56px;height:56px;border-radius:50%;background:var(--am20);border:1px solid var(--am);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--am)}
+.success-h{font-family:var(--D);font-size:24px;font-weight:700;color:var(--iv)}
+.success-p{font-size:14px;color:var(--iv60);font-weight:300;max-width:280px;text-align:center;line-height:1.7}
+
+/* INFO SIDE */
+.info-side{padding:72px 64px;background:var(--cr);display:flex;flex-direction:column;gap:0}
+.info-header{font-family:var(--D);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,235,.35);margin-bottom:48px;display:flex;align-items:center;gap:10px}
+.info-header::after{content:'';flex:1;height:1px;background:rgba(255,255,235,.15)}
+.info-block{padding:32px 0;border-bottom:1px solid rgba(255,255,235,.1)}
+.info-block:last-of-type{border-bottom:none}
+.info-block-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,235,.35);margin-bottom:8px}
+.info-block-value{font-family:var(--D);font-size:17px;font-weight:600;color:var(--iv);line-height:1.4}
+.info-block-sub{font-size:13px;color:rgba(255,255,235,.55);font-weight:300;margin-top:4px;line-height:1.6}
+.info-block-value a{color:var(--am);text-decoration:none;transition:opacity .2s}
+.info-block-value a:hover{opacity:.8}
+.info-map-placeholder{margin-top:36px;background:rgba(53,50,48,.3);border:1px solid rgba(255,255,235,.1);border-radius:2px;height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+.info-map-placeholder span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,235,.3)}
+.info-map-placeholder strong{font-family:var(--D);font-size:14px;color:rgba(255,255,235,.5)}
+
+/* FAQ */
+.faq{background:var(--g);padding:100px 52px;border-top:1px solid var(--cr30)}
+.faq-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px}
+.faq-header h2{font-family:var(--D);font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-.03em;color:var(--iv);line-height:.95}
+.faq-header p{font-size:13px;color:var(--iv60);font-weight:300;max-width:260px;text-align:right;line-height:1.7}
+.faq-list{border-top:1px solid var(--cr30)}
+.faq-item{border-bottom:1px solid var(--cr30)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:28px 0;cursor:none;gap:20px}
+.faq-q-text{font-family:var(--D);font-size:18px;font-weight:600;color:var(--iv);transition:color .2s;line-height:1.2}
+.faq-item:hover .faq-q-text{color:var(--am)}
+.faq-icon{width:28px;height:28px;border:1px solid var(--cr30);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--iv30);flex-shrink:0;transition:all .3s}
+.faq-item.open .faq-icon{background:var(--am);border-color:var(--am);color:var(--g);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.25,.46,.45,.94)}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a-inner{padding:0 0 28px;font-size:14px;color:var(--iv60);font-weight:300;line-height:1.8;max-width:680px}
+
+/* FOOTER */
+footer{background:var(--g);border-top:1px solid var(--cr30)}
+.footer-ticker-wrap{overflow:hidden;padding:18px 0;border-bottom:1px solid var(--cr30)}
+.footer-ticker-track{display:flex;width:max-content;animation:ticker 22s linear infinite}
+.footer-tick-item{font-family:var(--D);font-size:16px;font-style:italic;font-weight:400;color:var(--iv10);padding:0 36px;white-space:nowrap}
+.footer-tick-item strong{color:var(--am);opacity:.35;font-style:normal}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.footer-body{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:48px;padding:72px 52px 56px}
+.f-logo{font-family:var(--D);font-size:26px;font-weight:800;color:var(--iv);margin-bottom:10px}
+.f-logo em{color:var(--am);font-style:normal}
+.f-tag{font-size:13px;font-weight:300;color:var(--iv30);line-height:1.7;max-width:240px;margin-bottom:28px}
+.f-socials{display:flex;gap:10px}
+.f-socials a{width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:11px;font-weight:700;color:var(--iv30);text-decoration:none;transition:all .2s}
+.f-socials a:hover{border-color:var(--am);color:var(--am)}
+.f-col-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:20px}
+.f-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.f-col ul a{font-size:13.5px;font-weight:300;color:var(--iv60);text-decoration:none;transition:color .2s}
+.f-col ul a:hover{color:var(--am)}
+.f-contact-row{margin-bottom:14px}
+.f-contact-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--iv30);margin-bottom:3px}
+.f-contact-val{font-size:13px;font-weight:300;color:var(--iv60)}
+.f-contact-val a{color:var(--am);text-decoration:none}
+.footer-bottom{padding:20px 52px;border-top:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between}
+.f-copy{font-size:11.5px;color:var(--iv30);font-weight:300}
+.f-legal{display:flex;gap:24px}
+.f-legal a{font-size:11.5px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.f-legal a:hover{color:var(--iv60)}
+
+.r{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r.on{opacity:1;transform:none}
+.r-d1{transition-delay:.1s}.r-d2{transition-delay:.2s}.r-d3{transition-delay:.3s}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div id="prog"></div><div class="grain"></div>
+
+<nav id="nav">
+  <a href="frameflow-homepage-v2.html" class="nav-logo">Frame<em>Flow</em></a>
+  <ul class="nav-links">
+    <li><a href="frameflow-homepage-v2.html">Home</a></li>
+    <li><a href="frameflow-services.html">Services</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#" class="active">Contact</a></li>
+  </ul>
+  <a href="frameflow-login.html" class="nav-btn">Client Login</a>
+</nav>
+
+<!-- HERO -->
+<section class="contact-hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="contact-eyebrow" id="ce">Let's Connect</div>
+  <h1 class="contact-title" id="ct">Let's<br><em>Talk.</em></h1>
+  <a href="mailto:hello@frameflow.ca" class="contact-email-link" id="cel">hello@frameflow.ca</a>
+</section>
+
+<!-- MAIN -->
+<div class="contact-main">
+  <div class="form-side r">
+    <div class="form-label-top">Send us a message</div>
+    <form id="contact-form">
+      <div class="form-row">
+        <div class="form-group"><label class="form-field-label">Full Name</label><input class="form-input" type="text" placeholder="Jane Smith"></div>
+        <div class="form-group"><label class="form-field-label">Business Name</label><input class="form-input" type="text" placeholder="Acadia Bakes"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-field-label">Email Address</label><input class="form-input" type="email" placeholder="jane@yourbusiness.com"></div>
+        <div class="form-group"><label class="form-field-label">Phone (Optional)</label><input class="form-input" type="tel" placeholder="+1 (416) 000-0000"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-field-label">Service Interested In</label>
+          <select class="form-select"><option value="" disabled selected>Select a service</option><option>Logo Design</option><option>Brand Identity</option><option>Website Design</option><option>Social Media Management</option><option>Video & Photo</option><option>Ad Management</option><option>Web & Mobile App</option><option>Multiple Services</option><option>Not Sure Yet</option></select>
+        </div>
+        <div class="form-group"><label class="form-field-label">Project Budget</label>
+          <select class="form-select"><option value="" disabled selected>Select a range</option><option>Under $1,000</option><option>$1,000 – $3,000</option><option>$3,000 – $7,500</option><option>$7,500 – $15,000</option><option>$15,000+</option><option>Let's discuss</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-field-label">Tell Us About Your Project</label><textarea class="form-textarea" placeholder="Give us a brief overview — what does your business do, what's your main goal, and what's your timeline?"></textarea></div>
+      <button type="submit" class="form-submit">Send Message <span class="arr">→</span></button>
+    </form>
+    <div class="form-success" id="form-success">
+      <div class="success-icon">✓</div>
+      <div class="success-h">Message Sent!</div>
+      <p class="success-p">Thanks for reaching out. We'll review your project and get back to you within 1 business day.</p>
+    </div>
+  </div>
+
+  <div class="info-side r r-d2">
+    <div class="info-header">Contact Details</div>
+    <div class="info-block">
+      <div class="info-block-label">Office</div>
+      <div class="info-block-value">99 Yorkville Ave Unit 200<br>Toronto, ON, Canada</div>
+      <div class="info-block-sub">Available for in-person meetings by appointment</div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-label">Email</div>
+      <div class="info-block-value"><a href="mailto:hello@frameflow.ca">hello@frameflow.ca</a></div>
+      <div class="info-block-sub">We respond within 1 business day</div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-label">Social</div>
+      <div class="info-block-value"><a href="#">@frameflowdigital</a></div>
+      <div class="info-block-sub">Follow us on Instagram for our latest work</div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-label">Office Hours</div>
+      <div class="info-block-value">Mon – Fri, 9am – 6pm EST</div>
+      <div class="info-block-sub">Weekend inquiries answered Monday morning</div>
+    </div>
+    <div class="info-map-placeholder">
+      <span>Toronto, Canada</span>
+      <strong>99 Yorkville Ave</strong>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-header r">
+    <h2>Quick<br>Answers</h2>
+    <p>Common questions about working with FrameFlow.</p>
+  </div>
+  <div class="faq-list r r-d1">
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-text">How long does a typical project take?</span><div class="faq-icon">+</div></div>
+      <div class="faq-a"><p class="faq-a-inner">It depends on the scope. A logo takes 1–2 weeks, a full brand identity 2–4 weeks, and a website 4–8 weeks. We'll give you a detailed timeline during your free consultation.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-text">Do you work with businesses outside of Toronto?</span><div class="faq-icon">+</div></div>
+      <div class="faq-a"><p class="faq-a-inner">Absolutely. While we're based in Toronto, we work with clients across Canada and internationally. All our processes are designed to work seamlessly remotely.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-text">What does the free consultation involve?</span><div class="faq-icon">+</div></div>
+      <div class="faq-a"><p class="faq-a-inner">It's a 30-minute call where we listen to your goals, understand your business, and recommend the best path forward — no pressure, no sales pitch. Just honest, strategic advice.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-text">How does the client portal work?</span><div class="faq-icon">+</div></div>
+      <div class="faq-a"><p class="faq-a-inner">Once you're onboarded, you get access to your private client portal where you can view your social media schedule, review and approve post designs, give feedback, and communicate directly with our team — all in one place.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-text">What are your payment terms?</span><div class="faq-icon">+</div></div>
+      <div class="faq-a"><p class="faq-a-inner">We typically require 50% upfront to begin work, with the remaining 50% due on delivery. For ongoing retainer services, we invoice monthly at the start of each period.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-ticker-wrap"><div class="footer-ticker-track"><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div></div></div>
+  <div class="footer-body">
+    <div><div class="f-logo">Frame<em>Flow</em></div><p class="f-tag">Crafting brands & stories that flow. Your dedicated digital growth partner since 2021.</p><div class="f-socials"><a href="#">ig</a><a href="#">fb</a><a href="#">in</a><a href="#">bh</a></div></div>
+    <div class="f-col"><p class="f-col-head">Studio</p><ul><li><a href="#">About Us</a></li><li><a href="frameflow-services.html">Our Services</a></li><li><a href="#">Portfolio</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Services</p><ul><li><a href="#">Logo Design</a></li><li><a href="#">Brand Identity</a></li><li><a href="#">Website Design</a></li><li><a href="#">Social Media</a></li><li><a href="#">Video & Photo</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Contact</p><div class="f-contact-row"><div class="f-contact-lbl">Address</div><div class="f-contact-val">99 Yorkville Ave Unit 200<br>Toronto, ON</div></div><div class="f-contact-row"><div class="f-contact-lbl">Email</div><div class="f-contact-val"><a href="mailto:hello@frameflow.ca">hello@frameflow.ca</a></div></div></div>
+  </div>
+  <div class="footer-bottom"><p class="f-copy">© 2025 FrameFlow Digital. All rights reserved.</p><div class="f-legal"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('prog').style.width=(p*100)+'%';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+// hero in
+[['ce',150],['ct',300],['cel',500]].forEach(([id,d])=>setTimeout(()=>{const el=document.getElementById(id);el.style.transition='opacity .7s ease,transform .7s ease';el.style.opacity='1';el.style.transform='none'},d));
+// reveal
+const ro=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');ro.unobserve(x.target)}})},{threshold:.08});
+document.querySelectorAll('.r').forEach(el=>ro.observe(el));
+// faq
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+// form
+document.getElementById('contact-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  document.getElementById('contact-form').style.display='none';
+  document.getElementById('form-success').classList.add('show');
+});
+</script>
+</body>
+</html>

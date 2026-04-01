@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Client Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--B);background:var(--g);color:var(--iv);cursor:none;display:flex}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am);transition:width .2s,height .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid var(--am);opacity:.6;transition:all .12s ease}
+body:has(a:hover,button:hover,input:focus) #cur{width:16px;height:16px}
+body:has(a:hover,button:hover,input:focus) #cur-ring{width:52px;height:52px;opacity:.3}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* LAYOUT */
+.left-panel{width:52%;background:var(--g);display:flex;flex-direction:column;justify-content:space-between;padding:52px;position:relative;overflow:hidden;border-right:1px solid var(--cr30)}
+.right-panel{flex:1;background:var(--cr);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:52px;position:relative;overflow:hidden}
+
+/* LEFT PANEL */
+.lp-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:64px 64px;pointer-events:none}
+.lp-orb{position:absolute;width:500px;height:500px;border-radius:50%;background:var(--am20);bottom:-200px;left:-100px;filter:blur(100px);pointer-events:none;animation:orbFloat 8s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+.lp-header{position:relative;z-index:1}
+.lp-back{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--iv30);text-decoration:none;transition:color .2s;margin-bottom:0}
+.lp-back:hover{color:var(--iv60)}
+.lp-back-arr{font-size:14px;transition:transform .2s}
+.lp-back:hover .lp-back-arr{transform:translateX(-3px)}
+.lp-content{position:relative;z-index:1}
+.lp-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--am);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.lp-eyebrow::before{content:'';width:24px;height:1px;background:var(--am)}
+.lp-title{font-family:var(--D);font-size:clamp(44px,5vw,72px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--iv);margin-bottom:20px}
+.lp-title em{color:var(--am);font-style:italic}
+.lp-sub{font-size:14px;font-weight:300;color:var(--iv60);line-height:1.75;max-width:340px}
+.lp-features{margin-top:36px;display:flex;flex-direction:column;gap:14px}
+.lp-feature{display:flex;align-items:flex-start;gap:12px}
+.lp-feature-dot{width:6px;height:6px;border-radius:50%;background:var(--am);flex-shrink:0;margin-top:5px}
+.lp-feature-text{font-size:13px;color:var(--iv60);font-weight:300;line-height:1.5}
+.lp-footer{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
+.lp-footer-logo{font-family:var(--D);font-size:18px;font-weight:800;color:var(--iv)}
+.lp-footer-logo em{color:var(--am);font-style:normal}
+.lp-footer-copy{font-size:11px;color:var(--iv30);font-weight:300}
+
+/* RIGHT PANEL (form) */
+.rp-bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(53,50,48,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(53,50,48,.08) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.rp-orb{position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(211,143,44,.1);top:-100px;right:-100px;filter:blur(80px);pointer-events:none}
+.login-card{background:var(--g);border:1px solid var(--cr30);border-radius:2px;padding:48px 44px;width:100%;max-width:420px;position:relative;z-index:1;animation:cardIn .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.98)}to{opacity:1;transform:none}}
+.card-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:28px;display:flex;align-items:center;gap:8px}
+.card-tag::after{content:'';flex:1;height:1px;background:var(--cr30)}
+.card-title{font-family:var(--D);font-size:28px;font-weight:800;letter-spacing:-.02em;color:var(--iv);margin-bottom:6px}
+.card-sub{font-size:13px;color:var(--iv60);font-weight:300;margin-bottom:36px;line-height:1.5}
+.field-group{margin-bottom:24px;position:relative}
+.field-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--iv30);margin-bottom:8px;display:block;transition:color .2s}
+.field-group:focus-within .field-label{color:var(--am)}
+.field-input{width:100%;background:var(--iv05);border:1px solid var(--cr30);padding:14px 16px;font-family:var(--B);font-size:14px;font-weight:300;color:var(--iv);outline:none;border-radius:1px;transition:border-color .3s,background .3s}
+.field-input::placeholder{color:var(--iv30)}
+.field-input:focus{border-color:var(--am);background:var(--am20)}
+.field-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.field-check{display:flex;align-items:center;gap:8px;cursor:none}
+.field-check input{width:14px;height:14px;accent-color:var(--am);cursor:pointer}
+.field-check label{font-size:12px;color:var(--iv60);font-weight:300;cursor:pointer}
+.field-forgot{font-size:12px;color:var(--am);text-decoration:none;transition:opacity .2s}
+.field-forgot:hover{opacity:.7}
+.btn-login{width:100%;background:var(--am);color:var(--g);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:16px;border:none;border-radius:1px;cursor:none;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
+.btn-login:hover{background:#e09f3a;transform:translateY(-1px)}
+.btn-login .arr{transition:transform .3s}
+.btn-login:hover .arr{transform:translateX(4px)}
+.card-divider{height:1px;background:var(--cr30);margin:20px 0;position:relative;display:flex;align-items:center;justify-content:center}
+.card-divider span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--iv30);background:var(--g);padding:0 12px;position:absolute}
+.card-note{font-size:12px;color:var(--iv30);text-align:center;font-weight:300;line-height:1.7}
+.card-note a{color:var(--am);text-decoration:none}
+.card-note a:hover{text-decoration:underline}
+
+/* loading state */
+.btn-login.loading{pointer-events:none;opacity:.7}
+.spinner{display:none;width:16px;height:16px;border:2px solid var(--g);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+.btn-login.loading .btn-text{display:none}
+.btn-login.loading .btn-arr-wrap{display:none}
+.btn-login.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div class="grain"></div>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="lp-grid"></div>
+  <div class="lp-orb"></div>
+  <div class="lp-header">
+    <a href="frameflow-homepage-v2.html" class="lp-back"><span class="lp-back-arr">←</span> Back to Website</a>
+  </div>
+  <div class="lp-content">
+    <div class="lp-eyebrow">Client Portal</div>
+    <h1 class="lp-title">Your Growth,<br><em>Managed.</em></h1>
+    <p class="lp-sub">Log in to access your dedicated client portal — where your brand's social media strategy comes to life.</p>
+    <div class="lp-features">
+      <div class="lp-feature"><div class="lp-feature-dot"></div><span class="lp-feature-text">View your monthly & weekly social media schedule</span></div>
+      <div class="lp-feature"><div class="lp-feature-dot"></div><span class="lp-feature-text">Review and approve post designs & edited videos</span></div>
+      <div class="lp-feature"><div class="lp-feature-dot"></div><span class="lp-feature-text">Request redesigns or edits with direct feedback</span></div>
+      <div class="lp-feature"><div class="lp-feature-dot"></div><span class="lp-feature-text">Message your FrameFlow team directly</span></div>
+    </div>
+  </div>
+  <div class="lp-footer">
+    <div class="lp-footer-logo">Frame<em>Flow</em></div>
+    <span class="lp-footer-copy">© 2025 FrameFlow Digital</span>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="rp-bg-grid"></div>
+  <div class="rp-orb"></div>
+  <div class="login-card">
+    <div class="card-tag">Client Access</div>
+    <h2 class="card-title">Welcome Back</h2>
+    <p class="card-sub">Sign in to your client portal to review your content and approve posts.</p>
+
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <input class="field-input" type="email" placeholder="you@yourbusiness.com" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input class="field-input" type="password" placeholder="••••••••••" required>
+      </div>
+      <div class="field-row">
+        <label class="field-check"><input type="checkbox"> <span>Remember me</span></label>
+        <a href="#" class="field-forgot">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn-login" id="login-btn">
+        <span class="btn-text">Sign In</span>
+        <span class="btn-arr-wrap arr">→</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <div class="card-divider"><span>New client?</span></div>
+    <p class="card-note">Don't have a portal account yet?<br><a href="frameflow-contact.html">Contact FrameFlow</a> to get set up after onboarding.</p>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+function handleLogin(e){
+  e.preventDefault();
+  const btn=document.getElementById('login-btn');
+  btn.classList.add('loading');
+  setTimeout(()=>{window.location.href='frameflow-dashboard.html'},1600);
+}
+</script>
+</body>
+</html>

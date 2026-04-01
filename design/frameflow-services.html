@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Our Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#353230;--g80:rgba(53,50,48,.8);--g20:rgba(53,50,48,.2);
+  --iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);
+  --am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);
+  --em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);
+  --D:'Syne',sans-serif;--B:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--B);background:var(--g);color:var(--iv);overflow-x:hidden;cursor:none}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am);transition:width .2s,height .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid var(--am);opacity:.6;transition:all .12s ease}
+body:has(a:hover) #cur{width:20px;height:20px}
+body:has(a:hover) #cur-ring{width:60px;height:60px;opacity:.25}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--am);z-index:9998;width:0%;transition:width .05s linear}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:76px;transition:background .4s,backdrop-filter .4s,border-bottom .4s}
+nav.scrolled{background:rgba(53,50,48,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--cr30)}
+.nav-logo{font-family:var(--D);font-size:20px;font-weight:800;color:var(--iv);text-decoration:none;letter-spacing:-.01em}
+.nav-logo em{color:var(--am);font-style:normal}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:13px;font-weight:400;color:var(--iv60);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:2px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--am);transition:width .3s ease}
+.nav-links a:hover{color:var(--iv)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--iv)}
+.nav-btn{font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g);background:var(--am);padding:11px 24px;border-radius:1px;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:#e09f3a}
+
+/* HERO */
+.page-hero{min-height:55vh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px 52px 72px;position:relative;overflow:hidden;border-bottom:1px solid var(--cr30)}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 20% 80%,black 0%,transparent 70%)}
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px);width:500px;height:500px;background:var(--am10);top:-150px;right:-100px;animation:orbFloat 8s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.04)}}
+.breadcrumb{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--iv30);margin-bottom:28px;display:flex;align-items:center;gap:10px;opacity:0}
+.breadcrumb span{color:var(--am)}
+.breadcrumb-sep{width:16px;height:1px;background:var(--iv30)}
+.page-title{font-family:var(--D);font-size:clamp(56px,9vw,110px);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--iv);margin-bottom:24px;opacity:0;transform:translateY(24px)}
+.page-sub{font-size:15px;font-weight:300;color:var(--iv60);max-width:480px;line-height:1.8;opacity:0;transform:translateY(20px)}
+.page-hero-count{position:absolute;right:52px;bottom:52px;font-family:var(--D);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--iv30);display:flex;align-items:center;gap:12px;opacity:0}
+.page-hero-count::before{content:'';width:32px;height:1px;background:var(--am)}
+
+/* SERVICES DETAIL */
+.services-detail{background:var(--g)}
+.svc-detail-item{display:grid;grid-template-columns:1fr 1fr;min-height:600px;border-bottom:1px solid var(--cr30)}
+.svc-detail-item:nth-child(even) .svc-detail-img{order:2}
+.svc-detail-item:nth-child(even) .svc-detail-txt{order:1}
+.svc-detail-img{position:relative;overflow:hidden;background:rgba(53,50,48,.7);display:flex;align-items:center;justify-content:center}
+.svc-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative}
+.svc-img-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:56px 56px}
+.svc-img-num{font-family:var(--D);font-size:180px;font-weight:800;color:var(--iv05);line-height:1;letter-spacing:-.04em;position:absolute}
+.svc-img-label{position:absolute;bottom:28px;left:28px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30)}
+.svc-img-accent{position:absolute;top:28px;right:28px;width:1px;height:60px;background:var(--am)}
+.svc-detail-txt{padding:72px 64px;display:flex;flex-direction:column;justify-content:center;background:var(--g)}
+.svc-detail-item:nth-child(even) .svc-detail-txt{background:rgba(53,50,48,.4)}
+.svc-num-tag{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.svc-num-val{font-family:var(--D);font-size:12px;font-weight:600;letter-spacing:.2em;color:var(--am)}
+.svc-num-line{width:32px;height:1px;background:var(--am);opacity:.5}
+.svc-num-cat{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30)}
+.svc-detail-name{font-family:var(--D);font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.025em;color:var(--iv);line-height:1;margin-bottom:10px}
+.svc-detail-tagline{font-size:14px;color:var(--am);font-weight:400;font-style:italic;margin-bottom:28px;font-family:var(--D)}
+.svc-detail-desc{font-size:14px;font-weight:300;color:var(--iv60);line-height:1.85;margin-bottom:36px;max-width:420px}
+.svc-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:40px}
+.svc-features li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--iv60);font-weight:300}
+.svc-features li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--am);flex-shrink:0;margin-top:6px}
+.svc-cta{display:inline-flex;align-items:center;gap:10px;font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--g);background:var(--am);padding:14px 32px;border-radius:1px;text-decoration:none;transition:background .2s,transform .15s;width:fit-content}
+.svc-cta:hover{background:#e09f3a;transform:translateY(-2px)}
+.svc-cta .arr{transition:transform .3s}
+.svc-cta:hover .arr{transform:translateX(4px)}
+
+/* BOTTOM CTA */
+.bottom-cta{background:var(--am);padding:100px 52px;display:flex;align-items:center;justify-content:space-between;gap:48px}
+.bottom-cta h2{font-family:var(--D);font-size:clamp(28px,4vw,52px);font-weight:800;letter-spacing:-.03em;color:var(--g);line-height:1;max-width:500px}
+.bottom-cta h2 em{font-style:italic}
+.bottom-cta-right{display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.btn-g{background:var(--g);color:var(--iv);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;border-radius:1px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:background .2s,transform .15s;cursor:none}
+.btn-g:hover{background:#2a2826;transform:translateY(-2px)}
+.btn-g .arr{transition:transform .3s}
+.btn-g:hover .arr{transform:translateX(4px)}
+.btn-ghost{background:transparent;color:var(--g);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;border-radius:1px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;border:1.5px solid rgba(53,50,48,.35);transition:border-color .2s;cursor:none}
+.btn-ghost:hover{border-color:var(--g)}
+
+/* FOOTER (minimal) */
+footer{background:var(--g);border-top:1px solid var(--cr30)}
+.footer-ticker-wrap{overflow:hidden;padding:18px 0;border-bottom:1px solid var(--cr30)}
+.footer-ticker-track{display:flex;width:max-content;animation:ticker 22s linear infinite}
+.footer-tick-item{font-family:var(--D);font-size:16px;font-style:italic;font-weight:400;color:var(--iv10);padding:0 36px;white-space:nowrap}
+.footer-tick-item strong{color:var(--am);opacity:.35;font-style:normal}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.footer-body{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:48px;padding:72px 52px 56px}
+.f-logo{font-family:var(--D);font-size:26px;font-weight:800;color:var(--iv);margin-bottom:10px}
+.f-logo em{color:var(--am);font-style:normal}
+.f-tag{font-size:13px;font-weight:300;color:var(--iv30);line-height:1.7;max-width:240px;margin-bottom:28px}
+.f-socials{display:flex;gap:10px}
+.f-socials a{width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:11px;font-weight:700;color:var(--iv30);text-decoration:none;transition:all .2s}
+.f-socials a:hover{border-color:var(--am);color:var(--am)}
+.f-col-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:20px}
+.f-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.f-col ul a{font-size:13.5px;font-weight:300;color:var(--iv60);text-decoration:none;transition:color .2s}
+.f-col ul a:hover{color:var(--am)}
+.f-contact-row{margin-bottom:14px}
+.f-contact-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--iv30);margin-bottom:3px}
+.f-contact-val{font-size:13px;font-weight:300;color:var(--iv60)}
+.f-contact-val a{color:var(--am);text-decoration:none}
+.footer-bottom{padding:20px 52px;border-top:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between}
+.f-copy{font-size:11.5px;color:var(--iv30);font-weight:300}
+.f-legal{display:flex;gap:24px}
+.f-legal a{font-size:11.5px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.f-legal a:hover{color:var(--iv60)}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r.on{opacity:1;transform:none}
+.r-d1{transition-delay:.1s}.r-d2{transition-delay:.2s}.r-d3{transition-delay:.3s}
+.r-left{opacity:0;transform:translateX(-30px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r-left.on{opacity:1;transform:none}
+.r-right{opacity:0;transform:translateX(30px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r-right.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div id="prog"></div><div class="grain"></div>
+
+<nav id="nav">
+  <a href="frameflow-homepage-v2.html" class="nav-logo">Frame<em>Flow</em></a>
+  <ul class="nav-links">
+    <li><a href="frameflow-homepage-v2.html">Home</a></li>
+    <li><a href="#" class="active">Services</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="frameflow-contact.html">Contact</a></li>
+  </ul>
+  <a href="frameflow-login.html" class="nav-btn">Client Login</a>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="breadcrumb" id="bc"><span>Home</span><div class="breadcrumb-sep"></div>Our Services</div>
+  <h1 class="page-title" id="pt">Our<br>Services</h1>
+  <p class="page-sub" id="ps">Seven core services built around one goal — making your business grow with clarity, creativity, and a partner that genuinely cares.</p>
+  <div class="page-hero-count" id="phc">07 Services</div>
+</section>
+
+<!-- SERVICES DETAIL -->
+<div class="services-detail">
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-left">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">01</div>
+        <div class="svc-img-label">Logo Design</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-right">
+      <div class="svc-num-tag"><span class="svc-num-val">01</span><div class="svc-num-line"></div><span class="svc-num-cat">Branding</span></div>
+      <h2 class="svc-detail-name">Logo<br>Design</h2>
+      <p class="svc-detail-tagline">Your Brand Starts Here.</p>
+      <p class="svc-detail-desc">Your logo is the face of your brand — the first thing customers see and the weight of your identity, values, and promise. At FrameFlow, we craft strategic visual assets that set you up for lasting recognition.</p>
+      <ul class="svc-features">
+        <li>Custom logo concepts from scratch — no templates</li>
+        <li>Full brand mark suite (primary, secondary, icon versions)</li>
+        <li>Color palette & typography recommendations</li>
+        <li>All files delivered: SVG, PNG, PDF, EPS</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-right">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">02</div>
+        <div class="svc-img-label">Brand Identity</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-left">
+      <div class="svc-num-tag"><span class="svc-num-val">02</span><div class="svc-num-line"></div><span class="svc-num-cat">Branding</span></div>
+      <h2 class="svc-detail-name">Brand<br>Identity</h2>
+      <p class="svc-detail-tagline">Built to Connect, Built to Last.</p>
+      <p class="svc-detail-desc">Your brand is more than a logo — it's the entire experience. Voice, visuals, values, all working together. We build complete brand identities that make you memorable and magnetic to your ideal customers.</p>
+      <ul class="svc-features">
+        <li>Full visual identity system with brand guidelines</li>
+        <li>Typography & color system</li>
+        <li>Brand voice & messaging strategy</li>
+        <li>Business cards, stationery & collateral design</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-left">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">03</div>
+        <div class="svc-img-label">Website Design</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-right">
+      <div class="svc-num-tag"><span class="svc-num-val">03</span><div class="svc-num-line"></div><span class="svc-num-cat">Digital</span></div>
+      <h2 class="svc-detail-name">Website<br>Design</h2>
+      <p class="svc-detail-tagline">Your Business is Unique. Your Website Should Be Too.</p>
+      <p class="svc-detail-desc">In today's digital-first world, your website is your central hub. We build custom websites that look incredible, function flawlessly, and are designed from the ground up to help your business thrive.</p>
+      <ul class="svc-features">
+        <li>Custom design — no page builders or generic themes</li>
+        <li>Mobile-responsive & performance optimized</li>
+        <li>SEO-ready structure & on-page optimization</li>
+        <li>CMS integration so you can manage content easily</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-right">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">04</div>
+        <div class="svc-img-label">Social Media</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-left">
+      <div class="svc-num-tag"><span class="svc-num-val">04</span><div class="svc-num-line"></div><span class="svc-num-cat">Marketing</span></div>
+      <h2 class="svc-detail-name">Social<br>Media</h2>
+      <p class="svc-detail-tagline">Your Social Media? Consider It Handled.</p>
+      <p class="svc-detail-desc">You know you need social media — but who has time? FrameFlow is your dedicated social strategist, content creator, and community manager all in one results-driven package.</p>
+      <ul class="svc-features">
+        <li>Monthly content calendars & post scheduling</li>
+        <li>Custom graphic design & video editing per post</li>
+        <li>Community management & comment responses</li>
+        <li>Monthly analytics reports & strategy adjustments</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-left">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">05</div>
+        <div class="svc-img-label">Video & Photo</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-right">
+      <div class="svc-num-tag"><span class="svc-num-val">05</span><div class="svc-num-line"></div><span class="svc-num-cat">Content</span></div>
+      <h2 class="svc-detail-name">Video &<br>Photo</h2>
+      <p class="svc-detail-tagline">Your Story is Worth Seeing.</p>
+      <p class="svc-detail-desc">Stock photos and shaky smartphone videos don't cut it anymore. We create high-quality photography and videography that stops the scroll, tells your story, and makes a genuine connection with your audience.</p>
+      <ul class="svc-features">
+        <li>Product, food, lifestyle & event photography</li>
+        <li>Promotional & social media videos</li>
+        <li>Professional editing & post-production</li>
+        <li>Delivered in all formats for web, social & print</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-right">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">06</div>
+        <div class="svc-img-label">Ad Management</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-left">
+      <div class="svc-num-tag"><span class="svc-num-val">06</span><div class="svc-num-line"></div><span class="svc-num-cat">Advertising</span></div>
+      <h2 class="svc-detail-name">Ad<br>Management</h2>
+      <p class="svc-detail-tagline">Stop Wasting Money on Ads That Don't Work.</p>
+      <p class="svc-detail-desc">Throwing money at Google or Facebook without a strategy burns your budget fast. We build intelligent, data-driven campaigns designed for one thing: the best possible ROI for your business.</p>
+      <ul class="svc-features">
+        <li>Google Ads, Meta Ads & TikTok Ads setup & management</li>
+        <li>Audience research & targeting strategy</li>
+        <li>Ad creative design & copywriting</li>
+        <li>Weekly performance reporting & optimization</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="svc-detail-item">
+    <div class="svc-detail-img r-left">
+      <div class="svc-img-inner">
+        <div class="svc-img-grid"></div>
+        <div class="svc-img-num">07</div>
+        <div class="svc-img-label">Web & Mobile Apps</div>
+        <div class="svc-img-accent"></div>
+      </div>
+    </div>
+    <div class="svc-detail-txt r-right">
+      <div class="svc-num-tag"><span class="svc-num-val">07</span><div class="svc-num-line"></div><span class="svc-num-cat">Development</span></div>
+      <h2 class="svc-detail-name">Web & Mobile<br>Apps</h2>
+      <p class="svc-detail-tagline">Got an App Idea? Let's Build It.</p>
+      <p class="svc-detail-desc">A killer app idea can solve a problem, create a community, or transform an industry. FrameFlow is your end-to-end partner — from UX/UI design through development to launch and beyond.</p>
+      <ul class="svc-features">
+        <li>UX/UI design & interactive prototyping</li>
+        <li>Web app & mobile app development (iOS & Android)</li>
+        <li>API integrations & backend development</li>
+        <li>Ongoing maintenance, updates & support</li>
+      </ul>
+      <a href="frameflow-contact.html" class="svc-cta">Get Started <span class="arr">→</span></a>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta r">
+  <h2>Not sure which service<br><em>you need?</em></h2>
+  <div class="bottom-cta-right">
+    <a href="frameflow-contact.html" class="btn-g">Book a Free Call <span class="arr">→</span></a>
+    <a href="frameflow-homepage-v2.html" class="btn-ghost">Back to Home</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-ticker-wrap">
+    <div class="footer-ticker-track">
+      <div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div>
+      <div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div>
+      <div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div>
+      <div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div>
+      <div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div>
+      <div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div>
+    </div>
+  </div>
+  <div class="footer-body">
+    <div><div class="f-logo">Frame<em>Flow</em></div><p class="f-tag">Crafting brands & stories that flow. Your dedicated digital growth partner since 2021.</p><div class="f-socials"><a href="#">ig</a><a href="#">fb</a><a href="#">in</a><a href="#">bh</a></div></div>
+    <div class="f-col"><p class="f-col-head">Studio</p><ul><li><a href="#">About Us</a></li><li><a href="#">Our Services</a></li><li><a href="#">Portfolio</a></li><li><a href="frameflow-contact.html">Contact</a></li><li><a href="frameflow-login.html">Client Login</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Services</p><ul><li><a href="#">Logo Design</a></li><li><a href="#">Brand Identity</a></li><li><a href="#">Website Design</a></li><li><a href="#">Social Media</a></li><li><a href="#">Video & Photo</a></li><li><a href="#">Ad Management</a></li><li><a href="#">Apps</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Contact</p><div class="f-contact-row"><div class="f-contact-lbl">Address</div><div class="f-contact-val">99 Yorkville Ave Unit 200<br>Toronto, ON</div></div><div class="f-contact-row"><div class="f-contact-lbl">Email</div><div class="f-contact-val"><a href="mailto:hello@frameflow.ca">hello@frameflow.ca</a></div></div></div>
+  </div>
+  <div class="footer-bottom"><p class="f-copy">© 2025 FrameFlow Digital. All rights reserved.</p><div class="f-legal"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('prog').style.width=(p*100)+'%';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+// hero in
+setTimeout(()=>{const bc=document.getElementById('bc');bc.style.transition='opacity .6s ease';bc.style.opacity='1'},200);
+setTimeout(()=>{const pt=document.getElementById('pt');pt.style.transition='opacity .8s ease,transform .8s ease';pt.style.opacity='1';pt.style.transform='none'},350);
+setTimeout(()=>{const ps=document.getElementById('ps');ps.style.transition='opacity .8s ease,transform .8s ease';ps.style.opacity='1';ps.style.transform='none'},550);
+setTimeout(()=>{const phc=document.getElementById('phc');phc.style.transition='opacity .8s ease';phc.style.opacity='1'},700);
+// reveal
+const ro=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');ro.unobserve(x.target)}})},{threshold:.08});
+document.querySelectorAll('.r,.r-left,.r-right').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>

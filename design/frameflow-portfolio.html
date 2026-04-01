@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--B);background:var(--g);color:var(--iv);overflow-x:hidden;cursor:none}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am);transition:width .2s,height .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid var(--am);opacity:.6;transition:all .12s ease}
+body:has(a:hover,.proj-card:hover) #cur{width:20px;height:20px}
+body:has(a:hover,.proj-card:hover) #cur-ring{width:60px;height:60px;opacity:.25}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--am);z-index:9998;width:0%}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:76px;transition:background .4s,backdrop-filter .4s,border-bottom .4s}
+nav.scrolled{background:rgba(53,50,48,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--cr30)}
+.nav-logo{font-family:var(--D);font-size:20px;font-weight:800;color:var(--iv);text-decoration:none}
+.nav-logo em{color:var(--am);font-style:normal}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:13px;font-weight:400;color:var(--iv60);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:2px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--am);transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--iv)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-btn{font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g);background:var(--am);padding:11px 24px;border-radius:1px;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:#e09f3a}
+
+/* HERO */
+.port-hero{min-height:52vh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px 52px 56px;position:relative;overflow:hidden;border-bottom:1px solid var(--cr30)}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 80% at 80% 80%,black 0%,transparent 70%)}
+.hero-orb{position:absolute;width:500px;height:500px;border-radius:50%;background:var(--am10);top:-150px;left:-80px;filter:blur(100px);animation:orbFloat 8s ease-in-out infinite;pointer-events:none}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+.port-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--am);margin-bottom:20px;display:flex;align-items:center;gap:10px;opacity:0}
+.port-eyebrow::before{content:'';width:24px;height:1px;background:var(--am)}
+.port-title{font-family:var(--D);font-size:clamp(60px,9vw,110px);font-weight:800;letter-spacing:-.04em;line-height:.9;color:var(--iv);margin-bottom:20px;opacity:0;transform:translateY(24px)}
+.port-title em{color:var(--am);font-style:italic}
+.port-hero-bottom{display:flex;align-items:flex-end;justify-content:space-between}
+.port-sub{font-size:15px;font-weight:300;color:var(--iv60);max-width:420px;line-height:1.8;opacity:0;transform:translateY(20px)}
+.port-count{font-family:var(--D);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);opacity:0;display:flex;align-items:center;gap:10px}
+.port-count::before{content:'';width:24px;height:1px;background:var(--iv30)}
+
+/* FILTER */
+.filter-bar{padding:28px 52px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;gap:10px;position:sticky;top:76px;z-index:100;background:rgba(53,50,48,.92);backdrop-filter:blur(16px)}
+.filter-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--iv30);margin-right:6px}
+.filter-btn{font-family:var(--B);font-size:12px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;padding:8px 18px;border-radius:1px;border:1px solid var(--cr30);background:transparent;color:var(--iv60);cursor:none;transition:all .25s}
+.filter-btn:hover{border-color:var(--iv30);color:var(--iv)}
+.filter-btn.active{background:var(--am);border-color:var(--am);color:var(--g)}
+
+/* GRID */
+.portfolio-grid{padding:48px 52px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--cr30)}
+.proj-card{background:var(--g);position:relative;overflow:hidden;cursor:none;aspect-ratio:4/3}
+.proj-card.tall{grid-row:span 2;aspect-ratio:auto}
+.proj-card.wide{grid-column:span 2;aspect-ratio:auto}
+.proj-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.proj-bg-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:40px 40px}
+.proj-bg-num{font-family:var(--D);font-size:140px;font-weight:800;color:var(--iv05);line-height:1;letter-spacing:-.04em}
+.proj-card:hover .proj-bg{transform:scale(1.05)}
+.proj-overlay{position:absolute;inset:0;background:rgba(53,50,48,.88);opacity:0;transition:opacity .35s ease;display:flex;flex-direction:column;justify-content:flex-end;padding:32px}
+.proj-card:hover .proj-overlay{opacity:1}
+.proj-cat{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--am);margin-bottom:8px;transform:translateY(12px);transition:transform .35s ease}
+.proj-card:hover .proj-cat{transform:translateY(0)}
+.proj-name{font-family:var(--D);font-size:22px;font-weight:700;color:var(--iv);line-height:1.15;transform:translateY(12px);transition:transform .35s .05s ease;margin-bottom:8px}
+.proj-card:hover .proj-name{transform:translateY(0)}
+.proj-client{font-size:12px;color:var(--iv60);font-weight:300;transform:translateY(12px);transition:transform .35s .1s ease;margin-bottom:16px}
+.proj-card:hover .proj-client{transform:translateY(0)}
+.proj-arrow{width:36px;height:36px;border:1px solid var(--am);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--am);font-size:14px;transform:translateY(12px) rotate(-45deg);transition:transform .35s .15s ease,background .2s}
+.proj-card:hover .proj-arrow{transform:translateY(0) rotate(0deg)}
+.proj-card:hover .proj-arrow:hover{background:var(--am);color:var(--g)}
+.proj-label{position:absolute;top:20px;left:20px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--cr30);color:var(--iv30);border-radius:1px;background:rgba(53,50,48,.6)}
+.proj-card.featured .proj-label{background:var(--am);border-color:var(--am);color:var(--g)}
+
+/* hidden state for filter */
+.proj-card.hidden{opacity:0;pointer-events:none;position:absolute;visibility:hidden}
+.proj-card.filtered-out{opacity:0;transform:scale(.95);transition:opacity .3s,transform .3s;pointer-events:none}
+.proj-card.visible{opacity:1;transform:scale(1);transition:opacity .4s,transform .4s}
+
+/* CTA */
+.port-cta{background:var(--am);padding:80px 52px;display:flex;align-items:center;justify-content:space-between;gap:40px}
+.port-cta h2{font-family:var(--D);font-size:clamp(28px,4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--g)}
+.port-cta h2 em{font-style:italic}
+.btn-g{background:var(--g);color:var(--iv);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;border-radius:1px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:background .2s,transform .15s;cursor:none}
+.btn-g:hover{background:#2a2826;transform:translateY(-2px)}
+.btn-g .arr{transition:transform .3s}
+.btn-g:hover .arr{transform:translateX(4px)}
+
+footer{background:var(--g);border-top:1px solid var(--cr30)}
+.footer-ticker-wrap{overflow:hidden;padding:18px 0;border-bottom:1px solid var(--cr30)}
+.footer-ticker-track{display:flex;width:max-content;animation:ticker 22s linear infinite}
+.footer-tick-item{font-family:var(--D);font-size:16px;font-style:italic;font-weight:400;color:var(--iv10);padding:0 36px;white-space:nowrap}
+.footer-tick-item strong{color:var(--am);opacity:.35;font-style:normal}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.footer-body{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:48px;padding:72px 52px 56px}
+.f-logo{font-family:var(--D);font-size:26px;font-weight:800;color:var(--iv);margin-bottom:10px}
+.f-logo em{color:var(--am);font-style:normal}
+.f-tag{font-size:13px;font-weight:300;color:var(--iv30);line-height:1.7;max-width:240px;margin-bottom:28px}
+.f-socials{display:flex;gap:10px}
+.f-socials a{width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:11px;font-weight:700;color:var(--iv30);text-decoration:none;transition:all .2s}
+.f-socials a:hover{border-color:var(--am);color:var(--am)}
+.f-col-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:20px}
+.f-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.f-col ul a{font-size:13.5px;font-weight:300;color:var(--iv60);text-decoration:none;transition:color .2s}
+.f-col ul a:hover{color:var(--am)}
+.f-contact-row{margin-bottom:14px}
+.f-contact-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--iv30);margin-bottom:3px}
+.f-contact-val{font-size:13px;font-weight:300;color:var(--iv60)}
+.f-contact-val a{color:var(--am);text-decoration:none}
+.footer-bottom{padding:20px 52px;border-top:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between}
+.f-copy{font-size:11.5px;color:var(--iv30);font-weight:300}
+.f-legal{display:flex;gap:24px}
+.f-legal a{font-size:11.5px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.f-legal a:hover{color:var(--iv60)}
+
+.r{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div id="prog"></div><div class="grain"></div>
+
+<nav id="nav">
+  <a href="frameflow-homepage-v2.html" class="nav-logo">Frame<em>Flow</em></a>
+  <ul class="nav-links">
+    <li><a href="frameflow-homepage-v2.html">Home</a></li>
+    <li><a href="frameflow-services.html">Services</a></li>
+    <li><a href="frameflow-about.html">About</a></li>
+    <li><a href="#" class="active">Portfolio</a></li>
+    <li><a href="frameflow-contact.html">Contact</a></li>
+  </ul>
+  <a href="frameflow-login.html" class="nav-btn">Client Login</a>
+</nav>
+
+<section class="port-hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="port-eyebrow" id="pe">Work We're Proud Of</div>
+  <h1 class="port-title" id="pt">Our<br><em>Portfolio</em></h1>
+  <div class="port-hero-bottom">
+    <p class="port-sub" id="ps">A selection of brand identities, websites, campaigns, and creative work built for businesses we're proud to call partners.</p>
+    <div class="port-count" id="pc">12 Projects</div>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="brand">Brand Identity</button>
+  <button class="filter-btn" data-filter="social">Social Media</button>
+  <button class="filter-btn" data-filter="web">Web Design</button>
+  <button class="filter-btn" data-filter="video">Video & Photo</button>
+  <button class="filter-btn" data-filter="ads">Ad Campaigns</button>
+</div>
+
+<!-- GRID -->
+<div class="portfolio-grid" id="port-grid" style="background:var(--g);gap:2px">
+
+  <div class="proj-card tall featured" data-cat="brand" style="min-height:500px">
+    <div class="proj-bg" style="background:rgba(40,35,30,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">01</div>
+    </div>
+    <div class="proj-label">Featured</div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Brand Identity</div>
+      <div class="proj-name">Acadia Bakes<br>Complete Rebrand</div>
+      <div class="proj-client">Toronto Artisan Bakery</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="web" style="min-height:250px">
+    <div class="proj-bg" style="background:rgba(35,32,40,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">02</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Web Design</div>
+      <div class="proj-name">Nomad Studio Website</div>
+      <div class="proj-client">Creative Agency, Vancouver</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="social" style="min-height:250px">
+    <div class="proj-bg" style="background:rgba(40,30,30,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">03</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Social Media</div>
+      <div class="proj-name">Lune Café Instagram</div>
+      <div class="proj-client">Specialty Coffee, Toronto</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card wide" data-cat="video" style="min-height:320px">
+    <div class="proj-bg" style="background:rgba(30,35,30,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">04</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Video Production</div>
+      <div class="proj-name">Meridian Foods — Brand Film</div>
+      <div class="proj-client">Organic Food Brand, Ontario</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="brand" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(45,32,28,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">05</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Brand Identity</div>
+      <div class="proj-name">Trove Interiors Logo</div>
+      <div class="proj-client">Interior Design Studio</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="ads" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(28,35,45,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">06</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Ad Campaign</div>
+      <div class="proj-name">Sola Health Meta Ads</div>
+      <div class="proj-client">Health & Wellness Brand</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="web" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(35,40,28,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">07</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Web Design</div>
+      <div class="proj-name">Birchfield Co. E-Commerce</div>
+      <div class="proj-client">Sustainable Fashion, Ottawa</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card wide" data-cat="social" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(38,30,42,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">08</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Social Media</div>
+      <div class="proj-name">Velour Collective — 6-Month Campaign</div>
+      <div class="proj-client">Fashion Brand, Montreal</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="brand" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(42,30,30,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">09</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Brand Identity</div>
+      <div class="proj-name">Harbor Digital Identity</div>
+      <div class="proj-client">Tech Startup, Toronto</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card" data-cat="video" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(30,38,38,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">10</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Photo Shoot</div>
+      <div class="proj-name">Apex Creative Product Series</div>
+      <div class="proj-client">Design Products, Calgary</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+  <div class="proj-card wide" data-cat="ads" style="min-height:280px">
+    <div class="proj-bg" style="background:rgba(35,35,28,1)">
+      <div class="proj-bg-grid"></div>
+      <div class="proj-bg-num">11</div>
+    </div>
+    <div class="proj-overlay">
+      <div class="proj-cat">Ad Campaign</div>
+      <div class="proj-name">Acadia Bakes Google + Meta — Holiday Push</div>
+      <div class="proj-client">Toronto Artisan Bakery</div>
+      <div class="proj-arrow">↗</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="port-cta r">
+  <h2>Like What<br><em>You See?</em></h2>
+  <a href="frameflow-contact.html" class="btn-g">Start a Project <span class="arr">→</span></a>
+</div>
+
+<footer>
+  <div class="footer-ticker-wrap"><div class="footer-ticker-track"><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div></div></div>
+  <div class="footer-body">
+    <div><div class="f-logo">Frame<em>Flow</em></div><p class="f-tag">Crafting brands & stories that flow. Your dedicated digital growth partner since 2021.</p><div class="f-socials"><a href="#">ig</a><a href="#">fb</a><a href="#">in</a><a href="#">bh</a></div></div>
+    <div class="f-col"><p class="f-col-head">Studio</p><ul><li><a href="frameflow-about.html">About Us</a></li><li><a href="frameflow-services.html">Our Services</a></li><li><a href="#">Portfolio</a></li><li><a href="frameflow-contact.html">Contact</a></li><li><a href="frameflow-login.html">Client Login</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Services</p><ul><li><a href="#">Logo Design</a></li><li><a href="#">Brand Identity</a></li><li><a href="#">Website Design</a></li><li><a href="#">Social Media</a></li><li><a href="#">Video & Photo</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Contact</p><div class="f-contact-row"><div class="f-contact-lbl">Address</div><div class="f-contact-val">99 Yorkville Ave Unit 200<br>Toronto, ON</div></div><div class="f-contact-row"><div class="f-contact-lbl">Email</div><div class="f-contact-val"><a href="mailto:hello@frameflow.ca">hello@frameflow.ca</a></div></div></div>
+  </div>
+  <div class="footer-bottom"><p class="f-copy">© 2025 FrameFlow Digital. All rights reserved.</p><div class="f-legal"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('prog').style.width=(p*100)+'%';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+[['pe',150],['pt',300],['ps',500],['pc',600]].forEach(([id,d])=>setTimeout(()=>{const el=document.getElementById(id);el.style.transition='opacity .7s ease,transform .7s ease';el.style.opacity='1';el.style.transform='none'},d));
+const ro=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');ro.unobserve(x.target)}})},{threshold:.06});
+document.querySelectorAll('.r').forEach(el=>ro.observe(el));
+// filter
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.proj-card').forEach(card=>{
+      if(f==='all'||card.dataset.cat===f){card.style.opacity='1';card.style.transform='none';card.style.pointerEvents='auto'}
+      else{card.style.opacity='0';card.style.transform='scale(.96)';card.style.pointerEvents='none'}
+      card.style.transition='opacity .35s ease,transform .35s ease';
+    });
+  });
+});
+</script>
+</body>
+</html>

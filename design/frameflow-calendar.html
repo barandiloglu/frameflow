@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--g2:rgba(30,28,27,1);--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--B);background:var(--g);color:var(--iv);cursor:none;display:flex}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am)}
+#cur-ring{width:34px;height:34px;border:1.5px solid var(--am);opacity:.5;transition:all .1s ease}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* SIDEBAR */
+.sidebar{width:240px;flex-shrink:0;background:var(--g2);border-right:1px solid var(--cr30);display:flex;flex-direction:column;height:100%}
+.sb-logo{padding:28px 24px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;gap:12px}
+.sb-logo-mark{width:32px;height:32px;background:var(--am);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;font-weight:800;color:var(--g)}
+.sb-logo-text{font-family:var(--D);font-size:16px;font-weight:800;color:var(--iv)}
+.sb-logo-text em{color:var(--am);font-style:normal}
+.sb-client{padding:20px 24px;border-bottom:1px solid var(--cr30)}
+.sb-client-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);margin-bottom:6px}
+.sb-client-name{font-family:var(--D);font-size:14px;font-weight:700;color:var(--iv)}
+.sb-client-plan{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);background:var(--am10);border:1px solid rgba(211,143,44,.3);padding:2px 8px;border-radius:1px;margin-top:4px}
+.sb-nav{padding:16px 0;flex:1}
+.sb-nav-section{padding:8px 24px 4px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-top:8px}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;font-size:13px;color:var(--iv60);text-decoration:none;transition:all .2s;border-left:2px solid transparent;margin:1px 0}
+.sb-link:hover{color:var(--iv);background:var(--iv05)}
+.sb-link.active{color:var(--iv);background:var(--am10);border-left-color:var(--am)}
+.sb-link-icon{width:15px;height:15px;opacity:.6}
+.sb-link.active .sb-link-icon{opacity:1}
+.sb-badge{margin-left:auto;background:var(--em);color:var(--iv);font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px}
+.sb-bottom{padding:20px 24px;border-top:1px solid var(--cr30)}
+.sb-back-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.sb-back-link:hover{color:var(--iv60)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:68px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between;padding:0 36px;flex-shrink:0;background:rgba(53,50,48,.4);backdrop-filter:blur(10px)}
+.topbar-title{font-family:var(--D);font-size:18px;font-weight:700;color:var(--iv)}
+.topbar-sub{font-size:12px;color:var(--iv30);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+
+/* CAL CONTROLS */
+.cal-controls{padding:20px 36px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;gap:12px}
+.cal-nav-btn{width:32px;height:32px;border:1px solid var(--cr30);border-radius:1px;background:transparent;color:var(--iv60);cursor:none;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s}
+.cal-nav-btn:hover{border-color:var(--am);color:var(--am)}
+.cal-month{font-family:var(--D);font-size:18px;font-weight:700;color:var(--iv);letter-spacing:-.01em}
+.cal-today-btn{font-family:var(--B);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--iv60);background:transparent;border:1px solid var(--cr30);padding:7px 14px;border-radius:1px;cursor:none;transition:all .2s}
+.cal-today-btn:hover{border-color:var(--am);color:var(--am)}
+.view-toggle{display:flex;border:1px solid var(--cr30);border-radius:1px;overflow:hidden}
+.view-btn{font-family:var(--B);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 18px;background:transparent;color:var(--iv60);border:none;cursor:none;transition:all .2s}
+.view-btn.active{background:var(--am);color:var(--g)}
+.view-btn:not(.active):hover{color:var(--iv)}
+.cal-filters{display:flex;gap:8px}
+.plat-filter{font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--cr30);border-radius:1px;background:transparent;color:var(--iv60);cursor:none;transition:all .2s}
+.plat-filter:hover{border-color:var(--iv30);color:var(--iv)}
+.plat-filter.active{background:var(--am10);border-color:var(--am);color:var(--am)}
+
+/* MONTHLY VIEW */
+.monthly-cal{flex:1;overflow-y:auto;padding:0}
+.monthly-cal::-webkit-scrollbar{width:4px}
+.monthly-cal::-webkit-scrollbar-thumb{background:var(--cr30)}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--cr30)}
+.cal-day-head{padding:12px 16px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);border-right:1px solid var(--cr30);text-align:left}
+.cal-day-head:last-child{border-right:none}
+.cal-body{display:grid;grid-template-columns:repeat(7,1fr);flex:1}
+.cal-cell{min-height:120px;border-right:1px solid var(--cr30);border-bottom:1px solid var(--cr30);padding:10px;position:relative;transition:background .2s;cursor:none}
+.cal-cell:nth-child(7n){border-right:none}
+.cal-cell:hover{background:var(--iv05)}
+.cal-cell.today{background:var(--am10)}
+.cal-cell.today .cell-num{color:var(--am);font-weight:700}
+.cal-cell.other-month .cell-num{color:var(--iv30);opacity:.4}
+.cell-num{font-family:var(--D);font-size:13px;font-weight:600;color:var(--iv60);margin-bottom:6px}
+.cal-post-chip{display:flex;align-items:center;gap:5px;padding:4px 7px;border-radius:1px;margin-bottom:3px;font-size:10px;font-weight:400;cursor:none;transition:opacity .2s;border-left:2px solid transparent}
+.cal-post-chip:hover{opacity:.8}
+.chip-ig{background:rgba(211,143,44,.12);border-left-color:var(--am);color:var(--am)}
+.chip-fb{background:rgba(212,89,56,.12);border-left-color:var(--em);color:var(--em)}
+.chip-tk{background:rgba(255,255,235,.06);border-left-color:var(--iv30);color:var(--iv60)}
+.chip-text{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100px}
+.chip-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.chip-dot-pend{background:var(--am)}
+.chip-dot-appr{background:var(--iv30)}
+.chip-dot-need{background:var(--em)}
+
+/* WEEKLY VIEW */
+.weekly-cal{flex:1;overflow-y:auto;display:none}
+.weekly-cal::-webkit-scrollbar{width:4px}
+.weekly-cal::-webkit-scrollbar-thumb{background:var(--cr30)}
+.weekly-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--cr30);flex-shrink:0}
+.weekly-day-head{padding:16px 20px;border-right:1px solid var(--cr30)}
+.weekly-day-head:last-child{border-right:none}
+.weekly-day-head.today-col{background:var(--am10);border-top:2px solid var(--am)}
+.wdh-name{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);margin-bottom:4px}
+.wdh-num{font-family:var(--D);font-size:20px;font-weight:800;color:var(--iv60)}
+.today-col .wdh-num{color:var(--am)}
+.weekly-body{display:grid;grid-template-columns:repeat(7,1fr)}
+.weekly-col{border-right:1px solid var(--cr30);padding:16px;display:flex;flex-direction:column;gap:10px;min-height:500px}
+.weekly-col:last-child{border-right:none}
+.weekly-col.today-col{background:var(--am10)}
+.weekly-post-card{background:var(--iv05);border:1px solid var(--cr30);border-radius:2px;overflow:hidden;cursor:none;transition:border-color .25s,transform .25s}
+.weekly-post-card:hover{border-color:var(--am);transform:translateY(-2px)}
+.wpc-platform{display:flex;align-items:center;gap:6px;padding:8px 10px 6px;border-bottom:1px solid var(--cr30)}
+.wpc-plat-dot{width:5px;height:5px;border-radius:50%}
+.wpc-plat-name{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--iv30)}
+.wpc-thumb{height:52px;background:rgba(53,50,48,.8);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--iv30);position:relative;overflow:hidden}
+.wpc-thumb-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:12px 12px}
+.wpc-body{padding:8px 10px}
+.wpc-title{font-size:11px;color:var(--iv);font-weight:400;line-height:1.35;margin-bottom:4px}
+.wpc-time{font-size:10px;color:var(--iv30)}
+.wpc-status{display:flex;justify-content:flex-end;padding:6px 10px 8px}
+.sp-pending{font-size:9px;letter-spacing:.08em;padding:3px 7px;border-radius:6px;background:rgba(211,143,44,.15);color:var(--am);border:1px solid rgba(211,143,44,.25)}
+.sp-approved{font-size:9px;letter-spacing:.08em;padding:3px 7px;border-radius:6px;background:rgba(255,255,235,.06);color:var(--iv60);border:1px solid var(--cr30)}
+.sp-draft{font-size:9px;letter-spacing:.08em;padding:3px 7px;border-radius:6px;background:var(--cr15);color:var(--iv30);border:1px solid var(--cr30)}
+
+/* LEGEND */
+.cal-legend{display:flex;align-items:center;gap:20px;padding:12px 36px;border-top:1px solid var(--cr30);flex-shrink:0;background:rgba(53,50,48,.3)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--iv30)}
+.legend-dot{width:7px;height:7px;border-radius:50%}
+
+/* NOTIF / AVATAR shared */
+.topbar-notif{position:relative;width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;cursor:none;transition:border-color .2s}
+.topbar-notif:hover{border-color:var(--am)}
+.notif-dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--em);border:1.5px solid var(--g)}
+.topbar-notif svg{width:15px;height:15px;stroke:var(--iv60);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;background:var(--am);display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:800;color:var(--g)}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div class="grain"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">FF</div>
+    <div class="sb-logo-text">Frame<em>Flow</em></div>
+  </div>
+  <div class="sb-client">
+    <div class="sb-client-label">Logged in as</div>
+    <div class="sb-client-name">Acadia Bakes</div>
+    <div class="sb-client-plan">Social Pro Plan</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-nav-section">Overview</div>
+    <a href="frameflow-dashboard.html" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+      Dashboard
+    </a>
+    <div class="sb-nav-section">Content</div>
+    <a href="#" class="sb-link active">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="13" rx="1.5"/><path d="M1 6h14M5 1v2M11 1v2"/></svg>
+      Schedule
+    </a>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2zM2 6h12M6 6v8"/></svg>
+      Content Library
+    </a>
+    <a href="frameflow-approvals.html" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M5 8l2 2 4-4"/></svg>
+      Approvals
+      <span class="sb-badge">3</span>
+    </a>
+    <div class="sb-nav-section">Communication</div>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10c0 .6-.4 1-1 1H4l-2.5 2.5V3c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v7z"/></svg>
+      Messages
+      <span class="sb-badge">1</span>
+    </a>
+    <div class="sb-nav-section">Account</div>
+    <a href="#" class="sb-link">
+      <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      Settings
+    </a>
+  </div>
+  <div class="sb-bottom"><a href="frameflow-login.html" class="sb-back-link"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2L4 8l6 6"/></svg> Sign Out</a></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div><div class="topbar-title">Content Schedule</div><div class="topbar-sub">Acadia Bakes · July 2025</div></div>
+    <div class="topbar-right">
+      <div class="topbar-notif"><div class="notif-dot"></div><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <div class="topbar-avatar">AB</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="cal-controls">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" id="prev-btn">‹</button>
+      <div class="cal-month" id="cal-month-label">July 2025</div>
+      <button class="cal-nav-btn" id="next-btn">›</button>
+      <button class="cal-today-btn" id="today-btn">Today</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="cal-filters">
+        <button class="plat-filter active">All</button>
+        <button class="plat-filter">Instagram</button>
+        <button class="plat-filter">Facebook</button>
+        <button class="plat-filter">TikTok</button>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="monthly-btn">Monthly</button>
+        <button class="view-btn" id="weekly-btn">Weekly</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY -->
+  <div class="monthly-cal" id="monthly-view">
+    <div class="cal-head">
+      <div class="cal-day-head">Sunday</div><div class="cal-day-head">Monday</div><div class="cal-day-head">Tuesday</div><div class="cal-day-head">Wednesday</div><div class="cal-day-head">Thursday</div><div class="cal-day-head">Friday</div><div class="cal-day-head">Saturday</div>
+    </div>
+    <div class="cal-body">
+      <!-- Row 1: Jun 29 – Jul 5 -->
+      <div class="cal-cell other-month"><div class="cell-num">29</div></div>
+      <div class="cal-cell other-month"><div class="cell-num">30</div></div>
+      <div class="cal-cell"><div class="cell-num">1</div></div>
+      <div class="cal-cell"><div class="cell-num">2</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Weekend vibes</span></div></div>
+      <div class="cal-cell"><div class="cell-num">3</div><div class="cal-post-chip chip-fb"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">July menu drop</span></div></div>
+      <div class="cal-cell today"><div class="cell-num">4</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-pend"></div><span class="chip-text">Sourdough drop</span></div></div>
+      <div class="cal-cell"><div class="cell-num">5</div><div class="cal-post-chip chip-fb"><div class="chip-dot chip-dot-pend"></div><span class="chip-text">Weekend special</span></div></div>
+      <!-- Row 2 -->
+      <div class="cal-cell"><div class="cell-num">6</div><div class="cal-post-chip chip-tk"><div class="chip-dot chip-dot-pend"></div><span class="chip-text">Bake BTS reel</span></div></div>
+      <div class="cal-cell"><div class="cell-num">7</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Cust. spotlight</span></div></div>
+      <div class="cal-cell"><div class="cell-num">8</div></div>
+      <div class="cal-cell"><div class="cell-num">9</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Croissant close-up</span></div></div>
+      <div class="cal-cell"><div class="cell-num">10</div></div>
+      <div class="cal-cell"><div class="cell-num">11</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Staff picks</span></div><div class="cal-post-chip chip-fb"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Community post</span></div></div>
+      <div class="cal-cell"><div class="cell-num">12</div></div>
+      <!-- Row 3 -->
+      <div class="cal-cell"><div class="cell-num">13</div></div>
+      <div class="cal-cell"><div class="cell-num">14</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">New flavors 🎉</span></div></div>
+      <div class="cal-cell"><div class="cell-num">15</div><div class="cal-post-chip chip-tk"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">How we bake reel</span></div></div>
+      <div class="cal-cell"><div class="cell-num">16</div></div>
+      <div class="cal-cell"><div class="cell-num">17</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Mid-week energy</span></div></div>
+      <div class="cal-cell"><div class="cell-num">18</div></div>
+      <div class="cal-cell"><div class="cell-num">19</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Weekend prep</span></div><div class="cal-post-chip chip-fb"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Event reminder</span></div></div>
+      <!-- Row 4 -->
+      <div class="cal-cell"><div class="cell-num">20</div></div>
+      <div class="cal-cell"><div class="cell-num">21</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Mondy motivation</span></div></div>
+      <div class="cal-cell"><div class="cell-num">22</div></div>
+      <div class="cal-cell"><div class="cell-num">23</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Summer series pt2</span></div></div>
+      <div class="cal-cell"><div class="cell-num">24</div></div>
+      <div class="cal-cell"><div class="cell-num">25</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Crust texture reel</span></div></div>
+      <div class="cal-cell"><div class="cell-num">26</div><div class="cal-post-chip chip-tk"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">Baking ASMR</span></div></div>
+      <!-- Row 5 -->
+      <div class="cal-cell"><div class="cell-num">27</div></div>
+      <div class="cal-cell"><div class="cell-num">28</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">End of month recap</span></div></div>
+      <div class="cal-cell"><div class="cell-num">29</div></div>
+      <div class="cal-cell"><div class="cell-num">30</div></div>
+      <div class="cal-cell"><div class="cell-num">31</div><div class="cal-post-chip chip-ig"><div class="chip-dot chip-dot-appr"></div><span class="chip-text">July highlights</span></div></div>
+      <div class="cal-cell other-month"><div class="cell-num">1</div></div>
+      <div class="cal-cell other-month"><div class="cell-num">2</div></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY -->
+  <div class="weekly-cal" id="weekly-view">
+    <div class="weekly-head">
+      <div class="weekly-day-head"><div class="wdh-name">Sun</div><div class="wdh-num">6</div></div>
+      <div class="weekly-day-head today-col"><div class="wdh-name">Mon</div><div class="wdh-num">7</div></div>
+      <div class="weekly-day-head"><div class="wdh-name">Tue</div><div class="wdh-num">8</div></div>
+      <div class="weekly-day-head"><div class="wdh-name">Wed</div><div class="wdh-num">9</div></div>
+      <div class="weekly-day-head"><div class="wdh-name">Thu</div><div class="wdh-num">10</div></div>
+      <div class="weekly-day-head"><div class="wdh-name">Fri</div><div class="wdh-num">11</div></div>
+      <div class="weekly-day-head"><div class="wdh-name">Sat</div><div class="wdh-num">12</div></div>
+    </div>
+    <div class="weekly-body">
+      <div class="weekly-col">
+        <div class="weekly-post-card"><div class="wpc-platform"><div class="wpc-plat-dot" style="background:var(--iv30)"></div><div class="wpc-plat-name">TikTok</div></div><div class="wpc-thumb"><div class="wpc-thumb-grid"></div></div><div class="wpc-body"><div class="wpc-title">Bake BTS reel 🎬</div><div class="wpc-time">9:00 AM</div></div><div class="wpc-status"><span class="sp-pending">Pending</span></div></div>
+      </div>
+      <div class="weekly-col today-col">
+        <div class="weekly-post-card"><div class="wpc-platform"><div class="wpc-plat-dot" style="background:var(--am)"></div><div class="wpc-plat-name">Instagram</div></div><div class="wpc-thumb"><div class="wpc-thumb-grid"></div></div><div class="wpc-body"><div class="wpc-title">Customer Spotlight: @jane</div><div class="wpc-time">12:00 PM</div></div><div class="wpc-status"><span class="sp-approved">Approved</span></div></div>
+      </div>
+      <div class="weekly-col"></div>
+      <div class="weekly-col">
+        <div class="weekly-post-card"><div class="wpc-platform"><div class="wpc-plat-dot" style="background:var(--am)"></div><div class="wpc-plat-name">Instagram</div></div><div class="wpc-thumb"><div class="wpc-thumb-grid"></div></div><div class="wpc-body"><div class="wpc-title">Croissant close-up series</div><div class="wpc-time">10:30 AM</div></div><div class="wpc-status"><span class="sp-approved">Approved</span></div></div>
+      </div>
+      <div class="weekly-col"></div>
+      <div class="weekly-col">
+        <div class="weekly-post-card"><div class="wpc-platform"><div class="wpc-plat-dot" style="background:var(--am)"></div><div class="wpc-plat-name">Instagram</div></div><div class="wpc-thumb"><div class="wpc-thumb-grid"></div></div><div class="wpc-body"><div class="wpc-title">Staff picks this week</div><div class="wpc-time">11:00 AM</div></div><div class="wpc-status"><span class="sp-approved">Approved</span></div></div>
+        <div class="weekly-post-card"><div class="wpc-platform"><div class="wpc-plat-dot" style="background:var(--em)"></div><div class="wpc-plat-name">Facebook</div></div><div class="wpc-thumb"><div class="wpc-thumb-grid"></div></div><div class="wpc-body"><div class="wpc-title">Community post — July</div><div class="wpc-time">2:00 PM</div></div><div class="wpc-status"><span class="sp-approved">Approved</span></div></div>
+      </div>
+      <div class="weekly-col"></div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="cal-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--am)"></div>Pending Approval</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--iv30)"></div>Approved</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--em)"></div>Needs Edit</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cr30)"></div>Draft</div>
+    <div style="margin-left:auto;font-size:11px;color:var(--iv30)">24 posts scheduled in July · 3 pending your approval</div>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+// view toggle
+document.getElementById('monthly-btn').addEventListener('click',()=>{document.getElementById('monthly-view').style.display='';document.getElementById('weekly-view').style.display='none';document.getElementById('monthly-btn').classList.add('active');document.getElementById('weekly-btn').classList.remove('active')});
+document.getElementById('weekly-btn').addEventListener('click',()=>{document.getElementById('monthly-view').style.display='none';document.getElementById('weekly-view').style.display='block';document.getElementById('weekly-btn').classList.add('active');document.getElementById('monthly-btn').classList.remove('active')});
+// platform filters
+document.querySelectorAll('.plat-filter').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.plat-filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active')})});
+</script>
+</body>
+</html>

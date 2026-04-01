@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — About Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--B);background:var(--g);color:var(--iv);overflow-x:hidden;cursor:none}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am);transition:width .2s,height .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid var(--am);opacity:.6;transition:all .12s ease}
+body:has(a:hover) #cur{width:20px;height:20px}
+body:has(a:hover) #cur-ring{width:60px;height:60px;opacity:.25}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--am);z-index:9998;width:0%}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:76px;transition:background .4s,backdrop-filter .4s,border-bottom .4s}
+nav.scrolled{background:rgba(53,50,48,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--cr30)}
+.nav-logo{font-family:var(--D);font-size:20px;font-weight:800;color:var(--iv);text-decoration:none}
+.nav-logo em{color:var(--am);font-style:normal}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:13px;font-weight:400;color:var(--iv60);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:2px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--am);transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--iv)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-btn{font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g);background:var(--am);padding:11px 24px;border-radius:1px;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:#e09f3a}
+
+/* HERO */
+.about-hero{min-height:90vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;border-bottom:1px solid var(--cr30)}
+.ah-left{padding:140px 64px 80px 52px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;z-index:1}
+.ah-right{position:relative;overflow:hidden;background:rgba(40,38,36,1);display:flex;align-items:center;justify-content:center}
+.ah-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:64px 64px;pointer-events:none}
+.ah-right-num{font-family:var(--D);font-size:260px;font-weight:800;color:var(--iv05);line-height:1;letter-spacing:-.05em;user-select:none}
+.ah-right-label{position:absolute;bottom:32px;left:32px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30)}
+.ah-right-accent{position:absolute;top:32px;right:32px;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.ah-right-accent span{display:block;height:1px;background:var(--am)}
+.ah-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--am);margin-bottom:20px;display:flex;align-items:center;gap:10px;opacity:0}
+.ah-eyebrow::before{content:'';width:24px;height:1px;background:var(--am)}
+.ah-title{font-family:var(--D);font-size:clamp(52px,7vw,90px);font-weight:800;letter-spacing:-.03em;line-height:.92;color:var(--iv);margin-bottom:28px;opacity:0;transform:translateY(24px)}
+.ah-title em{color:var(--am);font-style:italic}
+.ah-body{font-size:15px;font-weight:300;color:var(--iv60);line-height:1.85;max-width:460px;margin-bottom:40px;opacity:0;transform:translateY(20px)}
+.ah-tags{display:flex;gap:10px;flex-wrap:wrap;opacity:0}
+.ah-tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--cr30);border-radius:1px;color:var(--iv60);transition:all .2s}
+.ah-tag:hover{border-color:var(--am);color:var(--am)}
+
+/* MISSION */
+.mission{padding:100px 52px;background:var(--am);position:relative;overflow:hidden}
+.mission-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(53,50,48,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(53,50,48,.06) 1px,transparent 1px);background-size:56px 56px;pointer-events:none}
+.mission-inner{position:relative;z-index:1;max-width:900px;margin:0 auto;text-align:center}
+.mission-quote-mark{font-family:var(--D);font-size:120px;font-weight:800;color:rgba(53,50,48,.15);line-height:.7;margin-bottom:8px}
+.mission-text{font-family:var(--D);font-size:clamp(22px,3.5vw,40px);font-weight:600;color:var(--g);line-height:1.3;letter-spacing:-.02em}
+.mission-text em{font-style:italic}
+.mission-attr{margin-top:28px;font-size:13px;color:rgba(53,50,48,.5);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+
+/* STATS */
+.about-stats{background:var(--g);border-top:1px solid var(--cr30);border-bottom:1px solid var(--cr30);display:grid;grid-template-columns:repeat(4,1fr)}
+.as-item{padding:56px 48px;border-right:1px solid var(--cr30);display:flex;flex-direction:column;gap:6px}
+.as-item:last-child{border-right:none}
+.as-num{font-family:var(--D);font-size:64px;font-weight:800;color:var(--iv);line-height:1;letter-spacing:-.04em}
+.as-num em{color:var(--am);font-style:normal}
+.as-label{font-size:13px;font-weight:300;color:var(--iv60);line-height:1.5}
+
+/* STORY */
+.story{background:var(--iv);padding:100px 52px}
+.story-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px;align-items:start}
+.story-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cr);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.story-eyebrow::before{content:'';width:24px;height:1px;background:var(--cr)}
+.story-title{font-family:var(--D);font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--g)}
+.story-body{font-size:15px;font-weight:300;color:rgba(53,50,48,.65);line-height:1.85}
+.story-body p+p{margin-top:20px}
+.story-timeline{border-left:1px solid rgba(137,47,42,.3);padding-left:36px;display:flex;flex-direction:column;gap:36px}
+.tl-item{position:relative}
+.tl-item::before{content:'';position:absolute;left:-41px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--iv);border:2px solid var(--cr);transition:background .3s,border-color .3s}
+.tl-item:hover::before{background:var(--am);border-color:var(--am)}
+.tl-year{font-family:var(--D);font-size:13px;font-weight:700;color:var(--cr);margin-bottom:6px;letter-spacing:.06em}
+.tl-event{font-family:var(--D);font-size:18px;font-weight:700;color:var(--g);margin-bottom:6px}
+.tl-detail{font-size:13px;color:rgba(53,50,48,.6);font-weight:300;line-height:1.6}
+
+/* VALUES */
+.values{background:var(--g);padding:100px 52px}
+.values-header{margin-bottom:64px}
+.values-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--am);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.values-eyebrow::before{content:'';width:24px;height:1px;background:var(--am)}
+.values-title{font-family:var(--D);font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--iv)}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--cr30);border:1px solid var(--cr30)}
+.value-card{background:var(--g);padding:44px 40px;transition:background .3s;position:relative;overflow:hidden}
+.value-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--am);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.value-card:hover{background:var(--iv05)}
+.value-card:hover::before{transform:scaleX(1)}
+.value-num{font-family:var(--D);font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--am);margin-bottom:20px}
+.value-icon{font-size:28px;margin-bottom:16px;opacity:.8}
+.value-title{font-family:var(--D);font-size:20px;font-weight:700;color:var(--iv);margin-bottom:10px;line-height:1.2}
+.value-body{font-size:13.5px;font-weight:300;color:var(--iv60);line-height:1.75}
+
+/* TEAM */
+.team{background:var(--iv);padding:100px 52px}
+.team-header{margin-bottom:56px}
+.team-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cr);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.team-eyebrow::before{content:'';width:24px;height:1px;background:var(--cr)}
+.team-title{font-family:var(--D);font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--g)}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.team-card{background:var(--g);border:1px solid var(--cr30);border-radius:2px;overflow:hidden;transition:border-color .3s,transform .3s}
+.team-card:hover{border-color:var(--am);transform:translateY(-4px)}
+.team-img{height:220px;background:rgba(40,38,36,1);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.team-img-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:40px 40px}
+.team-img-initials{font-family:var(--D);font-size:64px;font-weight:800;color:var(--iv10);position:relative;z-index:1}
+.team-info{padding:24px}
+.team-name{font-family:var(--D);font-size:18px;font-weight:700;color:var(--iv);margin-bottom:4px}
+.team-role{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:10px}
+.team-bio{font-size:13px;font-weight:300;color:var(--iv60);line-height:1.6}
+
+/* CTA */
+.about-cta{background:var(--cr);padding:100px 52px;display:flex;align-items:center;justify-content:space-between;gap:48px}
+.about-cta h2{font-family:var(--D);font-size:clamp(32px,5vw,60px);font-weight:800;letter-spacing:-.03em;line-height:.95;color:var(--iv)}
+.about-cta h2 em{color:var(--am);font-style:italic}
+.btn-am{background:var(--am);color:var(--g);font-family:var(--B);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;border-radius:1px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:background .2s,transform .15s;cursor:none}
+.btn-am:hover{background:#e09f3a;transform:translateY(-2px)}
+.btn-am .arr{transition:transform .3s}
+.btn-am:hover .arr{transform:translateX(4px)}
+
+/* FOOTER */
+footer{background:var(--g);border-top:1px solid var(--cr30)}
+.footer-ticker-wrap{overflow:hidden;padding:18px 0;border-bottom:1px solid var(--cr30)}
+.footer-ticker-track{display:flex;width:max-content;animation:ticker 22s linear infinite}
+.footer-tick-item{font-family:var(--D);font-size:16px;font-style:italic;font-weight:400;color:var(--iv10);padding:0 36px;white-space:nowrap}
+.footer-tick-item strong{color:var(--am);opacity:.35;font-style:normal}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.footer-body{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:48px;padding:72px 52px 56px}
+.f-logo{font-family:var(--D);font-size:26px;font-weight:800;color:var(--iv);margin-bottom:10px}
+.f-logo em{color:var(--am);font-style:normal}
+.f-tag{font-size:13px;font-weight:300;color:var(--iv30);line-height:1.7;max-width:240px;margin-bottom:28px}
+.f-socials{display:flex;gap:10px}
+.f-socials a{width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:11px;font-weight:700;color:var(--iv30);text-decoration:none;transition:all .2s}
+.f-socials a:hover{border-color:var(--am);color:var(--am)}
+.f-col-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-bottom:20px}
+.f-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.f-col ul a{font-size:13.5px;font-weight:300;color:var(--iv60);text-decoration:none;transition:color .2s}
+.f-col ul a:hover{color:var(--am)}
+.f-contact-row{margin-bottom:14px}
+.f-contact-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--iv30);margin-bottom:3px}
+.f-contact-val{font-size:13px;font-weight:300;color:var(--iv60)}
+.f-contact-val a{color:var(--am);text-decoration:none}
+.footer-bottom{padding:20px 52px;border-top:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between}
+.f-copy{font-size:11.5px;color:var(--iv30);font-weight:300}
+.f-legal{display:flex;gap:24px}
+.f-legal a{font-size:11.5px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.f-legal a:hover{color:var(--iv60)}
+
+.r{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r.on{opacity:1;transform:none}
+.r-left{opacity:0;transform:translateX(-28px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r-left.on{opacity:1;transform:none}
+.r-right{opacity:0;transform:translateX(28px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+.r-right.on{opacity:1;transform:none}
+.r-d1{transition-delay:.1s}.r-d2{transition-delay:.2s}.r-d3{transition-delay:.3s}.r-d4{transition-delay:.4s}.r-d5{transition-delay:.5s}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div id="prog"></div><div class="grain"></div>
+
+<nav id="nav">
+  <a href="frameflow-homepage-v2.html" class="nav-logo">Frame<em>Flow</em></a>
+  <ul class="nav-links">
+    <li><a href="frameflow-homepage-v2.html">Home</a></li>
+    <li><a href="frameflow-services.html">Services</a></li>
+    <li><a href="#" class="active">About</a></li>
+    <li><a href="frameflow-portfolio.html">Portfolio</a></li>
+    <li><a href="frameflow-contact.html">Contact</a></li>
+  </ul>
+  <a href="frameflow-login.html" class="nav-btn">Client Login</a>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="ah-left">
+    <div class="ah-eyebrow" id="ae">Since 2021 · Toronto</div>
+    <h1 class="ah-title" id="at">We're Your<br><em>Sincere</em><br>Partner.</h1>
+    <p class="ah-body" id="ab">FrameFlow goes beyond the typical agency model — we champion the success of small and medium-sized businesses with genuine investment in your growth, because your triumph is our triumph.</p>
+    <div class="ah-tags" id="atags">
+      <span class="ah-tag">Brand Strategy</span>
+      <span class="ah-tag">Digital Marketing</span>
+      <span class="ah-tag">Creative Direction</span>
+      <span class="ah-tag">Toronto-Based</span>
+    </div>
+  </div>
+  <div class="ah-right">
+    <div class="ah-grid"></div>
+    <div class="ah-right-num">FF</div>
+    <div class="ah-right-label">FrameFlow Digital · Est. 2021</div>
+    <div class="ah-right-accent">
+      <span style="width:48px"></span>
+      <span style="width:32px"></span>
+      <span style="width:20px"></span>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission r">
+  <div class="mission-grid"></div>
+  <div class="mission-inner">
+    <div class="mission-quote-mark">"</div>
+    <p class="mission-text">We believe your brand is more than a logo — it's the entire experience your customers have with your business. <em>We're here to make that experience unforgettable.</em></p>
+    <div class="mission-attr">— FrameFlow, Our Founding Principle</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="about-stats">
+  <div class="as-item r r-d1">
+    <div class="as-num" data-count="100">0<em>+</em></div>
+    <div class="as-label">Businesses served across Canada and worldwide</div>
+  </div>
+  <div class="as-item r r-d2">
+    <div class="as-num"><em>4</em></div>
+    <div class="as-label">Years building brands that last</div>
+  </div>
+  <div class="as-item r r-d3">
+    <div class="as-num"><em>7</em></div>
+    <div class="as-label">Core services under one roof</div>
+  </div>
+  <div class="as-item r r-d4">
+    <div class="as-num">98<em>%</em></div>
+    <div class="as-label">Client satisfaction score, consistently</div>
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-top">
+    <div class="r">
+      <div class="story-eyebrow">Our Story</div>
+      <h2 class="story-title">How FrameFlow<br>Came to Be</h2>
+    </div>
+    <div class="r r-d1">
+      <p class="story-body">
+        <p>FrameFlow was founded in 2021 with a single belief: small and medium-sized businesses deserve agency-level marketing without the agency runaround. Too many great businesses were being underserved — handed templates, ignored after signing, and left without real results.</p>
+        <p style="margin-top:20px">We built FrameFlow to be different. A studio that listens first, strategizes second, and executes with genuine care. Based in Toronto, we've grown from a branding boutique into a full-service digital growth partner trusted by businesses across Canada and beyond.</p>
+        <p style="margin-top:20px">Every project we take on becomes a partnership. We celebrate your wins, navigate your challenges with you, and measure our success by yours — not by the number of clients on our roster.</p>
+      </p>
+    </div>
+  </div>
+  <div class="story-timeline r">
+    <div class="tl-item">
+      <div class="tl-year">2021</div>
+      <div class="tl-event">FrameFlow is Founded</div>
+      <div class="tl-detail">Launched in Toronto with a focus on brand identity and logo design for local small businesses.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2022</div>
+      <div class="tl-event">Social Media Services Added</div>
+      <div class="tl-detail">Expanded into full social media management as clients asked for ongoing content support.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2023</div>
+      <div class="tl-event">Video & Ad Management Launch</div>
+      <div class="tl-detail">Brought video production and paid advertising in-house to offer clients an end-to-end solution.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2024</div>
+      <div class="tl-event">Web & App Development</div>
+      <div class="tl-detail">Added web and mobile application development — becoming a true one-stop digital partner.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2025</div>
+      <div class="tl-event">Client Portal Launched</div>
+      <div class="tl-detail">Built a dedicated client portal giving every client real-time visibility into their social strategy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="values-header r">
+    <div class="values-eyebrow">What Drives Us</div>
+    <h2 class="values-title">Our Core Values</h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-card r r-d1">
+      <div class="value-num">01 —</div>
+      <div class="value-title">Sincerity First</div>
+      <p class="value-body">We don't just say we care — we show it. Honest advice, transparent timelines, and real communication are non-negotiable at FrameFlow.</p>
+    </div>
+    <div class="value-card r r-d2">
+      <div class="value-num">02 —</div>
+      <div class="value-title">Results Over Vanity</div>
+      <p class="value-body">Pretty isn't enough. Every piece of work we create is grounded in strategy and designed to drive real, measurable outcomes for your business.</p>
+    </div>
+    <div class="value-card r r-d3">
+      <div class="value-num">03 —</div>
+      <div class="value-title">Partnership, Not Service</div>
+      <p class="value-body">You're not a ticket number. We invest in understanding your business deeply and show up as a genuine partner in your growth journey.</p>
+    </div>
+    <div class="value-card r r-d1">
+      <div class="value-num">04 —</div>
+      <div class="value-title">Agility & Adaptability</div>
+      <p class="value-body">The digital landscape moves fast. We stay ahead of trends and adapt our strategies continuously so your brand is always current and competitive.</p>
+    </div>
+    <div class="value-card r r-d2">
+      <div class="value-num">05 —</div>
+      <div class="value-title">Craft & Quality</div>
+      <p class="value-body">We take pride in the detail of our work — from the kerning in a logo to the colour grade of a video. Quality in every pixel, always.</p>
+    </div>
+    <div class="value-card r r-d3">
+      <div class="value-num">06 —</div>
+      <div class="value-title">Empowering Clients</div>
+      <p class="value-body">We don't gate-keep. We teach, share, and build systems so you understand your brand and marketing — and can thrive beyond our partnership.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team">
+  <div class="team-header r">
+    <div class="team-eyebrow">The People</div>
+    <h2 class="team-title">Meet the Team</h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card r r-d1">
+      <div class="team-img"><div class="team-img-grid"></div><div class="team-img-initials">AK</div></div>
+      <div class="team-info">
+        <div class="team-name">Alex K.</div>
+        <div class="team-role">Founder & Creative Director</div>
+        <div class="team-bio">Leads brand strategy and creative direction. Passionate about helping small businesses compete with the big players.</div>
+      </div>
+    </div>
+    <div class="team-card r r-d2">
+      <div class="team-img"><div class="team-img-grid"></div><div class="team-img-initials">SM</div></div>
+      <div class="team-info">
+        <div class="team-name">Sara M.</div>
+        <div class="team-role">Head of Social Media</div>
+        <div class="team-bio">Social strategist with a knack for content that connects. Manages campaigns across Instagram, TikTok, and Facebook.</div>
+      </div>
+    </div>
+    <div class="team-card r r-d3">
+      <div class="team-img"><div class="team-img-grid"></div><div class="team-img-initials">JP</div></div>
+      <div class="team-info">
+        <div class="team-name">Jordan P.</div>
+        <div class="team-role">Lead Developer</div>
+        <div class="team-bio">Builds fast, beautiful websites and apps. Turns complex ideas into clean, functional digital products people love to use.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="about-cta r">
+  <h2>Ready to Grow<br><em>Together?</em></h2>
+  <a href="frameflow-contact.html" class="btn-am">Book a Free Call <span class="arr">→</span></a>
+</section>
+
+<footer>
+  <div class="footer-ticker-wrap"><div class="footer-ticker-track"><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Freeze the Frame <strong>&nbsp;✦&nbsp;</strong></div><div class="footer-tick-item">Feel the Flow <strong>&nbsp;✦&nbsp;</strong></div></div></div>
+  <div class="footer-body">
+    <div><div class="f-logo">Frame<em>Flow</em></div><p class="f-tag">Crafting brands & stories that flow. Your dedicated digital growth partner since 2021.</p><div class="f-socials"><a href="#">ig</a><a href="#">fb</a><a href="#">in</a><a href="#">bh</a></div></div>
+    <div class="f-col"><p class="f-col-head">Studio</p><ul><li><a href="#">About Us</a></li><li><a href="frameflow-services.html">Our Services</a></li><li><a href="frameflow-portfolio.html">Portfolio</a></li><li><a href="frameflow-contact.html">Contact</a></li><li><a href="frameflow-login.html">Client Login</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Services</p><ul><li><a href="#">Logo Design</a></li><li><a href="#">Brand Identity</a></li><li><a href="#">Website Design</a></li><li><a href="#">Social Media</a></li><li><a href="#">Video & Photo</a></li><li><a href="#">Ad Management</a></li><li><a href="#">Apps</a></li></ul></div>
+    <div class="f-col"><p class="f-col-head">Contact</p><div class="f-contact-row"><div class="f-contact-lbl">Address</div><div class="f-contact-val">99 Yorkville Ave Unit 200<br>Toronto, ON</div></div><div class="f-contact-row"><div class="f-contact-lbl">Email</div><div class="f-contact-val"><a href="mailto:hello@frameflow.ca">hello@frameflow.ca</a></div></div></div>
+  </div>
+  <div class="footer-bottom"><p class="f-copy">© 2025 FrameFlow Digital. All rights reserved.</p><div class="f-legal"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('prog').style.width=(p*100)+'%';document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+[['ae',150,'opacity .6s ease,transform .6s ease'],['at',300,'opacity .8s ease,transform .8s ease'],['ab',500,'opacity .8s ease,transform .8s ease'],['atags',650,'opacity .8s ease']].forEach(([id,d,t])=>setTimeout(()=>{const el=document.getElementById(id);el.style.transition=t;el.style.opacity='1';el.style.transform='none'},d));
+const ro=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');ro.unobserve(x.target)}})},{threshold:.08});
+document.querySelectorAll('.r,.r-left,.r-right').forEach(el=>ro.observe(el));
+const co=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target,target=parseInt(el.dataset.count);if(!target)return;let start=null;const step=ts=>{if(!start)start=ts;const p=Math.min((ts-start)/1800,1),eased=1-Math.pow(1-p,3);el.querySelector('span:first-child')||( el.textContent=Math.floor(eased*target)+(p===1?'+':''));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step);co.unobserve(el)})},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+</script>
+</body>
+</html>

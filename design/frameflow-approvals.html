@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FrameFlow — Approvals</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#353230;--g2:rgba(30,28,27,1);--iv:#ffffeb;--iv60:rgba(255,255,235,.6);--iv30:rgba(255,255,235,.3);--iv10:rgba(255,255,235,.10);--iv05:rgba(255,255,235,.05);--am:#d38f2c;--am20:rgba(211,143,44,.2);--am10:rgba(211,143,44,.1);--em:#d45938;--em15:rgba(212,89,56,.15);--cr:#892f2a;--cr30:rgba(137,47,42,.30);--cr15:rgba(137,47,42,.15);--D:'Syne',sans-serif;--B:'Outfit',sans-serif}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--B);background:var(--g);color:var(--iv);cursor:none;display:flex}
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:10px;height:10px;background:var(--am)}
+#cur-ring{width:34px;height:34px;border:1.5px solid var(--am);opacity:.5;transition:all .1s ease}
+.grain{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+.sidebar{width:240px;flex-shrink:0;background:var(--g2);border-right:1px solid var(--cr30);display:flex;flex-direction:column;height:100%}
+.sb-logo{padding:28px 24px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;gap:12px}
+.sb-logo-mark{width:32px;height:32px;background:var(--am);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;font-weight:800;color:var(--g)}
+.sb-logo-text{font-family:var(--D);font-size:16px;font-weight:800;color:var(--iv)}
+.sb-logo-text em{color:var(--am);font-style:normal}
+.sb-client{padding:20px 24px;border-bottom:1px solid var(--cr30)}
+.sb-client-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--iv30);margin-bottom:6px}
+.sb-client-name{font-family:var(--D);font-size:14px;font-weight:700;color:var(--iv)}
+.sb-client-plan{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);background:var(--am10);border:1px solid rgba(211,143,44,.3);padding:2px 8px;border-radius:1px;margin-top:4px}
+.sb-nav{padding:16px 0;flex:1}
+.sb-nav-section{padding:8px 24px 4px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--iv30);margin-top:8px}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 24px;font-size:13px;color:var(--iv60);text-decoration:none;transition:all .2s;border-left:2px solid transparent;margin:1px 0}
+.sb-link:hover{color:var(--iv);background:var(--iv05)}
+.sb-link.active{color:var(--iv);background:var(--am10);border-left-color:var(--am)}
+.sb-link-icon{width:15px;height:15px;opacity:.6}
+.sb-link.active .sb-link-icon{opacity:1}
+.sb-badge{margin-left:auto;background:var(--em);color:var(--iv);font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px}
+.sb-bottom{padding:20px 24px;border-top:1px solid var(--cr30)}
+.sb-back-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--iv30);text-decoration:none;transition:color .2s}
+.sb-back-link:hover{color:var(--iv60)}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:68px;border-bottom:1px solid var(--cr30);display:flex;align-items:center;justify-content:space-between;padding:0 36px;flex-shrink:0;background:rgba(53,50,48,.4);backdrop-filter:blur(10px)}
+.topbar-left h1{font-family:var(--D);font-size:18px;font-weight:700;color:var(--iv)}
+.topbar-left p{font-size:12px;color:var(--iv30);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-notif{position:relative;width:34px;height:34px;border:1px solid var(--cr30);border-radius:1px;display:flex;align-items:center;justify-content:center;cursor:none;transition:border-color .2s}
+.topbar-notif:hover{border-color:var(--am)}
+.notif-dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--em);border:1.5px solid var(--g)}
+.topbar-notif svg{width:15px;height:15px;stroke:var(--iv60);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;background:var(--am);display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:800;color:var(--g)}
+
+/* PAGE TABS */
+.page-tabs{display:flex;border-bottom:1px solid var(--cr30);padding:0 36px;flex-shrink:0}
+.page-tab{font-family:var(--B);font-size:13px;font-weight:400;color:var(--iv60);padding:16px 0;margin-right:32px;border-bottom:2px solid transparent;cursor:none;transition:all .2s;letter-spacing:.02em}
+.page-tab:hover{color:var(--iv)}
+.page-tab.active{color:var(--iv);border-bottom-color:var(--am)}
+
+/* APPROVALS */
+.approvals-view{flex:1;overflow-y:auto;padding:28px 36px;display:flex;flex-direction:column;gap:16px}
+.approvals-view::-webkit-scrollbar{width:4px}
+.approvals-view::-webkit-scrollbar-thumb{background:var(--cr30)}
+.approvals-banner{background:var(--am10);border:1px solid rgba(211,143,44,.3);border-radius:2px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-shrink:0}
+.ab-left{display:flex;align-items:center;gap:12px}
+.ab-dot{width:8px;height:8px;border-radius:50%;background:var(--am);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.ab-text{font-size:13px;color:var(--iv);font-weight:400}
+.ab-text strong{color:var(--am)}
+.ab-approve-all{font-family:var(--B);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--am);color:var(--g);padding:8px 18px;border:none;border-radius:1px;cursor:none;transition:background .2s}
+.ab-approve-all:hover{background:#e09f3a}
+
+/* APPROVAL CARD */
+.appr-card{background:var(--iv05);border:1px solid var(--cr30);border-radius:2px;overflow:hidden;transition:border-color .3s}
+.appr-card:hover{border-color:rgba(211,143,44,.3)}
+.appr-card.approved{opacity:.5;pointer-events:none;filter:grayscale(.5)}
+.appr-card.approved .ac-status{background:rgba(255,255,235,.06);color:var(--iv60);border-color:var(--cr30)}
+.appr-header{display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--cr30)}
+.appr-num{font-family:var(--D);font-size:11px;font-weight:600;color:var(--iv30);letter-spacing:.12em;flex-shrink:0}
+.appr-platform{display:flex;align-items:center;gap:6px}
+.ap-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ap-name{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--iv60)}
+.appr-date{font-size:11px;color:var(--iv30);margin-left:auto}
+.ac-status{font-size:10px;letter-spacing:.08em;padding:4px 10px;border-radius:8px;background:var(--am10);color:var(--am);border:1px solid rgba(211,143,44,.3)}
+.appr-body{display:grid;grid-template-columns:200px 1fr;gap:0}
+.appr-preview{background:rgba(40,38,36,1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:160px}
+.appr-preview-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:20px 20px}
+.appr-preview-label{position:relative;z-index:1;font-family:var(--D);font-size:11px;color:var(--iv30);letter-spacing:.12em;text-transform:uppercase}
+.appr-info{padding:20px 24px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.appr-title{font-family:var(--D);font-size:16px;font-weight:700;color:var(--iv);line-height:1.3}
+.appr-caption{font-size:12px;font-weight:300;color:var(--iv60);line-height:1.6;max-width:400px}
+.appr-meta{display:flex;gap:20px;font-size:11px;color:var(--iv30)}
+.appr-actions{display:flex;align-items:center;gap:10px;margin-top:4px}
+.btn-approve{background:var(--am);color:var(--g);font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:10px 22px;border:none;border-radius:1px;cursor:none;transition:background .2s,transform .15s;display:flex;align-items:center;gap:8px}
+.btn-approve:hover{background:#e09f3a;transform:translateY(-1px)}
+.btn-request{background:transparent;color:var(--em);font-family:var(--B);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:10px 22px;border:1px solid rgba(212,89,56,.35);border-radius:1px;cursor:none;transition:all .2s}
+.btn-request:hover{border-color:var(--em);background:var(--em15)}
+.appr-feedback{border-top:1px solid var(--cr30);padding:14px 20px;display:none}
+.appr-card.expanded .appr-feedback{display:flex;gap:10px;align-items:flex-end}
+.feedback-input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--cr30);padding:8px 0;font-family:var(--B);font-size:13px;font-weight:300;color:var(--iv);outline:none;transition:border-color .25s}
+.feedback-input::placeholder{color:var(--iv30)}
+.feedback-input:focus{border-bottom-color:var(--am)}
+.btn-send{background:var(--cr);color:var(--iv);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:10px 20px;border:none;border-radius:1px;cursor:none;transition:background .2s;white-space:nowrap}
+.btn-send:hover{background:#7a2a25}
+.btn-cancel-fb{background:transparent;border:none;color:var(--iv30);font-size:12px;cursor:none;padding:10px;transition:color .2s}
+.btn-cancel-fb:hover{color:var(--iv60)}
+
+/* CONTENT LIBRARY */
+.library-view{flex:1;overflow-y:auto;padding:28px 36px;display:none;flex-direction:column;gap:20px}
+.library-view::-webkit-scrollbar{width:4px}
+.library-view::-webkit-scrollbar-thumb{background:var(--cr30)}
+.lib-controls{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.lib-search{flex:1;max-width:320px;background:var(--iv05);border:1px solid var(--cr30);padding:10px 16px;font-family:var(--B);font-size:13px;color:var(--iv);outline:none;border-radius:1px;transition:border-color .25s}
+.lib-search::placeholder{color:var(--iv30)}
+.lib-search:focus{border-color:var(--am)}
+.lib-filter{font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--cr30);border-radius:1px;background:transparent;color:var(--iv60);cursor:none;transition:all .2s}
+.lib-filter:hover{border-color:var(--iv30);color:var(--iv)}
+.lib-filter.active{background:var(--am10);border-color:var(--am);color:var(--am)}
+.view-toggle-lib{display:flex;border:1px solid var(--cr30);border-radius:1px;overflow:hidden;margin-left:auto}
+.vtl-btn{font-size:11px;padding:8px 14px;background:transparent;color:var(--iv60);border:none;cursor:none;transition:all .2s}
+.vtl-btn.active{background:var(--am);color:var(--g)}
+.lib-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--cr30)}
+.lib-card{background:var(--g);overflow:hidden;transition:border-color .25s;cursor:none;position:relative}
+.lib-card:hover .lib-card-overlay{opacity:1}
+.lib-thumb{height:160px;background:rgba(40,38,36,1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lib-thumb-grid{position:absolute;inset:0;background-image:linear-gradient(var(--cr15) 1px,transparent 1px),linear-gradient(90deg,var(--cr15) 1px,transparent 1px);background-size:20px 20px}
+.lib-thumb-type{position:relative;z-index:1;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--iv30)}
+.lib-card-overlay{position:absolute;top:0;left:0;right:0;height:160px;background:rgba(53,50,48,.85);opacity:0;transition:opacity .25s;display:flex;align-items:center;justify-content:center;gap:12px}
+.lib-icon-btn{width:36px;height:36px;border:1px solid rgba(255,255,235,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--iv);font-size:14px;cursor:none;transition:all .2s}
+.lib-icon-btn:hover{background:var(--am);border-color:var(--am);color:var(--g)}
+.lib-info{padding:12px 14px}
+.lib-name{font-size:13px;font-weight:400;color:var(--iv);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lib-meta{display:flex;align-items:center;justify-content:space-between}
+.lib-date{font-size:11px;color:var(--iv30)}
+.lib-status{font-size:10px;letter-spacing:.06em;padding:2px 7px;border-radius:6px}
+.ls-approved{background:rgba(255,255,235,.06);color:var(--iv60);border:1px solid var(--cr30)}
+.ls-pending{background:var(--am10);color:var(--am);border:1px solid rgba(211,143,44,.25)}
+.ls-needs{background:var(--em15);color:var(--em);border:1px solid rgba(212,89,56,.25)}
+.lib-platform-tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--iv30);margin-bottom:4px}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div><div class="grain"></div>
+
+<nav class="sidebar">
+  <div class="sb-logo"><div class="sb-logo-mark">FF</div><div class="sb-logo-text">Frame<em>Flow</em></div></div>
+  <div class="sb-client"><div class="sb-client-label">Logged in as</div><div class="sb-client-name">Acadia Bakes</div><div class="sb-client-plan">Social Pro Plan</div></div>
+  <div class="sb-nav">
+    <div class="sb-nav-section">Overview</div>
+    <a href="frameflow-dashboard.html" class="sb-link"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>Dashboard</a>
+    <div class="sb-nav-section">Content</div>
+    <a href="frameflow-calendar.html" class="sb-link"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="13" rx="1.5"/><path d="M1 6h14M5 1v2M11 1v2"/></svg>Schedule</a>
+    <a href="#" class="sb-link active" id="lib-nav"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2zM2 6h12M6 6v8"/></svg>Content Library</a>
+    <a href="#" class="sb-link active" id="appr-nav"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M5 8l2 2 4-4"/></svg>Approvals<span class="sb-badge" id="appr-badge">3</span></a>
+    <div class="sb-nav-section">Communication</div>
+    <a href="#" class="sb-link"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10c0 .6-.4 1-1 1H4l-2.5 2.5V3c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v7z"/></svg>Messages<span class="sb-badge">1</span></a>
+    <div class="sb-nav-section">Account</div>
+    <a href="#" class="sb-link"><svg class="sb-link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>Settings</a>
+  </div>
+  <div class="sb-bottom"><a href="frameflow-login.html" class="sb-back-link"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2L4 8l6 6"/></svg>Sign Out</a></div>
+</nav>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left"><h1 id="main-title">Approvals</h1><p id="main-sub">3 posts pending your approval · July 2025</p></div>
+    <div class="topbar-right"><div class="topbar-notif"><div class="notif-dot"></div><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="topbar-avatar">AB</div></div>
+  </div>
+
+  <div class="page-tabs">
+    <div class="page-tab active" id="tab-appr">Approvals <span id="badge-tab" style="background:var(--em);color:var(--iv);font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px">3</span></div>
+    <div class="page-tab" id="tab-lib">Content Library</div>
+  </div>
+
+  <!-- APPROVALS -->
+  <div class="approvals-view" id="approvals-view">
+    <div class="approvals-banner">
+      <div class="ab-left"><div class="ab-dot"></div><div class="ab-text"><strong>3 posts</strong> are waiting for your approval before they can be scheduled.</div></div>
+      <button class="ab-approve-all" id="approve-all-btn">Approve All</button>
+    </div>
+
+    <!-- Card 1 -->
+    <div class="appr-card" id="card-1">
+      <div class="appr-header">
+        <span class="appr-num">#22</span>
+        <div class="appr-platform"><div class="ap-dot" style="background:var(--am)"></div><span class="ap-name">Instagram Feed</span></div>
+        <span class="appr-date">Scheduled: Fri Jul 4 · 10:00 AM</span>
+        <span class="ac-status">Pending Approval</span>
+      </div>
+      <div class="appr-body">
+        <div class="appr-preview"><div class="appr-preview-grid"></div><span class="appr-preview-label">Post Preview</span></div>
+        <div class="appr-info">
+          <div class="appr-title">Summer Sourdough Collection Drop 🌾</div>
+          <div class="appr-caption">"Our new summer sourdough is here — baked fresh every morning with locally sourced grains. Stop by before they sell out ☀️ #AcadiaBakes #Toronto #Sourdough"</div>
+          <div class="appr-meta"><span>Platform: Instagram Feed</span><span>Format: Single Image</span><span>Scheduled: Jul 4</span></div>
+          <div class="appr-actions">
+            <button class="btn-approve" onclick="approveCard('card-1')">✓ Approve</button>
+            <button class="btn-request" onclick="toggleFeedback('card-1')">Request Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="appr-feedback">
+        <input class="feedback-input" placeholder="Describe the change you'd like (e.g. 'Please update the caption to mention our hours')…">
+        <button class="btn-cancel-fb" onclick="toggleFeedback('card-1')">✕</button>
+        <button class="btn-send" onclick="sendFeedback('card-1')">Send →</button>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="appr-card" id="card-2">
+      <div class="appr-header">
+        <span class="appr-num">#23</span>
+        <div class="appr-platform"><div class="ap-dot" style="background:var(--em)"></div><span class="ap-name">Facebook</span></div>
+        <span class="appr-date">Scheduled: Sat Jul 5 · 8:30 AM</span>
+        <span class="ac-status">Pending Approval</span>
+      </div>
+      <div class="appr-body">
+        <div class="appr-preview"><div class="appr-preview-grid"></div><span class="appr-preview-label">Post Preview</span></div>
+        <div class="appr-info">
+          <div class="appr-title">Weekend Special: Croissant & Latte Deal</div>
+          <div class="appr-caption">"This weekend only — grab a croissant + any latte for just $9. Available Saturday & Sunday while supplies last. Tag a friend to bring along! 🥐☕"</div>
+          <div class="appr-meta"><span>Platform: Facebook</span><span>Format: Single Image</span><span>Scheduled: Jul 5</span></div>
+          <div class="appr-actions">
+            <button class="btn-approve" onclick="approveCard('card-2')">✓ Approve</button>
+            <button class="btn-request" onclick="toggleFeedback('card-2')">Request Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="appr-feedback">
+        <input class="feedback-input" placeholder="Describe the change you'd like…">
+        <button class="btn-cancel-fb" onclick="toggleFeedback('card-2')">✕</button>
+        <button class="btn-send" onclick="sendFeedback('card-2')">Send →</button>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="appr-card" id="card-3">
+      <div class="appr-header">
+        <span class="appr-num">#24</span>
+        <div class="appr-platform"><div class="ap-dot" style="background:var(--iv30)"></div><span class="ap-name">TikTok</span></div>
+        <span class="appr-date">Scheduled: Sun Jul 6 · 9:00 AM</span>
+        <span class="ac-status">Pending Approval</span>
+      </div>
+      <div class="appr-body">
+        <div class="appr-preview" style="min-height:180px"><div class="appr-preview-grid"></div><span class="appr-preview-label">Video Preview (0:28)</span></div>
+        <div class="appr-info">
+          <div class="appr-title">Behind-the-scenes: Early morning bake 🎬</div>
+          <div class="appr-caption">"4am starts, the smell of fresh bread, and the rush of the morning bake — this is Acadia Bakes behind the scenes. 🎵 [trending audio]"</div>
+          <div class="appr-meta"><span>Platform: TikTok</span><span>Format: Video · 0:28</span><span>Scheduled: Jul 6</span></div>
+          <div class="appr-actions">
+            <button class="btn-approve" onclick="approveCard('card-3')">✓ Approve</button>
+            <button class="btn-request" onclick="toggleFeedback('card-3')">Request Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="appr-feedback">
+        <input class="feedback-input" placeholder="Describe the change you'd like…">
+        <button class="btn-cancel-fb" onclick="toggleFeedback('card-3')">✕</button>
+        <button class="btn-send" onclick="sendFeedback('card-3')">Send →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="library-view" id="library-view">
+    <div class="lib-controls">
+      <input class="lib-search" placeholder="Search files…">
+      <button class="lib-filter active">All</button>
+      <button class="lib-filter">Images</button>
+      <button class="lib-filter">Videos</button>
+      <button class="lib-filter">Approved</button>
+      <button class="lib-filter">Pending</button>
+      <div class="view-toggle-lib"><button class="vtl-btn active">Grid</button><button class="vtl-btn">List</button></div>
+    </div>
+    <div class="lib-grid">
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div><div class="lib-icon-btn">✓</div></div><div class="lib-info"><div class="lib-platform-tag">Instagram · Feed</div><div class="lib-name">Sourdough_Collection_July.jpg</div><div class="lib-meta"><span class="lib-date">Jul 3, 2025</span><span class="lib-status ls-pending">Pending</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div><div class="lib-icon-btn">✓</div></div><div class="lib-info"><div class="lib-platform-tag">Facebook · Post</div><div class="lib-name">Croissant_Weekend_Deal.jpg</div><div class="lib-meta"><span class="lib-date">Jul 3, 2025</span><span class="lib-status ls-pending">Pending</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Video</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">▶</div><div class="lib-icon-btn">↓</div><div class="lib-icon-btn">✓</div></div><div class="lib-info"><div class="lib-platform-tag">TikTok · Reel</div><div class="lib-name">BTS_Morning_Bake_0628.mp4</div><div class="lib-meta"><span class="lib-date">Jul 3, 2025</span><span class="lib-status ls-pending">Pending</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div></div><div class="lib-info"><div class="lib-platform-tag">Instagram · Feed</div><div class="lib-name">Customer_Spotlight_Jane.jpg</div><div class="lib-meta"><span class="lib-date">Jun 30, 2025</span><span class="lib-status ls-approved">Approved</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div></div><div class="lib-info"><div class="lib-platform-tag">Instagram · Feed</div><div class="lib-name">Croissant_CloseUp_v2.jpg</div><div class="lib-meta"><span class="lib-date">Jun 28, 2025</span><span class="lib-status ls-approved">Approved</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Video</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">▶</div><div class="lib-icon-btn">↓</div></div><div class="lib-info"><div class="lib-platform-tag">TikTok · Reel</div><div class="lib-name">How_We_Bake_Reel.mp4</div><div class="lib-meta"><span class="lib-date">Jun 24, 2025</span><span class="lib-status ls-approved">Approved</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div></div><div class="lib-info"><div class="lib-platform-tag">Instagram · Story</div><div class="lib-name">Summer_Menu_Announcement.jpg</div><div class="lib-meta"><span class="lib-date">Jun 20, 2025</span><span class="lib-status ls-approved">Approved</span></div></div></div>
+      <div class="lib-card"><div class="lib-thumb"><div class="lib-thumb-grid"></div><span class="lib-thumb-type">Image</span></div><div class="lib-card-overlay"><div class="lib-icon-btn">👁</div><div class="lib-icon-btn">↓</div></div><div class="lib-info"><div class="lib-platform-tag">Facebook · Post</div><div class="lib-name">Staff_Picks_June.jpg</div><div class="lib-meta"><span class="lib-date">Jun 16, 2025</span><span class="lib-status ls-needs">Needs Edit</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+// tabs
+document.getElementById('tab-appr').addEventListener('click',()=>{
+  document.getElementById('tab-appr').classList.add('active');document.getElementById('tab-lib').classList.remove('active');
+  document.getElementById('approvals-view').style.display='flex';document.getElementById('library-view').style.display='none';
+  document.getElementById('main-title').textContent='Approvals';document.getElementById('main-sub').textContent='3 posts pending your approval · July 2025';
+  document.getElementById('appr-nav').classList.add('active');document.getElementById('lib-nav').classList.remove('active');
+});
+document.getElementById('tab-lib').addEventListener('click',()=>{
+  document.getElementById('tab-lib').classList.add('active');document.getElementById('tab-appr').classList.remove('active');
+  document.getElementById('library-view').style.display='flex';document.getElementById('approvals-view').style.display='none';
+  document.getElementById('main-title').textContent='Content Library';document.getElementById('main-sub').textContent='All uploaded assets for Acadia Bakes';
+  document.getElementById('lib-nav').classList.add('active');document.getElementById('appr-nav').classList.remove('active');
+});
+// sidebar routing
+document.getElementById('appr-nav').addEventListener('click',e=>{e.preventDefault();document.getElementById('tab-appr').click()});
+document.getElementById('lib-nav').addEventListener('click',e=>{e.preventDefault();document.getElementById('tab-lib').click()});
+
+let pendingCount=3;
+function approveCard(id){
+  const card=document.getElementById(id);
+  card.style.transition='opacity .4s,transform .4s';
+  card.style.opacity='0';card.style.transform='translateX(20px)';
+  setTimeout(()=>{card.remove();pendingCount--;document.getElementById('appr-badge').textContent=pendingCount;document.getElementById('badge-tab').textContent=pendingCount;document.getElementById('main-sub').textContent=pendingCount+' posts pending your approval · July 2025';if(pendingCount===0){document.getElementById('approvals-view').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:60px;text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:var(--am20);border:1px solid var(--am);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--am)">✓</div><div style="font-family:var(--D);font-size:22px;font-weight:700;color:var(--iv)">All caught up!</div><div style="font-size:14px;color:var(--iv60);font-weight:300;max-width:320px;line-height:1.7">All posts have been approved. FrameFlow will now schedule them at the times shown.</div></div>'}},420);
+}
+function toggleFeedback(id){const card=document.getElementById(id);card.classList.toggle('expanded')}
+function sendFeedback(id){const card=document.getElementById(id);const input=card.querySelector('.feedback-input');if(!input.value.trim())return;input.value='';card.classList.remove('expanded');const status=card.querySelector('.ac-status');status.style.background='var(--em15)';status.style.color='var(--em)';status.style.borderColor='rgba(212,89,56,.25)';status.textContent='Edit Requested'}
+document.getElementById('approve-all-btn').addEventListener('click',()=>{['card-1','card-2','card-3'].forEach((id,i)=>setTimeout(()=>{const c=document.getElementById(id);if(c)approveCard(id)},i*200))});
+document.querySelectorAll('.lib-filter').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.lib-filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active')})});
+</script>
+</body>
+</html>
