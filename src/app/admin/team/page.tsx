@@ -64,7 +64,7 @@ const teamMembers = [
 ];
 
 const roleBadgeStyles: Record<string, string> = {
-  Admin: "bg-crimson text-ivory",
+  Admin: "bg-amber text-graphite",
   Manager: "bg-amber-10 text-amber",
   Member: "bg-ivory-05 text-ivory-30",
 };

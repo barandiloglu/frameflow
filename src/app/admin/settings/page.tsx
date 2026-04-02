@@ -192,8 +192,8 @@ export default function SettingsPage() {
         </div>
 
         {/* Section 4: Danger Zone */}
-        <div className="rounded-[2px] border border-ember/20 bg-ivory-05/50 overflow-hidden">
-          <div className="px-5 py-4 border-b border-ember/20">
+        <div className="rounded-[2px] border border-amber/20 bg-ivory-05/50 overflow-hidden">
+          <div className="px-5 py-4 border-b border-amber/20">
             <h2 className="font-display font-semibold text-sm text-ivory">Danger Zone</h2>
           </div>
           <div className="px-5 py-5 flex items-center justify-between">
@@ -201,7 +201,7 @@ export default function SettingsPage() {
               <p className="text-sm font-body font-semibold text-ivory">Delete Workspace</p>
               <p className="text-xs font-body text-ivory-30 mt-0.5">Permanently delete all data</p>
             </div>
-            <button className="h-8 px-4 rounded-[2px] bg-ember text-ivory text-xs font-body font-semibold hover:bg-ember/90 transition-colors">
+            <button className="h-8 px-4 rounded-[2px] bg-amber text-graphite text-xs font-body font-semibold hover:bg-amber/90 transition-colors">
               Delete
             </button>
           </div>

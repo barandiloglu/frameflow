@@ -203,13 +203,13 @@ export default function ContactPage() {
         </div>
 
         {/* ── Right: Info ── */}
-        <div className="bg-crimson px-6 md:px-[52px] py-[72px]">
+        <div className="bg-surface-alt px-6 md:px-[52px] py-[72px]">
           <Reveal>
             <div className="flex items-center gap-4 mb-10">
-              <span className="font-body text-[11px] uppercase tracking-[0.18em] text-ivory-60">
+              <span className="font-body text-[11px] uppercase tracking-[0.18em] text-on-alt-60">
                 Contact Details
               </span>
-              <span className="flex-1 h-px bg-ivory-10" />
+              <span className="flex-1 h-px bg-on-alt-10" />
             </div>
           </Reveal>
 
@@ -259,11 +259,11 @@ export default function ContactPage() {
 
           {/* Map placeholder */}
           <Reveal delay={0.25}>
-            <div className="mt-10 border border-ivory-10 rounded-sm aspect-[16/9] flex flex-col items-center justify-center bg-ivory-05/5">
-              <span className="font-display text-[18px] font-[700] text-ivory mb-1">
+            <div className="mt-10 border border-on-alt-10 rounded-sm aspect-[16/9] flex flex-col items-center justify-center bg-on-alt-05">
+              <span className="font-display text-[18px] font-[700] text-on-alt mb-1">
                 Toronto, Canada
               </span>
-              <span className="font-body text-[13px] text-ivory-30">
+              <span className="font-body text-[13px] text-on-alt-30">
                 99 Yorkville Ave
               </span>
             </div>
@@ -505,12 +505,12 @@ function InfoBlock({
 }) {
   return (
     <Reveal delay={delay}>
-      <div className={`py-6 ${!last ? "border-b border-ivory-10" : ""}`}>
-        <span className="font-body text-[10px] uppercase tracking-[0.16em] text-ivory-30 block mb-2">
+      <div className={`py-6 ${!last ? "border-b border-on-alt-10" : ""}`}>
+        <span className="font-body text-[10px] uppercase tracking-[0.16em] text-on-alt-30 block mb-2">
           {title}
         </span>
-        <p className="font-body text-[15px] text-ivory leading-[1.7] mb-1">{main}</p>
-        <p className="font-body text-[12px] text-ivory-30">{sub}</p>
+        <p className="font-body text-[15px] text-on-alt leading-[1.7] mb-1">{main}</p>
+        <p className="font-body text-[12px] text-on-alt-30">{sub}</p>
       </div>
     </Reveal>
   );

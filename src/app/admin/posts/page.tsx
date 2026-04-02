@@ -41,7 +41,7 @@ function getPlatformDotColor(platform: Platform): string {
     case "Instagram":
       return "bg-amber";
     case "Facebook":
-      return "bg-ember";
+      return "bg-ivory-30";
     case "TikTok":
       return "bg-ivory-60";
   }
@@ -56,7 +56,7 @@ function getStatusStyle(status: Status): string {
     case "Draft":
       return "bg-ivory-05 text-ivory-30";
     case "Needs Review":
-      return "bg-ember-15 text-ember";
+      return "bg-amber-10 text-amber";
   }
 }
 

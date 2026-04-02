@@ -20,7 +20,7 @@ const activities = [
 const plans = [
   { name: "Growth Plan", count: 5, width: "42%", barColor: "bg-amber" },
   { name: "Starter Plan", count: 4, width: "33%", barColor: "bg-ivory-30" },
-  { name: "Enterprise", count: 3, width: "25%", barColor: "bg-crimson" },
+  { name: "Enterprise", count: 3, width: "25%", barColor: "bg-ivory-30" },
 ];
 
 export default function AdminDashboardPage() {
@@ -39,7 +39,7 @@ export default function AdminDashboardPage() {
               <path d="M10 2C7.24 2 5 4.24 5 7V10.5L3.5 13H16.5L15 10.5V7C15 4.24 12.76 2 10 2Z" stroke="currentColor" strokeWidth="1.5" className="text-ivory-60" strokeLinejoin="round" />
               <path d="M8 15C8 16.1 8.9 17 10 17C11.1 17 12 16.1 12 15" stroke="currentColor" strokeWidth="1.5" className="text-ivory-60" strokeLinecap="round" />
             </svg>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-ember" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber" />
           </button>
           {/* Search */}
           <div className="relative">

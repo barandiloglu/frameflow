@@ -158,7 +158,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(to right, var(--color-crimson-15) 1px, transparent 1px), linear-gradient(to bottom, var(--color-crimson-15) 1px, transparent 1px)",
+              "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
             backgroundSize: "80px 80px",
             maskImage:
               "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
@@ -231,7 +231,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/portfolio"
-                className="font-body text-[13px] font-medium tracking-[0.06em] uppercase border border-crimson text-on-surface py-[13px] px-8 rounded-[1px] no-underline transition-colors duration-200 hover:border-amber hover:text-amber"
+                className="font-body text-[13px] font-medium tracking-[0.06em] uppercase border border-amber/30 text-on-surface py-[13px] px-8 rounded-[1px] no-underline transition-colors duration-200 hover:border-amber hover:text-amber"
               >
                 See Our Work
               </Link>
@@ -295,7 +295,7 @@ export default function Home() {
               key={i}
               className="flex items-center gap-3 whitespace-nowrap px-8 font-body text-[14px] font-light tracking-[0.04em] text-on-alt"
             >
-              <span className="inline-block h-[6px] w-[6px] rounded-full bg-crimson" />
+              <span className="inline-block h-[6px] w-[6px] rounded-full bg-amber" />
               {name}
             </span>
           ))}
@@ -368,7 +368,191 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  7. CTA                                                      */}
+      {/*  7. CLIENT PORTAL PROMO                                      */}
+      {/* ============================================================ */}
+      <section className="bg-surface py-[100px] px-6 md:px-[52px] border-t border-border-subtle">
+        <div className="max-w-[1320px] mx-auto">
+          {/* Header */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-12 mb-16">
+            <Reveal direction="up">
+              <div>
+                <div className="flex items-center gap-4 mb-5">
+                  <span className="block w-8 h-px bg-amber" />
+                  <span className="font-body text-[11px] uppercase tracking-[0.22em] text-on-surface-60">
+                    Client Portal
+                  </span>
+                </div>
+                <h2 className="font-display text-[clamp(36px,4vw,52px)] font-[800] text-on-surface leading-[1.08]">
+                  Your Projects,{" "}
+                  <span className="italic text-amber">Always</span> Within Reach.
+                </h2>
+              </div>
+            </Reveal>
+            <Reveal direction="up" delay={0.1}>
+              <div className="flex flex-col justify-end">
+                <p className="font-body text-[15px] font-light leading-[1.75] text-on-surface-60 max-w-[480px]">
+                  Every client gets access to a private dashboard — track progress,
+                  approve content, view analytics, and communicate with your team, all
+                  in one place. No more scattered emails or missed messages.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Dashboard Preview */}
+          <Reveal direction="up" delay={0.15}>
+            <div className="rounded-[3px] border border-border-subtle overflow-hidden">
+              {/* Mock title bar */}
+              <div className="flex items-center gap-2 px-5 py-3 bg-on-surface-05 border-b border-border-subtle">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber" />
+                <span className="w-2.5 h-2.5 rounded-full bg-on-surface-10" />
+                <span className="w-2.5 h-2.5 rounded-full bg-on-surface-10" />
+                <span className="ml-4 font-body text-[11px] text-on-surface-30 tracking-wide">dashboard.frameflow.ca</span>
+              </div>
+
+              {/* Mock dashboard content */}
+              <div className="bg-on-surface-05/50 p-6 md:p-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    { label: "Total Posts", value: "24", sub: "This month" },
+                    { label: "Pending Review", value: "3", sub: "Awaiting approval" },
+                    { label: "Approved", value: "18", sub: "On schedule" },
+                    { label: "Engagement", value: "4.8%", sub: "+0.6% this period" },
+                  ].map((stat, i) => (
+                    <div key={i} className="rounded-[2px] border border-border-faint bg-surface p-4">
+                      <p className="text-[10px] font-body text-on-surface-30 mb-1">{stat.label}</p>
+                      <p className="font-display font-bold text-2xl text-on-surface">{stat.value}</p>
+                      <p className="text-[10px] font-body text-on-surface-30 mt-0.5">{stat.sub}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-4">
+                  {/* Mock post list */}
+                  <div className="rounded-[2px] border border-border-faint bg-surface overflow-hidden">
+                    <div className="px-4 py-3 border-b border-border-faint">
+                      <span className="font-display font-semibold text-[13px] text-on-surface">Upcoming Posts</span>
+                    </div>
+                    {[
+                      { title: "Summer Menu Feature", platform: "Instagram", status: "Pending" },
+                      { title: "Client Testimonial", platform: "Facebook", status: "Approved" },
+                      { title: "Behind the Scenes", platform: "Instagram", status: "Draft" },
+                    ].map((post, i) => (
+                      <div key={i} className="flex items-center justify-between px-4 py-2.5 border-b border-border-faint last:border-b-0">
+                        <div className="flex items-center gap-3">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+                          <div>
+                            <p className="text-[12px] font-body text-on-surface">{post.title}</p>
+                            <p className="text-[10px] font-body text-on-surface-30">{post.platform}</p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-body font-semibold text-on-surface-30 bg-on-surface-05 px-2 py-0.5 rounded-full">
+                          {post.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Mock activity */}
+                  <div className="rounded-[2px] border border-border-faint bg-surface overflow-hidden">
+                    <div className="px-4 py-3 border-b border-border-faint">
+                      <span className="font-display font-semibold text-[13px] text-on-surface">Activity</span>
+                    </div>
+                    {[
+                      "Post moved to Pending Review",
+                      "Testimonial carousel approved",
+                      "New brand assets uploaded",
+                      "Weekly report generated",
+                    ].map((activity, i) => (
+                      <div key={i} className="flex items-start gap-2.5 px-4 py-2.5 border-b border-border-faint last:border-b-0">
+                        <span className="mt-1.5 w-1 h-1 rounded-full bg-on-surface-10 shrink-0" />
+                        <p className="text-[11px] font-body text-on-surface-60 leading-snug">{activity}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Feature highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+            {[
+              {
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 11L12 14L22 4" />
+                    <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" />
+                  </svg>
+                ),
+                title: "Content Approvals",
+                desc: "Review, approve, or request changes on every post before it goes live.",
+              },
+              {
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <path d="M16 2V6" />
+                    <path d="M8 2V6" />
+                    <path d="M3 10H21" />
+                  </svg>
+                ),
+                title: "Calendar View",
+                desc: "See your full content schedule at a glance — organized by platform and date.",
+              },
+              {
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 20V10" />
+                    <path d="M12 20V4" />
+                    <path d="M6 20V14" />
+                  </svg>
+                ),
+                title: "Real-Time Analytics",
+                desc: "Track impressions, engagement, and growth across all your platforms.",
+              },
+              {
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V15" />
+                    <path d="M7 10L12 15L17 10" />
+                    <path d="M12 15V3" />
+                  </svg>
+                ),
+                title: "File & Asset Library",
+                desc: "Access all your brand assets, deliverables, and media files in one hub.",
+              },
+            ].map((feature, i) => (
+              <Reveal key={i} direction="up" delay={i * 0.08}>
+                <div className="p-6 rounded-[2px] border border-border-subtle hover:border-amber/30 transition-colors duration-300">
+                  <span className="text-amber mb-4 block">{feature.icon}</span>
+                  <h3 className="font-display text-[16px] font-[700] text-on-surface mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                    {feature.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Portal CTA */}
+          <Reveal direction="up" delay={0.1}>
+            <div className="mt-12 text-center">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2.5 font-body text-[13px] font-medium tracking-[0.06em] uppercase bg-amber text-graphite py-[14px] px-10 rounded-[1px] no-underline transition-colors duration-200 hover:bg-[#e09f3a]"
+              >
+                Explore the Portal &rarr;
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  8. CTA                                                      */}
       {/* ============================================================ */}
       <section className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr]">
         {/* Left */}
@@ -390,7 +574,7 @@ export default function Home() {
         </div>
 
         {/* Right */}
-        <div className="flex flex-col justify-center bg-crimson px-6 md:px-[52px] py-[80px]">
+        <div className="flex flex-col justify-center bg-surface-alt px-6 md:px-[52px] py-[80px]">
           <Reveal direction="right">
             <div className="flex flex-col gap-8">
               {[
@@ -409,14 +593,14 @@ export default function Home() {
                 },
               ].map((item, i, arr) => (
                 <div key={i}>
-                  <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-ivory-60">
+                  <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
                     {item.label}
                   </p>
-                  <p className="font-body text-[14px] font-light leading-[1.7] text-ivory">
+                  <p className="font-body text-[14px] font-light leading-[1.7] text-on-alt">
                     {item.value}
                   </p>
                   {i < arr.length - 1 && (
-                    <div className="mt-8 h-[1px] w-full bg-ivory-10" />
+                    <div className="mt-8 h-[1px] w-full bg-on-alt-10" />
                   )}
                 </div>
               ))}
@@ -551,12 +735,12 @@ function WhyBlock({
         style={{
           backgroundImage: section.flipped
             ? "linear-gradient(rgba(53,50,48,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(53,50,48,0.06) 1px, transparent 1px)"
-            : "linear-gradient(to right, var(--color-crimson-15) 1px, transparent 1px), linear-gradient(to bottom, var(--color-crimson-15) 1px, transparent 1px)",
+            : "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
       {/* Amber accent line */}
-      <span className={`absolute top-10 left-10 block h-[1px] w-[48px] ${section.flipped ? "bg-crimson" : "bg-amber"}`} />
+      <span className={`absolute top-10 left-10 block h-[1px] w-[48px] ${section.flipped ? "bg-amber" : "bg-amber"}`} />
       {/* Tag */}
       <span className={`absolute top-10 left-[76px] font-body text-[10px] font-light tracking-[0.2em] uppercase ${
         section.flipped ? "text-on-alt-20" : "text-on-surface-30"

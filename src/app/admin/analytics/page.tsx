@@ -44,7 +44,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "68%", engagement: "5.2%", impressions: "189K", borderColor: "border-amber", barPercent: 68 },
-      { name: "Facebook", posts: "22%", engagement: "3.8%", impressions: "64K", borderColor: "border-ember", barPercent: 22 },
+      { name: "Facebook", posts: "22%", engagement: "3.8%", impressions: "64K", borderColor: "border-ivory-30", barPercent: 22 },
       { name: "TikTok", posts: "10%", engagement: "9.1%", impressions: "31K", borderColor: "border-ivory-60", barPercent: 10 },
     ],
   },
@@ -64,7 +64,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "60%", engagement: "6.8%", impressions: "98K", borderColor: "border-amber", barPercent: 60 },
-      { name: "Facebook", posts: "25%", engagement: "4.1%", impressions: "38K", borderColor: "border-ember", barPercent: 25 },
+      { name: "Facebook", posts: "25%", engagement: "4.1%", impressions: "38K", borderColor: "border-ivory-30", barPercent: 25 },
       { name: "TikTok", posts: "15%", engagement: "10.5%", impressions: "20K", borderColor: "border-ivory-60", barPercent: 15 },
     ],
   },
@@ -84,7 +84,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "75%", engagement: "5.6%", impressions: "36K", borderColor: "border-amber", barPercent: 75 },
-      { name: "Facebook", posts: "15%", engagement: "3.4%", impressions: "7K", borderColor: "border-ember", barPercent: 15 },
+      { name: "Facebook", posts: "15%", engagement: "3.4%", impressions: "7K", borderColor: "border-ivory-30", barPercent: 15 },
       { name: "TikTok", posts: "10%", engagement: "8.4%", impressions: "5K", borderColor: "border-ivory-60", barPercent: 10 },
     ],
   },
@@ -104,7 +104,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "55%", engagement: "5.5%", impressions: "16K", borderColor: "border-amber", barPercent: 55 },
-      { name: "Facebook", posts: "45%", engagement: "3.8%", impressions: "12K", borderColor: "border-ember", barPercent: 45 },
+      { name: "Facebook", posts: "45%", engagement: "3.8%", impressions: "12K", borderColor: "border-ivory-30", barPercent: 45 },
       { name: "TikTok", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-60", barPercent: 0 },
     ],
   },
@@ -124,7 +124,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "70%", engagement: "7.4%", impressions: "23K", borderColor: "border-amber", barPercent: 70 },
-      { name: "Facebook", posts: "10%", engagement: "3.5%", impressions: "3K", borderColor: "border-ember", barPercent: 10 },
+      { name: "Facebook", posts: "10%", engagement: "3.5%", impressions: "3K", borderColor: "border-ivory-30", barPercent: 10 },
       { name: "TikTok", posts: "20%", engagement: "12.8%", impressions: "6K", borderColor: "border-ivory-60", barPercent: 20 },
     ],
   },
@@ -144,7 +144,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "65%", engagement: "4.5%", impressions: "14K", borderColor: "border-amber", barPercent: 65 },
-      { name: "Facebook", posts: "20%", engagement: "2.8%", impressions: "4K", borderColor: "border-ember", barPercent: 20 },
+      { name: "Facebook", posts: "20%", engagement: "2.8%", impressions: "4K", borderColor: "border-ivory-30", barPercent: 20 },
       { name: "TikTok", posts: "15%", engagement: "7.3%", impressions: "3K", borderColor: "border-ivory-60", barPercent: 15 },
     ],
   },
@@ -153,7 +153,7 @@ const analyticsData: Record<string, ClientAnalytics> = {
 const platformDotColors: Record<string, string> = {
   Instagram: "bg-amber",
   TikTok: "bg-ivory-60",
-  Facebook: "bg-ember",
+  Facebook: "bg-ivory-30",
 };
 
 function getClientData(client: string): ClientAnalytics {
@@ -168,7 +168,7 @@ function getClientData(client: string): ClientAnalytics {
     topPosts: [],
     platforms: [
       { name: "Instagram", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-amber", barPercent: 0 },
-      { name: "Facebook", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ember", barPercent: 0 },
+      { name: "Facebook", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-30", barPercent: 0 },
       { name: "TikTok", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-60", barPercent: 0 },
     ],
   };
@@ -336,7 +336,7 @@ export default function AnalyticsPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
-                  className={`text-xs font-body mt-1 ${s.positive ? "text-[#4ade80]" : "text-ember"}`}
+                  className={`text-xs font-body mt-1 ${s.positive ? "text-[#4ade80]" : "text-ivory-60"}`}
                 >
                   {s.change} <span className="text-ivory-30">vs last period</span>
                 </motion.p>

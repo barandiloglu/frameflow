@@ -23,14 +23,14 @@ const postsByDate: Record<number, Post[]> = {
 
 const platformStyles: Record<string, { border: string; bg: string; dot: string }> = {
   ig: { border: "border-l-amber", bg: "bg-amber-10", dot: "bg-amber" },
-  fb: { border: "border-l-ember", bg: "bg-ember-15", dot: "bg-ember" },
+  fb: { border: "border-l-ivory-30", bg: "bg-ivory-10", dot: "bg-ivory-30" },
   tk: { border: "border-l-ivory-60", bg: "bg-ivory-05", dot: "bg-ivory-60" },
 };
 
 const statusDots: Record<string, string> = {
   pending: "bg-amber",
   approved: "bg-green-500",
-  needs: "bg-ember",
+  needs: "bg-amber",
 };
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

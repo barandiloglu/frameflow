@@ -4,12 +4,12 @@ const stats = [
   { label: "Total Posts", value: "24", sub: "This month", badge: null, badgeColor: "" },
   { label: "Pending Review", value: "3", sub: null, badge: "3 awaiting", badgeColor: "bg-amber-20 text-amber" },
   { label: "Approved", value: "18", sub: null, badge: "on schedule", badgeColor: "bg-ivory-10 text-ivory-60" },
-  { label: "Needs Edits", value: "2", sub: null, badge: "action needed", badgeColor: "bg-ember-15 text-ember" },
+  { label: "Needs Edits", value: "2", sub: null, badge: "action needed", badgeColor: "bg-amber-10 text-amber" },
 ];
 
 const posts = [
   { platform: "Instagram", color: "bg-amber", title: "Summer Menu Feature", date: "Jul 3", status: "Pending" },
-  { platform: "Facebook", color: "bg-ember", title: "Client Testimonial Carousel", date: "Jul 4", status: "Approved" },
+  { platform: "Facebook", color: "bg-ivory-30", title: "Client Testimonial Carousel", date: "Jul 4", status: "Approved" },
   { platform: "Instagram", color: "bg-amber", title: "Behind the Scenes Reel", date: "Jul 5", status: "Needs Edits" },
   { platform: "TikTok", color: "bg-ivory", title: "Recipe Short — Croissant", date: "Jul 7", status: "Draft" },
   { platform: "Instagram", color: "bg-amber", title: "Weekend Special Promo", date: "Jul 8", status: "Pending" },
@@ -28,8 +28,8 @@ function statusPill(status: string) {
   const map: Record<string, string> = {
     Pending: "bg-amber-20 text-amber",
     Approved: "bg-ivory-10 text-ivory",
-    "Needs Edits": "bg-ember-15 text-ember",
-    Draft: "bg-crimson-30 text-crimson",
+    "Needs Edits": "bg-amber-10 text-amber",
+    Draft: "bg-ivory-05 text-ivory-30",
   };
   return map[status] || "bg-ivory-10 text-ivory-60";
 }
@@ -50,7 +50,7 @@ export default function DashboardPage() {
               <path d="M10 2C7.24 2 5 4.24 5 7V10.5L3.5 13H16.5L15 10.5V7C15 4.24 12.76 2 10 2Z" stroke="currentColor" strokeWidth="1.5" className="text-ivory-60" strokeLinejoin="round" />
               <path d="M8 15C8 16.1 8.9 17 10 17C11.1 17 12 16.1 12 15" stroke="currentColor" strokeWidth="1.5" className="text-ivory-60" strokeLinecap="round" />
             </svg>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-ember" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber" />
           </button>
           {/* Avatar */}
           <div className="w-9 h-9 rounded-full bg-amber-20 flex items-center justify-center">

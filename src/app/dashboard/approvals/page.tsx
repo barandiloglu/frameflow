@@ -30,7 +30,7 @@ const cards: ApprovalCard[] = [
   {
     id: "#SMM-042",
     platform: "Facebook",
-    platformColor: "bg-ember",
+    platformColor: "bg-ivory-30",
     date: "Jul 4",
     title: "Client Testimonial Carousel",
     caption:
@@ -56,7 +56,7 @@ function statusPillClass(status: string) {
     case "Approved":
       return "bg-ivory-10 text-ivory";
     case "Needs Revision":
-      return "bg-ember-15 text-ember";
+      return "bg-amber-10 text-amber";
     default:
       return "bg-ivory-10 text-ivory-60";
   }
@@ -190,7 +190,7 @@ export default function ApprovalsPage() {
                       className="w-full h-24 px-3 py-2 text-sm font-body rounded-[1px] bg-graphite border border-ivory-10 text-ivory placeholder:text-ivory-30 focus:outline-none focus:border-amber resize-none"
                     />
                     <div className="flex items-center gap-2">
-                      <button className="px-4 py-1.5 text-xs font-body font-semibold rounded-[1px] bg-ember text-ivory hover:brightness-110 transition">
+                      <button className="px-4 py-1.5 text-xs font-body font-semibold rounded-[1px] bg-amber text-graphite hover:brightness-110 transition">
                         Submit Feedback
                       </button>
                       <button

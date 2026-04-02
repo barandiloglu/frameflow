@@ -98,7 +98,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="h-screen overflow-hidden flex flex-row bg-graphite">
       {/* Sidebar */}
       <aside
-        className="w-[240px] shrink-0 flex flex-col border-r border-crimson-30"
+        className="w-[240px] shrink-0 flex flex-col border-r border-ivory-10"
         style={{ background: "rgba(30,28,27,1)" }}
       >
         {/* Logo */}
@@ -149,7 +149,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <span className="shrink-0">{item.icon}</span>
                         <span className="flex-1">{item.name}</span>
                         {item.badge && (
-                          <span className="w-5 h-5 rounded-full bg-ember text-ivory text-[10px] font-semibold flex items-center justify-center">
+                          <span className="w-5 h-5 rounded-full bg-amber text-graphite text-[10px] font-semibold flex items-center justify-center">
                             {item.badge}
                           </span>
                         )}

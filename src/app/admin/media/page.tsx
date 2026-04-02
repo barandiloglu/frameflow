@@ -54,11 +54,11 @@ function getCategoryBadgeStyle(category: FileCategory): string {
     case "Image":
       return "bg-amber-10 text-amber";
     case "Video":
-      return "bg-ember-15 text-ember";
+      return "bg-amber-10 text-amber";
     case "Document":
       return "bg-ivory-05 text-ivory-30";
     case "Brand Asset":
-      return "bg-crimson-30 text-crimson";
+      return "bg-ivory-05 text-ivory-60";
   }
 }
 

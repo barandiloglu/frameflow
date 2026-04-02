@@ -32,7 +32,7 @@ function planBadgeClass(plan: string) {
     case "Growth Plan":
       return "bg-ivory-10 text-ivory";
     case "Starter Plan":
-      return "bg-crimson-30 text-ivory-60";
+      return "bg-ivory-05 text-ivory-30";
     default:
       return "bg-ivory-10 text-ivory-60";
   }

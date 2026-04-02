@@ -26,13 +26,13 @@ export default function LoginPage() {
   return (
     <div className="h-screen w-screen overflow-hidden flex">
       {/* ── Left Panel ── */}
-      <div className="relative hidden lg:flex w-[52%] bg-graphite border-r border-crimson-30 flex-col overflow-hidden">
+      <div className="relative hidden lg:flex w-[52%] bg-graphite border-r border-ivory-10 flex-col overflow-hidden">
         {/* Grid overlay */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(to right, rgba(137,47,42,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(137,47,42,0.15) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(211,143,44,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(211,143,44,0.1) 1px, transparent 1px)",
             backgroundSize: "64px 64px",
           }}
         />
@@ -110,7 +110,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right Panel ── */}
-      <div className="relative w-full lg:flex-1 bg-crimson flex items-center justify-center overflow-hidden">
+      <div className="relative w-full lg:flex-1 bg-graphite flex items-center justify-center overflow-hidden">
         {/* Grid overlay */}
         <div
           className="pointer-events-none absolute inset-0"
@@ -129,7 +129,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 w-full max-w-[420px] mx-6 bg-graphite border border-crimson-30 rounded-[3px] p-9"
+          className="relative z-10 w-full max-w-[420px] mx-6 bg-graphite border border-ivory-10 rounded-[3px] p-9"
         >
           {/* Tag */}
           <div className="flex items-center gap-3 mb-5">
@@ -166,7 +166,7 @@ export default function LoginPage() {
                 onFocus={() => setEmailFocused(true)}
                 onBlur={() => setEmailFocused(false)}
                 placeholder="you@company.com"
-                className="w-full h-[46px] px-3.5 text-[14px] font-body font-light text-ivory bg-ivory-05 border border-crimson-30 rounded-[2px] outline-none placeholder:text-ivory-10 transition-all duration-200 focus:border-amber focus:bg-amber-20"
+                className="w-full h-[46px] px-3.5 text-[14px] font-body font-light text-ivory bg-ivory-05 border border-ivory-10 rounded-[2px] outline-none placeholder:text-ivory-10 transition-all duration-200 focus:border-amber focus:bg-amber-20"
               />
             </div>
 
@@ -187,7 +187,7 @@ export default function LoginPage() {
                 onFocus={() => setPasswordFocused(true)}
                 onBlur={() => setPasswordFocused(false)}
                 placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
-                className="w-full h-[46px] px-3.5 text-[14px] font-body font-light text-ivory bg-ivory-05 border border-crimson-30 rounded-[2px] outline-none placeholder:text-ivory-10 transition-all duration-200 focus:border-amber focus:bg-amber-20"
+                className="w-full h-[46px] px-3.5 text-[14px] font-body font-light text-ivory bg-ivory-05 border border-ivory-10 rounded-[2px] outline-none placeholder:text-ivory-10 transition-all duration-200 focus:border-amber focus:bg-amber-20"
               />
             </div>
 
@@ -198,7 +198,7 @@ export default function LoginPage() {
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
-                  className="w-3.5 h-3.5 accent-amber rounded-none border border-crimson-30 bg-ivory-05"
+                  className="w-3.5 h-3.5 accent-amber rounded-none border border-ivory-10 bg-ivory-05"
                 />
                 <span className="text-[11.5px] text-ivory-30 font-body font-light">
                   Remember me
@@ -249,11 +249,11 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
-            <span className="flex-1 h-[1px] bg-crimson-30" />
+            <span className="flex-1 h-[1px] bg-ivory-10" />
             <span className="text-[10px] uppercase tracking-[0.14em] text-ivory-10 font-body">
               New client?
             </span>
-            <span className="flex-1 h-[1px] bg-crimson-30" />
+            <span className="flex-1 h-[1px] bg-ivory-10" />
           </div>
 
           {/* Contact note */}

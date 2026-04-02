@@ -58,7 +58,7 @@ interface PostItem {
 
 const posts: PostItem[] = [
   { title: "Summer Menu Feature", platform: "Instagram", platformColor: "bg-amber", date: "Jul 3", status: "Pending" },
-  { title: "Client Testimonial Carousel", platform: "Facebook", platformColor: "bg-ember", date: "Jul 4", status: "Approved" },
+  { title: "Client Testimonial Carousel", platform: "Facebook", platformColor: "bg-ivory-30", date: "Jul 4", status: "Approved" },
   { title: "Behind the Scenes Reel", platform: "Instagram", platformColor: "bg-amber", date: "Jul 5", status: "Needs Edits" },
   { title: "Recipe Short — Croissant", platform: "TikTok", platformColor: "bg-ivory", date: "Jul 7", status: "Draft" },
   { title: "Weekend Special Promo", platform: "Instagram", platformColor: "bg-amber", date: "Jul 8", status: "Pending" },
@@ -71,9 +71,9 @@ function statusPillClass(status: string) {
     case "Approved":
       return "bg-ivory-10 text-ivory";
     case "Needs Edits":
-      return "bg-ember-15 text-ember";
+      return "bg-amber-10 text-amber";
     case "Draft":
-      return "bg-crimson-30 text-ivory-30";
+      return "bg-ivory-05 text-ivory-30";
     default:
       return "bg-ivory-10 text-ivory-60";
   }

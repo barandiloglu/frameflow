@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Syne, Outfit } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
-import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const syne = Syne({
-  variable: "--font-display",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--ff-display",
   subsets: ["latin"],
   weight: ["400", "600", "700", "800"],
 });
 
-const outfit = Outfit({
-  variable: "--font-body",
+const inter = Inter({
+  variable: "--ff-body",
   subsets: ["latin"],
   weight: ["300", "400", "500"],
 });
@@ -35,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${outfit.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${jakarta.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script
@@ -46,7 +45,6 @@ export default function RootLayout({
       </head>
       <body className="font-body">
         <ThemeProvider>
-          <CustomCursor />
           <ScrollProgress />
           <ScrollToTop />
           <GrainOverlay />

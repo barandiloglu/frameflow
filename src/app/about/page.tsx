@@ -311,8 +311,8 @@ export default function AboutPage() {
               <Reveal key={item.year} delay={i * 0.1}>
                 <div className="relative mb-10 last:mb-0">
                   {/* Dot */}
-                  <span className="absolute -left-[41px] top-[6px] h-3 w-3 rounded-full border-2 border-crimson bg-surface-alt md:-left-[41px]" />
-                  <p className="font-body text-xs uppercase tracking-[0.2em] text-crimson">
+                  <span className="absolute -left-[41px] top-[6px] h-3 w-3 rounded-full border-2 border-amber bg-surface-alt md:-left-[41px]" />
+                  <p className="font-body text-xs uppercase tracking-[0.2em] text-amber">
                     {item.year}
                   </p>
                   <p className="mt-1 font-display text-xl text-on-alt">
@@ -420,10 +420,10 @@ export default function AboutPage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="bg-crimson py-28">
+      <section className="bg-surface-alt py-28">
         <div className="mx-auto max-w-[1320px] px-6 md:px-[52px] text-center">
           <Reveal>
-            <h2 className="font-display text-4xl leading-tight text-ivory md:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl leading-tight text-on-alt md:text-5xl lg:text-6xl">
               Ready to Grow Together?
             </h2>
           </Reveal>

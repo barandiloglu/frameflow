@@ -58,7 +58,7 @@ function getAvatarBg(plan: Plan): string {
     case "Starter Plan":
       return "bg-ivory-10";
     case "Enterprise":
-      return "bg-crimson-30";
+      return "bg-ivory-10";
   }
 }
 
@@ -69,7 +69,7 @@ function getPlanBadge(plan: Plan): string {
     case "Starter Plan":
       return "bg-ivory-10 text-ivory-60";
     case "Enterprise":
-      return "bg-crimson text-ivory";
+      return "bg-ivory-10 text-ivory-60";
   }
 }
 

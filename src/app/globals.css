@@ -11,9 +11,13 @@
   --on-surface-05: rgba(255, 255, 235, 0.05);
   --on-alt:        #353230;
   --on-alt-80:     rgba(53, 50, 48, 0.8);
+  --on-alt-60:     rgba(53, 50, 48, 0.6);
+  --on-alt-30:     rgba(53, 50, 48, 0.3);
   --on-alt-20:     rgba(53, 50, 48, 0.2);
-  --border-subtle: rgba(137, 47, 42, 0.3);
-  --border-faint:  rgba(137, 47, 42, 0.15);
+  --on-alt-10:     rgba(53, 50, 48, 0.1);
+  --on-alt-05:     rgba(53, 50, 48, 0.05);
+  --border-subtle: rgba(211, 143, 44, 0.12);
+  --border-faint:  rgba(211, 143, 44, 0.06);
 }
 
 [data-theme="light"] {
@@ -26,9 +30,13 @@
   --on-surface-05: rgba(53, 50, 48, 0.05);
   --on-alt:        #ffffeb;
   --on-alt-80:     rgba(255, 255, 235, 0.8);
+  --on-alt-60:     rgba(255, 255, 235, 0.6);
+  --on-alt-30:     rgba(255, 255, 235, 0.3);
   --on-alt-20:     rgba(255, 255, 235, 0.2);
-  --border-subtle: rgba(137, 47, 42, 0.2);
-  --border-faint:  rgba(137, 47, 42, 0.1);
+  --on-alt-10:     rgba(255, 255, 235, 0.1);
+  --on-alt-05:     rgba(255, 255, 235, 0.05);
+  --border-subtle: rgba(211, 143, 44, 0.1);
+  --border-faint:  rgba(211, 143, 44, 0.05);
 }
 
 @theme inline {
@@ -44,11 +52,6 @@
   --color-amber: #d38f2c;
   --color-amber-20: rgba(211, 143, 44, 0.2);
   --color-amber-10: rgba(211, 143, 44, 0.1);
-  --color-ember: #d45938;
-  --color-ember-15: rgba(212, 89, 56, 0.15);
-  --color-crimson: #892f2a;
-  --color-crimson-30: rgba(137, 47, 42, 0.3);
-  --color-crimson-15: rgba(137, 47, 42, 0.15);
 
   /* Semantic theme tokens — swapped by [data-theme] */
   --color-surface:       var(--surface);
@@ -60,12 +63,18 @@
   --color-on-surface-05: var(--on-surface-05);
   --color-on-alt:        var(--on-alt);
   --color-on-alt-80:     var(--on-alt-80);
+  --color-on-alt-60:     var(--on-alt-60);
+  --color-on-alt-30:     var(--on-alt-30);
   --color-on-alt-20:     var(--on-alt-20);
+  --color-on-alt-10:     var(--on-alt-10);
+  --color-on-alt-05:     var(--on-alt-05);
   --color-border-subtle: var(--border-subtle);
   --color-border-faint:  var(--border-faint);
+}
 
-  --font-display: "Syne", sans-serif;
-  --font-body: "Outfit", sans-serif;
+@theme {
+  --font-display: var(--ff-display), sans-serif;
+  --font-body: var(--ff-body), sans-serif;
 }
 
 html {
@@ -113,32 +122,6 @@ body {
   z-index: 200;
   width: 0%;
   transition: width 0.05s linear;
-}
-
-/* Custom cursor */
-.custom-cursor {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  top: -100px;
-  left: -100px;
-}
-
-.cursor-dot {
-  width: 10px;
-  height: 10px;
-  background: var(--color-amber);
-  transition: width 0.2s, height 0.2s;
-}
-
-.cursor-ring {
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid var(--color-amber);
-  opacity: 0.6;
-  transition: all 0.12s ease;
 }
 
 /* Custom scrollbar */

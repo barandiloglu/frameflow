@@ -124,7 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="h-screen overflow-hidden flex flex-row bg-graphite">
       {/* Sidebar */}
       <aside
-        className="w-[260px] shrink-0 flex flex-col border-r border-crimson-30"
+        className="w-[260px] shrink-0 flex flex-col border-r border-ivory-10"
         style={{ background: "rgba(30,28,27,1)" }}
       >
         {/* Logo */}
@@ -137,7 +137,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               height={38}
               className="h-[44px] w-auto"
             />
-            <span className="px-1.5 py-0.5 text-[9px] font-semibold font-body rounded-[2px] bg-crimson text-ivory uppercase tracking-wide">
+            <span className="px-1.5 py-0.5 text-[9px] font-semibold font-body rounded-[2px] bg-amber text-graphite uppercase tracking-wide">
               Admin
             </span>
           </Link>

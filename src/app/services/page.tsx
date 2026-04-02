@@ -124,7 +124,7 @@ export default function ServicesPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(to right, var(--color-crimson-15) 1px, transparent 1px), linear-gradient(to bottom, var(--color-crimson-15) 1px, transparent 1px)",
+              "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
             backgroundSize: "80px 80px",
             maskImage:
               "radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%)",
@@ -194,7 +194,7 @@ export default function ServicesPage() {
               className="pointer-events-none absolute inset-0"
               style={{
                 backgroundImage:
-                  "linear-gradient(to right, var(--color-crimson-15) 1px, transparent 1px), linear-gradient(to bottom, var(--color-crimson-15) 1px, transparent 1px)",
+                  "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
                 backgroundSize: "56px 56px",
               }}
             />
