@@ -35,21 +35,6 @@ const tags = [
   "Toronto-Based",
 ];
 
-const stats: { value: string; label: string }[] = [
-  { value: "100+", label: "Businesses Served" },
-  { value: "4", label: "Years in the Game" },
-  { value: "7", label: "Core Services" },
-  { value: "98%", label: "Client Satisfaction" },
-];
-
-const timeline: { year: string; title: string }[] = [
-  { year: "2021", title: "FrameFlow is Founded" },
-  { year: "2022", title: "Social Media Services Added" },
-  { year: "2023", title: "Video & Ad Management Launch" },
-  { year: "2024", title: "Web & App Development" },
-  { year: "2025", title: "Client Portal Launched" },
-];
-
 const values: { num: string; title: string; desc: string }[] = [
   {
     num: "01",
@@ -147,10 +132,10 @@ export default function AboutPage() {
               variants={fadeUp}
               className="max-w-[520px] font-body text-base leading-relaxed text-on-surface-60"
             >
-              FrameFlow is a Toronto-based digital agency helping businesses
-              grow through thoughtful brand strategy, compelling creative, and
-              data-driven marketing. We believe every brand has a story worth
-              telling — we just help you tell it louder.
+              FrameFlow is a Toronto-based creative agency that champions small
+              and medium-sized businesses. We combine strategic thinking with
+              hands-on creativity to build brands people remember — and
+              marketing that actually moves the needle.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap gap-2 pt-2">
@@ -202,158 +187,100 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ===== MISSION ===== */}
-      <section className="relative overflow-hidden bg-amber py-28">
-        {/* Grid overlay */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(53,50,48,1) 1px, transparent 1px), linear-gradient(90deg, rgba(53,50,48,1) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-
-        <div className="relative mx-auto max-w-[860px] px-6 md:px-[52px] text-center">
-          <span className="mb-6 block font-display text-[120px] leading-none text-graphite/10 md:text-[160px]">
-            &ldquo;
-          </span>
-
-          <Reveal>
-            <blockquote className="-mt-20 font-display text-2xl leading-snug text-graphite md:text-3xl lg:text-4xl">
-              &ldquo;We believe your brand is more than a logo — it&rsquo;s the
-              entire experience your customers have with your business.
-              We&rsquo;re here to make that experience unforgettable.&rdquo;
-            </blockquote>
-          </Reveal>
-
-          <Reveal delay={0.15}>
-            <p className="mt-8 font-body text-sm uppercase tracking-[0.2em] text-graphite/60">
-              — FrameFlow, Our Founding Principle
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ===== STATS ===== */}
-      <section className="bg-surface py-24">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-2 border-t border-on-surface-10 px-6 md:px-[52px] md:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.1}>
-              <div
-                className={`flex flex-col gap-2 border-b border-on-surface-10 py-12 pr-6 ${
-                  i !== 0 ? "md:border-l md:pl-8" : ""
-                }`}
-              >
-                <span className="font-display text-5xl text-on-surface md:text-6xl">
-                  {s.value}
+      {/* ===== MISSION & VISION ===== */}
+      <section className="bg-surface py-28 px-6 md:px-[52px]">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Mission */}
+            <Reveal direction="up">
+              <div className="relative p-10 md:p-12 rounded-[3px] border border-border-subtle">
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-amber rounded-l-[3px]" />
+                <span className="font-body text-[10px] font-light tracking-[0.22em] uppercase text-amber mb-4 block">
+                  Our Mission
                 </span>
-                <span className="font-body text-sm uppercase tracking-wider text-on-surface-30">
-                  {s.label}
-                </span>
+                <h3 className="font-display text-[26px] md:text-[30px] font-[700] text-on-surface leading-[1.2] mb-5">
+                  Empower Growing Businesses Through Authentic Branding
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.85] text-on-surface-60">
+                  We exist to give small and medium-sized businesses the same
+                  caliber of branding, design, and marketing that the big players
+                  have — without the impersonal experience. Every strategy we
+                  build starts with listening, and every deliverable is rooted in
+                  your unique story.
+                </p>
               </div>
             </Reveal>
-          ))}
-        </div>
-      </section>
 
-      {/* ===== STORY ===== */}
-      <section className="bg-surface-alt py-28">
-        <div className="mx-auto max-w-[1320px] px-6 md:px-[52px]">
-          {/* Top two-col */}
-          <div className="grid gap-16 lg:grid-cols-2">
-            <div>
-              <Reveal>
-                <p className="font-body text-sm uppercase tracking-[0.2em] text-on-alt-20">
-                  Our Story
+            {/* Vision */}
+            <Reveal direction="up" delay={0.12}>
+              <div className="relative p-10 md:p-12 rounded-[3px] border border-border-subtle">
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-amber rounded-l-[3px]" />
+                <span className="font-body text-[10px] font-light tracking-[0.22em] uppercase text-amber mb-4 block">
+                  Our Vision
+                </span>
+                <h3 className="font-display text-[26px] md:text-[30px] font-[700] text-on-surface leading-[1.2] mb-5">
+                  A World Where Every Brand Tells a Story Worth Hearing
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.85] text-on-surface-60">
+                  We envision a future where no business is held back by generic
+                  marketing or forgettable visuals. FrameFlow is building toward
+                  a creative landscape where authenticity wins, partnerships
+                  thrive, and every brand — no matter the size — gets the
+                  spotlight it deserves.
                 </p>
-              </Reveal>
-              <Reveal delay={0.08}>
-                <h2 className="mt-3 font-display text-4xl leading-tight text-on-alt md:text-5xl">
-                  How FrameFlow Came to Be
-                </h2>
-              </Reveal>
-            </div>
-
-            <div className="flex flex-col gap-5 font-body text-base leading-relaxed text-on-alt-80">
-              <Reveal delay={0.12}>
-                <p>
-                  FrameFlow started with a simple observation: too many talented
-                  businesses were being held back by generic, one-size-fits-all
-                  marketing. Founded in 2021 in Toronto, we set out to change
-                  that by building a creative agency rooted in sincerity and
-                  partnership.
-                </p>
-              </Reveal>
-              <Reveal delay={0.18}>
-                <p>
-                  From our earliest days working with local cafes and
-                  independent retailers, we learned that the best results come
-                  from truly understanding a founder&rsquo;s vision. We never
-                  wanted to be just another vendor — we wanted to be the team
-                  our clients called first.
-                </p>
-              </Reveal>
-              <Reveal delay={0.24}>
-                <p>
-                  Four years later, we&rsquo;ve grown from a two-person
-                  operation into a multidisciplinary studio serving over 100
-                  businesses across Canada. The mission hasn&rsquo;t changed: make
-                  great brands impossible to ignore.
-                </p>
-              </Reveal>
-            </div>
+              </div>
+            </Reveal>
           </div>
 
-          {/* Timeline */}
-          <div className="mt-20 border-l-2 border-border-subtle pl-8 md:ml-8">
-            {timeline.map((item, i) => (
-              <Reveal key={item.year} delay={i * 0.1}>
-                <div className="relative mb-10 last:mb-0">
-                  {/* Dot */}
-                  <span className="absolute -left-[41px] top-[6px] h-3 w-3 rounded-full border-2 border-amber bg-surface-alt md:-left-[41px]" />
-                  <p className="font-body text-xs uppercase tracking-[0.2em] text-amber">
-                    {item.year}
-                  </p>
-                  <p className="mt-1 font-display text-xl text-on-alt">
-                    {item.title}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          {/* Quote */}
+          <Reveal direction="up" delay={0.15}>
+            <div className="mt-16 text-center max-w-[700px] mx-auto">
+              <span className="font-display text-[80px] leading-none text-on-surface-05 block">
+                &ldquo;
+              </span>
+              <blockquote className="-mt-10 font-display text-[20px] md:text-[24px] leading-[1.5] text-on-surface italic">
+                Your brand is more than a logo — it&rsquo;s the entire
+                experience your customers have with your business. We&rsquo;re
+                here to make that experience unforgettable.
+              </blockquote>
+              <p className="mt-6 font-body text-[11px] uppercase tracking-[0.2em] text-on-surface-30">
+                — FrameFlow, Founding Principle
+              </p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ===== VALUES ===== */}
-      <section className="bg-surface py-28">
+      <section className="bg-surface-alt py-28">
         <div className="mx-auto max-w-[1320px] px-6 md:px-[52px]">
           <Reveal>
-            <p className="font-body text-sm uppercase tracking-[0.2em] text-on-surface-30">
+            <p className="font-body text-[11px] font-light uppercase tracking-[0.22em] text-on-alt-80">
               What Drives Us
             </p>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="mt-3 font-display text-4xl leading-tight text-on-surface md:text-5xl">
+            <h2 className="mt-3 font-display text-4xl leading-tight text-on-alt md:text-5xl">
               Our Core Values
             </h2>
           </Reveal>
 
-          <div className="mt-16 grid gap-[1px] bg-border-subtle sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v, i) => (
               <Reveal key={v.num} delay={i * 0.08}>
                 <motion.div
-                  whileHover={{ backgroundColor: "rgba(255,255,235,0.04)" }}
-                  className="group relative flex h-full flex-col gap-3 bg-surface p-8 transition-colors"
+                  whileHover={{ y: -3 }}
+                  transition={{ duration: 0.25 }}
+                  className="group relative flex h-full flex-col gap-3 rounded-[3px] border border-on-alt-10 bg-surface-alt p-8 hover:border-amber/30 transition-colors duration-400"
                 >
                   {/* Hover amber top border */}
-                  <span className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-amber transition-transform duration-300 group-hover:scale-x-100" />
+                  <span className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 rounded-t-[3px] bg-amber transition-transform duration-300 group-hover:scale-x-100" />
 
                   <span className="font-body text-xs tracking-wider text-amber">
                     {v.num}
                   </span>
-                  <h3 className="font-display text-xl text-on-surface">{v.title}</h3>
-                  <p className="font-body text-sm leading-relaxed text-on-surface-60">
+                  <h3 className="font-display text-xl text-on-alt">{v.title}</h3>
+                  <p className="font-body text-sm leading-relaxed text-on-alt-80">
                     {v.desc}
                   </p>
                 </motion.div>
@@ -364,15 +291,15 @@ export default function AboutPage() {
       </section>
 
       {/* ===== TEAM ===== */}
-      <section className="bg-surface-alt py-28">
+      <section className="bg-surface py-28">
         <div className="mx-auto max-w-[1320px] px-6 md:px-[52px]">
           <Reveal>
-            <p className="font-body text-sm uppercase tracking-[0.2em] text-on-alt-20">
+            <p className="font-body text-[11px] font-light uppercase tracking-[0.22em] text-on-surface-30">
               The People
             </p>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="mt-3 font-display text-4xl leading-tight text-on-alt md:text-5xl">
+            <h2 className="mt-3 font-display text-4xl leading-tight text-on-surface md:text-5xl">
               Meet the Team
             </h2>
           </Reveal>
@@ -382,7 +309,7 @@ export default function AboutPage() {
               <Reveal key={member.initials} delay={i * 0.1}>
                 <motion.div
                   whileHover={{ y: -4 }}
-                  className="group overflow-hidden rounded-[2px] border border-transparent transition-colors hover:border-amber"
+                  className="group overflow-hidden rounded-[2px] border border-border-subtle transition-colors hover:border-amber/40"
                 >
                   {/* Card visual */}
                   <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#2a2825]">

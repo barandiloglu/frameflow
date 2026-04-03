@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const periods = ["7D", "30D", "90D", "12M"];
 
@@ -17,7 +18,7 @@ const clients = [
   "Nomad Studio",
   "Velour Collective",
   "Sola Health",
-  "Lune Café",
+  "Lune Caf\u00e9",
   "Birchfield Co.",
   "Meridian Foods",
   "Apex Creative",
@@ -44,8 +45,8 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "68%", engagement: "5.2%", impressions: "189K", borderColor: "border-amber", barPercent: 68 },
-      { name: "Facebook", posts: "22%", engagement: "3.8%", impressions: "64K", borderColor: "border-ivory-30", barPercent: 22 },
-      { name: "TikTok", posts: "10%", engagement: "9.1%", impressions: "31K", borderColor: "border-ivory-60", barPercent: 10 },
+      { name: "Facebook", posts: "22%", engagement: "3.8%", impressions: "64K", borderColor: "border-on-surface-30", barPercent: 22 },
+      { name: "TikTok", posts: "10%", engagement: "9.1%", impressions: "31K", borderColor: "border-on-surface-60", barPercent: 10 },
     ],
   },
   "Acadia Bakes": {
@@ -57,15 +58,15 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     topPosts: [
       { rank: 1, title: "Summer Menu Feature", platform: "Instagram", impressions: "12.4K", engagement: "8.2%" },
-      { rank: 2, title: "Recipe Short — Croissant", platform: "TikTok", impressions: "8.2K", engagement: "11.3%" },
+      { rank: 2, title: "Recipe Short \u2014 Croissant", platform: "TikTok", impressions: "8.2K", engagement: "11.3%" },
       { rank: 3, title: "Client Testimonial Carousel", platform: "Facebook", impressions: "6.1K", engagement: "4.2%" },
       { rank: 4, title: "Behind the Scenes Reel", platform: "Instagram", impressions: "5.8K", engagement: "7.6%" },
       { rank: 5, title: "Weekend Special Promo", platform: "Instagram", impressions: "4.3K", engagement: "5.1%" },
     ],
     platforms: [
       { name: "Instagram", posts: "60%", engagement: "6.8%", impressions: "98K", borderColor: "border-amber", barPercent: 60 },
-      { name: "Facebook", posts: "25%", engagement: "4.1%", impressions: "38K", borderColor: "border-ivory-30", barPercent: 25 },
-      { name: "TikTok", posts: "15%", engagement: "10.5%", impressions: "20K", borderColor: "border-ivory-60", barPercent: 15 },
+      { name: "Facebook", posts: "25%", engagement: "4.1%", impressions: "38K", borderColor: "border-on-surface-30", barPercent: 25 },
+      { name: "TikTok", posts: "15%", engagement: "10.5%", impressions: "20K", borderColor: "border-on-surface-60", barPercent: 15 },
     ],
   },
   "Velour Collective": {
@@ -84,8 +85,8 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "75%", engagement: "5.6%", impressions: "36K", borderColor: "border-amber", barPercent: 75 },
-      { name: "Facebook", posts: "15%", engagement: "3.4%", impressions: "7K", borderColor: "border-ivory-30", barPercent: 15 },
-      { name: "TikTok", posts: "10%", engagement: "8.4%", impressions: "5K", borderColor: "border-ivory-60", barPercent: 10 },
+      { name: "Facebook", posts: "15%", engagement: "3.4%", impressions: "7K", borderColor: "border-on-surface-30", barPercent: 15 },
+      { name: "TikTok", posts: "10%", engagement: "8.4%", impressions: "5K", borderColor: "border-on-surface-60", barPercent: 10 },
     ],
   },
   "Sola Health": {
@@ -104,8 +105,8 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "55%", engagement: "5.5%", impressions: "16K", borderColor: "border-amber", barPercent: 55 },
-      { name: "Facebook", posts: "45%", engagement: "3.8%", impressions: "12K", borderColor: "border-ivory-30", barPercent: 45 },
-      { name: "TikTok", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-60", barPercent: 0 },
+      { name: "Facebook", posts: "45%", engagement: "3.8%", impressions: "12K", borderColor: "border-on-surface-30", barPercent: 45 },
+      { name: "TikTok", posts: "0%", engagement: "\u2014", impressions: "\u2014", borderColor: "border-on-surface-60", barPercent: 0 },
     ],
   },
   "Apex Creative": {
@@ -124,11 +125,11 @@ const analyticsData: Record<string, ClientAnalytics> = {
     ],
     platforms: [
       { name: "Instagram", posts: "70%", engagement: "7.4%", impressions: "23K", borderColor: "border-amber", barPercent: 70 },
-      { name: "Facebook", posts: "10%", engagement: "3.5%", impressions: "3K", borderColor: "border-ivory-30", barPercent: 10 },
-      { name: "TikTok", posts: "20%", engagement: "12.8%", impressions: "6K", borderColor: "border-ivory-60", barPercent: 20 },
+      { name: "Facebook", posts: "10%", engagement: "3.5%", impressions: "3K", borderColor: "border-on-surface-30", barPercent: 10 },
+      { name: "TikTok", posts: "20%", engagement: "12.8%", impressions: "6K", borderColor: "border-on-surface-60", barPercent: 20 },
     ],
   },
-  "Lune Café": {
+  "Lune Caf\u00e9": {
     stats: [
       { label: "Total Impressions", value: "21,340", change: "+9%", positive: true },
       { label: "Engagement Rate", value: "3.9%", change: "-0.2%", positive: false },
@@ -136,40 +137,40 @@ const analyticsData: Record<string, ClientAnalytics> = {
       { label: "Link Clicks", value: "215", change: "-8%", positive: false },
     ],
     topPosts: [
-      { rank: 1, title: "Monthly Recap — June", platform: "Instagram", impressions: "3.8K", engagement: "4.6%" },
+      { rank: 1, title: "Monthly Recap \u2014 June", platform: "Instagram", impressions: "3.8K", engagement: "4.6%" },
       { rank: 2, title: "Latte Art Series", platform: "Instagram", impressions: "3.1K", engagement: "5.2%" },
       { rank: 3, title: "New Summer Drinks", platform: "Instagram", impressions: "2.6K", engagement: "3.8%" },
-      { rank: 4, title: "Café Vibes Reel", platform: "TikTok", impressions: "2.1K", engagement: "7.3%" },
+      { rank: 4, title: "Caf\u00e9 Vibes Reel", platform: "TikTok", impressions: "2.1K", engagement: "7.3%" },
       { rank: 5, title: "Community Event Recap", platform: "Facebook", impressions: "1.4K", engagement: "2.9%" },
     ],
     platforms: [
       { name: "Instagram", posts: "65%", engagement: "4.5%", impressions: "14K", borderColor: "border-amber", barPercent: 65 },
-      { name: "Facebook", posts: "20%", engagement: "2.8%", impressions: "4K", borderColor: "border-ivory-30", barPercent: 20 },
-      { name: "TikTok", posts: "15%", engagement: "7.3%", impressions: "3K", borderColor: "border-ivory-60", barPercent: 15 },
+      { name: "Facebook", posts: "20%", engagement: "2.8%", impressions: "4K", borderColor: "border-on-surface-30", barPercent: 20 },
+      { name: "TikTok", posts: "15%", engagement: "7.3%", impressions: "3K", borderColor: "border-on-surface-60", barPercent: 15 },
     ],
   },
 };
 
 const platformDotColors: Record<string, string> = {
   Instagram: "bg-amber",
-  TikTok: "bg-ivory-60",
-  Facebook: "bg-ivory-30",
+  TikTok: "bg-on-surface-60",
+  Facebook: "bg-on-surface-30",
 };
 
 function getClientData(client: string): ClientAnalytics {
   if (analyticsData[client]) return analyticsData[client];
   return {
     stats: [
-      { label: "Total Impressions", value: "0", change: "—", positive: true },
-      { label: "Engagement Rate", value: "0%", change: "—", positive: true },
-      { label: "New Followers", value: "0", change: "—", positive: true },
-      { label: "Link Clicks", value: "0", change: "—", positive: true },
+      { label: "Total Impressions", value: "0", change: "\u2014", positive: true },
+      { label: "Engagement Rate", value: "0%", change: "\u2014", positive: true },
+      { label: "New Followers", value: "0", change: "\u2014", positive: true },
+      { label: "Link Clicks", value: "0", change: "\u2014", positive: true },
     ],
     topPosts: [],
     platforms: [
-      { name: "Instagram", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-amber", barPercent: 0 },
-      { name: "Facebook", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-30", barPercent: 0 },
-      { name: "TikTok", posts: "0%", engagement: "—", impressions: "—", borderColor: "border-ivory-60", barPercent: 0 },
+      { name: "Instagram", posts: "0%", engagement: "\u2014", impressions: "\u2014", borderColor: "border-amber", barPercent: 0 },
+      { name: "Facebook", posts: "0%", engagement: "\u2014", impressions: "\u2014", borderColor: "border-on-surface-30", barPercent: 0 },
+      { name: "TikTok", posts: "0%", engagement: "\u2014", impressions: "\u2014", borderColor: "border-on-surface-60", barPercent: 0 },
     ],
   };
 }
@@ -179,7 +180,7 @@ const clientPerformance = [
   { name: "Velour Collective", impressions: "48K", engagement: "5.1%", bar: 55 },
   { name: "Apex Creative", impressions: "32K", engagement: "7.8%", bar: 45 },
   { name: "Sola Health", impressions: "28K", engagement: "4.5%", bar: 35 },
-  { name: "Lune Café", impressions: "21K", engagement: "3.9%", bar: 25 },
+  { name: "Lune Caf\u00e9", impressions: "21K", engagement: "3.9%", bar: 25 },
 ];
 
 /* ── Animated number that counts up when value changes ── */
@@ -246,20 +247,21 @@ export default function AnalyticsPage() {
   const isAllClients = selectedClient === "All Clients";
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-ivory-05">
+      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">Analytics</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">
+          <h1 className="font-display font-bold text-xl text-on-surface">Analytics</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">
             {isAllClients ? "Performance overview" : selectedClient}
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
-            className="bg-ivory-05 border border-ivory-10 rounded-[2px] px-3 py-1.5 text-sm font-body text-ivory outline-none focus:border-amber transition-colors cursor-pointer appearance-none pr-8"
+            className="bg-on-surface-05 border border-on-surface-10 rounded-[2px] px-3 py-1.5 text-sm font-body text-on-surface outline-none focus:border-amber transition-colors cursor-pointer appearance-none pr-8"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23ffffeb' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
               backgroundRepeat: "no-repeat",
@@ -267,7 +269,7 @@ export default function AnalyticsPage() {
             }}
           >
             {clients.map((c) => (
-              <option key={c} value={c} className="bg-graphite text-ivory">
+              <option key={c} value={c} className="bg-surface text-on-surface">
                 {c}
               </option>
             ))}
@@ -281,7 +283,7 @@ export default function AnalyticsPage() {
                 className={`px-3 py-1.5 text-xs font-body font-semibold rounded-[2px] transition-colors ${
                   activePeriod === p
                     ? "bg-amber text-graphite"
-                    : "bg-ivory-05 text-ivory-30 hover:text-ivory"
+                    : "bg-on-surface-05 text-on-surface-30 hover:text-on-surface"
                 }`}
               >
                 {p}
@@ -305,12 +307,12 @@ export default function AnalyticsPage() {
             >
               <div className="flex items-center gap-3 rounded-[2px] border border-amber-20 bg-amber-10 px-5 py-3 mb-6">
                 <span className="w-2 h-2 rounded-full bg-amber" />
-                <span className="text-sm font-body text-ivory">
+                <span className="text-sm font-body text-on-surface">
                   Showing analytics for <strong className="text-amber">{selectedClient}</strong>
                 </span>
                 <button
                   onClick={() => setSelectedClient("All Clients")}
-                  className="ml-auto text-xs font-body text-ivory-30 hover:text-ivory transition-colors"
+                  className="ml-auto text-xs font-body text-on-surface-30 hover:text-on-surface transition-colors"
                 >
                   View All Clients
                 </button>
@@ -324,21 +326,21 @@ export default function AnalyticsPage() {
           {data.stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 p-5"
+              className="rounded-[2px] border border-border-subtle bg-on-surface-05 p-5"
             >
-              <p className="text-xs font-body text-ivory-30 mb-1">{s.label}</p>
-              <p className="font-display font-bold text-3xl text-ivory">
+              <p className="text-xs font-body text-on-surface-30 mb-1">{s.label}</p>
+              <p className="font-display font-bold text-3xl text-on-surface">
                 <AnimatedValue value={s.value} />
               </p>
-              {s.change !== "—" && (
+              {s.change !== "\u2014" && (
                 <motion.p
                   key={`${selectedClient}-${s.label}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
-                  className={`text-xs font-body mt-1 ${s.positive ? "text-[#4ade80]" : "text-ivory-60"}`}
+                  className={`text-xs font-body mt-1 ${s.positive ? "text-[#4ade80]" : "text-on-surface-60"}`}
                 >
-                  {s.change} <span className="text-ivory-30">vs last period</span>
+                  {s.change} <span className="text-on-surface-30">vs last period</span>
                 </motion.p>
               )}
             </div>
@@ -348,9 +350,9 @@ export default function AnalyticsPage() {
         {/* Two-column layout */}
         <div className="grid grid-cols-2 gap-4">
           {/* Top Performing Posts — crossfade */}
-          <div className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 overflow-hidden">
-            <div className="px-5 py-4 border-b border-ivory-05">
-              <h2 className="font-display font-semibold text-sm text-ivory">
+          <div className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden">
+            <div className="px-5 py-4 border-b border-border-subtle">
+              <h2 className="font-display font-semibold text-sm text-on-surface">
                 Top Performing Posts
               </h2>
             </div>
@@ -363,7 +365,7 @@ export default function AnalyticsPage() {
                 transition={{ duration: 0.25 }}
               >
                 {data.topPosts.length > 0 ? (
-                  <div className="divide-y divide-ivory-05">
+                  <div className="divide-y divide-border-faint">
                     {data.topPosts.map((post, i) => (
                       <motion.div
                         key={post.title}
@@ -376,14 +378,14 @@ export default function AnalyticsPage() {
                           {post.rank}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-body font-semibold text-ivory">{post.title}</p>
+                          <p className="text-sm font-body font-semibold text-on-surface">{post.title}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className={`w-1.5 h-1.5 rounded-full ${platformDotColors[post.platform] || "bg-ivory-30"}`} />
-                            <span className="text-xs font-body text-ivory-30">{post.platform}</span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${platformDotColors[post.platform] || "bg-on-surface-30"}`} />
+                            <span className="text-xs font-body text-on-surface-30">{post.platform}</span>
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-sm font-body text-ivory">{post.impressions}</p>
+                          <p className="text-sm font-body text-on-surface">{post.impressions}</p>
                           <p className="text-xs font-body text-amber">{post.engagement}</p>
                         </div>
                       </motion.div>
@@ -391,7 +393,7 @@ export default function AnalyticsPage() {
                   </div>
                 ) : (
                   <div className="px-5 py-12 text-center">
-                    <p className="text-sm font-body text-ivory-30">No data available</p>
+                    <p className="text-sm font-body text-on-surface-30">No data available</p>
                   </div>
                 )}
               </motion.div>
@@ -399,9 +401,9 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Right panel */}
-          <div className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 overflow-hidden">
-            <div className="px-5 py-4 border-b border-ivory-05">
-              <h2 className="font-display font-semibold text-sm text-ivory">
+          <div className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden">
+            <div className="px-5 py-4 border-b border-border-subtle">
+              <h2 className="font-display font-semibold text-sm text-on-surface">
                 {isAllClients ? "Client Performance" : "Monthly Trend"}
               </h2>
             </div>
@@ -424,16 +426,16 @@ export default function AnalyticsPage() {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                           <span className="font-display font-bold text-sm text-amber">{i + 1}</span>
-                          <span className="text-sm font-body font-semibold text-ivory group-hover:text-amber transition-colors">
+                          <span className="text-sm font-body font-semibold text-on-surface group-hover:text-amber transition-colors">
                             {client.name}
                           </span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-body text-ivory-30">{client.impressions}</span>
+                          <span className="text-xs font-body text-on-surface-30">{client.impressions}</span>
                           <span className="text-xs font-body text-amber">{client.engagement} avg</span>
                         </div>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-ivory-05">
+                      <div className="w-full h-1.5 rounded-full bg-on-surface-05">
                         <motion.div
                           className="h-full rounded-full bg-amber"
                           initial={{ width: 0 }}
@@ -458,10 +460,10 @@ export default function AnalyticsPage() {
                     return (
                       <div key={month}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-body text-ivory">{month} 2025</span>
+                          <span className="text-sm font-body text-on-surface">{month} 2025</span>
                           <span className="text-xs font-body text-amber">{values[i]}% of goal</span>
                         </div>
-                        <div className="w-full h-1.5 rounded-full bg-ivory-05">
+                        <div className="w-full h-1.5 rounded-full bg-on-surface-05">
                           <motion.div
                             className="h-full rounded-full bg-amber"
                             initial={{ width: 0 }}
@@ -479,26 +481,26 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Platform Breakdown — bars animate width */}
-        <div className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 overflow-hidden">
-          <div className="px-5 py-4 border-b border-ivory-05">
-            <h2 className="font-display font-semibold text-sm text-ivory">Platform Breakdown</h2>
+        <div className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden">
+          <div className="px-5 py-4 border-b border-border-subtle">
+            <h2 className="font-display font-semibold text-sm text-on-surface">Platform Breakdown</h2>
           </div>
-          <div className="grid grid-cols-3 divide-x divide-ivory-05">
+          <div className="grid grid-cols-3 divide-x divide-border-faint">
             {data.platforms.map((platform, i) => (
               <div
                 key={platform.name}
                 className={`p-5 border-l-2 ${platform.borderColor}`}
               >
-                <h3 className="font-display font-semibold text-base text-ivory mb-3">
+                <h3 className="font-display font-semibold text-base text-on-surface mb-3">
                   {platform.name}
                 </h3>
                 <div className="space-y-2.5">
                   <div>
-                    <p className="text-xs font-body text-ivory-30">Share of Posts</p>
-                    <p className="text-sm font-body font-semibold text-ivory mt-0.5">
+                    <p className="text-xs font-body text-on-surface-30">Share of Posts</p>
+                    <p className="text-sm font-body font-semibold text-on-surface mt-0.5">
                       <AnimatedValue value={platform.posts} />
                     </p>
-                    <div className="w-full h-1.5 rounded-full bg-ivory-05 mt-1.5">
+                    <div className="w-full h-1.5 rounded-full bg-on-surface-05 mt-1.5">
                       <motion.div
                         className={`h-full rounded-full ${platform.borderColor.replace("border-", "bg-")}`}
                         animate={{ width: `${platform.barPercent}%` }}
@@ -507,12 +509,12 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-body text-ivory-30">Avg Engagement</p>
-                    <p className="text-sm font-body font-semibold text-ivory mt-0.5">{platform.engagement}</p>
+                    <p className="text-xs font-body text-on-surface-30">Avg Engagement</p>
+                    <p className="text-sm font-body font-semibold text-on-surface mt-0.5">{platform.engagement}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-body text-ivory-30">Impressions</p>
-                    <p className="text-sm font-body font-semibold text-ivory mt-0.5">{platform.impressions}</p>
+                    <p className="text-xs font-body text-on-surface-30">Impressions</p>
+                    <p className="text-sm font-body font-semibold text-on-surface mt-0.5">{platform.impressions}</p>
                   </div>
                 </div>
               </div>

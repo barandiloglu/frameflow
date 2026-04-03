@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
@@ -10,13 +9,6 @@ import { Reveal } from "@/components/Reveal";
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
-
-const stats = [
-  { value: "100+", label: "Clients Served" },
-  { value: "4", label: "Years in Business" },
-  { value: "7", label: "Core Services" },
-  { value: "98%", label: "Client Satisfaction" },
-];
 
 const clients = [
   "Acadia Bakes",
@@ -33,39 +25,98 @@ const clients = [
 
 const services = [
   {
-    name: "Logo Design",
-    description:
-      "Strategic visual assets that make your brand unforgettable — crafted for lasting recognition.",
-  },
-  {
     name: "Brand Identity",
     description:
       "Complete identities built to connect, built to last — voice, visuals, values, all telling one story.",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+        <path d="M2 17L12 22L22 17" />
+        <path d="M2 12L12 17L22 12" />
+      </svg>
+    ),
+    size: "large" as const,
   },
   {
     name: "Website Design",
     description:
       "Modern, SEO-friendly, mobile-responsive websites custom-built to make your business thrive online.",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21H16" />
+        <path d="M12 17V21" />
+      </svg>
+    ),
+    size: "large" as const,
   },
   {
-    name: "Social Media Management",
+    name: "Logo Design",
     description:
-      "Strategy-driven campaigns on Instagram, Facebook, TikTok and beyond — creative content that actually converts.",
+      "Strategic visual assets that make your brand unforgettable — crafted for lasting recognition.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 19L19 12L22 15L15 22L12 19Z" />
+        <path d="M18 13L16.5 5.5L2 2L5.5 16.5L13 18L18 13Z" />
+        <path d="M2 2L9.586 9.586" />
+        <circle cx="11" cy="11" r="2" />
+      </svg>
+    ),
+    size: "small" as const,
   },
   {
-    name: "Video & Photo Shooting",
+    name: "Social Media",
     description:
-      "High-quality photography and videography that captures your brand's true essence and stops the scroll.",
+      "Strategy-driven campaigns on Instagram, Facebook, TikTok and beyond — content that converts.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 4L9 9" />
+        <path d="M12 3V6" />
+        <path d="M20 4L15 9" />
+        <path d="M21 12H18" />
+        <path d="M20 20L15 15" />
+        <path d="M12 18V21" />
+        <path d="M4 20L9 15" />
+        <path d="M3 12H6" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    ),
+    size: "small" as const,
+  },
+  {
+    name: "Video & Photo",
+    description:
+      "High-quality photography and videography that captures your brand's true essence.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14.5 4H9.5L7 7H4C2.9 7 2 7.9 2 9V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V9C22 7.9 21.1 7 20 7H17L14.5 4Z" />
+        <circle cx="12" cy="13" r="3.5" />
+      </svg>
+    ),
+    size: "small" as const,
   },
   {
     name: "Ad Management",
     description:
-      "Data-driven Google and Meta campaigns designed for real ROI — no wasted budget, only results.",
+      "Data-driven Google and Meta campaigns designed for real ROI — no wasted budget.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 12H18L15 21L9 3L6 12H2" />
+      </svg>
+    ),
+    size: "small" as const,
   },
   {
-    name: "Web & Mobile Applications",
+    name: "Web & Mobile Apps",
     description:
-      "End-to-end app development — from concept to polished product, your vision brought to life.",
+      "End-to-end app development — from concept to polished product.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2" />
+        <path d="M12 18H12.01" />
+      </svg>
+    ),
+    size: "small" as const,
   },
 ];
 
@@ -96,27 +147,21 @@ const processSteps = [
   },
 ];
 
-const whySections = [
+const whyReasons = [
   {
-    numeral: "I",
     tag: "Brand & Identity",
     heading: "Real Impact Starts With Real Identity",
     text: "A strong brand is more than a logo — it's the feeling people get when they encounter your business. We build identities that are authentic, memorable, and strategically designed to set you apart in a crowded market.",
-    flipped: false,
   },
   {
-    numeral: "II",
     tag: "Partnership",
     heading: "We Don't Just Work For You — We Work With You",
     text: "We believe the best results come from genuine collaboration. You're not a ticket in our queue — you're a partner. We embed ourselves in your goals, communicate transparently, and celebrate wins together.",
-    flipped: true,
   },
   {
-    numeral: "III",
     tag: "Marketing",
     heading: "You Do You. We'll Handle the Marketing.",
     text: "Running a business is demanding enough. Let us take the weight of branding, social media, ads, and web off your shoulders so you can focus on what you do best — serving your customers.",
-    flipped: false,
   },
 ];
 
@@ -260,30 +305,6 @@ export default function Home() {
         </span>
       </section>
 
-      {/* ============================================================ */}
-      {/*  2. STATS BAR                                                */}
-      {/* ============================================================ */}
-      <section className="bg-amber">
-        <Reveal direction="up">
-          <div className="grid grid-cols-2 md:grid-cols-4 px-6 md:px-[52px] py-[42px]">
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                className={`flex flex-col items-center text-center ${
-                  i < stats.length - 1 ? "border-r border-graphite-20" : ""
-                }`}
-              >
-                <span className="font-display text-[42px] font-[800] text-graphite leading-none">
-                  {s.value}
-                </span>
-                <span className="mt-1 font-body text-[12px] font-medium tracking-[0.12em] uppercase text-graphite-80">
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </section>
 
       {/* ============================================================ */}
       {/*  3. CLIENT TICKER                                            */}
@@ -303,7 +324,7 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  4. SERVICES                                                 */}
+      {/*  4. SERVICES — BENTO GRID                                    */}
       {/* ============================================================ */}
       <section className="bg-surface py-[100px] px-6 md:px-[52px]">
         {/* Header */}
@@ -326,20 +347,181 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* Rows */}
-        <div className="border-t border-border-subtle">
-          {services.map((svc, i) => (
-            <ServiceRow key={i} index={i} service={svc} />
-          ))}
+        {/* Bento grid — explicit placement */}
+        <div
+          className="grid gap-4"
+          style={{
+            gridTemplateColumns: "1fr",
+            gridAutoRows: "auto",
+          }}
+        >
+          {/* Mobile: stack all. Desktop: 4-col bento */}
+          <div
+            className="hidden lg:grid gap-4"
+            style={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateRows: "280px 280px 220px",
+            }}
+          >
+            {/* Brand Identity — tall left */}
+            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 row-span-2 p-10 flex flex-col justify-between"
+              style={{ gridColumn: "1 / 2", gridRow: "1 / 3" }}>
+              <div className="pointer-events-none absolute -bottom-20 -right-20 w-[260px] h-[260px] bg-amber-10 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative z-10">
+                <span className="text-amber mb-5 block">{services[0].icon}</span>
+                <h3 className="font-display text-[28px] font-[700] text-on-surface leading-[1.15] mb-4">
+                  {services[0].name}
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60">
+                  {services[0].description}
+                </p>
+              </div>
+              <span className="relative z-10 font-body text-[12px] tracking-[0.06em] text-amber opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                Learn more &rarr;
+              </span>
+            </div>
+
+            {/* Website Design — wide top */}
+            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-10 flex flex-col justify-between"
+              style={{ gridColumn: "2 / 4", gridRow: "1 / 2" }}>
+              <div className="pointer-events-none absolute -top-16 -right-16 w-[200px] h-[200px] bg-amber-10 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              {/* Large watermark */}
+              <span className="pointer-events-none absolute bottom-4 right-6 font-display text-[120px] font-[800] leading-none text-on-surface-05 select-none">
+                WEB
+              </span>
+              <div className="relative z-10">
+                <span className="text-amber mb-5 block">{services[1].icon}</span>
+                <h3 className="font-display text-[28px] font-[700] text-on-surface leading-[1.15] mb-4">
+                  {services[1].name}
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60 max-w-[400px]">
+                  {services[1].description}
+                </p>
+              </div>
+              <span className="relative z-10 font-body text-[12px] tracking-[0.06em] text-amber opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                Learn more &rarr;
+              </span>
+            </div>
+
+            {/* Social Media — top right */}
+            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
+              style={{ gridColumn: "4 / 5", gridRow: "1 / 2" }}>
+              <div>
+                <span className="text-amber mb-4 block">{services[3].icon}</span>
+                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
+                  {services[3].name}
+                </h3>
+                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                  {services[3].description}
+                </p>
+              </div>
+            </div>
+
+            {/* Logo Design — mid */}
+            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
+              style={{ gridColumn: "2 / 3", gridRow: "2 / 3" }}>
+              <div>
+                <span className="text-amber mb-4 block">{services[2].icon}</span>
+                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
+                  {services[2].name}
+                </h3>
+                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                  {services[2].description}
+                </p>
+              </div>
+            </div>
+
+            {/* Video & Photo — mid right wide */}
+            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
+              style={{ gridColumn: "3 / 5", gridRow: "2 / 3" }}>
+              <div className="flex items-start gap-6">
+                <span className="text-amber shrink-0 mt-1">{services[4].icon}</span>
+                <div>
+                  <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
+                    {services[4].name}
+                  </h3>
+                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                    {services[4].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Ad Management — bottom left wide */}
+            <div className="group relative overflow-hidden rounded-[3px] bg-on-surface-05 border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex items-center gap-8"
+              style={{ gridColumn: "1 / 3", gridRow: "3 / 4" }}>
+              <span className="text-amber shrink-0">{services[5].icon}</span>
+              <div>
+                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-1 group-hover:text-amber transition-colors duration-300">
+                  {services[5].name}
+                </h3>
+                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                  {services[5].description}
+                </p>
+              </div>
+            </div>
+
+            {/* Web & Mobile Apps — bottom right wide */}
+            <div className="group relative overflow-hidden rounded-[3px] bg-on-surface-05 border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex items-center gap-8"
+              style={{ gridColumn: "3 / 5", gridRow: "3 / 4" }}>
+              <span className="text-amber shrink-0">{services[6].icon}</span>
+              <div>
+                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-1 group-hover:text-amber transition-colors duration-300">
+                  {services[6].name}
+                </h3>
+                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                  {services[6].description}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tablet: 2-col */}
+          <div className="hidden md:grid lg:hidden grid-cols-2 gap-4">
+            {services.map((svc, i) => (
+              <Reveal key={svc.name} direction="up" delay={i * 0.06}>
+                <div className={`group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 ${svc.size === "large" ? "min-h-[260px]" : ""}`}>
+                  <span className="text-amber mb-4 block">{svc.icon}</span>
+                  <h3 className={`font-display font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300 ${svc.size === "large" ? "text-[24px] mb-3" : "text-[18px]"}`}>
+                    {svc.name}
+                  </h3>
+                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                    {svc.description}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Mobile: single column */}
+          <div className="grid md:hidden grid-cols-1 gap-4">
+            {services.map((svc, i) => (
+              <Reveal key={svc.name} direction="up" delay={i * 0.06}>
+                <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-6">
+                  <div className="flex items-start gap-4">
+                    <span className="text-amber shrink-0 mt-0.5">{svc.icon}</span>
+                    <div>
+                      <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
+                        {svc.name}
+                      </h3>
+                      <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
+                        {svc.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  5. PROCESS                                                  */}
+      {/*  5. PROCESS — VERTICAL TIMELINE                              */}
       {/* ============================================================ */}
       <section className="bg-surface-alt py-[100px] px-6 md:px-[52px]">
         <Reveal direction="up">
-          <div className="mb-16">
+          <div className="mb-20 max-w-[600px]">
             <p className="mb-2 font-body text-[11px] font-light tracking-[0.22em] uppercase text-on-alt-80">
               How It Works
             </p>
@@ -349,22 +531,78 @@ export default function Home() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="relative max-w-[900px] mx-auto">
+          {/* Vertical line */}
+          <div className="absolute left-[23px] md:left-1/2 md:-translate-x-[0.5px] top-0 bottom-0 w-[1px] bg-on-alt-10" />
+
           {processSteps.map((step, i) => (
-            <Reveal key={i} direction="up" delay={i * 0.1}>
-              <ProcessCard step={step} />
-            </Reveal>
+            <TimelineStep key={i} step={step} index={i} />
           ))}
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  6. WHY FRAMEFLOW                                            */}
+      {/*  6. WHAT SETS US APART                                       */}
       {/* ============================================================ */}
-      <section className="bg-surface">
-        {whySections.map((section, i) => (
-          <WhyBlock key={i} index={i} section={section} />
-        ))}
+      <section className="bg-surface py-[100px] px-6 md:px-[52px]">
+        <div className="max-w-[1100px] mx-auto">
+          {/* Header */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-10 mb-20">
+            <Reveal direction="up">
+              <div>
+                <p className="mb-2 font-body text-[11px] font-light tracking-[0.22em] uppercase text-on-surface-30">
+                  Why FrameFlow
+                </p>
+                <h2 className="font-display text-[clamp(36px,4.5vw,52px)] font-[700] text-on-surface leading-[1.1]">
+                  What Sets Us{" "}
+                  <span className="italic text-amber">Apart</span>
+                </h2>
+              </div>
+            </Reveal>
+            <Reveal direction="up" delay={0.1}>
+              <p className="font-body text-[15px] font-light leading-[1.8] text-on-surface-60 md:pt-8">
+                We&apos;re not just another agency. Every decision we make is rooted in
+                genuine care for your business, your audience, and your long-term success.
+              </p>
+            </Reveal>
+          </div>
+
+          {/* Reason cards */}
+          <div className="flex flex-col gap-6">
+            {whyReasons.map((reason, i) => (
+              <Reveal key={i} direction="up" delay={i * 0.12}>
+                <motion.div
+                  className="group relative grid grid-cols-1 md:grid-cols-[80px_1fr] gap-6 md:gap-10 p-8 md:p-10 rounded-[3px] border border-border-subtle hover:border-amber/30 transition-all duration-500 overflow-hidden"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Amber side accent — visible on hover */}
+                  <div className="hidden md:block absolute left-0 top-0 bottom-0 w-[3px] bg-amber scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500" />
+
+                  {/* Number */}
+                  <div className="flex items-start">
+                    <span className="font-display text-[56px] md:text-[72px] font-[800] leading-none text-on-surface-05 group-hover:text-amber-10 transition-colors duration-500 select-none">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex flex-col justify-center">
+                    <span className="font-body text-[10px] font-light tracking-[0.2em] uppercase text-amber mb-3">
+                      {reason.tag}
+                    </span>
+                    <h3 className="font-display text-[22px] md:text-[26px] font-[700] text-on-surface leading-[1.2] mb-4">
+                      {reason.heading}
+                    </h3>
+                    <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60 max-w-[560px]">
+                      {reason.text}
+                    </p>
+                  </div>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ============================================================ */}
@@ -614,199 +852,113 @@ export default function Home() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Service Row                                                        */
-/* ------------------------------------------------------------------ */
-
-function ServiceRow({
-  index,
-  service,
-}: {
-  index: number;
-  service: { name: string; description: string };
-}) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <Reveal direction="up" delay={index * 0.05}>
-      <div
-        className="group cursor-pointer border-b border-border-subtle py-6 transition-colors duration-300"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <span className="font-body text-[13px] font-light text-on-surface-30 w-[32px]">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span
-              className={`font-display text-[22px] font-[600] transition-colors duration-300 ${
-                hovered ? "text-amber" : "text-on-surface"
-              }`}
-            >
-              {service.name}
-            </span>
-          </div>
-          <span
-            className={`font-body text-[18px] transition-all duration-300 ${
-              hovered
-                ? "text-amber translate-x-0 opacity-100"
-                : "text-on-surface-30 -translate-x-2 opacity-0"
-            }`}
-          >
-            &rarr;
-          </span>
-        </div>
-
-        {/* Description reveal */}
-        <motion.div
-          initial={false}
-          animate={{
-            height: hovered ? "auto" : 0,
-            opacity: hovered ? 1 : 0,
-          }}
-          transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="overflow-hidden"
-        >
-          <p className="pt-3 pl-[64px] font-body text-[13px] font-light leading-[1.7] text-on-surface-60 max-w-[500px]">
-            {service.description}
-          </p>
-        </motion.div>
-      </div>
-    </Reveal>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Process Card                                                       */
 /* ------------------------------------------------------------------ */
 
-function ProcessCard({
+function TimelineStep({
   step,
+  index,
 }: {
   step: { number: string; title: string; description: string };
+  index: number;
 }) {
-  return (
-    <div className="group relative overflow-hidden rounded-[2px] border border-on-alt-20 p-8 pt-14 transition-all duration-400 hover:bg-surface hover:border-border-subtle cursor-pointer">
-      {/* Large number watermark */}
-      <span className="pointer-events-none absolute top-3 right-4 font-display text-[100px] font-[800] leading-none text-on-alt-20 transition-colors duration-400 group-hover:text-on-surface-05 select-none">
-        {step.number}
-      </span>
+  const isEven = index % 2 === 0;
 
-      <div className="relative z-10">
-        <p className="mb-1 font-body text-[11px] font-light tracking-[0.2em] uppercase text-on-alt-80 transition-colors duration-400 group-hover:text-on-surface-30">
-          Step {step.number}
-        </p>
-        <h3 className="mb-3 font-display text-[20px] font-[700] text-on-alt transition-colors duration-400 group-hover:text-on-surface">
-          {step.title}
-        </h3>
-        <p className="font-body text-[13px] font-light leading-[1.7] text-on-alt-80 transition-colors duration-400 group-hover:text-on-surface-60">
-          {step.description}
-        </p>
+  return (
+    <div className={`relative flex items-start gap-0 md:gap-0 mb-16 last:mb-0`}>
+      {/* ── Mobile layout (always left-aligned) ── */}
+      <div className="md:hidden flex items-start gap-6 w-full">
+        {/* Node */}
+        <div className="relative z-10 shrink-0">
+          <Reveal direction="up" delay={index * 0.15}>
+            <motion.div
+              className="w-[48px] h-[48px] rounded-full border-2 border-amber/40 bg-surface-alt flex items-center justify-center"
+              whileInView={{ borderColor: "var(--color-amber)" }}
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
+            >
+              <span className="font-display text-[16px] font-[800] text-amber">{step.number}</span>
+            </motion.div>
+          </Reveal>
+        </div>
+
+        {/* Content */}
+        <Reveal direction="up" delay={index * 0.15 + 0.1}>
+          <div className="pt-2">
+            <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
+              Step {step.number}
+            </p>
+            <h3 className="mb-2 font-display text-[20px] font-[700] text-on-alt leading-tight">
+              {step.title}
+            </h3>
+            <p className="font-body text-[13px] font-light leading-[1.8] text-on-alt-80 max-w-[360px]">
+              {step.description}
+            </p>
+          </div>
+        </Reveal>
+      </div>
+
+      {/* ── Desktop layout (alternating sides) ── */}
+      <div className="hidden md:grid grid-cols-[1fr_auto_1fr] items-start w-full gap-8">
+        {/* Left content */}
+        <div className={`${isEven ? "text-right" : ""}`}>
+          {isEven ? (
+            <Reveal direction="right" delay={index * 0.15 + 0.1}>
+              <div className="pr-4">
+                <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
+                  Step {step.number}
+                </p>
+                <h3 className="mb-3 font-display text-[24px] font-[700] text-on-alt leading-tight">
+                  {step.title}
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.8] text-on-alt-80 ml-auto max-w-[340px]">
+                  {step.description}
+                </p>
+              </div>
+            </Reveal>
+          ) : (
+            <div />
+          )}
+        </div>
+
+        {/* Center node */}
+        <div className="relative z-10">
+          <Reveal direction="up" delay={index * 0.15}>
+            <motion.div
+              className="w-[52px] h-[52px] rounded-full border-2 border-on-alt-10 bg-surface-alt flex items-center justify-center"
+              whileInView={{ borderColor: "var(--color-amber)", scale: [1, 1.15, 1] }}
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
+            >
+              <span className="font-display text-[18px] font-[800] text-amber">{step.number}</span>
+            </motion.div>
+          </Reveal>
+        </div>
+
+        {/* Right content */}
+        <div>
+          {!isEven ? (
+            <Reveal direction="left" delay={index * 0.15 + 0.1}>
+              <div className="pl-4">
+                <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
+                  Step {step.number}
+                </p>
+                <h3 className="mb-3 font-display text-[24px] font-[700] text-on-alt leading-tight">
+                  {step.title}
+                </h3>
+                <p className="font-body text-[14px] font-light leading-[1.8] text-on-alt-80 max-w-[340px]">
+                  {step.description}
+                </p>
+              </div>
+            </Reveal>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Why Block                                                          */
-/* ------------------------------------------------------------------ */
-
-function WhyBlock({
-  index,
-  section,
-}: {
-  index: number;
-  section: {
-    numeral: string;
-    tag: string;
-    heading: string;
-    text: string;
-    flipped: boolean;
-  };
-}) {
-  const visual = (
-    <div className={`relative flex items-center justify-center overflow-hidden min-h-[480px] ${
-      section.flipped ? "bg-surface-alt" : "bg-[rgba(53,50,48,0.6)]"
-    }`}>
-      {/* Grid */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage: section.flipped
-            ? "linear-gradient(rgba(53,50,48,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(53,50,48,0.06) 1px, transparent 1px)"
-            : "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-      {/* Amber accent line */}
-      <span className={`absolute top-10 left-10 block h-[1px] w-[48px] ${section.flipped ? "bg-amber" : "bg-amber"}`} />
-      {/* Tag */}
-      <span className={`absolute top-10 left-[76px] font-body text-[10px] font-light tracking-[0.2em] uppercase ${
-        section.flipped ? "text-on-alt-20" : "text-on-surface-30"
-      }`}>
-        {section.tag}
-      </span>
-      {/* Large numeral */}
-      <span className={`pointer-events-none font-display text-[180px] font-[800] leading-none select-none ${
-        section.flipped ? "text-on-alt-20" : "text-on-surface-05"
-      }`}>
-        {section.numeral}
-      </span>
-    </div>
-  );
-
-  const textSide = (
-    <div
-      className={`flex flex-col justify-center px-6 md:px-[52px] py-[72px] ${
-        section.flipped ? "bg-surface-alt" : "bg-surface"
-      }`}
-    >
-      <Reveal direction={section.flipped ? "left" : "right"}>
-        <span
-          className={`mb-4 font-body text-[13px] font-light ${
-            section.flipped ? "text-on-alt-80" : "text-on-surface-30"
-          }`}
-        >
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <h3
-          className={`mb-5 font-display text-[34px] font-[700] leading-[1.15] max-w-[400px] ${
-            section.flipped ? "text-on-alt" : "text-on-surface"
-          }`}
-        >
-          {section.heading}
-        </h3>
-        <p
-          className={`mb-8 font-body text-[14px] font-light leading-[1.8] max-w-[420px] ${
-            section.flipped ? "text-on-alt-80" : "text-on-surface-60"
-          }`}
-        >
-          {section.text}
-        </p>
-        <Link
-          href="/about"
-          className="font-body text-[13px] font-light tracking-[0.04em] text-amber no-underline transition-opacity duration-200 hover:opacity-70"
-        >
-          Read More &rarr;
-        </Link>
-      </Reveal>
-    </div>
-  );
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2">
-      {section.flipped ? (
-        <>
-          {textSide}
-          {visual}
-        </>
-      ) : (
-        <>
-          {visual}
-          {textSide}
-        </>
-      )}
-    </div>
-  );
-}

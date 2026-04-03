@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Status = "Published" | "Scheduled" | "Draft" | "Needs Review";
 type Platform = "Instagram" | "Facebook" | "TikTok";
@@ -41,9 +42,9 @@ function getPlatformDotColor(platform: Platform): string {
     case "Instagram":
       return "bg-amber";
     case "Facebook":
-      return "bg-ivory-30";
+      return "bg-on-surface-30";
     case "TikTok":
-      return "bg-ivory-60";
+      return "bg-on-surface-60";
   }
 }
 
@@ -54,7 +55,7 @@ function getStatusStyle(status: Status): string {
     case "Scheduled":
       return "bg-amber-10 text-amber";
     case "Draft":
-      return "bg-ivory-05 text-ivory-30";
+      return "bg-on-surface-05 text-on-surface-30";
     case "Needs Review":
       return "bg-amber-10 text-amber";
   }
@@ -81,14 +82,15 @@ export default function AllPostsPage() {
   });
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-ivory-05">
+      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">All Posts</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">142 total posts</p>
+          <h1 className="font-display font-bold text-xl text-on-surface">All Posts</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">142 total posts</p>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {/* Search */}
           <div className="relative">
             <svg
@@ -96,7 +98,7 @@ export default function AllPostsPage() {
               height="16"
               viewBox="0 0 16 16"
               fill="none"
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ivory-30"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-30"
             >
               <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
               <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -106,7 +108,7 @@ export default function AllPostsPage() {
               placeholder="Search posts..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-[240px] pl-8 pr-3 py-2 rounded-[2px] border border-ivory-05 bg-ivory-05/50 text-sm font-body text-ivory placeholder:text-ivory-30 focus:outline-none focus:border-amber transition-colors"
+              className="w-[240px] pl-8 pr-3 py-2 rounded-[2px] border border-border-subtle bg-on-surface-05 text-sm font-body text-on-surface placeholder:text-on-surface-30 focus:outline-none focus:border-amber transition-colors"
             />
           </div>
 
@@ -114,7 +116,7 @@ export default function AllPostsPage() {
           <select
             value={platformFilter}
             onChange={(e) => setPlatformFilter(e.target.value)}
-            className="px-3 py-2 rounded-[2px] border border-ivory-05 bg-ivory-05/50 text-sm font-body text-ivory focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
+            className="px-3 py-2 rounded-[2px] border border-border-subtle bg-on-surface-05 text-sm font-body text-on-surface focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
           >
             <option value="All">Platform: All</option>
             <option value="Instagram">Instagram</option>
@@ -126,7 +128,7 @@ export default function AllPostsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-[2px] border border-ivory-05 bg-ivory-05/50 text-sm font-body text-ivory focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
+            className="px-3 py-2 rounded-[2px] border border-border-subtle bg-on-surface-05 text-sm font-body text-on-surface focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
           >
             <option value="All">Status: All</option>
             <option value="Published">Published</option>
@@ -146,7 +148,7 @@ export default function AllPostsPage() {
       </header>
 
       {/* Tabs */}
-      <div className="shrink-0 flex items-center gap-0 px-8 border-b border-ivory-05">
+      <div className="shrink-0 flex items-center gap-0 px-8 border-b border-border-subtle">
         {tabs.map((tab) => (
           <button
             key={tab.label}
@@ -154,13 +156,13 @@ export default function AllPostsPage() {
             className={`relative px-4 py-3 text-sm font-body transition-colors ${
               activeTab === tab.label
                 ? "text-amber"
-                : "text-ivory-30 hover:text-ivory"
+                : "text-on-surface-30 hover:text-on-surface"
             }`}
           >
             {tab.label}
             <span
               className={`ml-1.5 text-xs ${
-                activeTab === tab.label ? "text-amber" : "text-ivory-30"
+                activeTab === tab.label ? "text-amber" : "text-on-surface-30"
               }`}
             >
               {tab.count}
@@ -176,23 +178,23 @@ export default function AllPostsPage() {
       <div className="flex-1 overflow-y-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-ivory-05">
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+            <tr className="border-b border-border-subtle">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Post
               </th>
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Client
               </th>
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Platform
               </th>
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Status
               </th>
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Scheduled Date
               </th>
-              <th className="text-left text-[10px] uppercase tracking-wider text-ivory-30 font-body font-normal py-3 px-6">
+              <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-30 font-body font-normal py-3 px-6">
                 Actions
               </th>
             </tr>
@@ -201,20 +203,20 @@ export default function AllPostsPage() {
             {filteredPosts.map((post) => (
               <tr
                 key={post.id}
-                className="border-b border-ivory-05 hover:bg-ivory-05 transition"
+                className="border-b border-border-subtle hover:bg-on-surface-05 transition"
               >
                 <td className="py-3.5 px-6">
-                  <span className="font-body text-sm text-ivory">{post.title}</span>
+                  <span className="font-body text-sm text-on-surface">{post.title}</span>
                 </td>
                 <td className="py-3.5 px-6">
-                  <span className="text-xs text-ivory-30 font-body">{post.client}</span>
+                  <span className="text-xs text-on-surface-30 font-body">{post.client}</span>
                 </td>
                 <td className="py-3.5 px-6">
                   <div className="flex items-center gap-2">
                     <span
                       className={`w-2 h-2 rounded-full shrink-0 ${getPlatformDotColor(post.platform)}`}
                     />
-                    <span className="text-xs text-ivory-60 font-body">{post.platform}</span>
+                    <span className="text-xs text-on-surface-60 font-body">{post.platform}</span>
                   </div>
                 </td>
                 <td className="py-3.5 px-6">
@@ -225,7 +227,7 @@ export default function AllPostsPage() {
                   </span>
                 </td>
                 <td className="py-3.5 px-6">
-                  <span className="text-xs text-ivory-30 font-body">
+                  <span className="text-xs text-on-surface-30 font-body">
                     {post.scheduledDate ?? "\u2014"}
                   </span>
                 </td>
@@ -234,7 +236,7 @@ export default function AllPostsPage() {
                     <button className="text-amber text-xs font-body hover:text-amber/80 transition-colors">
                       Edit
                     </button>
-                    <button className="text-ivory-30 hover:text-ivory transition-colors">
+                    <button className="text-on-surface-30 hover:text-on-surface transition-colors">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <circle cx="8" cy="3" r="1.25" fill="currentColor" />
                         <circle cx="8" cy="8" r="1.25" fill="currentColor" />

@@ -23,8 +23,8 @@ const postsByDate: Record<number, Post[]> = {
 
 const platformStyles: Record<string, { border: string; bg: string; dot: string }> = {
   ig: { border: "border-l-amber", bg: "bg-amber-10", dot: "bg-amber" },
-  fb: { border: "border-l-ivory-30", bg: "bg-ivory-10", dot: "bg-ivory-30" },
-  tk: { border: "border-l-ivory-60", bg: "bg-ivory-05", dot: "bg-ivory-60" },
+  fb: { border: "border-l-on-surface-30", bg: "bg-on-surface-10", dot: "bg-on-surface-30" },
+  tk: { border: "border-l-on-surface-60", bg: "bg-on-surface-05", dot: "bg-on-surface-60" },
 };
 
 const statusDots: Record<string, string> = {
@@ -60,41 +60,41 @@ export default function CalendarPage() {
   const today = 28; // highlight a sample "today"
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 flex items-center justify-between px-8 py-5 border-b border-ivory-05">
+      <header className="shrink-0 flex items-center justify-between px-8 py-5 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">Schedule</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">July 2025</p>
+          <h1 className="font-display font-bold text-xl text-on-surface">Schedule</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">July 2025</p>
         </div>
       </header>
 
       {/* Controls */}
-      <div className="shrink-0 px-8 py-4 flex items-center justify-between border-b border-ivory-05">
+      <div className="shrink-0 px-8 py-4 flex items-center justify-between border-b border-border-subtle">
         <div className="flex items-center gap-3">
           {/* Prev / Next */}
-          <button className="p-1.5 rounded-[1px] hover:bg-ivory-05 text-ivory-30 hover:text-ivory transition-colors">
+          <button className="p-1.5 rounded-[1px] hover:bg-on-surface-05 text-on-surface-30 hover:text-on-surface transition-colors">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <span className="font-display font-semibold text-sm text-ivory min-w-[110px] text-center">July 2025</span>
-          <button className="p-1.5 rounded-[1px] hover:bg-ivory-05 text-ivory-30 hover:text-ivory transition-colors">
+          <span className="font-display font-semibold text-sm text-on-surface min-w-[110px] text-center">July 2025</span>
+          <button className="p-1.5 rounded-[1px] hover:bg-on-surface-05 text-on-surface-30 hover:text-on-surface transition-colors">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <button className="ml-2 px-3 py-1 text-xs font-body font-semibold rounded-[1px] border border-ivory-10 text-ivory-60 hover:text-ivory hover:border-ivory-30 transition-colors">
+          <button className="ml-2 px-3 py-1 text-xs font-body font-semibold rounded-[1px] border border-on-surface-10 text-on-surface-60 hover:text-on-surface hover:border-on-surface-30 transition-colors">
             Today
           </button>
           {/* View toggle */}
-          <div className="ml-3 flex rounded-[1px] border border-ivory-10 overflow-hidden">
+          <div className="ml-3 flex rounded-[1px] border border-on-surface-10 overflow-hidden">
             {(["Month", "Week"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={`px-3 py-1 text-xs font-body font-semibold transition-colors ${
-                  view === v ? "bg-ivory-10 text-ivory" : "text-ivory-30 hover:text-ivory"
+                  view === v ? "bg-on-surface-10 text-on-surface" : "text-on-surface-30 hover:text-on-surface"
                 }`}
               >
                 {v}
@@ -111,7 +111,7 @@ export default function CalendarPage() {
               className={`px-3 py-1 text-xs font-body font-semibold rounded-full transition-colors ${
                 filter === p
                   ? "bg-amber-20 text-amber"
-                  : "text-ivory-30 hover:text-ivory hover:bg-ivory-05"
+                  : "text-on-surface-30 hover:text-on-surface hover:bg-on-surface-05"
               }`}
             >
               {p}
@@ -125,13 +125,13 @@ export default function CalendarPage() {
         {/* Day headers */}
         <div className="grid grid-cols-7 mb-1">
           {DAYS.map((d) => (
-            <div key={d} className="text-center text-[10px] font-body font-semibold text-ivory-30 uppercase tracking-wider py-2">
+            <div key={d} className="text-center text-[10px] font-body font-semibold text-on-surface-30 uppercase tracking-wider py-2">
               {d}
             </div>
           ))}
         </div>
         {/* Cells */}
-        <div className="grid grid-cols-7 border-t border-l border-ivory-05">
+        <div className="grid grid-cols-7 border-t border-l border-border-subtle">
           {cells.map((day, i) => {
             const isToday = day === today;
             const dayPosts = day ? postsByDate[day] || [] : [];
@@ -143,15 +143,15 @@ export default function CalendarPage() {
             return (
               <div
                 key={i}
-                className={`min-h-[100px] border-r border-b border-ivory-05 p-1.5 ${
+                className={`min-h-[100px] border-r border-b border-border-subtle p-1.5 ${
                   isToday ? "bg-amber-10" : ""
-                } ${day ? "" : "bg-ivory-05/30"}`}
+                } ${day ? "" : "bg-on-surface-05"}`}
               >
                 {day && (
                   <>
                     <span
                       className={`inline-block text-xs font-body mb-1 px-1 rounded ${
-                        isToday ? "font-bold text-amber" : "text-ivory-30"
+                        isToday ? "font-bold text-amber" : "text-on-surface-30"
                       }`}
                     >
                       {day}
@@ -165,7 +165,7 @@ export default function CalendarPage() {
                             className={`rounded px-1.5 py-0.5 border-l-2 ${ps.border} ${ps.bg} flex items-center gap-1`}
                           >
                             <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDots[post.status]}`} />
-                            <span className="text-[10px] font-body text-ivory truncate leading-tight">
+                            <span className="text-[10px] font-body text-on-surface truncate leading-tight">
                               {post.title}
                             </span>
                           </div>

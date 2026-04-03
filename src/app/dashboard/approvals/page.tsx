@@ -30,7 +30,7 @@ const cards: ApprovalCard[] = [
   {
     id: "#SMM-042",
     platform: "Facebook",
-    platformColor: "bg-ivory-30",
+    platformColor: "bg-on-surface-30",
     date: "Jul 4",
     title: "Client Testimonial Carousel",
     caption:
@@ -54,11 +54,11 @@ function statusPillClass(status: string) {
     case "Pending":
       return "bg-amber-20 text-amber";
     case "Approved":
-      return "bg-ivory-10 text-ivory";
+      return "bg-on-surface-10 text-on-surface";
     case "Needs Revision":
       return "bg-amber-10 text-amber";
     default:
-      return "bg-ivory-10 text-ivory-60";
+      return "bg-on-surface-10 text-on-surface-60";
   }
 }
 
@@ -71,12 +71,12 @@ export default function ApprovalsPage() {
     activeTab === "All" ? cards : cards.filter((c) => c.status === activeTab);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 flex items-center justify-between px-8 py-5 border-b border-ivory-05">
+      <header className="shrink-0 flex items-center justify-between px-8 py-5 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">Approvals</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">Review and approve your content</p>
+          <h1 className="font-display font-bold text-xl text-on-surface">Approvals</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">Review and approve your content</p>
         </div>
       </header>
 
@@ -88,8 +88,8 @@ export default function ApprovalsPage() {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-sm font-body font-semibold rounded-t-[2px] transition-colors ${
               activeTab === tab
-                ? "bg-ivory-05 text-ivory border-b-2 border-amber"
-                : "text-ivory-30 hover:text-ivory hover:bg-ivory-05/50"
+                ? "bg-on-surface-05 text-on-surface border-b-2 border-amber"
+                : "text-on-surface-30 hover:text-on-surface hover:bg-on-surface-05"
             }`}
           >
             {tab}
@@ -106,7 +106,7 @@ export default function ApprovalsPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber opacity-75" />
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber" />
             </span>
-            <p className="text-sm font-body text-ivory">
+            <p className="text-sm font-body text-on-surface">
               You have <span className="font-semibold text-amber">3 posts</span> pending approval
             </p>
           </div>
@@ -119,15 +119,15 @@ export default function ApprovalsPage() {
         {filtered.map((card) => (
           <div
             key={card.id}
-            className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 overflow-hidden"
+            className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden"
           >
             {/* Card header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-ivory-05">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle">
               <div className="flex items-center gap-3">
-                <span className="text-xs font-body font-mono text-ivory-30">{card.id}</span>
+                <span className="text-xs font-body font-mono text-on-surface-30">{card.id}</span>
                 <span className={`w-2 h-2 rounded-full ${card.platformColor}`} />
-                <span className="text-xs font-body text-ivory-60">{card.platform}</span>
-                <span className="text-xs font-body text-ivory-30">{card.date}</span>
+                <span className="text-xs font-body text-on-surface-60">{card.platform}</span>
+                <span className="text-xs font-body text-on-surface-30">{card.date}</span>
               </div>
               <span
                 className={`px-2.5 py-0.5 text-[10px] font-semibold font-body rounded-full ${statusPillClass(
@@ -141,8 +141,8 @@ export default function ApprovalsPage() {
             {/* Card body */}
             <div className="flex">
               {/* Preview placeholder */}
-              <div className="w-[200px] shrink-0 bg-ivory-05 flex items-center justify-center border-r border-ivory-05">
-                <svg width="64" height="64" viewBox="0 0 64 64" className="text-ivory-10">
+              <div className="w-[200px] shrink-0 bg-on-surface-05 flex items-center justify-center border-r border-border-subtle">
+                <svg width="64" height="64" viewBox="0 0 64 64" className="text-on-surface-10">
                   <defs>
                     <pattern id={`prev-${card.id}`} width="8" height="8" patternUnits="userSpaceOnUse">
                       <rect width="8" height="8" fill="none" />
@@ -155,9 +155,9 @@ export default function ApprovalsPage() {
 
               {/* Info */}
               <div className="flex-1 p-5 space-y-3">
-                <h3 className="font-display font-semibold text-base text-ivory">{card.title}</h3>
-                <p className="text-sm font-body text-ivory-60 leading-relaxed">{card.caption}</p>
-                <div className="flex items-center gap-4 text-[11px] font-body text-ivory-30">
+                <h3 className="font-display font-semibold text-base text-on-surface">{card.title}</h3>
+                <p className="text-sm font-body text-on-surface-60 leading-relaxed">{card.caption}</p>
+                <div className="flex items-center gap-4 text-[11px] font-body text-on-surface-30">
                   <span>Format: Single Image</span>
                   <span>Hashtags: 3</span>
                   <span>Scheduled: {card.date}, 2025</span>
@@ -172,7 +172,7 @@ export default function ApprovalsPage() {
                     onClick={() =>
                       setFeedbackOpen(feedbackOpen === card.id ? null : card.id)
                     }
-                    className="px-4 py-2 text-xs font-body font-semibold rounded-[1px] border border-ivory-10 text-ivory-60 hover:text-ivory hover:border-ivory-30 transition-colors"
+                    className="px-4 py-2 text-xs font-body font-semibold rounded-[1px] border border-on-surface-10 text-on-surface-60 hover:text-on-surface hover:border-on-surface-30 transition-colors"
                   >
                     Request Changes
                   </button>
@@ -187,7 +187,7 @@ export default function ApprovalsPage() {
                         setFeedbackText({ ...feedbackText, [card.id]: e.target.value })
                       }
                       placeholder="Describe the changes you'd like..."
-                      className="w-full h-24 px-3 py-2 text-sm font-body rounded-[1px] bg-graphite border border-ivory-10 text-ivory placeholder:text-ivory-30 focus:outline-none focus:border-amber resize-none"
+                      className="w-full h-24 px-3 py-2 text-sm font-body rounded-[1px] bg-surface border border-on-surface-10 text-on-surface placeholder:text-on-surface-30 focus:outline-none focus:border-amber resize-none"
                     />
                     <div className="flex items-center gap-2">
                       <button className="px-4 py-1.5 text-xs font-body font-semibold rounded-[1px] bg-amber text-graphite hover:brightness-110 transition">
@@ -195,7 +195,7 @@ export default function ApprovalsPage() {
                       </button>
                       <button
                         onClick={() => setFeedbackOpen(null)}
-                        className="px-4 py-1.5 text-xs font-body font-semibold rounded-[1px] text-ivory-30 hover:text-ivory transition-colors"
+                        className="px-4 py-1.5 text-xs font-body font-semibold rounded-[1px] text-on-surface-30 hover:text-on-surface transition-colors"
                       >
                         Cancel
                       </button>

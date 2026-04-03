@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type FileCategory = "Image" | "Video" | "Document" | "Brand Asset";
 type CategoryFilter = "All" | "Images" | "Videos" | "Documents" | "Brand Assets";
@@ -56,14 +57,14 @@ function getCategoryBadgeStyle(category: FileCategory): string {
     case "Video":
       return "bg-amber-10 text-amber";
     case "Document":
-      return "bg-ivory-05 text-ivory-30";
+      return "bg-on-surface-05 text-on-surface-30";
     case "Brand Asset":
-      return "bg-ivory-05 text-ivory-60";
+      return "bg-on-surface-05 text-on-surface-60";
   }
 }
 
 function CategoryIcon({ category }: { category: FileCategory }) {
-  const cls = "text-ivory-10";
+  const cls = "text-on-surface-10";
   switch (category) {
     case "Image":
       return (
@@ -111,14 +112,15 @@ export default function MediaLibraryPage() {
   });
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-ivory-05">
+      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">Media Library</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">Assets across all clients</p>
+          <h1 className="font-display font-bold text-xl text-on-surface">Media Library</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">Assets across all clients</p>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {/* Search */}
           <div className="relative">
             <svg
@@ -126,7 +128,7 @@ export default function MediaLibraryPage() {
               height="16"
               viewBox="0 0 16 16"
               fill="none"
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ivory-30"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-30"
             >
               <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
               <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -136,7 +138,7 @@ export default function MediaLibraryPage() {
               placeholder="Search assets..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-[240px] pl-8 pr-3 py-2 rounded-[2px] border border-ivory-05 bg-ivory-05/50 text-sm font-body text-ivory placeholder:text-ivory-30 focus:outline-none focus:border-amber transition-colors"
+              className="w-[240px] pl-8 pr-3 py-2 rounded-[2px] border border-border-subtle bg-on-surface-05 text-sm font-body text-on-surface placeholder:text-on-surface-30 focus:outline-none focus:border-amber transition-colors"
             />
           </div>
 
@@ -150,10 +152,10 @@ export default function MediaLibraryPage() {
           </button>
 
           {/* View toggle */}
-          <div className="flex items-center rounded-[2px] border border-ivory-05 overflow-hidden">
+          <div className="flex items-center rounded-[2px] border border-border-subtle overflow-hidden">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-2 transition-colors ${viewMode === "grid" ? "bg-ivory-05 text-ivory" : "text-ivory-30 hover:text-ivory"}`}
+              className={`p-2 transition-colors ${viewMode === "grid" ? "bg-on-surface-05 text-on-surface" : "text-on-surface-30 hover:text-on-surface"}`}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <rect x="1" y="1" width="6" height="6" rx="0.5" stroke="currentColor" strokeWidth="1.25" />
@@ -164,7 +166,7 @@ export default function MediaLibraryPage() {
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-2 transition-colors ${viewMode === "list" ? "bg-ivory-05 text-ivory" : "text-ivory-30 hover:text-ivory"}`}
+              className={`p-2 transition-colors ${viewMode === "list" ? "bg-on-surface-05 text-on-surface" : "text-on-surface-30 hover:text-on-surface"}`}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M1 3H15M1 8H15M1 13H15" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
@@ -175,7 +177,7 @@ export default function MediaLibraryPage() {
       </header>
 
       {/* Filter bar */}
-      <div className="shrink-0 flex items-center justify-between px-8 py-3 border-b border-ivory-05">
+      <div className="shrink-0 flex items-center justify-between px-8 py-3 border-b border-border-subtle">
         <div className="flex items-center gap-2">
           {categoryFilters.map((cat) => (
             <button
@@ -184,7 +186,7 @@ export default function MediaLibraryPage() {
               className={`px-3 py-1.5 rounded-[2px] text-xs font-body transition-colors ${
                 activeCategory === cat.label
                   ? "bg-amber-10 text-amber"
-                  : "bg-ivory-05/50 text-ivory-30 hover:text-ivory hover:bg-ivory-05"
+                  : "bg-on-surface-05 text-on-surface-30 hover:text-on-surface hover:bg-on-surface-05"
               }`}
             >
               {cat.label}
@@ -195,7 +197,7 @@ export default function MediaLibraryPage() {
         <select
           value={clientFilter}
           onChange={(e) => setClientFilter(e.target.value)}
-          className="px-3 py-1.5 rounded-[2px] border border-ivory-05 bg-ivory-05/50 text-xs font-body text-ivory focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
+          className="px-3 py-1.5 rounded-[2px] border border-border-subtle bg-on-surface-05 text-xs font-body text-on-surface focus:outline-none focus:border-amber transition-colors appearance-none cursor-pointer"
         >
           {clientOptions.map((opt) => (
             <option key={opt} value={opt}>
@@ -211,27 +213,27 @@ export default function MediaLibraryPage() {
           {filteredAssets.map((asset) => (
             <div
               key={asset.id}
-              className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 overflow-hidden hover:border-amber transition group cursor-pointer"
+              className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden hover:border-amber transition group cursor-pointer"
             >
               {/* Preview area */}
-              <div className="aspect-[4/3] bg-graphite flex flex-col items-center justify-center gap-2">
+              <div className="aspect-[4/3] bg-surface flex flex-col items-center justify-center gap-2">
                 <CategoryIcon category={asset.category} />
-                <span className="text-[10px] font-body text-ivory-10 uppercase tracking-wider">
+                <span className="text-[10px] font-body text-on-surface-10 uppercase tracking-wider">
                   {asset.extension}
                 </span>
               </div>
 
               {/* Info area */}
               <div className="p-4">
-                <p className="text-sm font-body text-ivory truncate">{asset.filename}</p>
-                <p className="text-xs font-body text-ivory-30 mt-0.5">{asset.client}</p>
+                <p className="text-sm font-body text-on-surface truncate">{asset.filename}</p>
+                <p className="text-xs font-body text-on-surface-30 mt-0.5">{asset.client}</p>
                 <div className="flex items-center justify-between mt-3">
                   <span
                     className={`text-[10px] font-body rounded-[1px] px-1.5 py-0.5 ${getCategoryBadgeStyle(asset.category)}`}
                   >
                     {asset.category}
                   </span>
-                  <span className="text-xs font-body text-ivory-30">{asset.size}</span>
+                  <span className="text-xs font-body text-on-surface-30">{asset.size}</span>
                 </div>
               </div>
             </div>

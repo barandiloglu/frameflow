@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Status = "Active" | "Paused" | "Onboarding";
 type Plan = "Growth Plan" | "Starter Plan" | "Enterprise";
@@ -56,9 +57,9 @@ function getAvatarBg(plan: Plan): string {
     case "Growth Plan":
       return "bg-amber-20";
     case "Starter Plan":
-      return "bg-ivory-10";
+      return "bg-on-surface-10";
     case "Enterprise":
-      return "bg-ivory-10";
+      return "bg-on-surface-10";
   }
 }
 
@@ -67,9 +68,9 @@ function getPlanBadge(plan: Plan): string {
     case "Growth Plan":
       return "bg-amber text-graphite";
     case "Starter Plan":
-      return "bg-ivory-10 text-ivory-60";
+      return "bg-on-surface-10 text-on-surface-60";
     case "Enterprise":
-      return "bg-ivory-10 text-ivory-60";
+      return "bg-on-surface-10 text-on-surface-60";
   }
 }
 
@@ -78,7 +79,7 @@ function getStatusBadge(status: Status): string {
     case "Active":
       return "bg-emerald-500/15 text-emerald-400";
     case "Paused":
-      return "bg-ivory-30 text-ivory-60";
+      return "bg-on-surface-30 text-on-surface-60";
     case "Onboarding":
       return "bg-amber-10 text-amber";
   }
@@ -99,22 +100,23 @@ export default function AdminClientsPage() {
   });
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-surface">
       {/* Top bar */}
-      <div className="flex items-center justify-between h-[68px] min-h-[68px] px-6 border-b border-ivory-05">
+      <div className="flex items-center justify-between h-[68px] min-h-[68px] px-6 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-semibold text-lg text-ivory">
+          <h1 className="font-display font-semibold text-lg text-on-surface">
             Clients
           </h1>
-          <p className="text-xs text-ivory-30">12 total clients</p>
+          <p className="text-xs text-on-surface-30">12 total clients</p>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <input
             type="text"
             placeholder="Search clients..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-[240px] h-9 px-3 text-sm text-ivory bg-ivory-05 border border-ivory-10 rounded-[2px] placeholder:text-ivory-30 outline-none focus:border-ivory-30 transition font-body"
+            className="w-[240px] h-9 px-3 text-sm text-on-surface bg-on-surface-05 border border-on-surface-10 rounded-[2px] placeholder:text-on-surface-30 outline-none focus:border-on-surface-30 transition font-body"
           />
           <button className="h-9 px-4 bg-amber text-graphite text-sm font-body font-medium rounded-[2px] hover:opacity-90 transition cursor-pointer">
             + Add Client
@@ -123,21 +125,21 @@ export default function AdminClientsPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex items-center gap-6 px-6 border-b border-ivory-05">
+      <div className="flex items-center gap-6 px-6 border-b border-border-subtle">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`relative py-3 text-sm font-body transition cursor-pointer ${
               activeTab === tab
-                ? "text-ivory"
-                : "text-ivory-30 hover:text-ivory"
+                ? "text-on-surface"
+                : "text-on-surface-30 hover:text-on-surface"
             }`}
           >
             {tab}{" "}
             <span
               className={
-                activeTab === tab ? "text-ivory-60" : "text-ivory-30"
+                activeTab === tab ? "text-on-surface-60" : "text-on-surface-30"
               }
             >
               ({tabCounts[tab]})
@@ -154,23 +156,23 @@ export default function AdminClientsPage() {
         {filtered.map((client) => (
           <div
             key={client.id}
-            className="flex items-center py-4 px-6 border-b border-ivory-05 hover:bg-ivory-05 transition"
+            className="flex items-center py-4 px-6 border-b border-border-subtle hover:bg-on-surface-05 transition"
           >
             {/* Avatar */}
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getAvatarBg(client.plan)}`}
             >
-              <span className="font-display font-semibold text-xs text-ivory">
+              <span className="font-display font-semibold text-xs text-on-surface">
                 {getInitials(client.name)}
               </span>
             </div>
 
             {/* Name + Location */}
             <div className="ml-3 min-w-[140px]">
-              <p className="font-display font-semibold text-sm text-ivory">
+              <p className="font-display font-semibold text-sm text-on-surface">
                 {client.name}
               </p>
-              <p className="text-xs text-ivory-30">{client.location}</p>
+              <p className="text-xs text-on-surface-30">{client.location}</p>
             </div>
 
             {/* Plan badge */}
@@ -193,7 +195,7 @@ export default function AdminClientsPage() {
 
             {/* Services */}
             <div className="ml-4 min-w-[140px]">
-              <p className="text-xs text-ivory-30">
+              <p className="text-xs text-on-surface-30">
                 {client.services.join(", ")}
               </p>
             </div>
@@ -206,13 +208,13 @@ export default function AdminClientsPage() {
                   {client.pending} pending
                 </span>
               ) : (
-                <span className="text-xs text-ivory-30">All clear</span>
+                <span className="text-xs text-on-surface-30">All clear</span>
               )}
             </div>
 
             {/* Joined */}
             <div className="ml-4 min-w-[80px]">
-              <p className="text-xs text-ivory-30">{client.joined}</p>
+              <p className="text-xs text-on-surface-30">{client.joined}</p>
             </div>
 
             {/* Actions */}
@@ -223,7 +225,7 @@ export default function AdminClientsPage() {
               >
                 View
               </Link>
-              <button className="text-ivory-30 hover:text-ivory transition text-lg leading-none cursor-pointer">
+              <button className="text-on-surface-30 hover:text-on-surface transition text-lg leading-none cursor-pointer">
                 ...
               </button>
             </div>
@@ -232,7 +234,7 @@ export default function AdminClientsPage() {
 
         {filtered.length === 0 && (
           <div className="flex items-center justify-center py-20">
-            <p className="text-sm text-ivory-30">No clients found.</p>
+            <p className="text-sm text-on-surface-30">No clients found.</p>
           </div>
         )}
       </div>

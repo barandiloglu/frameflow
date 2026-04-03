@@ -252,7 +252,7 @@ export default function ServicesPage() {
             </p>
 
             {/* Feature list */}
-            <ul className="flex flex-col gap-2.5 mb-10">
+            <ul className="flex flex-col gap-2.5">
               {service.features.map((feature, fIdx) => (
                 <li key={fIdx} className="flex items-start gap-3">
                   <span className="mt-[5px] block h-1 w-1 shrink-0 rounded-[1px] bg-amber" />
@@ -263,16 +263,6 @@ export default function ServicesPage() {
               ))}
             </ul>
 
-            {/* CTA */}
-            <div>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2.5 bg-amber text-graphite font-body text-[12px] font-medium tracking-[0.12em] uppercase py-[14px] px-8 rounded-[1px] hover:bg-[#e09f3a] transition-colors"
-              >
-                Get Started
-                <span>&rarr;</span>
-              </Link>
-            </div>
           </Reveal>
         );
 

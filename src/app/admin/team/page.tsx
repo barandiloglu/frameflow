@@ -1,5 +1,7 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
+
 const teamMembers = [
   {
     initials: "AK",
@@ -66,21 +68,24 @@ const teamMembers = [
 const roleBadgeStyles: Record<string, string> = {
   Admin: "bg-amber text-graphite",
   Manager: "bg-amber-10 text-amber",
-  Member: "bg-ivory-05 text-ivory-30",
+  Member: "bg-on-surface-05 text-on-surface-30",
 };
 
 export default function TeamPage() {
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface">
       {/* Top bar */}
-      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-ivory-05">
+      <header className="shrink-0 h-[68px] flex items-center justify-between px-8 border-b border-border-subtle">
         <div>
-          <h1 className="font-display font-bold text-xl text-ivory">Team</h1>
-          <p className="text-sm font-body text-ivory-30 mt-0.5">Manage your team members</p>
+          <h1 className="font-display font-bold text-xl text-on-surface">Team</h1>
+          <p className="text-sm font-body text-on-surface-30 mt-0.5">Manage your team members</p>
         </div>
-        <button className="h-9 px-4 rounded-[2px] bg-amber text-graphite text-sm font-body font-semibold hover:bg-amber/90 transition-colors">
-          + Add Member
-        </button>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <button className="h-9 px-4 rounded-[2px] bg-amber text-graphite text-sm font-body font-semibold hover:bg-amber/90 transition-colors">
+            + Add Member
+          </button>
+        </div>
       </header>
 
       {/* Scrollable content */}
@@ -89,22 +94,22 @@ export default function TeamPage() {
           {teamMembers.map((member) => (
             <div
               key={member.email}
-              className="rounded-[2px] border border-ivory-05 bg-ivory-05/50 flex flex-col"
+              className="rounded-[2px] border border-border-subtle bg-on-surface-05 flex flex-col"
             >
               {/* Top section */}
               <div className="p-5 flex items-start gap-4">
                 <div
                   className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center ${
-                    member.role === "Admin" ? "bg-amber-20" : "bg-ivory-10"
+                    member.role === "Admin" ? "bg-amber-20" : "bg-on-surface-10"
                   }`}
                 >
-                  <span className="font-display font-bold text-lg text-ivory">
+                  <span className="font-display font-bold text-lg text-on-surface">
                     {member.initials}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-display font-semibold text-lg text-ivory">{member.name}</h3>
+                    <h3 className="font-display font-semibold text-lg text-on-surface">{member.name}</h3>
                     <span
                       className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-[1px] ${roleBadgeStyles[member.role]}`}
                     >
@@ -114,24 +119,24 @@ export default function TeamPage() {
                   <p className="text-xs font-body text-amber uppercase tracking-wider mt-1">
                     {member.title}
                   </p>
-                  <p className="text-xs font-body text-ivory-30 mt-1">{member.email}</p>
+                  <p className="text-xs font-body text-on-surface-30 mt-1">{member.email}</p>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="border-t border-ivory-05" />
+              <div className="border-t border-border-subtle" />
 
               {/* Stats section */}
               <div className="px-5 py-4 flex items-center gap-6">
                 <div>
-                  <p className="text-[10px] font-body text-ivory-30 uppercase tracking-wider">Clients</p>
-                  <p className="font-display font-semibold text-sm text-ivory mt-0.5">
+                  <p className="text-[10px] font-body text-on-surface-30 uppercase tracking-wider">Clients</p>
+                  <p className="font-display font-semibold text-sm text-on-surface mt-0.5">
                     {member.clients.length}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-body text-ivory-30 uppercase tracking-wider">Since</p>
-                  <p className="font-display font-semibold text-sm text-ivory mt-0.5">
+                  <p className="text-[10px] font-body text-on-surface-30 uppercase tracking-wider">Since</p>
+                  <p className="font-display font-semibold text-sm text-on-surface mt-0.5">
                     {member.joined}
                   </p>
                 </div>
@@ -139,13 +144,13 @@ export default function TeamPage() {
 
               {/* Client list */}
               <div className="px-5 pb-4">
-                <p className="text-xs font-body text-ivory-60">
+                <p className="text-xs font-body text-on-surface-60">
                   {member.clients.join(", ")}
                 </p>
               </div>
 
               {/* Bottom links */}
-              <div className="mt-auto px-5 py-3 border-t border-ivory-05 flex items-center gap-4">
+              <div className="mt-auto px-5 py-3 border-t border-border-subtle flex items-center gap-4">
                 <button className="text-xs font-body text-amber hover:text-amber/80 transition-colors">
                   Edit
                 </button>

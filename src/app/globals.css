@@ -74,7 +74,7 @@
 
 @theme {
   --font-display: var(--ff-display), sans-serif;
-  --font-body: var(--ff-body), sans-serif;
+  --font-body: inherit;
 }
 
 html {
@@ -82,7 +82,6 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
   background: var(--color-surface);
   color: var(--color-on-surface);
   overflow-x: hidden;

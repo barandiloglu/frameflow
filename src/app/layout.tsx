@@ -13,7 +13,6 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const inter = Inter({
-  variable: "--ff-body",
   subsets: ["latin"],
   weight: ["300", "400", "500"],
 });
@@ -34,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.className} ${jakarta.variable}`} suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script
@@ -43,7 +42,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-body">
+      <body>
         <ThemeProvider>
           <ScrollProgress />
           <ScrollToTop />

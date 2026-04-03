@@ -121,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="h-screen overflow-hidden flex flex-row bg-graphite">
+    <div className="h-screen overflow-hidden flex flex-row bg-surface">
       {/* Sidebar */}
       <aside
         className="w-[260px] shrink-0 flex flex-col border-r border-ivory-10"

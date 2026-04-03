@@ -95,7 +95,7 @@ const filters = [
 /*  Card                                                               */
 /* ------------------------------------------------------------------ */
 
-function ProjectCard({ project, visible }: { project: Project; visible: boolean }) {
+function ProjectCard({ project }: { project: Project }) {
   const sizeClasses =
     project.size === "tall"
       ? "sm:row-span-2"
@@ -105,24 +105,24 @@ function ProjectCard({ project, visible }: { project: Project; visible: boolean 
 
   const aspectClass =
     project.size === "tall"
-      ? "aspect-[4/6]"
+      ? "aspect-[3/5]"
       : project.size === "wide"
-        ? "aspect-[8/3]"
-        : "aspect-[4/3]";
+        ? "aspect-[2/1]"
+        : project.featured
+          ? "aspect-square"
+          : "aspect-[4/3]";
 
   return (
     <motion.div
-      data-cat={project.cat}
       layout
-      animate={{
-        opacity: visible ? 1 : 0,
-        scale: visible ? 1 : 0.96,
-      }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={`${sizeClasses} ${!visible ? "pointer-events-none" : ""}`}
+      className={sizeClasses}
     >
       <div
-        className={`group relative ${aspectClass} w-full overflow-hidden rounded-[2px] bg-[#2a2826] cursor-pointer`}
+        className={`group relative ${aspectClass} w-full overflow-hidden rounded-[3px] bg-[#2a2826] cursor-pointer`}
       >
         {/* grid pattern */}
         <div
@@ -276,16 +276,17 @@ export default function PortfolioPage() {
       <section className="bg-surface px-6 md:px-[52px] py-16">
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[2px]"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
         >
-          <AnimatePresence>
-            {projects.map((p) => (
-              <ProjectCard
-                key={p.id}
-                project={p}
-                visible={active === "all" || p.cat === active}
-              />
-            ))}
+          <AnimatePresence mode="popLayout">
+            {projects
+              .filter((p) => active === "all" || p.cat === active)
+              .map((p) => (
+                <ProjectCard
+                  key={p.id}
+                  project={p}
+                />
+              ))}
           </AnimatePresence>
         </motion.div>
       </section>
