@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter, Fraunces, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -15,6 +15,25 @@ const jakarta = Plus_Jakarta_Sans({
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
+});
+
+const fraunces = Fraunces({
+  variable: "--ff-editorial",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--ff-warm",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+});
+
+const jetMono = JetBrains_Mono({
+  variable: "--ff-mono",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className} ${jakarta.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.className} ${jakarta.variable} ${fraunces.variable} ${dmSans.variable} ${jetMono.variable}`} suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script

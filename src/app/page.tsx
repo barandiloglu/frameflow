@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Reveal } from "@/components/Reveal";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -23,170 +22,148 @@ const clients = [
   "Harbor Digital",
 ];
 
-const services = [
-  {
-    name: "Brand Identity",
-    description:
-      "Complete identities built to connect, built to last — voice, visuals, values, all telling one story.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-        <path d="M2 17L12 22L22 17" />
-        <path d="M2 12L12 17L22 12" />
-      </svg>
-    ),
-    size: "large" as const,
-  },
-  {
-    name: "Website Design",
-    description:
-      "Modern, SEO-friendly, mobile-responsive websites custom-built to make your business thrive online.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2" />
-        <path d="M8 21H16" />
-        <path d="M12 17V21" />
-      </svg>
-    ),
-    size: "large" as const,
-  },
-  {
-    name: "Logo Design",
-    description:
-      "Strategic visual assets that make your brand unforgettable — crafted for lasting recognition.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 19L19 12L22 15L15 22L12 19Z" />
-        <path d="M18 13L16.5 5.5L2 2L5.5 16.5L13 18L18 13Z" />
-        <path d="M2 2L9.586 9.586" />
-        <circle cx="11" cy="11" r="2" />
-      </svg>
-    ),
-    size: "small" as const,
-  },
-  {
-    name: "Social Media",
-    description:
-      "Strategy-driven campaigns on Instagram, Facebook, TikTok and beyond — content that converts.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 4L9 9" />
-        <path d="M12 3V6" />
-        <path d="M20 4L15 9" />
-        <path d="M21 12H18" />
-        <path d="M20 20L15 15" />
-        <path d="M12 18V21" />
-        <path d="M4 20L9 15" />
-        <path d="M3 12H6" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    ),
-    size: "small" as const,
-  },
-  {
-    name: "Video & Photo",
-    description:
-      "High-quality photography and videography that captures your brand's true essence.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14.5 4H9.5L7 7H4C2.9 7 2 7.9 2 9V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V9C22 7.9 21.1 7 20 7H17L14.5 4Z" />
-        <circle cx="12" cy="13" r="3.5" />
-      </svg>
-    ),
-    size: "small" as const,
-  },
-  {
-    name: "Ad Management",
-    description:
-      "Data-driven Google and Meta campaigns designed for real ROI — no wasted budget.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 12H18L15 21L9 3L6 12H2" />
-      </svg>
-    ),
-    size: "small" as const,
-  },
-  {
-    name: "Web & Mobile Apps",
-    description:
-      "End-to-end app development — from concept to polished product.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="5" y="2" width="14" height="20" rx="2" />
-        <path d="M12 18H12.01" />
-      </svg>
-    ),
-    size: "small" as const,
-  },
+const marqueeWords = [
+  "Identity",
+  "Websites",
+  "Campaigns",
+  "Social",
+  "Film",
+  "Photo",
+  "Ads",
+  "Apps",
 ];
 
-const processSteps = [
-  {
-    number: "01",
-    title: "Initial Analysis",
-    description:
-      "We learn your business inside-out — goals, audience, competitors — to build a strategy rooted in reality.",
-  },
-  {
-    number: "02",
-    title: "Project Outline",
-    description:
-      "A detailed roadmap with milestones, deliverables, and timelines so you always know what to expect.",
-  },
-  {
-    number: "03",
-    title: "Continuous Work",
-    description:
-      "Iterative design and development with regular check-ins, ensuring every detail aligns with your vision.",
-  },
-  {
-    number: "04",
-    title: "Delivery",
-    description:
-      "Polished final assets, seamless handoff, and post-launch support to keep your momentum going.",
-  },
-];
-
-const whyReasons = [
-  {
-    tag: "Brand & Identity",
-    heading: "Real Impact Starts With Real Identity",
-    text: "A strong brand is more than a logo — it's the feeling people get when they encounter your business. We build identities that are authentic, memorable, and strategically designed to set you apart in a crowded market.",
-  },
-  {
-    tag: "Partnership",
-    heading: "We Don't Just Work For You — We Work With You",
-    text: "We believe the best results come from genuine collaboration. You're not a ticket in our queue — you're a partner. We embed ourselves in your goals, communicate transparently, and celebrate wins together.",
-  },
-  {
-    tag: "Marketing",
-    heading: "You Do You. We'll Handle the Marketing.",
-    text: "Running a business is demanding enough. Let us take the weight of branding, social media, ads, and web off your shoulders so you can focus on what you do best — serving your customers.",
-  },
-];
-
-/* ------------------------------------------------------------------ */
-/*  Hero word animation variants                                       */
-/* ------------------------------------------------------------------ */
-
-const wordContainer = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.3 },
-  },
+type Scene = {
+  id: string;
+  slug: string;
+  subtitle: string;
+  copy: string;
+  scene: string;
+  span: string;
+  accent?: boolean;
 };
 
-const wordReveal = {
-  hidden: { y: "100%", opacity: 0 },
-  visible: {
+const reel: Scene[] = [
+  {
+    id: "001",
+    slug: "Brand Identity",
+    subtitle: "the core frame",
+    copy: "Voice, visuals, values — one story told through every surface a customer touches.",
+    scene: "INT. STUDIO — DAY",
+    span: "col-span-12 md:col-span-7 md:row-span-2",
+    accent: true,
+  },
+  {
+    id: "002",
+    slug: "Websites",
+    subtitle: "the main stage",
+    copy: "Modern, responsive, SEO-native websites custom-built to convert the room.",
+    scene: "EXT. WEB — CONTINUOUS",
+    span: "col-span-12 md:col-span-5",
+  },
+  {
+    id: "003",
+    slug: "Logo Design",
+    subtitle: "the signature shot",
+    copy: "Marks engineered for instant recognition at every size, on every surface.",
+    scene: "INT. STUDIO — INSERT",
+    span: "col-span-12 md:col-span-5",
+  },
+  {
+    id: "004",
+    slug: "Social Media",
+    subtitle: "the daily rushes",
+    copy: "Strategy-led campaigns that turn feeds into full scenes — not afterthoughts.",
+    scene: "EXT. FEED — CONTINUOUS",
+    span: "col-span-12 md:col-span-4",
+  },
+  {
+    id: "005",
+    slug: "Video & Photo",
+    subtitle: "principal photography",
+    copy: "Film and stills that capture the real texture of your brand, on location.",
+    scene: "EXT. LOCATION — GOLDEN HR",
+    span: "col-span-12 md:col-span-4",
+  },
+  {
+    id: "006",
+    slug: "Ad Management",
+    subtitle: "the wide release",
+    copy: "Meta & Google campaigns engineered for real ROI. No wasted reel, no vanity metrics.",
+    scene: "INT. WAR ROOM — NIGHT",
+    span: "col-span-12 md:col-span-4",
+  },
+  {
+    id: "007",
+    slug: "Web & Mobile Apps",
+    subtitle: "the sequel",
+    copy: "End-to-end product work — concept, design, development, launch. Built for what comes next.",
+    scene: "INT. DEV BAY — DAY",
+    span: "col-span-12",
+  },
+];
+
+const metrics = [
+  { code: "05:00:00", label: "Years rolling", sub: "Since 2021 · Toronto" },
+  { code: "047", label: "Brands framed", sub: "And still counting" },
+  { code: "12.4M", label: "Impressions", sub: "Delivered last year" },
+  { code: "98%", label: "Retention", sub: "Clients who re-up" },
+];
+
+const storyboard = [
+  {
+    step: "I",
+    title: "Table Read",
+    sub: "Discovery & strategy",
+    body: "We meet, we listen, we dig into your goals, audience, and what's holding the story back.",
+  },
+  {
+    step: "II",
+    title: "Blocking",
+    sub: "Design & scoping",
+    body: "A clear shot list: milestones, deliverables, and the creative direction we'll follow.",
+  },
+  {
+    step: "III",
+    title: "Rolling",
+    sub: "Production",
+    body: "Iterative design, development, and content — each scene reviewed and approved on the portal.",
+  },
+  {
+    step: "IV",
+    title: "Final Cut",
+    sub: "Delivery & beyond",
+    body: "Polished launch, post-release support, and a dashboard that keeps every project moving forward.",
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Motion variants                                                    */
+/* ------------------------------------------------------------------ */
+
+const lineReveal = {
+  hidden: { y: "108%" },
+  visible: (i: number) => ({
     y: "0%",
+    transition: {
+      duration: 0.95,
+      delay: 0.15 + i * 0.11,
+      ease: [0.2, 0.8, 0.2, 1] as const,
+    },
+  }),
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  visible: (i: number) => ({
     opacity: 1,
-    transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  },
+    y: 0,
+    transition: { duration: 0.8, delay: 0.4 + i * 0.08 },
+  }),
 };
 
 /* ------------------------------------------------------------------ */
-/*  Page Component                                                     */
+/*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
@@ -195,655 +172,733 @@ export default function Home() {
       <Navbar />
 
       {/* ============================================================ */}
-      {/*  1. HERO                                                     */}
+      {/*  REEL 01 — HERO                                              */}
       {/* ============================================================ */}
-      <section className="relative h-screen w-full overflow-hidden bg-surface flex items-center border-b border-border-subtle">
-        {/* Grid pattern */}
+      <section className="relative h-screen min-h-[780px] w-full overflow-hidden bg-surface flex flex-col">
+        {/* Background: scanlines */}
         <div
-          className="pointer-events-none absolute inset-0"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-overlay animate-scan"
           style={{
             backgroundImage:
-              "linear-gradient(to right, var(--color-amber-10) 1px, transparent 1px), linear-gradient(to bottom, var(--color-amber-10) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-            maskImage:
-              "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
+              "repeating-linear-gradient(0deg, var(--color-ivory) 0 1px, transparent 1px 4px)",
           }}
         />
+        {/* Background: dotted grid */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              "radial-gradient(var(--color-amber-10) 1px, transparent 1px)",
+            backgroundSize: "38px 38px",
+            maskImage:
+              "radial-gradient(ellipse 80% 70% at 50% 55%, black 20%, transparent 90%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 70% at 50% 55%, black 20%, transparent 90%)",
+          }}
+        />
+        {/* Ember orb */}
+        <div className="pointer-events-none absolute top-[22%] right-[8%] h-[360px] w-[360px] rounded-full bg-ember-10 blur-[140px]" />
+        <div className="pointer-events-none absolute bottom-[18%] left-[6%] h-[280px] w-[280px] rounded-full bg-amber-10 blur-[120px]" />
 
-        {/* Floating orbs */}
-        <div className="animate-orb pointer-events-none absolute top-[15%] left-[10%] h-[340px] w-[340px] rounded-full bg-amber-10 blur-[100px]" />
-        <div className="animate-orb-reverse pointer-events-none absolute bottom-[10%] right-[12%] h-[280px] w-[280px] rounded-full bg-amber-10 blur-[120px]" />
+        {/* Reserve space for fixed navbar */}
+        <div className="h-[76px] shrink-0" />
 
-        {/* Content */}
-        <div className="relative z-10 w-full px-6 md:px-[52px]">
-          {/* Tag line */}
-          <Reveal direction="up" delay={0}>
-            <div className="mb-8 flex items-center gap-4">
-              <span className="block h-[1px] w-10 bg-amber" />
-              <span className="font-body text-[12px] font-light tracking-[0.2em] uppercase text-on-surface-60">
-                Since 2021 &middot; Toronto, Canada
-              </span>
-            </div>
-          </Reveal>
-
-          {/* Heading */}
-          <motion.h1
-            className="font-display font-[800] leading-[1.02] tracking-[-0.025em] text-on-surface"
-            style={{ fontSize: "clamp(64px, 9vw, 130px)" }}
-            variants={wordContainer}
-            initial="hidden"
-            animate="visible"
-          >
-            {[
-              { text: "Your Sincere", italic: true, amber: true },
-              { text: "Growth", italic: false, amber: false },
-              { text: "Partner.", italic: false, amber: false },
-            ].map((line, i) => (
-              <span key={i} className="block overflow-hidden">
-                <motion.span
-                  className={`block ${
-                    line.italic && line.amber
-                      ? "italic text-amber"
-                      : ""
-                  }`}
-                  variants={wordReveal}
-                >
-                  {line.text}
-                </motion.span>
-              </span>
-            ))}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <Reveal direction="up" delay={0.7}>
-            <p className="mt-8 max-w-[560px] font-body text-[15px] font-light leading-[1.75] text-on-surface-60">
-              We go beyond the typical agency model — championing the success of
-              small and medium-sized businesses with strategy, creativity, and
-              genuine investment in your growth.
-            </p>
-          </Reveal>
-
-          {/* CTAs */}
-          <Reveal direction="up" delay={0.9}>
-            <div className="mt-10 flex items-center gap-5">
-              <Link
-                href="/contact"
-                className="font-body text-[13px] font-medium tracking-[0.06em] uppercase bg-amber text-graphite py-[14px] px-8 rounded-[1px] no-underline transition-colors duration-200 hover:bg-[#e09f3a]"
-              >
-                Work With Us &rarr;
-              </Link>
-              <Link
-                href="/portfolio"
-                className="font-body text-[13px] font-medium tracking-[0.06em] uppercase border border-amber/30 text-on-surface py-[13px] px-8 rounded-[1px] no-underline transition-colors duration-200 hover:border-amber hover:text-amber"
-              >
-                See Our Work
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Scroll hint */}
-        <div className="hidden md:flex absolute bottom-10 left-[52px] items-center gap-3">
-          <div className="flex flex-col gap-[5px]">
-            <span className="block h-[1px] w-[18px] bg-on-surface-30" />
-            <span className="block h-[1px] w-[18px] bg-on-surface-30" />
-            <span className="block h-[1px] w-[18px] bg-on-surface-30" />
-          </div>
-          <span className="font-body text-[10px] font-light tracking-[0.18em] uppercase text-on-surface-30">
-            Scroll to explore
+        {/* REC strip */}
+        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em] text-on-surface-60">
+          <span className="flex items-center gap-2 text-ember font-semibold">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inset-0 rounded-full bg-ember animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-ember" />
+            </span>
+            REC
+          </span>
+          <span>FF_REEL_01</span>
+          <span className="hidden sm:inline text-on-surface-30">/</span>
+          <span className="hidden sm:inline">TORONTO · 43.65N 79.38W</span>
+          <span className="ml-auto hidden md:flex items-center gap-2">
+            <span className="text-on-surface-30">TC</span>
+            <span className="text-amber">00:00:01:24</span>
           </span>
         </div>
 
-        {/* FF watermark */}
-        <span
-          className="hidden md:block pointer-events-none absolute bottom-6 right-[52px] font-display font-[800] text-on-surface-10 select-none"
-          style={{ fontSize: "200px", lineHeight: 1 }}
-        >
-          FF
-        </span>
+        {/* Sidebar meta (xl+) */}
+        <aside className="hidden xl:block absolute left-8 top-[240px] z-10 font-mono text-[10px] uppercase tracking-[0.2em]">
+          <div className="flex flex-col gap-6">
+            {[
+              ["SCN", "01"],
+              ["TAKE", "∞"],
+              ["ROLL", "A"],
+              ["LENS", "35mm"],
+              ["ASA", "800"],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <div className="text-on-surface-30">{k}</div>
+                <div className="text-amber mt-1">{v}</div>
+              </div>
+            ))}
+            <div className="h-16 w-px bg-border-subtle mt-2" />
+          </div>
+        </aside>
+
+        {/* Right meta (xl+) */}
+        <aside className="hidden xl:flex absolute right-8 top-[240px] z-10 flex-col items-end gap-6 font-mono text-[10px] uppercase tracking-[0.2em]">
+          <div className="text-right">
+            <div className="text-on-surface-30">CREW</div>
+            <div className="text-amber mt-1">12</div>
+          </div>
+          <div className="text-right">
+            <div className="text-on-surface-30">DIR</div>
+            <div className="text-amber mt-1">FrameFlow</div>
+          </div>
+          <div className="h-16 w-px bg-border-subtle" />
+        </aside>
+
+        {/* Main content */}
+        <div className="relative z-10 flex-1 flex items-center px-6 md:px-[52px] xl:px-[160px]">
+          <div className="relative w-full max-w-[1500px] mx-auto">
+            {/* corner brackets */}
+            <span aria-hidden className="pointer-events-none absolute -top-10 -left-3 md:-left-8 w-7 h-7 md:w-10 md:h-10 border-t border-l border-amber/50" />
+            <span aria-hidden className="pointer-events-none absolute -top-10 -right-3 md:-right-8 w-7 h-7 md:w-10 md:h-10 border-t border-r border-amber/50" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-8 -left-3 md:-left-8 w-7 h-7 md:w-10 md:h-10 border-b border-l border-amber/50" />
+            <span aria-hidden className="pointer-events-none absolute -bottom-8 -right-3 md:-right-8 w-7 h-7 md:w-10 md:h-10 border-b border-r border-amber/50" />
+
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
+            >
+              <span className="block h-px w-10 bg-amber" />
+              Frame · 01 — Title Card
+            </motion.p>
+
+            <h1
+              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
+              style={{ fontSize: "clamp(54px, 10.2vw, 168px)" }}
+            >
+              <span className="block overflow-hidden">
+                <motion.span
+                  custom={0}
+                  initial="hidden"
+                  animate="visible"
+                  variants={lineReveal}
+                  className="block"
+                >
+                  We roll cameras
+                </motion.span>
+              </span>
+              <span className="block overflow-hidden">
+                <motion.span
+                  custom={1}
+                  initial="hidden"
+                  animate="visible"
+                  variants={lineReveal}
+                  className="block"
+                >
+                  on{" "}
+                  <em className="italic font-[400] text-amber">brands</em>
+                </motion.span>
+              </span>
+              <span className="block overflow-hidden">
+                <motion.span
+                  custom={2}
+                  initial="hidden"
+                  animate="visible"
+                  variants={lineReveal}
+                  className="block"
+                >
+                  worth believing in.
+                </motion.span>
+              </span>
+            </h1>
+
+            <motion.p
+              custom={3}
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              className="mt-9 max-w-[560px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60"
+            >
+              A Toronto creative studio that scripts, shoots, and ships the story
+              of your business — from identity to campaigns, all on one reel.
+            </motion.p>
+
+            <motion.div
+              custom={4}
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              className="mt-10 flex flex-wrap items-center gap-5"
+            >
+              <Link
+                href="/contact"
+                className="group relative inline-flex items-center gap-3 bg-amber text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] pl-6 pr-7 no-underline transition-all duration-300 hover:bg-ember hover:text-ivory"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inset-0 rounded-full bg-graphite/40 animate-ping group-hover:bg-ivory/40" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-graphite group-hover:bg-ivory" />
+                </span>
+                Roll Camera
+                <span className="font-editorial not-italic text-[18px] leading-none translate-y-[-1px] transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
+              <Link
+                href="/portfolio"
+                className="group inline-flex items-center gap-3 text-on-surface font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-2 no-underline"
+              >
+                <span className="h-[1px] w-8 bg-on-surface-30 transition-all duration-300 group-hover:w-14 group-hover:bg-amber" />
+                See the reel
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bottom client ticker */}
+        <div className="relative z-20 overflow-hidden border-t border-border-subtle bg-surface-alt py-4">
+          <div className="flex w-max animate-ticker items-center">
+            {[...clients, ...clients, ...clients].map((c, i) => (
+              <span
+                key={i}
+                className="flex items-center gap-6 whitespace-nowrap px-8 font-mono text-[11px] uppercase tracking-[0.22em] text-on-alt"
+              >
+                <span className="text-ember">✦</span>
+                {c}
+              </span>
+            ))}
+          </div>
+        </div>
       </section>
 
-
       {/* ============================================================ */}
-      {/*  3. CLIENT TICKER                                            */}
+      {/*  MARQUEE RIBBON                                              */}
       {/* ============================================================ */}
-      <section className="overflow-hidden bg-surface-alt py-[28px]">
-        <div className="flex w-max animate-ticker">
-          {[...clients, ...clients].map((name, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-3 whitespace-nowrap px-8 font-body text-[14px] font-light tracking-[0.04em] text-on-alt"
-            >
-              <span className="inline-block h-[6px] w-[6px] rounded-full bg-amber" />
-              {name}
+      <section className="relative overflow-hidden bg-surface-alt border-b border-on-alt-10">
+        <div className="flex w-max animate-ticker-slow items-center py-10">
+          {[...marqueeWords, ...marqueeWords, ...marqueeWords].map((w, i) => (
+            <span key={i} className="flex items-center gap-14 pr-14 shrink-0">
+              <span
+                className="font-editorial italic font-[300] leading-none text-on-alt"
+                style={{ fontSize: "clamp(56px, 9.5vw, 140px)" }}
+              >
+                {w}
+              </span>
+              <span
+                className="font-editorial not-italic text-ember font-[300] leading-none"
+                style={{ fontSize: "clamp(40px, 7vw, 108px)" }}
+              >
+                ✦
+              </span>
             </span>
           ))}
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  4. SERVICES — BENTO GRID                                    */}
+      {/*  REEL 02 — THE REEL (services)                               */}
       {/* ============================================================ */}
-      <section className="bg-surface py-[100px] px-6 md:px-[52px]">
-        {/* Header */}
-        <Reveal direction="up">
-          <div className="mb-16 flex items-end justify-between">
+      <section className="relative bg-surface py-[140px] px-6 md:px-[52px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
             <div>
-              <p className="mb-2 font-body text-[11px] font-light tracking-[0.22em] uppercase text-on-surface-30">
-                What We Do
+              <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
+                <span className="block h-px w-10 bg-amber" />
+                Frame · 02 — The Reel
               </p>
-              <h2 className="font-display text-[48px] font-[700] text-on-surface leading-none">
-                Our Services
+              <h2
+                className="font-editorial font-[300] text-on-surface leading-[0.92] tracking-[-0.03em]"
+                style={{ fontSize: "clamp(48px, 7vw, 120px)" }}
+              >
+                Seven{" "}
+                <em className="italic text-amber">scenes</em>
+                <br />
+                we&apos;ll shoot for you.
               </h2>
             </div>
             <Link
               href="/services"
-              className="font-body text-[13px] font-light tracking-[0.06em] text-amber no-underline transition-opacity duration-200 hover:opacity-70"
+              className="self-start md:self-end inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.24em] text-on-surface-60 hover:text-amber transition-colors"
             >
-              View All &rarr;
+              [ view full reel
+              <span className="font-editorial text-[18px] leading-none">→</span>
+              ]
             </Link>
           </div>
-        </Reveal>
 
-        {/* Bento grid — explicit placement */}
-        <div
-          className="grid gap-4"
-          style={{
-            gridTemplateColumns: "1fr",
-            gridAutoRows: "auto",
-          }}
-        >
-          {/* Mobile: stack all. Desktop: 4-col bento */}
-          <div
-            className="hidden lg:grid gap-4"
-            style={{
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gridTemplateRows: "280px 280px 220px",
-            }}
-          >
-            {/* Brand Identity — tall left */}
-            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 row-span-2 p-10 flex flex-col justify-between"
-              style={{ gridColumn: "1 / 2", gridRow: "1 / 3" }}>
-              <div className="pointer-events-none absolute -bottom-20 -right-20 w-[260px] h-[260px] bg-amber-10 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10">
-                <span className="text-amber mb-5 block">{services[0].icon}</span>
-                <h3 className="font-display text-[28px] font-[700] text-on-surface leading-[1.15] mb-4">
-                  {services[0].name}
-                </h3>
-                <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60">
-                  {services[0].description}
-                </p>
-              </div>
-              <span className="relative z-10 font-body text-[12px] tracking-[0.06em] text-amber opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                Learn more &rarr;
-              </span>
-            </div>
-
-            {/* Website Design — wide top */}
-            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-10 flex flex-col justify-between"
-              style={{ gridColumn: "2 / 4", gridRow: "1 / 2" }}>
-              <div className="pointer-events-none absolute -top-16 -right-16 w-[200px] h-[200px] bg-amber-10 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              {/* Large watermark */}
-              <span className="pointer-events-none absolute bottom-4 right-6 font-display text-[120px] font-[800] leading-none text-on-surface-05 select-none">
-                WEB
-              </span>
-              <div className="relative z-10">
-                <span className="text-amber mb-5 block">{services[1].icon}</span>
-                <h3 className="font-display text-[28px] font-[700] text-on-surface leading-[1.15] mb-4">
-                  {services[1].name}
-                </h3>
-                <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60 max-w-[400px]">
-                  {services[1].description}
-                </p>
-              </div>
-              <span className="relative z-10 font-body text-[12px] tracking-[0.06em] text-amber opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                Learn more &rarr;
-              </span>
-            </div>
-
-            {/* Social Media — top right */}
-            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
-              style={{ gridColumn: "4 / 5", gridRow: "1 / 2" }}>
-              <div>
-                <span className="text-amber mb-4 block">{services[3].icon}</span>
-                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
-                  {services[3].name}
-                </h3>
-                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                  {services[3].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Logo Design — mid */}
-            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
-              style={{ gridColumn: "2 / 3", gridRow: "2 / 3" }}>
-              <div>
-                <span className="text-amber mb-4 block">{services[2].icon}</span>
-                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
-                  {services[2].name}
-                </h3>
-                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                  {services[2].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Video & Photo — mid right wide */}
-            <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex flex-col justify-between"
-              style={{ gridColumn: "3 / 5", gridRow: "2 / 3" }}>
-              <div className="flex items-start gap-6">
-                <span className="text-amber shrink-0 mt-1">{services[4].icon}</span>
-                <div>
-                  <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
-                    {services[4].name}
-                  </h3>
-                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                    {services[4].description}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Ad Management — bottom left wide */}
-            <div className="group relative overflow-hidden rounded-[3px] bg-on-surface-05 border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex items-center gap-8"
-              style={{ gridColumn: "1 / 3", gridRow: "3 / 4" }}>
-              <span className="text-amber shrink-0">{services[5].icon}</span>
-              <div>
-                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-1 group-hover:text-amber transition-colors duration-300">
-                  {services[5].name}
-                </h3>
-                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                  {services[5].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Web & Mobile Apps — bottom right wide */}
-            <div className="group relative overflow-hidden rounded-[3px] bg-on-surface-05 border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 flex items-center gap-8"
-              style={{ gridColumn: "3 / 5", gridRow: "3 / 4" }}>
-              <span className="text-amber shrink-0">{services[6].icon}</span>
-              <div>
-                <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-1 group-hover:text-amber transition-colors duration-300">
-                  {services[6].name}
-                </h3>
-                <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                  {services[6].description}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Tablet: 2-col */}
-          <div className="hidden md:grid lg:hidden grid-cols-2 gap-4">
-            {services.map((svc, i) => (
-              <Reveal key={svc.name} direction="up" delay={i * 0.06}>
-                <div className={`group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-8 ${svc.size === "large" ? "min-h-[260px]" : ""}`}>
-                  <span className="text-amber mb-4 block">{svc.icon}</span>
-                  <h3 className={`font-display font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300 ${svc.size === "large" ? "text-[24px] mb-3" : "text-[18px]"}`}>
-                    {svc.name}
-                  </h3>
-                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                    {svc.description}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Mobile: single column */}
-          <div className="grid md:hidden grid-cols-1 gap-4">
-            {services.map((svc, i) => (
-              <Reveal key={svc.name} direction="up" delay={i * 0.06}>
-                <div className="group relative overflow-hidden rounded-[3px] border border-border-subtle hover:border-amber/40 transition-all duration-500 p-6">
-                  <div className="flex items-start gap-4">
-                    <span className="text-amber shrink-0 mt-0.5">{svc.icon}</span>
-                    <div>
-                      <h3 className="font-display text-[18px] font-[700] text-on-surface leading-tight mb-2 group-hover:text-amber transition-colors duration-300">
-                        {svc.name}
-                      </h3>
-                      <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                        {svc.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
+          <div className="grid grid-cols-12 auto-rows-fr gap-5">
+            {reel.map((scene, i) => (
+              <ReelCard key={scene.id} scene={scene} index={i} />
             ))}
           </div>
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  5. PROCESS — VERTICAL TIMELINE                              */}
+      {/*  REEL 03 — TIMECODES (metrics)                               */}
       {/* ============================================================ */}
-      <section className="bg-surface-alt py-[100px] px-6 md:px-[52px]">
-        <Reveal direction="up">
-          <div className="mb-20 max-w-[600px]">
-            <p className="mb-2 font-body text-[11px] font-light tracking-[0.22em] uppercase text-on-alt-80">
-              How It Works
-            </p>
-            <h2 className="font-display text-[48px] font-[700] text-on-alt leading-none">
-              Our Process
-            </h2>
+      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-24">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="mb-14 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-on-alt-60">
+            <span className="h-px w-10 bg-on-alt-30" />
+            <span>Frame · 03 — Timecodes</span>
           </div>
-        </Reveal>
-
-        <div className="relative max-w-[900px] mx-auto">
-          {/* Vertical line */}
-          <div className="absolute left-[23px] md:left-1/2 md:-translate-x-[0.5px] top-0 bottom-0 w-[1px] bg-on-alt-10" />
-
-          {processSteps.map((step, i) => (
-            <TimelineStep key={i} step={step} index={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  6. WHAT SETS US APART                                       */}
-      {/* ============================================================ */}
-      <section className="bg-surface py-[100px] px-6 md:px-[52px]">
-        <div className="max-w-[1100px] mx-auto">
-          {/* Header */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-10 mb-20">
-            <Reveal direction="up">
-              <div>
-                <p className="mb-2 font-body text-[11px] font-light tracking-[0.22em] uppercase text-on-surface-30">
-                  Why FrameFlow
-                </p>
-                <h2 className="font-display text-[clamp(36px,4.5vw,52px)] font-[700] text-on-surface leading-[1.1]">
-                  What Sets Us{" "}
-                  <span className="italic text-amber">Apart</span>
-                </h2>
-              </div>
-            </Reveal>
-            <Reveal direction="up" delay={0.1}>
-              <p className="font-body text-[15px] font-light leading-[1.8] text-on-surface-60 md:pt-8">
-                We&apos;re not just another agency. Every decision we make is rooted in
-                genuine care for your business, your audience, and your long-term success.
-              </p>
-            </Reveal>
-          </div>
-
-          {/* Reason cards */}
-          <div className="flex flex-col gap-6">
-            {whyReasons.map((reason, i) => (
-              <Reveal key={i} direction="up" delay={i * 0.12}>
-                <motion.div
-                  className="group relative grid grid-cols-1 md:grid-cols-[80px_1fr] gap-6 md:gap-10 p-8 md:p-10 rounded-[3px] border border-border-subtle hover:border-amber/30 transition-all duration-500 overflow-hidden"
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.3 }}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
+            {metrics.map((m, i) => (
+              <motion.div
+                key={m.code}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, delay: i * 0.1 }}
+                className="relative"
+              >
+                <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-on-alt-60 mb-3">
+                  {String(i + 1).padStart(2, "0")} / 04
+                </span>
+                <div
+                  className="font-editorial font-[300] leading-none text-on-alt tracking-[-0.03em]"
+                  style={{ fontSize: "clamp(46px, 6vw, 104px)" }}
                 >
-                  {/* Amber side accent — visible on hover */}
-                  <div className="hidden md:block absolute left-0 top-0 bottom-0 w-[3px] bg-amber scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500" />
-
-                  {/* Number */}
-                  <div className="flex items-start">
-                    <span className="font-display text-[56px] md:text-[72px] font-[800] leading-none text-on-surface-05 group-hover:text-amber-10 transition-colors duration-500 select-none">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex flex-col justify-center">
-                    <span className="font-body text-[10px] font-light tracking-[0.2em] uppercase text-amber mb-3">
-                      {reason.tag}
-                    </span>
-                    <h3 className="font-display text-[22px] md:text-[26px] font-[700] text-on-surface leading-[1.2] mb-4">
-                      {reason.heading}
-                    </h3>
-                    <p className="font-body text-[14px] font-light leading-[1.8] text-on-surface-60 max-w-[560px]">
-                      {reason.text}
-                    </p>
-                  </div>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  7. CLIENT PORTAL PROMO                                      */}
-      {/* ============================================================ */}
-      <section className="bg-surface py-[100px] px-6 md:px-[52px] border-t border-border-subtle">
-        <div className="max-w-[1320px] mx-auto">
-          {/* Header */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-12 mb-16">
-            <Reveal direction="up">
-              <div>
-                <div className="flex items-center gap-4 mb-5">
-                  <span className="block w-8 h-px bg-amber" />
-                  <span className="font-body text-[11px] uppercase tracking-[0.22em] text-on-surface-60">
-                    Client Portal
+                  {m.code}
+                </div>
+                <div className="mt-5 flex items-center gap-3">
+                  <span className="h-[1px] w-6 bg-ember" />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-on-alt">
+                    {m.label}
                   </span>
                 </div>
-                <h2 className="font-display text-[clamp(36px,4vw,52px)] font-[800] text-on-surface leading-[1.08]">
-                  Your Projects,{" "}
-                  <span className="italic text-amber">Always</span> Within Reach.
-                </h2>
-              </div>
-            </Reveal>
-            <Reveal direction="up" delay={0.1}>
-              <div className="flex flex-col justify-end">
-                <p className="font-body text-[15px] font-light leading-[1.75] text-on-surface-60 max-w-[480px]">
-                  Every client gets access to a private dashboard — track progress,
-                  approve content, view analytics, and communicate with your team, all
-                  in one place. No more scattered emails or missed messages.
+                <p className="mt-1 ml-9 font-warm text-[12px] font-[300] text-on-alt-60">
+                  {m.sub}
                 </p>
-              </div>
-            </Reveal>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  REEL 04 — STORYBOARD (process)                              */}
+      {/* ============================================================ */}
+      <section className="relative bg-surface py-[140px] px-6 md:px-[52px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="mb-20">
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
+              <span className="block h-px w-10 bg-amber" />
+              Frame · 04 — Storyboard
+            </p>
+            <h2
+              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1000px]"
+              style={{ fontSize: "clamp(44px, 6vw, 98px)" }}
+            >
+              How a brand gets <em className="italic text-amber">made</em>.
+            </h2>
           </div>
 
-          {/* Dashboard Preview */}
-          <Reveal direction="up" delay={0.15}>
-            <div className="rounded-[3px] border border-border-subtle overflow-hidden">
-              {/* Mock title bar */}
-              <div className="flex items-center gap-2 px-5 py-3 bg-on-surface-05 border-b border-border-subtle">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber" />
-                <span className="w-2.5 h-2.5 rounded-full bg-on-surface-10" />
-                <span className="w-2.5 h-2.5 rounded-full bg-on-surface-10" />
-                <span className="ml-4 font-body text-[11px] text-on-surface-30 tracking-wide">dashboard.frameflow.ca</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            {/* Connecting dashed line */}
+            <div
+              aria-hidden
+              className="hidden md:block absolute top-[100px] left-[8%] right-[8%] border-t border-dashed border-amber/30"
+            />
+
+            {storyboard.map((step, i) => (
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, delay: i * 0.12 }}
+                className="relative"
+              >
+                {/* panel */}
+                <div className="relative aspect-[4/3] border border-amber/30 mb-7 overflow-hidden bg-on-surface-05">
+                  <div className="absolute inset-[10px] border border-dashed border-amber/25" />
+                  <span
+                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[300] text-amber/55 leading-none select-none"
+                    style={{ fontSize: "clamp(96px, 11vw, 180px)" }}
+                  >
+                    {step.step}
+                  </span>
+                  <div className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.22em] text-amber">
+                    Panel {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-[0.22em] text-on-surface-30">
+                    {String((i + 1) * 23).padStart(3, "0")}s
+                  </div>
+                  {/* ember tick */}
+                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-ember" />
+                    <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-ember">
+                      cued
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ember mb-3">
+                    Act {step.step} · {step.sub}
+                  </p>
+                  <h3 className="font-editorial font-[400] text-on-surface text-[28px] md:text-[30px] leading-tight mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-surface-60">
+                    {step.body}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  REEL 05 — CONTROL ROOM (dashboard)                          */}
+      {/* ============================================================ */}
+      <section className="relative bg-surface-alt text-on-alt py-[140px] px-6 md:px-[52px] border-y border-on-alt-10 overflow-hidden">
+        {/* graphite grid backdrop */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-50"
+          style={{
+            backgroundImage:
+              "linear-gradient(var(--color-graphite-20) 1px, transparent 1px), linear-gradient(90deg, var(--color-graphite-20) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
+            maskImage:
+              "radial-gradient(ellipse 70% 60% at 80% 50%, black 20%, transparent 90%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 70% 60% at 80% 50%, black 20%, transparent 90%)",
+          }}
+        />
+
+        <div className="relative max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[0.85fr_1fr] gap-16 lg:gap-20 items-center">
+          {/* Left — copy */}
+          <div>
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
+              <span className="block h-px w-10 bg-ember" />
+              Frame · 05 — Control Room
+            </p>
+            <h2
+              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-alt"
+              style={{ fontSize: "clamp(44px, 5.5vw, 92px)" }}
+            >
+              Your projects,
+              <br />
+              <em className="italic text-amber">on your</em> monitor.
+            </h2>
+            <p className="mt-9 max-w-[480px] font-warm text-[14px] font-[300] leading-[1.8] text-on-alt/70">
+              Every client gets a private dashboard — approve content, track campaigns,
+              read analytics, and message the team. No scattered emails. No lost files.
+              Just one clean cut from brief to delivery.
+            </p>
+            <div className="mt-10 space-y-4">
+              {[
+                "Content approvals & review rounds",
+                "Campaign calendar by platform & date",
+                "Real-time impressions & engagement",
+                "Asset library with brand-safe downloads",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <span className="mt-[9px] block h-[1px] w-6 bg-ember shrink-0" />
+                  <span className="font-warm text-[13px] font-[400] text-on-alt">
+                    {f}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/login"
+              className="mt-12 inline-flex items-center gap-3 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-8 no-underline transition-colors duration-300 hover:bg-ember"
+            >
+              Enter the Control Room
+              <span className="font-editorial text-[18px] leading-none">→</span>
+            </Link>
+          </div>
+
+          {/* Right — monitor */}
+          <div className="relative">
+            <div className="relative border border-graphite/20 bg-graphite text-ivory p-2 shadow-[0_40px_90px_-40px_rgba(53,50,48,0.5)]">
+              {/* chrome strip */}
+              <div className="flex items-center gap-3 border border-amber/30 bg-graphite px-4 py-2.5 mb-2 font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/60">
+                <span className="flex items-center gap-2 text-ember">
+                  <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
+                  LIVE
+                </span>
+                <span className="text-ivory/40">·</span>
+                <span>dashboard.frameflow.ca</span>
+                <span className="ml-auto text-amber">TC 00:24:07:12</span>
               </div>
 
-              {/* Mock dashboard content */}
-              <div className="bg-on-surface-05/50 p-6 md:p-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="border border-amber/20 p-5 md:p-6 bg-graphite">
+                <div className="mb-5 flex items-end justify-between">
+                  <div>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/40">
+                      Overview
+                    </p>
+                    <p className="font-editorial text-[22px] text-ivory mt-1 leading-none">
+                      Acadia Bakes
+                    </p>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">
+                    APR 2026
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-4 gap-2 mb-3">
                   {[
-                    { label: "Total Posts", value: "24", sub: "This month" },
-                    { label: "Pending Review", value: "3", sub: "Awaiting approval" },
-                    { label: "Approved", value: "18", sub: "On schedule" },
-                    { label: "Engagement", value: "4.8%", sub: "+0.6% this period" },
-                  ].map((stat, i) => (
-                    <div key={i} className="rounded-[2px] border border-border-faint bg-surface p-4">
-                      <p className="text-[10px] font-body text-on-surface-30 mb-1">{stat.label}</p>
-                      <p className="font-display font-bold text-2xl text-on-surface">{stat.value}</p>
-                      <p className="text-[10px] font-body text-on-surface-30 mt-0.5">{stat.sub}</p>
+                    { l: "POSTS", v: "24", d: "+3" },
+                    { l: "REVIEW", v: "03", d: "·" },
+                    { l: "APPROVED", v: "18", d: "+1" },
+                    { l: "ENG%", v: "4.8", d: "↑0.6" },
+                  ].map((s, i) => (
+                    <div key={i} className="border border-ivory/10 p-3">
+                      <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-ivory/40">
+                        {s.l}
+                      </p>
+                      <p className="font-editorial text-[22px] text-ivory mt-1 leading-none">
+                        {s.v}
+                      </p>
+                      <p className="font-mono text-[9px] text-ember mt-1">
+                        {s.d}
+                      </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-4">
-                  {/* Mock post list */}
-                  <div className="rounded-[2px] border border-border-faint bg-surface overflow-hidden">
-                    <div className="px-4 py-3 border-b border-border-faint">
-                      <span className="font-display font-semibold text-[13px] text-on-surface">Upcoming Posts</span>
+                <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-2">
+                  <div className="border border-ivory/10">
+                    <div className="border-b border-ivory/10 px-3 py-2.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/50 flex items-center justify-between">
+                      <span>Queue · 03</span>
+                      <span className="text-amber">this week</span>
                     </div>
                     {[
-                      { title: "Summer Menu Feature", platform: "Instagram", status: "Pending" },
-                      { title: "Client Testimonial", platform: "Facebook", status: "Approved" },
-                      { title: "Behind the Scenes", platform: "Instagram", status: "Draft" },
-                    ].map((post, i) => (
-                      <div key={i} className="flex items-center justify-between px-4 py-2.5 border-b border-border-faint last:border-b-0">
+                      { t: "Summer Menu Feature", p: "IG", s: "REVIEW", h: true },
+                      { t: "Client Testimonial", p: "FB", s: "APPROVED" },
+                      { t: "Behind the Scenes", p: "IG", s: "DRAFT" },
+                    ].map((row, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between px-3 py-2.5 border-b border-ivory/5 last:border-0"
+                      >
                         <div className="flex items-center gap-3">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber" />
-                          <div>
-                            <p className="text-[12px] font-body text-on-surface">{post.title}</p>
-                            <p className="text-[10px] font-body text-on-surface-30">{post.platform}</p>
-                          </div>
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              row.h ? "bg-ember" : "bg-amber/60"
+                            }`}
+                          />
+                          <span className="font-warm text-[11px] text-ivory">
+                            {row.t}
+                          </span>
                         </div>
-                        <span className="text-[10px] font-body font-semibold text-on-surface-30 bg-on-surface-05 px-2 py-0.5 rounded-full">
-                          {post.status}
-                        </span>
+                        <div className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.18em] text-ivory/40">
+                          <span>{row.p}</span>
+                          <span
+                            className={row.h ? "text-ember" : "text-amber"}
+                          >
+                            {row.s}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
-
-                  {/* Mock activity */}
-                  <div className="rounded-[2px] border border-border-faint bg-surface overflow-hidden">
-                    <div className="px-4 py-3 border-b border-border-faint">
-                      <span className="font-display font-semibold text-[13px] text-on-surface">Activity</span>
+                  <div className="border border-ivory/10 p-3">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/40 mb-3">
+                      Engagement · 7d
+                    </p>
+                    <div className="flex items-end gap-1.5 h-16">
+                      {[40, 62, 48, 70, 55, 85, 78].map((h, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ height: 0 }}
+                          whileInView={{ height: `${h}%` }}
+                          viewport={{ once: true }}
+                          transition={{
+                            duration: 0.8,
+                            delay: 0.2 + i * 0.06,
+                            ease: "easeOut",
+                          }}
+                          className={`flex-1 ${
+                            i === 5 ? "bg-ember" : "bg-amber/60"
+                          }`}
+                        />
+                      ))}
                     </div>
-                    {[
-                      "Post moved to Pending Review",
-                      "Testimonial carousel approved",
-                      "New brand assets uploaded",
-                      "Weekly report generated",
-                    ].map((activity, i) => (
-                      <div key={i} className="flex items-start gap-2.5 px-4 py-2.5 border-b border-border-faint last:border-b-0">
-                        <span className="mt-1.5 w-1 h-1 rounded-full bg-on-surface-10 shrink-0" />
-                        <p className="text-[11px] font-body text-on-surface-60 leading-snug">{activity}</p>
-                      </div>
-                    ))}
+                    <div className="mt-3 flex items-center justify-between font-mono text-[9px] text-ivory/40">
+                      <span>M</span>
+                      <span>T</span>
+                      <span>W</span>
+                      <span>T</span>
+                      <span>F</span>
+                      <span className="text-ember">S</span>
+                      <span>S</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </Reveal>
 
-          {/* Feature highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {[
-              {
-                icon: (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 11L12 14L22 4" />
-                    <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" />
-                  </svg>
-                ),
-                title: "Content Approvals",
-                desc: "Review, approve, or request changes on every post before it goes live.",
-              },
-              {
-                icon: (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <path d="M16 2V6" />
-                    <path d="M8 2V6" />
-                    <path d="M3 10H21" />
-                  </svg>
-                ),
-                title: "Calendar View",
-                desc: "See your full content schedule at a glance — organized by platform and date.",
-              },
-              {
-                icon: (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 20V10" />
-                    <path d="M12 20V4" />
-                    <path d="M6 20V14" />
-                  </svg>
-                ),
-                title: "Real-Time Analytics",
-                desc: "Track impressions, engagement, and growth across all your platforms.",
-              },
-              {
-                icon: (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V15" />
-                    <path d="M7 10L12 15L17 10" />
-                    <path d="M12 15V3" />
-                  </svg>
-                ),
-                title: "File & Asset Library",
-                desc: "Access all your brand assets, deliverables, and media files in one hub.",
-              },
-            ].map((feature, i) => (
-              <Reveal key={i} direction="up" delay={i * 0.08}>
-                <div className="p-6 rounded-[2px] border border-border-subtle hover:border-amber/30 transition-colors duration-300">
-                  <span className="text-amber mb-4 block">{feature.icon}</span>
-                  <h3 className="font-display text-[16px] font-[700] text-on-surface mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="font-body text-[13px] font-light leading-[1.7] text-on-surface-60">
-                    {feature.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Portal CTA */}
-          <Reveal direction="up" delay={0.1}>
-            <div className="mt-12 text-center">
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-2.5 font-body text-[13px] font-medium tracking-[0.06em] uppercase bg-amber text-graphite py-[14px] px-10 rounded-[1px] no-underline transition-colors duration-200 hover:bg-[#e09f3a]"
+            {/* floating label */}
+            <div className="absolute -left-2 top-4 hidden lg:block">
+              <div
+                className="font-mono text-[9px] uppercase tracking-[0.22em] text-on-alt-60 whitespace-nowrap"
+                style={{
+                  transform: "rotate(-90deg)",
+                  transformOrigin: "left top",
+                }}
               >
-                Explore the Portal &rarr;
-              </Link>
+                monitor 01 · live feed
+              </div>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  8. CTA                                                      */}
+      {/*  REEL 06 — DIRECTOR'S NOTES (pull quote)                     */}
       {/* ============================================================ */}
-      <section className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr]">
-        {/* Left */}
-        <div className="flex flex-col justify-center bg-amber px-6 md:px-[52px] py-[80px]">
-          <Reveal direction="left">
-            <p className="mb-3 font-body text-[11px] font-light tracking-[0.22em] uppercase text-graphite-80">
-              Let&apos;s Talk
+      <section className="relative bg-surface py-[140px] px-6 md:px-[52px] overflow-hidden">
+        {/* decorative wash */}
+        <div className="pointer-events-none absolute -top-10 right-0 h-[320px] w-[320px] rounded-full bg-ember-10 blur-[140px]" />
+
+        <div className="relative max-w-[1200px] mx-auto">
+          <p className="mb-12 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
+            <span className="block h-px w-10 bg-amber" />
+            Frame · 06 — Director&apos;s Notes
+          </p>
+
+          <div className="relative">
+            <span
+              aria-hidden
+              className="absolute -top-20 -left-2 md:-left-8 font-editorial italic text-ember/80 font-[300] leading-none select-none"
+              style={{ fontSize: "clamp(160px, 18vw, 300px)" }}
+            >
+              &ldquo;
+            </span>
+
+            <blockquote className="relative pl-4 md:pl-28">
+              <p
+                className="font-editorial font-[300] italic text-on-surface leading-[1.05] tracking-[-0.01em]"
+                style={{ fontSize: "clamp(34px, 5vw, 76px)" }}
+              >
+                FrameFlow didn&apos;t just make us look good —
+                <br className="hidden md:block" /> they made us look{" "}
+                <span className="not-italic text-amber">inevitable</span>.
+              </p>
+              <footer className="mt-12 flex items-center gap-5">
+                <span className="h-[1px] w-12 bg-amber" />
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-surface">
+                    Sun-Hee Park
+                  </p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-on-surface-60 mt-1">
+                    Creative Director · Meridian Foods
+                  </p>
+                </div>
+                <div className="ml-auto hidden md:flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-30">
+                  <span>Take</span>
+                  <span className="text-amber">001 / 047</span>
+                </div>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  REEL 07 — ACTION! (CTA clapperboard)                        */}
+      {/* ============================================================ */}
+      <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
+        {/* Left — ember clapperboard */}
+        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
+          {/* clapper stripes */}
+          <div
+            aria-hidden
+            className="absolute top-0 left-0 right-0 h-9"
+            style={{
+              background:
+                "repeating-linear-gradient(-68deg, #ffffeb 0 28px, #353230 28px 56px)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute top-9 left-0 right-0 h-[2px] bg-graphite"
+          />
+
+          <div className="pt-10">
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
+              <span className="block h-px w-10 bg-graphite/60" />
+              Frame · 07 — Action
             </p>
-            <h2 className="font-display text-[44px] font-[700] leading-[1.12] text-graphite max-w-[440px]">
-              Schedule Your Free Consultation.
+            <h2
+              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              style={{ fontSize: "clamp(48px, 6.8vw, 112px)" }}
+            >
+              Ready when you are.
+              <br />
+              <em className="italic">Let&apos;s roll.</em>
             </h2>
+          </div>
+
+          <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/contact"
-              className="mt-10 inline-block font-body text-[13px] font-medium tracking-[0.06em] uppercase bg-graphite text-ivory py-[14px] px-8 rounded-[1px] no-underline transition-opacity duration-200 hover:opacity-85"
+              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
             >
-              Let&apos;s Start &rarr;
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inset-0 rounded-full bg-ember animate-pulse-dot" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-ember" />
+              </span>
+              Book the studio
+              <span className="font-editorial not-italic text-[18px] leading-none transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
             </Link>
-          </Reveal>
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/70">
+              / 30 min · free consult
+            </span>
+          </div>
         </div>
 
-        {/* Right */}
-        <div className="flex flex-col justify-center bg-surface-alt px-6 md:px-[52px] py-[80px]">
-          <Reveal direction="right">
-            <div className="flex flex-col gap-8">
-              {[
-                {
-                  label: "What to expect",
-                  value:
-                    "A no-pressure conversation about your brand, goals, and how we can help.",
-                },
-                {
-                  label: "Duration",
-                  value: "30 minutes — concise, focused, and productive.",
-                },
-                {
-                  label: "Location",
-                  value: "Virtual (Google Meet / Zoom) or in-person in Toronto.",
-                },
-              ].map((item, i, arr) => (
-                <div key={i}>
-                  <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
-                    {item.label}
+        {/* Right — shot details */}
+        <div className="relative flex flex-col justify-center bg-surface-alt px-6 md:px-[60px] py-20 lg:py-[100px]">
+          <p className="mb-10 font-mono text-[11px] uppercase tracking-[0.28em] text-on-alt-60 flex items-center gap-3">
+            <span className="block h-px w-10 bg-on-alt-30" />
+            Scene 01 / Take ∞
+          </p>
+          <div className="flex flex-col gap-6">
+            {[
+              {
+                k: "Script",
+                v: "A focused talk about your brand, goals, and where we can help.",
+              },
+              {
+                k: "Runtime",
+                v: "30 minutes. Concise. Honest. No pitch deck, no upsell.",
+              },
+              {
+                k: "Location",
+                v: "Virtual (Zoom / Meet) — or in-person in Toronto.",
+              },
+              {
+                k: "Budget",
+                v: "Starting at $2.5k / month. Custom from there.",
+              },
+            ].map((row, i, arr) => (
+              <div key={row.k}>
+                <div className="flex items-baseline gap-6">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber w-24 shrink-0">
+                    {String(i + 1).padStart(2, "0")} · {row.k}
+                  </span>
+                  <p className="font-warm text-[14px] font-[300] leading-[1.7] text-on-alt flex-1">
+                    {row.v}
                   </p>
-                  <p className="font-body text-[14px] font-light leading-[1.7] text-on-alt">
-                    {item.value}
-                  </p>
-                  {i < arr.length - 1 && (
-                    <div className="mt-8 h-[1px] w-full bg-on-alt-10" />
-                  )}
                 </div>
-              ))}
-            </div>
-          </Reveal>
+                {i < arr.length - 1 && (
+                  <div className="mt-6 h-[1px] w-full bg-on-alt-10" />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -852,113 +907,86 @@ export default function Home() {
   );
 }
 
-
 /* ------------------------------------------------------------------ */
-/*  Process Card                                                       */
+/*  ReelCard                                                           */
 /* ------------------------------------------------------------------ */
 
-function TimelineStep({
-  step,
-  index,
-}: {
-  step: { number: string; title: string; description: string };
-  index: number;
-}) {
-  const isEven = index % 2 === 0;
-
+function ReelCard({ scene, index }: { scene: Scene; index: number }) {
   return (
-    <div className={`relative flex items-start gap-0 md:gap-0 mb-16 last:mb-0`}>
-      {/* ── Mobile layout (always left-aligned) ── */}
-      <div className="md:hidden flex items-start gap-6 w-full">
-        {/* Node */}
-        <div className="relative z-10 shrink-0">
-          <Reveal direction="up" delay={index * 0.15}>
-            <motion.div
-              className="w-[48px] h-[48px] rounded-full border-2 border-amber/40 bg-surface-alt flex items-center justify-center"
-              whileInView={{ borderColor: "var(--color-amber)" }}
-              viewport={{ once: true, amount: 0.8 }}
-              transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
-            >
-              <span className="font-display text-[16px] font-[800] text-amber">{step.number}</span>
-            </motion.div>
-          </Reveal>
+    <motion.article
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.8, delay: index * 0.08 }}
+      className={`group relative ${scene.span} border border-border-subtle hover:border-amber/50 transition-colors duration-500 overflow-hidden`}
+    >
+      {/* dashed inner frame */}
+      <div
+        aria-hidden
+        className="absolute inset-3 border border-dashed border-border-faint pointer-events-none group-hover:border-amber/30 transition-colors duration-500"
+      />
+
+      {/* hover wash */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-amber opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500"
+      />
+
+      <div className="relative flex flex-col h-full p-8 md:p-10 min-h-[280px]">
+        {/* top meta */}
+        <div className="flex items-start justify-between gap-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">
+            Frame · {scene.id}
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-on-surface-30 text-right">
+            {scene.scene}
+          </span>
         </div>
 
-        {/* Content */}
-        <Reveal direction="up" delay={index * 0.15 + 0.1}>
-          <div className="pt-2">
-            <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
-              Step {step.number}
-            </p>
-            <h3 className="mb-2 font-display text-[20px] font-[700] text-on-alt leading-tight">
-              {step.title}
-            </h3>
-            <p className="font-body text-[13px] font-light leading-[1.8] text-on-alt-80 max-w-[360px]">
-              {step.description}
-            </p>
-          </div>
-        </Reveal>
+        {/* body */}
+        <div className="mt-auto pt-14">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ember mb-4">
+            / {scene.subtitle}
+          </p>
+          <h3
+            className="font-editorial font-[300] text-on-surface leading-[0.95] tracking-[-0.02em] mb-5"
+            style={{
+              fontSize: scene.accent
+                ? "clamp(44px, 5vw, 88px)"
+                : "clamp(28px, 2.7vw, 46px)",
+            }}
+          >
+            {scene.slug}
+          </h3>
+          <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-surface-60 max-w-[460px]">
+            {scene.copy}
+          </p>
+        </div>
+
+        {/* footer — hover arrow */}
+        <span className="mt-7 inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-30 group-hover:text-amber transition-colors">
+          <span className="h-[1px] w-6 bg-border-subtle group-hover:w-12 group-hover:bg-amber transition-all duration-500" />
+          roll scene
+        </span>
+
+        {/* corner brackets (hover) */}
+        <span
+          aria-hidden
+          className="absolute top-5 left-5 w-3 h-3 border-t border-l border-transparent group-hover:border-amber/70 transition-colors duration-500"
+        />
+        <span
+          aria-hidden
+          className="absolute top-5 right-5 w-3 h-3 border-t border-r border-transparent group-hover:border-amber/70 transition-colors duration-500"
+        />
+        <span
+          aria-hidden
+          className="absolute bottom-5 left-5 w-3 h-3 border-b border-l border-transparent group-hover:border-amber/70 transition-colors duration-500"
+        />
+        <span
+          aria-hidden
+          className="absolute bottom-5 right-5 w-3 h-3 border-b border-r border-transparent group-hover:border-amber/70 transition-colors duration-500"
+        />
       </div>
-
-      {/* ── Desktop layout (alternating sides) ── */}
-      <div className="hidden md:grid grid-cols-[1fr_auto_1fr] items-start w-full gap-8">
-        {/* Left content */}
-        <div className={`${isEven ? "text-right" : ""}`}>
-          {isEven ? (
-            <Reveal direction="right" delay={index * 0.15 + 0.1}>
-              <div className="pr-4">
-                <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
-                  Step {step.number}
-                </p>
-                <h3 className="mb-3 font-display text-[24px] font-[700] text-on-alt leading-tight">
-                  {step.title}
-                </h3>
-                <p className="font-body text-[14px] font-light leading-[1.8] text-on-alt-80 ml-auto max-w-[340px]">
-                  {step.description}
-                </p>
-              </div>
-            </Reveal>
-          ) : (
-            <div />
-          )}
-        </div>
-
-        {/* Center node */}
-        <div className="relative z-10">
-          <Reveal direction="up" delay={index * 0.15}>
-            <motion.div
-              className="w-[52px] h-[52px] rounded-full border-2 border-on-alt-10 bg-surface-alt flex items-center justify-center"
-              whileInView={{ borderColor: "var(--color-amber)", scale: [1, 1.15, 1] }}
-              viewport={{ once: true, amount: 0.8 }}
-              transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
-            >
-              <span className="font-display text-[18px] font-[800] text-amber">{step.number}</span>
-            </motion.div>
-          </Reveal>
-        </div>
-
-        {/* Right content */}
-        <div>
-          {!isEven ? (
-            <Reveal direction="left" delay={index * 0.15 + 0.1}>
-              <div className="pl-4">
-                <p className="mb-1 font-body text-[10px] font-light tracking-[0.2em] uppercase text-on-alt-60">
-                  Step {step.number}
-                </p>
-                <h3 className="mb-3 font-display text-[24px] font-[700] text-on-alt leading-tight">
-                  {step.title}
-                </h3>
-                <p className="font-body text-[14px] font-light leading-[1.8] text-on-alt-80 max-w-[340px]">
-                  {step.description}
-                </p>
-              </div>
-            </Reveal>
-          ) : (
-            <div />
-          )}
-        </div>
-      </div>
-    </div>
+    </motion.article>
   );
 }
-

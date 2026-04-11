@@ -18,6 +18,7 @@
   --on-alt-05:     rgba(53, 50, 48, 0.05);
   --border-subtle: rgba(211, 143, 44, 0.12);
   --border-faint:  rgba(211, 143, 44, 0.06);
+  --border-ember:  rgba(212, 89, 56, 0.25);
 }
 
 [data-theme="light"] {
@@ -37,6 +38,7 @@
   --on-alt-05:     rgba(255, 255, 235, 0.05);
   --border-subtle: rgba(211, 143, 44, 0.1);
   --border-faint:  rgba(211, 143, 44, 0.05);
+  --border-ember:  rgba(212, 89, 56, 0.3);
 }
 
 @theme inline {
@@ -52,6 +54,11 @@
   --color-amber: #d38f2c;
   --color-amber-20: rgba(211, 143, 44, 0.2);
   --color-amber-10: rgba(211, 143, 44, 0.1);
+  --color-ember: #d45938;
+  --color-ember-60: rgba(212, 89, 56, 0.6);
+  --color-ember-30: rgba(212, 89, 56, 0.3);
+  --color-ember-20: rgba(212, 89, 56, 0.2);
+  --color-ember-10: rgba(212, 89, 56, 0.1);
 
   /* Semantic theme tokens — swapped by [data-theme] */
   --color-surface:       var(--surface);
@@ -70,11 +77,15 @@
   --color-on-alt-05:     var(--on-alt-05);
   --color-border-subtle: var(--border-subtle);
   --color-border-faint:  var(--border-faint);
+  --color-border-ember:  var(--border-ember);
 }
 
 @theme {
   --font-display: var(--ff-display), sans-serif;
   --font-body: inherit;
+  --font-editorial: var(--ff-editorial), "Times New Roman", serif;
+  --font-warm: var(--ff-warm), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
 html {
@@ -145,6 +156,28 @@ body {
 .animate-ticker {
   animation: ticker 22s linear infinite;
 }
+
+.animate-ticker-slow {
+  animation: ticker 55s linear infinite;
+}
+
+.animate-ticker-fast {
+  animation: ticker 14s linear infinite;
+}
+
+/* Hero grain/scanline flicker */
+@keyframes scan-flicker {
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.08; }
+}
+.animate-scan { animation: scan-flicker 3.8s ease-in-out infinite; }
+
+/* Countdown cycling */
+@keyframes tc-cycle {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.animate-tc { animation: tc-cycle 6s steps(6) infinite; }
 
 /* Orb float animation */
 @keyframes orbFloat {
