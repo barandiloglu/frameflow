@@ -1867,6 +1867,851 @@
     }
 
     /* ============================================================ */
+    /*  THE WRAPPER — packaging mockup                              */
+    /* ============================================================ */
+
+    .wrapper-section {
+      margin: 0 52px;
+      padding: 96px 0 96px;
+      border-bottom: 1px solid var(--ff-ivory-15);
+    }
+
+    .wrapper-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 56px;
+    }
+    .wrapper-eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--ff-amber);
+    }
+
+    .wrapper-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0 24px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-60);
+    }
+    .wrapper-meta .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bb-toast);
+    }
+    .wrapper-meta .pulse::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--bb-toast);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(196, 106, 44, 0.5);
+      animation: pulse-toast 2s ease-in-out infinite;
+    }
+
+    .wrapper-stage {
+      position: relative;
+      background: var(--bb-char);
+      perspective: 1800px;
+      perspective-origin: 50% 30%;
+      min-height: 580px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+    /* studio backdrop sweep */
+    .wrapper-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(196, 106, 44, 0.32), transparent 65%),
+        radial-gradient(ellipse 90% 70% at 50% 110%, rgba(212, 63, 27, 0.18), transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* film grain overlay */
+    .wrapper-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 235, 0.04) 0 1px,
+          transparent 1px 3px
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+      z-index: 1;
+    }
+
+    /* corner brackets */
+    .wrapper-stage .brk {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: var(--bb-cream);
+      opacity: 0.55;
+      z-index: 4;
+    }
+    .wrapper-stage .brk.tl { top: 22px; left: 22px; border-top: 1px solid; border-left: 1px solid; }
+    .wrapper-stage .brk.tr { top: 22px; right: 22px; border-top: 1px solid; border-right: 1px solid; }
+    .wrapper-stage .brk.bl { bottom: 22px; left: 22px; border-bottom: 1px solid; border-left: 1px solid; }
+    .wrapper-stage .brk.br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* studio meta — top-left */
+    .wrapper-stage .studio-tag {
+      position: absolute;
+      top: 38px;
+      left: 56px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.7;
+      z-index: 3;
+    }
+    .wrapper-stage .studio-tag b {
+      color: var(--bb-cream);
+      opacity: 1;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+    }
+    /* TAKE counter — top-right */
+    .wrapper-stage .studio-take {
+      position: absolute;
+      top: 38px;
+      right: 56px;
+      text-align: right;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.7;
+      z-index: 3;
+    }
+    .wrapper-stage .studio-take em {
+      display: block;
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--bb-cream);
+      opacity: 1;
+      margin-top: 4px;
+    }
+
+    /* the paper sleeve */
+    .paper-bag {
+      width: 300px;
+      height: 420px;
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      transform: rotateY(-12deg) rotateX(3deg);
+      transition: transform 0.8s var(--ease-soft);
+      animation: bag-float 7s ease-in-out infinite;
+      cursor: pointer;
+    }
+    .paper-bag:hover {
+      transform: rotateY(12deg) rotateX(-3deg);
+      animation-play-state: paused;
+    }
+    @keyframes bag-float {
+      0%, 100% { translate: 0 0; }
+      50%      { translate: 0 -10px; }
+    }
+
+    /* paper face */
+    .paper-bag .face-front {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(43, 20, 16, 0.05) 1.5px, transparent 2px),
+        radial-gradient(circle at 70% 60%, rgba(43, 20, 16, 0.04) 1px, transparent 1.5px),
+        linear-gradient(180deg, var(--bb-cream) 0%, #efe2ca 100%);
+      background-size: 22px 22px, 28px 28px, auto;
+      border-radius: 4px 4px 2px 2px;
+      box-shadow:
+        0 50px 80px -30px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(43, 20, 16, 0.12);
+      backface-visibility: hidden;
+      overflow: hidden;
+      padding: 36px 32px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    /* fold crease at top */
+    .paper-bag .face-front::before {
+      content: "";
+      position: absolute;
+      top: 32px; left: 0; right: 0;
+      height: 1px;
+      background: rgba(43, 20, 16, 0.18);
+    }
+    /* dotted side seam */
+    .paper-bag .face-front::after {
+      content: "";
+      position: absolute;
+      top: 12px; bottom: 12px;
+      left: 8px;
+      width: 1px;
+      background-image: linear-gradient(to bottom, rgba(43, 20, 16, 0.22) 50%, transparent 50%);
+      background-size: 1px 6px;
+      background-repeat: repeat-y;
+    }
+
+    /* contents printed on the front */
+    .paper-bag .top-stamp {
+      font-family: var(--ff-mono);
+      font-size: 8px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--bb-char);
+      opacity: 0.55;
+      margin-top: 10px;
+    }
+
+    .paper-bag .bag-bear {
+      width: 96px;
+      height: 96px;
+      margin-top: 18px;
+    }
+    .paper-bag .bag-bear .face,
+    .paper-bag .bag-bear .ear { fill: var(--bb-toast); }
+    .paper-bag .bag-bear .feature { fill: var(--bb-char); }
+
+    .paper-bag .bag-word {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--bb-char);
+      text-align: center;
+      margin-top: 4px;
+    }
+    .paper-bag .bag-tagline {
+      font-family: var(--ff-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--bb-char);
+      opacity: 0.55;
+      text-align: center;
+    }
+
+    .paper-bag .bag-divider {
+      width: 64px;
+      height: 1px;
+      background: var(--bb-char);
+      opacity: 0.3;
+      margin: 4px 0;
+    }
+
+    .paper-bag .bag-spec {
+      font-family: var(--ff-mono);
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-char);
+      opacity: 0.45;
+      text-align: center;
+      line-height: 1.7;
+      margin-top: auto;
+    }
+    .paper-bag .bag-spec b { color: var(--bb-ember); opacity: 1; font-weight: 500; }
+
+    /* annotation callouts pointing at the bag */
+    .wrapper-stage .callout {
+      position: absolute;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0;
+      z-index: 3;
+      animation: rise 0.8s var(--ease-soft) 0.7s forwards;
+    }
+    .wrapper-stage .callout b {
+      display: block;
+      color: var(--ff-amber);
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      margin-bottom: 4px;
+    }
+    .wrapper-stage .callout::before {
+      content: "";
+      position: absolute;
+      background: var(--ff-amber);
+      opacity: 0.5;
+    }
+
+    /* top-left callout: bear placement */
+    .wrapper-stage .callout.c1 {
+      top: 36%;
+      left: calc(50% - 360px);
+      text-align: right;
+      max-width: 160px;
+    }
+    .wrapper-stage .callout.c1::before {
+      top: 50%;
+      right: -56px;
+      width: 48px;
+      height: 1px;
+    }
+    /* bottom-right callout: spec */
+    .wrapper-stage .callout.c2 {
+      bottom: 24%;
+      left: calc(50% + 200px);
+      max-width: 180px;
+    }
+    .wrapper-stage .callout.c2::before {
+      top: 50%;
+      left: -56px;
+      width: 48px;
+      height: 1px;
+    }
+    /* top-right callout: paper */
+    .wrapper-stage .callout.c3 {
+      top: 22%;
+      left: calc(50% + 200px);
+      max-width: 160px;
+    }
+    .wrapper-stage .callout.c3::before {
+      top: 50%;
+      left: -56px;
+      width: 48px;
+      height: 1px;
+    }
+
+    /* WRAPPER DETAILS — application strip */
+    .wrapper-details {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .wrapper-detail {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border: 1px solid var(--ff-ivory-15);
+      transition:
+        transform 0.5s var(--ease-soft),
+        border-color 0.4s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+    .wrapper-detail:hover {
+      transform: translateY(-6px);
+      border-color: var(--ff-amber);
+    }
+    .wrapper-detail::before {
+      content: attr(data-frame);
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+    }
+    .wrapper-detail::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: 14px;
+      right: 16px;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+      transition: color 0.3s, transform 0.3s;
+    }
+    .wrapper-detail:hover::after {
+      color: var(--ff-amber);
+      transform: translateX(-4px);
+    }
+
+    /* detail 1 — sticker (round) */
+    .wrapper-detail.sticker {
+      background: var(--bb-char);
+    }
+    .wrapper-detail.sticker .sticker-disk {
+      width: 70%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--bb-toast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        inset 0 0 0 4px var(--bb-cream),
+        inset 0 0 0 5px rgba(43, 20, 16, 0.4);
+      animation: sticker-spin 22s linear infinite;
+    }
+    .wrapper-detail.sticker:hover .sticker-disk { animation-play-state: paused; }
+    @keyframes sticker-spin {
+      to { transform: rotate(360deg); }
+    }
+    .wrapper-detail.sticker svg {
+      width: 60%;
+      height: 60%;
+    }
+    .wrapper-detail.sticker svg .face,
+    .wrapper-detail.sticker svg .ear { fill: var(--bb-cream); }
+    .wrapper-detail.sticker svg .feature { fill: var(--bb-toast); }
+
+    /* detail 2 — coffee cup sleeve */
+    .wrapper-detail.sleeve {
+      background: var(--bb-cream);
+    }
+    .wrapper-detail.sleeve::before, .wrapper-detail.sleeve::after { color: rgba(43, 20, 16, 0.45); }
+    .wrapper-detail.sleeve:hover::after { color: var(--bb-ember); }
+    .wrapper-detail.sleeve .cup-band {
+      width: 78%;
+      height: 50%;
+      background: var(--bb-toast);
+      border-radius: 4px;
+      transform: perspective(800px) rotateX(38deg);
+      box-shadow:
+        0 20px 30px -14px rgba(43, 20, 16, 0.4),
+        inset 0 -8px 24px -10px rgba(43, 20, 16, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0 22px;
+    }
+    .wrapper-detail.sleeve .cup-band .cup-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .wrapper-detail.sleeve .cup-band .cup-mark .face,
+    .wrapper-detail.sleeve .cup-band .cup-mark .ear { fill: var(--bb-cream); }
+    .wrapper-detail.sleeve .cup-band .cup-mark .feature { fill: var(--bb-toast); }
+    .wrapper-detail.sleeve .cup-band .cup-word {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--bb-cream);
+      letter-spacing: -0.01em;
+    }
+
+    /* detail 3 — loyalty card */
+    .wrapper-detail.card {
+      background: var(--bb-toast);
+    }
+    .wrapper-detail.card::before, .wrapper-detail.card::after { color: rgba(245, 235, 216, 0.5); }
+    .wrapper-detail.card:hover::after { color: var(--bb-cream); }
+    .wrapper-detail.card .biz-card {
+      width: 80%;
+      aspect-ratio: 1.7 / 1;
+      background: var(--bb-cream);
+      border-radius: 4px;
+      box-shadow:
+        0 20px 30px -14px rgba(0, 0, 0, 0.4);
+      transform: rotate(-4deg);
+      transition: transform 0.5s var(--ease-soft);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--bb-char);
+    }
+    .wrapper-detail.card:hover .biz-card {
+      transform: rotate(0deg);
+    }
+    .wrapper-detail.card .biz-card .biz-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wrapper-detail.card .biz-mark {
+      width: 26px;
+      height: 26px;
+    }
+    .wrapper-detail.card .biz-mark .face,
+    .wrapper-detail.card .biz-mark .ear { fill: var(--bb-toast); }
+    .wrapper-detail.card .biz-mark .feature { fill: var(--bb-char); }
+    .wrapper-detail.card .biz-tag {
+      font-family: var(--ff-mono);
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(43, 20, 16, 0.55);
+    }
+    .wrapper-detail.card .biz-stamps {
+      display: flex;
+      gap: 4px;
+    }
+    .wrapper-detail.card .biz-stamps .stamp-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(43, 20, 16, 0.4);
+    }
+    .wrapper-detail.card .biz-stamps .stamp-dot.filled {
+      background: var(--bb-ember);
+      border-color: var(--bb-ember);
+    }
+    .wrapper-detail.card .biz-name {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+      color: var(--bb-char);
+    }
+
+    /* detail 4 — fold/seam close-up */
+    .wrapper-detail.seam {
+      background:
+        radial-gradient(circle at 30% 20%, rgba(43, 20, 16, 0.05) 1.5px, transparent 2px),
+        radial-gradient(circle at 70% 60%, rgba(43, 20, 16, 0.04) 1px, transparent 1.5px),
+        linear-gradient(180deg, var(--bb-cream) 0%, #efe2ca 100%);
+      background-size: 18px 18px, 22px 22px, auto;
+    }
+    .wrapper-detail.seam::before, .wrapper-detail.seam::after { color: rgba(43, 20, 16, 0.45); }
+    .wrapper-detail.seam:hover::after { color: var(--bb-ember); }
+    .wrapper-detail.seam .seam-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .wrapper-detail.seam .seam-stitch {
+      width: 4px;
+      height: 80px;
+      background-image: linear-gradient(to bottom, var(--bb-char) 50%, transparent 50%);
+      background-size: 4px 8px;
+      background-repeat: repeat-y;
+      opacity: 0.4;
+    }
+    .wrapper-detail.seam .seam-text {
+      margin-left: 18px;
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      color: var(--bb-char);
+    }
+    .wrapper-detail.seam .seam-text small {
+      display: block;
+      font-family: var(--ff-mono);
+      font-style: normal;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(43, 20, 16, 0.55);
+      margin-top: 4px;
+    }
+
+    /* ============================================================ */
+    /*  THE PHOTOS — gallery with crossfade hero + contact sheet    */
+    /* ============================================================ */
+
+    .photos-section {
+      margin: 0 52px;
+      padding: 96px 0 96px;
+      border-bottom: 1px solid var(--ff-ivory-15);
+    }
+
+    .photos-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 56px;
+    }
+    .photos-eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--ff-amber);
+    }
+
+    .photos-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0 24px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-60);
+    }
+    .photos-meta .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bb-ember);
+    }
+    .photos-meta .pulse::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--bb-ember);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(212, 63, 27, 0.5);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+
+    /* HERO PHOTO VIEWER */
+    .photos-hero {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      isolation: isolate;
+      box-shadow:
+        0 50px 80px -30px rgba(0, 0, 0, 0.5);
+    }
+
+    .photo-frame {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+    }
+    .photo-frame.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* the gradient-as-photo placeholders */
+    .photo-frame[data-shot="01"] {
+      background:
+        radial-gradient(ellipse 90% 70% at 30% 65%, rgba(212, 63, 27, 0.85), transparent 60%),
+        linear-gradient(135deg, #c46a2c 0%, #d43f1b 35%, #2b1410 100%);
+    }
+    .photo-frame[data-shot="02"] {
+      background:
+        radial-gradient(ellipse 80% 70% at 70% 30%, rgba(245, 235, 216, 0.55), transparent 60%),
+        linear-gradient(180deg, #efe2ca 0%, #c46a2c 100%);
+    }
+    .photo-frame[data-shot="03"] {
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 30%, rgba(212, 63, 27, 0.5), transparent 60%),
+        linear-gradient(160deg, #c46a2c 0%, #2b1410 75%);
+    }
+    .photo-frame[data-shot="04"] {
+      background:
+        radial-gradient(circle at 50% 50%, #f5ebd8 0%, #c46a2c 55%, #2b1410 100%);
+    }
+    .photo-frame[data-shot="05"] {
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 60%, rgba(196, 106, 44, 0.45), transparent 65%),
+        linear-gradient(190deg, #2b1410 0%, #4a2418 50%, #c46a2c 100%);
+    }
+    .photo-frame[data-shot="06"] {
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(245, 235, 216, 0.4), transparent 60%),
+        linear-gradient(155deg, #d43f1b 0%, #c46a2c 40%, #2b1410 100%);
+    }
+
+    /* film grain on every photo */
+    .photo-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 235, 0.05) 0 1px,
+          transparent 1px 3px
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+    }
+
+    /* corner brackets on hero */
+    .photos-hero .brk {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: var(--bb-cream);
+      opacity: 0.65;
+      z-index: 5;
+    }
+    .photos-hero .brk.tl { top: 18px; left: 18px; border-top: 1px solid; border-left: 1px solid; }
+    .photos-hero .brk.tr { top: 18px; right: 18px; border-top: 1px solid; border-right: 1px solid; }
+    .photos-hero .brk.bl { bottom: 18px; left: 18px; border-bottom: 1px solid; border-left: 1px solid; }
+    .photos-hero .brk.br { bottom: 18px; right: 18px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* the slate that updates per-photo */
+    .photos-hero .slate {
+      position: absolute;
+      bottom: 36px;
+      left: 36px;
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: clamp(28px, 3.5vw, 56px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--bb-cream);
+      z-index: 6;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s;
+    }
+    .photo-frame.active ~ .slate-layer .slate.active,
+    .photos-hero .slate.active {
+      opacity: 1;
+    }
+    .photos-hero .slate small {
+      display: block;
+      font-family: var(--ff-mono);
+      font-style: normal;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.65;
+      margin-bottom: 8px;
+    }
+
+    /* counter top-left; progress bar top-right */
+    .photos-hero .counter {
+      position: absolute;
+      top: 30px;
+      left: 36px;
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.85;
+      z-index: 6;
+    }
+    .photos-hero .counter b {
+      color: var(--bb-cream);
+      font-weight: 500;
+    }
+    .photos-hero .progress-track {
+      position: absolute;
+      top: 36px;
+      right: 36px;
+      width: 120px;
+      height: 1px;
+      background: rgba(245, 235, 216, 0.2);
+      z-index: 6;
+      overflow: hidden;
+    }
+    .photos-hero .progress-bar {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 100%;
+      background: var(--bb-cream);
+      transform-origin: left;
+      animation: progress-tick 4.5s linear infinite;
+    }
+    .photos-hero.paused .progress-bar { animation-play-state: paused; }
+    @keyframes progress-tick {
+      0%   { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    /* CONTACT SHEET */
+    .contact-sheet {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.4s var(--ease-soft), border-color 0.3s ease, opacity 0.3s ease;
+      opacity: 0.55;
+    }
+    .thumb:hover { opacity: 0.95; transform: translateY(-3px); }
+    .thumb.active {
+      opacity: 1;
+      border-color: var(--ff-amber);
+    }
+
+    /* same gradient backgrounds, smaller */
+    .thumb[data-shot="01"] { background:
+        radial-gradient(ellipse 90% 70% at 30% 65%, rgba(212, 63, 27, 0.85), transparent 60%),
+        linear-gradient(135deg, #c46a2c 0%, #d43f1b 35%, #2b1410 100%); }
+    .thumb[data-shot="02"] { background:
+        radial-gradient(ellipse 80% 70% at 70% 30%, rgba(245, 235, 216, 0.55), transparent 60%),
+        linear-gradient(180deg, #efe2ca 0%, #c46a2c 100%); }
+    .thumb[data-shot="03"] { background:
+        radial-gradient(ellipse 70% 60% at 50% 30%, rgba(212, 63, 27, 0.5), transparent 60%),
+        linear-gradient(160deg, #c46a2c 0%, #2b1410 75%); }
+    .thumb[data-shot="04"] { background:
+        radial-gradient(circle at 50% 50%, #f5ebd8 0%, #c46a2c 55%, #2b1410 100%); }
+    .thumb[data-shot="05"] { background:
+        radial-gradient(ellipse 80% 60% at 70% 60%, rgba(196, 106, 44, 0.45), transparent 65%),
+        linear-gradient(190deg, #2b1410 0%, #4a2418 50%, #c46a2c 100%); }
+    .thumb[data-shot="06"] { background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(245, 235, 216, 0.4), transparent 60%),
+        linear-gradient(155deg, #d43f1b 0%, #c46a2c 40%, #2b1410 100%); }
+
+    .thumb .thumb-no {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--bb-cream);
+      opacity: 0.85;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    }
+    .thumb .thumb-slate {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      right: 10px;
+      font-family: var(--ff-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.85;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ============================================================ */
     /*  Footer note                                                 */
     /* ============================================================ */
     .footer-note {
@@ -1896,8 +2741,11 @@
     /* ============================================================ */
     @media (max-width: 880px) {
       .scene { margin: 28px 18px 0; min-height: 64vh; }
-      .breadcrumb, .filmstrip-wrap, .typespec, .footer-note, .mark-section, .menu-section { padding-left: 18px; padding-right: 18px; margin-left: 0; margin-right: 0; }
-      .mark-section, .menu-section { padding-top: 60px; padding-bottom: 60px; }
+      .breadcrumb, .filmstrip-wrap, .typespec, .footer-note, .mark-section, .menu-section, .wrapper-section, .photos-section { padding-left: 18px; padding-right: 18px; margin-left: 0; margin-right: 0; }
+      .mark-section, .menu-section, .wrapper-section, .photos-section { padding-top: 60px; padding-bottom: 60px; }
+      .wrapper-stage { min-height: 480px; }
+      .wrapper-stage .callout { display: none; }
+      .wrapper-details, .contact-sheet { grid-template-columns: 1fr 1fr; }
       .menu-book { aspect-ratio: 5 / 7; }
       .menu-spread { grid-template-columns: 1fr; }
       .menu-spread::after { display: none; }
@@ -2459,18 +3307,224 @@ Baked Potato</h1>
     </div>
   </section>
 
+  <!-- ============================================================ -->
+  <!--  THE WRAPPER                                                 -->
+  <!-- ============================================================ -->
+
+  <section class="wrapper-section" aria-label="Wrapper / packaging">
+    <p class="wrapper-eyebrow">Frame · 08 — The Wrapper</p>
+
+    <div class="wrapper-meta">
+      <span>Set decoration · Take-away sleeve · Spring 2026</span>
+      <span class="pulse">Print · Take 01</span>
+    </div>
+
+    <div class="wrapper-stage">
+      <span class="brk tl" aria-hidden="true"></span>
+      <span class="brk tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span>
+      <span class="brk br" aria-hidden="true"></span>
+
+      <div class="studio-tag"><b>Studio shot</b><br />Tasting room · Toronto</div>
+      <div class="studio-take">Take<em>01</em></div>
+
+      <span class="callout c1">
+        <b>01 · Mark</b>
+        Centered · 22mm clear<br />space all sides
+      </span>
+      <span class="callout c3">
+        <b>02 · Stock</b>
+        100% kraft · uncoated<br />180gsm · brown ink
+      </span>
+      <span class="callout c2">
+        <b>03 · Spec</b>
+        160 × 220 mm finished<br />flat · 320 × 240 unfolded
+      </span>
+
+      <div class="paper-bag" id="paper-bag">
+        <div class="face-front">
+          <span class="top-stamp">No. 005 · Big Bears · 2026</span>
+
+          <svg class="bag-bear" viewBox="-10 0 220 220" aria-hidden="true">
+            <circle class="ear" cx="55"  cy="60"  r="28" />
+            <circle class="ear" cx="155" cy="60"  r="28" />
+            <circle class="face" cx="105" cy="118" r="68" />
+            <ellipse class="feature" cx="105" cy="142" rx="36" ry="26" opacity="0.85" />
+            <circle class="feature" cx="80"  cy="110" r="6" />
+            <circle class="feature" cx="130" cy="110" r="6" />
+            <path   class="feature" d="M95 134 L115 134 L105 146 Z" />
+          </svg>
+
+          <span class="bag-word"><em>Big Bears</em></span>
+          <span class="bag-tagline">Baked · Toronto · Slow</span>
+          <span class="bag-divider"></span>
+
+          <span class="bag-spec">
+            Take-away sleeve<br />
+            <b>est. 2024</b> · made by hand
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper-details">
+      <!-- 1 · sticker -->
+      <div class="wrapper-detail sticker" data-frame="/ 01" data-label="Sticker · Mark">
+        <div class="sticker-disk">
+          <svg viewBox="-10 0 220 220" aria-hidden="true">
+            <circle class="ear" cx="55"  cy="60"  r="28" />
+            <circle class="ear" cx="155" cy="60"  r="28" />
+            <circle class="face" cx="105" cy="118" r="68" />
+            <ellipse class="feature" cx="105" cy="142" rx="36" ry="26" />
+            <circle class="feature" cx="80"  cy="110" r="6" />
+            <circle class="feature" cx="130" cy="110" r="6" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- 2 · cup sleeve -->
+      <div class="wrapper-detail sleeve" data-frame="/ 02" data-label="Cup · Sleeve">
+        <div class="cup-band">
+          <svg class="cup-mark" viewBox="-10 0 220 220" aria-hidden="true">
+            <circle class="ear" cx="55"  cy="60"  r="28" />
+            <circle class="ear" cx="155" cy="60"  r="28" />
+            <circle class="face" cx="105" cy="118" r="68" />
+            <ellipse class="feature" cx="105" cy="142" rx="36" ry="26" />
+            <circle class="feature" cx="80"  cy="110" r="6" />
+            <circle class="feature" cx="130" cy="110" r="6" />
+          </svg>
+          <span class="cup-word">Big Bears</span>
+        </div>
+      </div>
+
+      <!-- 3 · loyalty card -->
+      <div class="wrapper-detail card" data-frame="/ 03" data-label="Loyalty · Card">
+        <div class="biz-card">
+          <div class="biz-row">
+            <svg class="biz-mark" viewBox="-10 0 220 220" aria-hidden="true">
+              <circle class="ear" cx="55"  cy="60"  r="28" />
+              <circle class="ear" cx="155" cy="60"  r="28" />
+              <circle class="face" cx="105" cy="118" r="68" />
+              <ellipse class="feature" cx="105" cy="142" rx="36" ry="26" />
+              <circle class="feature" cx="80"  cy="110" r="6" />
+              <circle class="feature" cx="130" cy="110" r="6" />
+            </svg>
+            <span class="biz-tag">10 spuds · 1 free</span>
+          </div>
+          <div class="biz-row">
+            <span class="biz-name"><em>Big Bears</em></span>
+            <span class="biz-stamps">
+              <span class="stamp-dot filled"></span>
+              <span class="stamp-dot filled"></span>
+              <span class="stamp-dot filled"></span>
+              <span class="stamp-dot filled"></span>
+              <span class="stamp-dot"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 · seam / stock close-up -->
+      <div class="wrapper-detail seam" data-frame="/ 04" data-label="Stock · Detail">
+        <div class="seam-row">
+          <span class="seam-stitch" aria-hidden="true"></span>
+          <span class="seam-text">
+            <em>Kraft</em>
+            <small>180 gsm · uncoated</small>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!--  THE PHOTOS                                                  -->
+  <!-- ============================================================ -->
+
+  <section class="photos-section" aria-label="Photo showcase">
+    <p class="photos-eyebrow">Frame · 09 — The Photos</p>
+
+    <div class="photos-meta">
+      <span>Photography · 06 hero stills · cycling auto</span>
+      <span class="pulse">Reel · Take 01</span>
+    </div>
+
+    <div class="photos-hero" id="photos-hero">
+      <span class="brk tl" aria-hidden="true"></span>
+      <span class="brk tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span>
+      <span class="brk br" aria-hidden="true"></span>
+
+      <div class="photo-frame active" data-shot="01"></div>
+      <div class="photo-frame" data-shot="02"></div>
+      <div class="photo-frame" data-shot="03"></div>
+      <div class="photo-frame" data-shot="04"></div>
+      <div class="photo-frame" data-shot="05"></div>
+      <div class="photo-frame" data-shot="06"></div>
+
+      <div class="counter">
+        <b id="photo-counter">01</b>&nbsp;<span style="opacity: 0.5;">/ 06</span>
+      </div>
+      <div class="progress-track">
+        <span class="progress-bar" id="photo-progress"></span>
+      </div>
+
+      <div class="slate-layer">
+        <span class="slate active" data-for="01"><small>Frame 01 · EXT.</small>Storefront — Dusk</span>
+        <span class="slate" data-for="02"><small>Frame 02 · INT.</small>Kitchen — Day</span>
+        <span class="slate" data-for="03"><small>Frame 03 · INT.</small>Plating — Cont.</span>
+        <span class="slate" data-for="04"><small>Frame 04 · CU.</small>Loaded Potato</span>
+        <span class="slate" data-for="05"><small>Frame 05 · INT.</small>Dining Room — Night</span>
+        <span class="slate" data-for="06"><small>Frame 06 · POV.</small>First Bite</span>
+      </div>
+    </div>
+
+    <div class="contact-sheet">
+      <div class="thumb active" data-shot="01" data-idx="0">
+        <span class="thumb-no">/ 01</span>
+        <span class="thumb-slate">EXT. Storefront</span>
+      </div>
+      <div class="thumb" data-shot="02" data-idx="1">
+        <span class="thumb-no">/ 02</span>
+        <span class="thumb-slate">INT. Kitchen</span>
+      </div>
+      <div class="thumb" data-shot="03" data-idx="2">
+        <span class="thumb-no">/ 03</span>
+        <span class="thumb-slate">INT. Plating</span>
+      </div>
+      <div class="thumb" data-shot="04" data-idx="3">
+        <span class="thumb-no">/ 04</span>
+        <span class="thumb-slate">CU. Potato</span>
+      </div>
+      <div class="thumb" data-shot="05" data-idx="4">
+        <span class="thumb-no">/ 05</span>
+        <span class="thumb-slate">INT. Dining</span>
+      </div>
+      <div class="thumb" data-shot="06" data-idx="5">
+        <span class="thumb-no">/ 06</span>
+        <span class="thumb-slate">POV. First Bite</span>
+      </div>
+    </div>
+  </section>
+
   <p class="footer-note">
     <em>Animated prototype — Brand Showcase scene.</em><br />
-    <b>Opening sequence</b>: scene sweeps in → brackets snap → wordmark cascades →
-    tagline rises → filmstrip locks → type specimen fades. <b>Frame · 06 — The Mark</b>:
-    bear logo builds on scroll-into-view (outlines draw, fills bloom, eyes + nose
-    punch in). <b>Frame · 07 — The Menu</b>: cover flips open on scroll-into-view to
-    reveal the printed spread; menu items rise in staggered after the page turn settles;
-    detail strip below shows close-up frames (cover lockup · section header · item
-    typography · price treatment). <b>Ambient</b>: projector flicker, light-leak
-    breathing, grain shimmer, take-counter tick, scene-meta monogram tilt, vintage
-    stamp rotation, bear breathing, price-tick on hover. Big Bears Baked Potato shown
-    with illustrative brand + mark + menu data — drop in the real assets when ready.
+    <b>03 BRAND</b>: sweep, bracket snap, wordmark cascade, tagline rise.
+    <b>04 PALETTE</b>: auto-scrolling filmstrip, hover to pause + see role.
+    <b>05 TYPE</b>: living display glyph, blinking caret on body sample.
+    <b>06 MARK</b>: logo builds on scroll-into-view (strokes draw, fills bloom,
+    features punch in), then breathes; variant cards (monogram, rotating vintage
+    stamp, mono knockout).
+    <b>07 MENU</b>: cover flips open on scroll, items stagger-rise on the spread,
+    detail strip with close-ups.
+    <b>08 WRAPPER</b>: paper sleeve floating in studio light, hover to flip,
+    annotation callouts pointing to design specs; applications row (sticker, cup
+    sleeve, loyalty card, stock detail).
+    <b>09 PHOTOS</b>: 6-still gallery auto-cycling every 4.5s, slate label updates
+    per frame, contact sheet below — click any thumb to jump (cycles pause off-screen).
+    <b>Ambient throughout</b>: projector flicker, light-leak breathing, grain shimmer.
+    Big Bears Baked Potato shown with illustrative content — drop in real assets to
+    swap.
   </p>
 
   <!-- ============================================================ -->
@@ -2543,6 +3597,66 @@ Baked Potato</h1>
         });
       }, { threshold: 0.3 });
       observer.observe(menuBook);
+    }
+
+    /* Photo gallery — auto-cycle the hero, sync the slate + thumbs +
+       counter + progress bar. Pause when off-screen for performance,
+       and click any thumb to jump (which restarts the cycle). */
+    const photosHero = document.getElementById('photos-hero');
+    if (photosHero) {
+      const frames = photosHero.querySelectorAll('.photo-frame');
+      const slates = photosHero.querySelectorAll('.slate-layer .slate');
+      const thumbs = document.querySelectorAll('.contact-sheet .thumb');
+      const counter = document.getElementById('photo-counter');
+      const progress = document.getElementById('photo-progress');
+      const cycleMs = 4500;
+      let idx = 0;
+      let timer = null;
+
+      const setActive = (next) => {
+        idx = next % frames.length;
+        frames.forEach((f, i) => f.classList.toggle('active', i === idx));
+        slates.forEach((s, i) => s.classList.toggle('active', i === idx));
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === idx));
+        if (counter) counter.textContent = String(idx + 1).padStart(2, '0');
+        if (progress) {
+          // restart the progress bar animation
+          progress.style.animation = 'none';
+          progress.offsetHeight; // reflow
+          progress.style.animation = '';
+        }
+      };
+
+      const start = () => {
+        if (timer) return;
+        timer = setInterval(() => setActive(idx + 1), cycleMs);
+      };
+      const stop = () => {
+        if (timer) { clearInterval(timer); timer = null; }
+      };
+
+      // Pause cycling when offscreen; resume when visible
+      const visObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            photosHero.classList.remove('paused');
+            start();
+          } else {
+            photosHero.classList.add('paused');
+            stop();
+          }
+        });
+      }, { threshold: 0.2 });
+      visObserver.observe(photosHero);
+
+      // Click thumb to jump
+      thumbs.forEach((t) => {
+        t.addEventListener('click', () => {
+          stop();
+          setActive(parseInt(t.dataset.idx, 10));
+          start();
+        });
+      });
     }
   </script>
 </body>
