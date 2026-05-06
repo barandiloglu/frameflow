@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brand Showcase — Prototype · FrameFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Caveat+Brush&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ------------------------------------------------------------ */
+    /*  FF tokens                                                   */
+    /* ------------------------------------------------------------ */
+    :root {
+      --ff-graphite: #353230;
+      --ff-ivory:    #ffffeb;
+      --ff-amber:    #c19a4a;
+      --ff-ember:    #d43f1b;
+      --ff-graphite-90: #3d3a37;
+      --ff-graphite-80: #4a4744;
+      --ff-ivory-60: rgba(255, 255, 235, 0.60);
+      --ff-ivory-40: rgba(255, 255, 235, 0.40);
+      --ff-ivory-15: rgba(255, 255, 235, 0.15);
+      --ff-ivory-08: rgba(255, 255, 235, 0.08);
+
+      --ff-display:   "Fraunces", Georgia, serif;
+      --ff-body:      "Inter", system-ui, sans-serif;
+      --ff-mono:      "JetBrains Mono", ui-monospace, monospace;
+
+      /* Big Bears brand — illustrative for the prototype */
+      --bb-toast:  #c46a2c;
+      --bb-char:   #2b1410;
+      --bb-cream:  #f5ebd8;
+      --bb-ember:  #d43f1b;
+      --bb-display: "DM Serif Display", "Fraunces", serif;
+      --bb-body:    "Inter", system-ui, sans-serif;
+      --bb-script:  "Caveat Brush", cursive;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--ff-graphite);
+      color: var(--ff-ivory);
+      font-family: var(--ff-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    /* ------------------------------------------------------------ */
+    /*  Page chrome wrapper (so the prototype reads in context)     */
+    /* ------------------------------------------------------------ */
+
+    .rec-strip {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(53, 50, 48, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--ff-ivory-15);
+      border-bottom: 1px solid var(--ff-ivory-15);
+      padding: 14px 52px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-60);
+    }
+
+    .rec-dot {
+      position: relative;
+      display: inline-flex;
+      width: 8px;
+      height: 8px;
+    }
+    .rec-dot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--ff-ember);
+      border-radius: 50%;
+      animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    .rec-dot::after {
+      content: "";
+      position: relative;
+      width: 8px;
+      height: 8px;
+      background: var(--ff-ember);
+      border-radius: 50%;
+    }
+    @keyframes ping {
+      75%, 100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .rec-status {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .rec-status .label { color: rgba(255, 255, 235, 0.30); }
+    .rec-status .value { color: var(--ff-amber); }
+
+    .breadcrumb {
+      padding: 60px 52px 24px;
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .breadcrumb-rule {
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--ff-amber);
+    }
+    .breadcrumb-sep { color: rgba(255, 255, 235, 0.30); margin: 0 8px; }
+
+    /* ------------------------------------------------------------ */
+    /*  THE BRAND SCENE — main showcase                             */
+    /* ------------------------------------------------------------ */
+
+    .scene {
+      position: relative;
+      margin: 60px 52px 0;
+      background: var(--bb-toast);
+      color: var(--bb-cream);
+      overflow: hidden;
+      isolation: isolate;
+      min-height: 78vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      box-shadow:
+        0 1px 0 var(--ff-ivory-15),
+        0 60px 120px -40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* film-grain overlay on the scene */
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 235, 0.04) 0 1px,
+          transparent 1px 3px
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.6;
+    }
+
+    /* large blurred ember beam */
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 70% 30%, rgba(212, 63, 27, 0.35), transparent 60%),
+        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(43, 20, 16, 0.45), transparent 65%);
+    }
+
+    .scene > * { position: relative; z-index: 2; }
+
+    /* corner brackets in client's accent color */
+    .scene .bracket {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: var(--bb-cream);
+      opacity: 0.7;
+      z-index: 3;
+    }
+    .scene .bracket.tl { top: 22px; left: 22px; border-top: 1px solid; border-left: 1px solid; }
+    .scene .bracket.tr { top: 22px; right: 22px; border-top: 1px solid; border-right: 1px solid; }
+    .scene .bracket.bl { bottom: 22px; left: 22px; border-bottom: 1px solid; border-left: 1px solid; }
+    .scene .bracket.br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* scene meta strip — top */
+    .scene-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 38px 56px 0;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      color: var(--bb-cream);
+      opacity: 0.78;
+    }
+    .scene-meta .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bb-ember);
+      opacity: 1;
+    }
+    .scene-meta .pulse::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--bb-ember);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(212, 63, 27, 0.5);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      50% { box-shadow: 0 0 0 6px rgba(212, 63, 27, 0); }
+    }
+
+    /* center stage — the brand's name in its own type */
+    .stage {
+      display: flex;
+      align-items: center;
+      padding: 0 56px;
+    }
+
+    .stage-inner {
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--bb-ember);
+      margin: 0 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--bb-ember);
+    }
+
+    .wordmark {
+      font-family: var(--bb-display);
+      font-weight: 400;
+      font-size: clamp(78px, 13vw, 220px);
+      line-height: 0.86;
+      letter-spacing: -0.025em;
+      color: var(--bb-cream);
+      margin: 0;
+      text-wrap: balance;
+    }
+    .wordmark em {
+      font-style: italic;
+      color: var(--bb-char);
+    }
+
+    .tagline {
+      margin: 32px 0 0;
+      max-width: 680px;
+      font-family: var(--bb-body);
+      font-weight: 300;
+      font-size: clamp(18px, 1.6vw, 24px);
+      line-height: 1.5;
+      letter-spacing: -0.005em;
+      color: var(--bb-cream);
+      opacity: 0.9;
+    }
+    .tagline .accent {
+      font-family: var(--bb-script);
+      font-weight: 400;
+      color: var(--bb-ember);
+      font-size: 1.25em;
+      vertical-align: -2px;
+    }
+
+    /* bottom credit strip */
+    .credit {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      padding: 0 56px 38px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.72;
+    }
+    .credit .left { line-height: 1.7; }
+    .credit .left b { font-weight: 500; color: var(--bb-cream); opacity: 1; letter-spacing: 0.30em; }
+    .credit .right {
+      font-family: var(--bb-display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--bb-cream);
+      opacity: 1;
+    }
+    .credit .right small {
+      display: block;
+      font-family: var(--ff-mono);
+      font-style: normal;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--bb-cream);
+      opacity: 0.5;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+
+    /* ------------------------------------------------------------ */
+    /*  PALETTE FILMSTRIP                                           */
+    /* ------------------------------------------------------------ */
+
+    .filmstrip {
+      margin: 0 52px;
+      display: grid;
+      grid-template-columns: 100px repeat(4, 1fr);
+      border-bottom: 1px solid var(--ff-ivory-15);
+    }
+
+    .filmstrip-label {
+      padding: 28px 0 28px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+      border-right: 1px solid var(--ff-ivory-08);
+    }
+    .filmstrip-label b {
+      display: block;
+      color: var(--ff-amber);
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      margin-bottom: 4px;
+    }
+
+    .swatch {
+      position: relative;
+      min-height: 220px;
+      padding: 24px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .swatch:hover { transform: translateY(-4px); }
+
+    .swatch .perforation {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 6px;
+      background: var(--ff-graphite);
+      border-bottom-left-radius: 999px;
+      border-bottom-right-radius: 999px;
+      opacity: 0.85;
+    }
+    .swatch .perforation.bottom {
+      top: auto;
+      bottom: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: 999px;
+      border-top-right-radius: 999px;
+    }
+
+    .swatch .frame-no {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      mix-blend-mode: difference;
+      color: white;
+      opacity: 0.85;
+    }
+    .swatch .name-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .swatch .name {
+      font-family: var(--bb-display);
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      mix-blend-mode: difference;
+      color: white;
+    }
+    .swatch .hex {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      mix-blend-mode: difference;
+      color: white;
+      opacity: 0.7;
+    }
+
+    .swatch[data-color="toast"] { background: var(--bb-toast); }
+    .swatch[data-color="char"]  { background: var(--bb-char);  }
+    .swatch[data-color="cream"] { background: var(--bb-cream); }
+    .swatch[data-color="ember"] { background: var(--bb-ember); }
+
+    /* ------------------------------------------------------------ */
+    /*  TYPE SPECIMEN ROW                                           */
+    /* ------------------------------------------------------------ */
+
+    .typespec {
+      margin: 0 52px;
+      padding: 80px 0 96px;
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--ff-ivory-15);
+    }
+
+    .typespec-label {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+      padding-top: 6px;
+      border-right: 1px solid var(--ff-ivory-08);
+    }
+    .typespec-label b {
+      display: block;
+      color: var(--ff-amber);
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      margin-bottom: 4px;
+    }
+
+    .specimen {
+      padding: 0 36px;
+      border-right: 1px solid var(--ff-ivory-08);
+    }
+    .specimen:last-child { border-right: none; }
+
+    .specimen .role {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      margin: 0 0 10px;
+    }
+    .specimen .face {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-60);
+      margin: 0 0 28px;
+    }
+
+    .specimen .glyph-display {
+      font-family: var(--bb-display);
+      font-weight: 400;
+      font-size: clamp(96px, 11vw, 168px);
+      line-height: 0.85;
+      letter-spacing: -0.025em;
+      color: var(--ff-ivory);
+      margin: 0 0 16px;
+    }
+    .specimen .glyph-display em {
+      font-style: italic;
+      color: var(--bb-toast);
+    }
+    .specimen .specimen-set {
+      font-family: var(--bb-display);
+      font-weight: 400;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      color: var(--ff-ivory-60);
+      text-transform: uppercase;
+    }
+
+    .specimen .glyph-body {
+      font-family: var(--bb-body);
+      font-weight: 300;
+      font-size: clamp(28px, 3vw, 44px);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ff-ivory);
+      margin: 0 0 22px;
+      max-width: 28ch;
+    }
+    .specimen .body-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 16px 32px;
+      font-family: var(--bb-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--ff-ivory-60);
+    }
+    .specimen .body-grid b {
+      display: block;
+      font-family: var(--ff-mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      margin-bottom: 4px;
+    }
+
+    /* ------------------------------------------------------------ */
+    /*  Footer note                                                 */
+    /* ------------------------------------------------------------ */
+
+    .footer-note {
+      padding: 60px 52px 80px;
+      max-width: 720px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+      line-height: 1.9;
+    }
+    .footer-note b {
+      color: var(--ff-amber);
+      font-weight: 500;
+    }
+    .footer-note em {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ff-ivory);
+    }
+
+    /* ------------------------------------------------------------ */
+    /*  Responsive nudges                                           */
+    /* ------------------------------------------------------------ */
+
+    @media (max-width: 880px) {
+      .scene { margin: 28px 18px 0; min-height: 64vh; }
+      .breadcrumb, .filmstrip, .typespec, .footer-note { padding-left: 18px; padding-right: 18px; margin-left: 0; margin-right: 0; }
+      .scene-meta, .stage, .credit { padding-left: 26px; padding-right: 26px; }
+      .filmstrip { grid-template-columns: 1fr 1fr; }
+      .filmstrip-label { display: none; }
+      .typespec { grid-template-columns: 1fr; gap: 60px; }
+      .typespec-label { display: none; }
+      .specimen { padding: 0; border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!--  Page chrome (so the prototype reads as part of the subpage) -->
+  <!-- ============================================================ -->
+
+  <header class="rec-strip">
+    <span class="rec-dot" aria-hidden="true"></span>
+    <span style="color: var(--ff-ember); font-weight: 600;">FF_ARCHIVE</span>
+    <span style="color: rgba(255, 255, 235, 0.30);">/</span>
+    <span>/clients/big-bears-baked-potato</span>
+    <span class="rec-status">
+      <span class="label">SCENE</span>
+      <span class="value">03 — BRAND</span>
+    </span>
+  </header>
+
+  <p class="breadcrumb">
+    <span class="breadcrumb-rule"></span>
+    <span>Home<span class="breadcrumb-sep">/</span>Portfolio<span class="breadcrumb-sep">/</span>Big Bears Baked Potato<span class="breadcrumb-sep">/</span>Brand</span>
+  </p>
+
+  <!-- ============================================================ -->
+  <!--  THE BRAND SCENE                                             -->
+  <!-- ============================================================ -->
+
+  <section class="scene">
+    <span class="bracket tl" aria-hidden="true"></span>
+    <span class="bracket tr" aria-hidden="true"></span>
+    <span class="bracket bl" aria-hidden="true"></span>
+    <span class="bracket br" aria-hidden="true"></span>
+
+    <div class="scene-meta">
+      <span>FF#005 · Reel '26</span>
+      <span class="pulse">Brand · Take 01</span>
+    </div>
+
+    <div class="stage">
+      <div class="stage-inner">
+        <p class="eyebrow">A short film about a hot potato</p>
+        <h1 class="wordmark">
+          Big <em>Bears</em><br />
+          Baked Potato
+        </h1>
+        <p class="tagline">
+          Brown butter, char, cream &amp; a flame at the door —
+          <span class="accent">spuds</span> shouldn't be shy.
+        </p>
+      </div>
+    </div>
+
+    <div class="credit">
+      <div class="left">
+        <span><b>Shot in our chair</b> — Tasting room, Toronto</span><br />
+        <span style="opacity: 0.55;">Brand kit · 12 wks · Q2 2026</span>
+      </div>
+      <div class="right">
+        <small>Take</small>
+        01
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!--  PALETTE — filmstrip                                         -->
+  <!-- ============================================================ -->
+
+  <section class="filmstrip" aria-label="Brand palette">
+    <div class="filmstrip-label">
+      <span><b>Frame · 04</b>The Palette</span>
+    </div>
+
+    <div class="swatch" data-color="toast">
+      <span class="perforation"></span>
+      <span class="frame-no">/ 01</span>
+      <div class="name-block">
+        <span class="name">Toast</span>
+        <span class="hex">#C46A2C</span>
+      </div>
+      <span class="perforation bottom"></span>
+    </div>
+
+    <div class="swatch" data-color="char">
+      <span class="perforation"></span>
+      <span class="frame-no">/ 02</span>
+      <div class="name-block">
+        <span class="name">Char</span>
+        <span class="hex">#2B1410</span>
+      </div>
+      <span class="perforation bottom"></span>
+    </div>
+
+    <div class="swatch" data-color="cream">
+      <span class="perforation"></span>
+      <span class="frame-no" style="color: var(--bb-char); mix-blend-mode: normal; opacity: 0.7;">/ 03</span>
+      <div class="name-block">
+        <span class="name" style="color: var(--bb-char); mix-blend-mode: normal;">Cream</span>
+        <span class="hex" style="color: var(--bb-char); mix-blend-mode: normal; opacity: 0.55;">#F5EBD8</span>
+      </div>
+      <span class="perforation bottom"></span>
+    </div>
+
+    <div class="swatch" data-color="ember">
+      <span class="perforation"></span>
+      <span class="frame-no">/ 04</span>
+      <div class="name-block">
+        <span class="name">Ember</span>
+        <span class="hex">#D43F1B</span>
+      </div>
+      <span class="perforation bottom"></span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!--  TYPE SPECIMEN                                               -->
+  <!-- ============================================================ -->
+
+  <section class="typespec" aria-label="Type specimen">
+    <div class="typespec-label">
+      <span><b>Frame · 05</b>The Type</span>
+    </div>
+
+    <div class="specimen">
+      <p class="role">Display</p>
+      <p class="face">DM Serif Display · Italic</p>
+      <p class="glyph-display"><em>Aa</em>Bb</p>
+      <p class="specimen-set">Aa Bb Cc Dd Ee Ff Gg &amp; 0123</p>
+    </div>
+
+    <div class="specimen">
+      <p class="role">Body</p>
+      <p class="face">Inter · Light / Regular</p>
+      <p class="glyph-body">A potato is a small private rebellion against the cold.</p>
+      <div class="body-grid">
+        <div><b>Light</b>300</div>
+        <div><b>Regular</b>400</div>
+        <div><b>Medium</b>500</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    <em>Prototype — Brand Showcase scene for the client subpage.</em><br />
+    The dominant block at the top uses the client's <b>actual colors and typefaces</b> as a <b>cinema title card</b>.
+    Below it, the palette renders as a perforated filmstrip; the type specimen is laid out like a printed spec sheet
+    with FF chrome around it. The whole section sits between the FilmStill and the Prev / Next reel nav on the
+    real subpage. Big Bears Baked Potato shown with illustrative brand data — replace with the real palette + type
+    stack before this ships.
+  </p>
+
+</body>
+</html>
