@@ -16,7 +16,6 @@ type Props = {
 
 export function ClientPage({ client, frameNumber, prev, next }: Props) {
   const status = client.synopsis ? "ON SCREEN" : "IN POST";
-  const services = client.services;
 
   return (
     <>
@@ -79,7 +78,7 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
             </h1>
 
             <div className="flex flex-wrap gap-2 mt-6">
-              {services.map((s) => (
+              {client.services.map((s) => (
                 <span
                   key={s}
                   className="border border-amber/30 bg-amber/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-amber"
@@ -124,12 +123,13 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
 
       {/* PREV / NEXT NAV */}
       <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-12">
-        <div className="max-w-[1500px] mx-auto grid grid-cols-2 gap-6">
+        <nav aria-label="Adjacent clients" className="max-w-[1500px] mx-auto grid grid-cols-2 gap-6">
           <Link
             href={`/portfolio/${prev.slug}`}
+            aria-label={`Previous client: ${prev.name}`}
             className="group flex items-baseline gap-4 no-underline"
           >
-            <span className="font-editorial not-italic text-[22px] text-on-alt-30 group-hover:text-amber group-hover:-translate-x-1 transition-all duration-300">
+            <span aria-hidden="true" className="font-editorial not-italic text-[22px] text-on-alt-30 group-hover:text-amber group-hover:-translate-x-1 transition-all duration-300">
               ←
             </span>
             <span className="flex flex-col">
@@ -143,6 +143,7 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
           </Link>
           <Link
             href={`/portfolio/${next.slug}`}
+            aria-label={`Next client: ${next.name}`}
             className="group flex items-baseline justify-end gap-4 text-right no-underline"
           >
             <span className="flex flex-col items-end">
@@ -153,11 +154,11 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
                 {next.name}
               </span>
             </span>
-            <span className="font-editorial not-italic text-[22px] text-on-alt-30 group-hover:text-amber group-hover:translate-x-1 transition-all duration-300">
+            <span aria-hidden="true" className="font-editorial not-italic text-[22px] text-on-alt-30 group-hover:text-amber group-hover:translate-x-1 transition-all duration-300">
               →
             </span>
           </Link>
-        </div>
+        </nav>
       </section>
 
       {/* CTA — same booking strip as the index */}
