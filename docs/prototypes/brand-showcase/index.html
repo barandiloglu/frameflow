@@ -781,6 +781,423 @@
     }
 
     /* ============================================================ */
+    /*  THE MARK — logo treatment                                   */
+    /* ============================================================ */
+
+    /* tiny monogram in the scene-meta top-left */
+    .meta-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .meta-mark-svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      animation: mark-tilt 5.5s ease-in-out infinite;
+      transform-origin: 50% 65%;
+    }
+    .meta-mark-svg circle { fill: var(--bb-cream); }
+    .meta-mark-svg ellipse { fill: var(--bb-char); }
+    @keyframes mark-tilt {
+      0%, 100% { transform: rotate(-3deg); }
+      50%      { transform: rotate(3deg); }
+    }
+
+    /* the hero mark section */
+    .mark-section {
+      margin: 0 52px;
+      padding: 96px 0 96px;
+      border-bottom: 1px solid var(--ff-ivory-15);
+    }
+
+    .mark-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 80px;
+    }
+    .mark-eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--ff-amber);
+    }
+
+    /* the BUILD frame — large dark card */
+    .mark-hero {
+      position: relative;
+      background: var(--bb-char);
+      color: var(--bb-cream);
+      min-height: 540px;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      align-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* spotlight on the mark */
+    .mark-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 55%, rgba(196, 106, 44, 0.45), transparent 55%);
+      z-index: 0;
+      pointer-events: none;
+      animation: spotlight-pulse 6s ease-in-out infinite;
+    }
+    .mark-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 235, 0.05) 0 1px,
+          transparent 1px 3px
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+    }
+    @keyframes spotlight-pulse {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50%      { opacity: 1.05; transform: scale(1.06); }
+    }
+
+    .mark-hero > * { position: relative; z-index: 1; }
+
+    .mark-hero .corner-tl,
+    .mark-hero .corner-tr,
+    .mark-hero .corner-bl,
+    .mark-hero .corner-br {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--bb-cream);
+      opacity: 0.55;
+    }
+    .mark-hero .corner-tl { top: 22px; left: 22px; border-top: 1px solid; border-left: 1px solid; }
+    .mark-hero .corner-tr { top: 22px; right: 22px; border-top: 1px solid; border-right: 1px solid; }
+    .mark-hero .corner-bl { bottom: 22px; left: 22px; border-bottom: 1px solid; border-left: 1px solid; }
+    .mark-hero .corner-br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* left column — production credits stack */
+    .mark-hero-left {
+      padding: 48px 36px 48px 56px;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      opacity: 0.78;
+    }
+    .mark-hero-left .top { line-height: 1.8; }
+    .mark-hero-left .top b {
+      color: var(--bb-cream);
+      opacity: 1;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+    }
+    .mark-hero-left .bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mark-hero-left .stamp {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--bb-cream);
+      opacity: 1;
+    }
+    .mark-hero-left .stamp small {
+      display: block;
+      font-family: var(--ff-mono);
+      font-style: normal;
+      font-size: 9px;
+      letter-spacing: 0.30em;
+      color: var(--bb-cream);
+      opacity: 0.5;
+      margin-bottom: 4px;
+    }
+
+    /* center — the bear mark stage */
+    .mark-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 0;
+    }
+
+    /* the bear */
+    .bear {
+      width: clamp(220px, 26vw, 360px);
+      height: auto;
+      overflow: visible;
+    }
+    .bear .bear-part {
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    /* outline strokes — drawn in via stroke-dashoffset */
+    .bear .stroke {
+      fill: none;
+      stroke: var(--bb-toast);
+      stroke-width: 2;
+      stroke-linecap: round;
+      pathLength: 1;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    /* fills — appear after the strokes finish */
+    .bear .fill {
+      opacity: 0;
+    }
+    /* features — punch in last */
+    .bear .punch {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    /* trigger build sequence when .start is added (on scroll-into-view) */
+    .bear.start .stroke {
+      animation: stroke-draw 0.9s var(--ease-cinematic) forwards;
+    }
+    .bear.start .stroke.face   { animation-delay: 0.0s; }
+    .bear.start .stroke.ear-l  { animation-delay: 0.4s; }
+    .bear.start .stroke.ear-r  { animation-delay: 0.5s; }
+    .bear.start .stroke.snout  { animation-delay: 0.9s; }
+
+    .bear.start .fill {
+      animation: fill-in 0.5s var(--ease-soft) forwards;
+    }
+    .bear.start .fill.face  { animation-delay: 1.3s; }
+    .bear.start .fill.ear-l { animation-delay: 1.4s; }
+    .bear.start .fill.ear-r { animation-delay: 1.5s; }
+    .bear.start .fill.snout { animation-delay: 1.7s; }
+
+    .bear.start .punch {
+      animation: feature-punch 0.4s var(--ease-soft) forwards;
+    }
+    .bear.start .punch.eye-l { animation-delay: 2.0s; }
+    .bear.start .punch.eye-r { animation-delay: 2.05s; }
+    .bear.start .punch.nose  { animation-delay: 2.15s; }
+
+    @keyframes stroke-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes fill-in {
+      to { opacity: 1; }
+    }
+    @keyframes feature-punch {
+      0%   { opacity: 0; transform: scale(0); }
+      70%  { opacity: 1; transform: scale(1.25); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* once everything is built, the whole bear breathes subtly */
+    .bear.built {
+      animation: bear-breathe 5s ease-in-out infinite;
+      transform-origin: center 65%;
+    }
+    @keyframes bear-breathe {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.02); }
+    }
+    .bear:hover {
+      animation-play-state: paused;
+    }
+    .bear:hover { cursor: pointer; }
+    .bear:hover .punch.eye-l, .bear:hover .punch.eye-r {
+      animation: blink 0.5s ease-in-out;
+    }
+    @keyframes blink {
+      0%, 100% { transform: scaleY(1); }
+      50%      { transform: scaleY(0.05); }
+    }
+
+    /* right column — usage spec */
+    .mark-hero-right {
+      padding: 48px 56px 48px 36px;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      text-align: right;
+    }
+    .mark-hero-right .top {
+      opacity: 0.78;
+    }
+    .mark-hero-right .top b {
+      color: var(--bb-cream);
+      opacity: 1;
+      font-weight: 500;
+    }
+    .mark-hero-right .specs {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-end;
+    }
+    .mark-hero-right .spec {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.4;
+    }
+    .mark-hero-right .spec-label {
+      font-size: 9px;
+      letter-spacing: 0.30em;
+      color: var(--bb-cream);
+      opacity: 0.45;
+    }
+    .mark-hero-right .spec-val {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--bb-cream);
+    }
+
+    /* ---------- VARIANT ROW ---------- */
+    .mark-variants {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .variant {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--ff-ivory-15);
+      overflow: hidden;
+      transition:
+        transform 0.5s var(--ease-soft),
+        border-color 0.4s ease;
+      cursor: pointer;
+    }
+    .variant:hover {
+      transform: translateY(-6px);
+      border-color: var(--ff-amber);
+    }
+    .variant::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .variant:hover::after {
+      color: var(--ff-amber);
+      transform: translateX(4px);
+    }
+    .variant::before {
+      content: attr(data-frame);
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-ivory-40);
+    }
+
+    /* variant 1 — monogram BB on cream */
+    .variant.monogram {
+      background: var(--bb-cream);
+    }
+    .variant.monogram .bb {
+      font-family: var(--bb-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(96px, 12vw, 160px);
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: var(--bb-toast);
+      position: relative;
+      transition: letter-spacing 0.6s var(--ease-soft);
+    }
+    .variant.monogram:hover .bb {
+      letter-spacing: -0.03em;
+    }
+    .variant.monogram .bb .b2 {
+      color: var(--bb-char);
+      margin-left: -0.18em;
+    }
+
+    /* variant 2 — circular stamp */
+    .variant.stamp {
+      background: var(--bb-toast);
+      color: var(--bb-cream);
+    }
+    .variant.stamp::after,
+    .variant.stamp::before {
+      color: rgba(245, 235, 216, 0.5);
+    }
+    .variant.stamp:hover::after { color: var(--bb-cream); }
+    .variant.stamp svg { width: 70%; height: 70%; }
+    .variant.stamp .stamp-text {
+      fill: var(--bb-cream);
+      font-family: var(--ff-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .variant.stamp .stamp-circle {
+      fill: none;
+      stroke: var(--bb-cream);
+      stroke-width: 1.2;
+    }
+    .variant.stamp svg {
+      animation: stamp-rotate 30s linear infinite;
+    }
+    .variant.stamp:hover svg { animation-play-state: paused; }
+    @keyframes stamp-rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    /* variant 3 — mono knockout (mark on dark) */
+    .variant.knockout {
+      background: var(--bb-char);
+      color: var(--bb-cream);
+    }
+    .variant.knockout .bear-mini {
+      width: 60%;
+      height: auto;
+    }
+    .variant.knockout .bear-mini circle { fill: var(--bb-cream); }
+    .variant.knockout .bear-mini .feature { fill: var(--bb-char); }
+
+    /* ============================================================ */
     /*  Footer note                                                 */
     /* ============================================================ */
     .footer-note {
@@ -810,7 +1227,8 @@
     /* ============================================================ */
     @media (max-width: 880px) {
       .scene { margin: 28px 18px 0; min-height: 64vh; }
-      .breadcrumb, .filmstrip-wrap, .typespec, .footer-note { padding-left: 18px; padding-right: 18px; margin-left: 0; margin-right: 0; }
+      .breadcrumb, .filmstrip-wrap, .typespec, .footer-note, .mark-section { padding-left: 18px; padding-right: 18px; margin-left: 0; margin-right: 0; }
+      .mark-section { padding-top: 60px; padding-bottom: 60px; }
       .scene-meta, .stage, .credit { padding-left: 36px; padding-right: 26px; }
       .filmstrip-wrap { grid-template-columns: 1fr; }
       .filmstrip-label { display: none; }
@@ -818,6 +1236,12 @@
       .typespec { grid-template-columns: 1fr; gap: 60px; }
       .typespec-label { display: none; }
       .specimen { padding: 0; border-right: none; }
+      .mark-hero { grid-template-columns: 1fr; min-height: 0; }
+      .mark-hero-left, .mark-hero-right { padding: 32px; text-align: left; align-items: flex-start; }
+      .mark-hero-right { text-align: left; }
+      .mark-hero-right .specs { align-items: flex-start; }
+      .mark-stage { padding: 24px 0 8px; }
+      .mark-variants { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -857,7 +1281,17 @@
     <span class="bracket br" aria-hidden="true"></span>
 
     <div class="scene-meta">
-      <span>FF#005 · Reel '26</span>
+      <span class="meta-mark">
+        <svg class="meta-mark-svg" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="11" cy="13" r="5" />
+          <circle cx="29" cy="13" r="5" />
+          <circle cx="20" cy="22" r="11" />
+          <circle cx="16" cy="20" r="1.4" fill="var(--bb-char)" />
+          <circle cx="24" cy="20" r="1.4" fill="var(--bb-char)" />
+          <ellipse cx="20" cy="26" rx="5" ry="3.5" fill="var(--bb-char)" opacity="0.85" />
+        </svg>
+        FF#005 · Reel '26
+      </span>
       <span class="pulse">Brand · Take 01</span>
     </div>
 
@@ -1011,14 +1445,135 @@ Baked Potato</h1>
     </div>
   </section>
 
+  <!-- ============================================================ -->
+  <!--  THE MARK                                                    -->
+  <!-- ============================================================ -->
+
+  <section class="mark-section" aria-label="Brand mark">
+    <p class="mark-eyebrow">Frame · 06 — The Mark</p>
+
+    <div class="mark-hero">
+      <span class="corner-tl" aria-hidden="true"></span>
+      <span class="corner-tr" aria-hidden="true"></span>
+      <span class="corner-bl" aria-hidden="true"></span>
+      <span class="corner-br" aria-hidden="true"></span>
+
+      <div class="mark-hero-left">
+        <div class="top">
+          <span><b>Hand-drawn</b><br />in Toronto</span><br />
+          <span style="opacity: 0.55;">2026 · Q2 batch</span>
+        </div>
+        <div class="bottom">
+          <div class="stamp">
+            <small>Reel</small>
+            Take 06
+          </div>
+        </div>
+      </div>
+
+      <div class="mark-stage">
+        <svg class="bear" id="hero-bear" viewBox="-10 0 220 220" aria-label="Big Bears primary mark">
+          <!-- back ear circles (drawn first) -->
+          <circle class="bear-part fill ear-l" cx="55"  cy="60"  r="28" fill="var(--bb-toast)" />
+          <circle class="bear-part fill ear-r" cx="155" cy="60"  r="28" fill="var(--bb-toast)" />
+
+          <!-- face -->
+          <circle class="bear-part fill face" cx="105" cy="118" r="68" fill="var(--bb-toast)" />
+
+          <!-- inner ears -->
+          <circle class="bear-part fill ear-l" cx="55"  cy="60"  r="13" fill="var(--bb-ember)" />
+          <circle class="bear-part fill ear-r" cx="155" cy="60"  r="13" fill="var(--bb-ember)" />
+
+          <!-- snout -->
+          <ellipse class="bear-part fill snout" cx="105" cy="142" rx="36" ry="26" fill="var(--bb-cream)" />
+
+          <!-- outline strokes that draw in first (above the fills, fade behind once filled) -->
+          <circle class="bear-part stroke face"  cx="105" cy="118" r="68" />
+          <circle class="bear-part stroke ear-l" cx="55"  cy="60"  r="28" />
+          <circle class="bear-part stroke ear-r" cx="155" cy="60"  r="28" />
+          <ellipse class="bear-part stroke snout" cx="105" cy="142" rx="36" ry="26" />
+
+          <!-- features punch in last -->
+          <circle class="bear-part punch eye-l" cx="80"  cy="110" r="6" fill="var(--bb-char)" />
+          <circle class="bear-part punch eye-r" cx="130" cy="110" r="6" fill="var(--bb-char)" />
+          <path   class="bear-part punch nose"  d="M95 134 L115 134 L105 146 Z" fill="var(--bb-char)" />
+        </svg>
+      </div>
+
+      <div class="mark-hero-right">
+        <div class="top">
+          <span><b>Bear</b> · Primary mark</span>
+        </div>
+        <div class="specs">
+          <div class="spec">
+            <span class="spec-label">Min size</span>
+            <span class="spec-val">24px</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Clear space</span>
+            <span class="spec-val">½ ear</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">On photo</span>
+            <span class="spec-val">Knockout</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mark-variants">
+      <!-- monogram -->
+      <div class="variant monogram" data-frame="/ 01" data-label="Monogram">
+        <span class="bb"><span>B</span><span class="b2">B</span></span>
+      </div>
+
+      <!-- circular stamp -->
+      <div class="variant stamp" data-frame="/ 02" data-label="Vintage stamp">
+        <svg viewBox="-100 -100 200 200" aria-hidden="true">
+          <defs>
+            <path id="stamp-curve" d="M 0,-72 a 72,72 0 1,1 -0.01,0" />
+          </defs>
+          <circle class="stamp-circle" cx="0" cy="0" r="84" />
+          <circle class="stamp-circle" cx="0" cy="0" r="60" />
+          <text class="stamp-text">
+            <textPath href="#stamp-curve" startOffset="0">
+              · BIG BEARS · BAKED POTATO · TORONTO · 2026
+            </textPath>
+          </text>
+          <!-- mini bear -->
+          <circle cx="-22" cy="-12" r="11" fill="var(--bb-cream)" />
+          <circle cx="22"  cy="-12" r="11" fill="var(--bb-cream)" />
+          <circle cx="0"   cy="14"  r="26" fill="var(--bb-cream)" />
+          <ellipse cx="0" cy="22" rx="14" ry="10" fill="var(--bb-toast)" />
+          <circle cx="-9" cy="10" r="2.2" fill="var(--bb-toast)" />
+          <circle cx="9"  cy="10" r="2.2" fill="var(--bb-toast)" />
+        </svg>
+      </div>
+
+      <!-- mono knockout -->
+      <div class="variant knockout" data-frame="/ 03" data-label="Mono · Knockout">
+        <svg class="bear-mini" viewBox="-10 0 220 220" aria-hidden="true">
+          <circle cx="55"  cy="60"  r="28" />
+          <circle cx="155" cy="60"  r="28" />
+          <circle cx="105" cy="118" r="68" />
+          <circle cx="80"  cy="110" r="6" class="feature" />
+          <circle cx="130" cy="110" r="6" class="feature" />
+          <ellipse cx="105" cy="142" rx="36" ry="26" class="feature" opacity="0.85" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
   <p class="footer-note">
     <em>Animated prototype — Brand Showcase scene.</em><br />
-    Opening sequence: char-color sweep peels right-to-left → corner brackets snap in →
-    wordmark cascades letter by letter → tagline rises → filmstrip locks in → type specimen
-    fades up. <b>Ambient</b>: subtle projector flicker, ember light-leak breathing, grain
-    shimmer, take-counter tick. <b>Hover</b>: wordmark italic accent rotates through palette,
-    swatches lift to reveal usage role, palette filmstrip pauses. Big Bears Baked Potato
-    shown with illustrative brand data.
+    <b>Opening sequence</b>: scene sweeps in → brackets snap → wordmark cascades →
+    tagline rises → filmstrip locks → type specimen fades. <b>Frame · 06 — The Mark</b>
+    builds itself in: the bear's outlines draw clockwise, fills bloom in, then eyes and
+    nose punch in to finish. Once built, the bear breathes subtly. The vintage stamp
+    rotates continuously; hover any variant card to lift it. <b>Ambient</b> across the
+    whole scene: projector flicker, light-leak breathing, grain shimmer, take-counter
+    tick, scene-meta monogram tilts back and forth. Big Bears Baked Potato shown with
+    illustrative brand + mark data — drop in the real SVG when it's ready.
   </p>
 
   <!-- ============================================================ -->
@@ -1058,6 +1613,23 @@ Baked Potato</h1>
 
       [...el.childNodes].forEach(wrap);
     });
+
+    /* The hero bear builds itself in when scrolled into view. Once the
+       build finishes (~2.6s after .start), add .built so the ambient
+       breathing animation kicks in. */
+    const heroBear = document.getElementById('hero-bear');
+    if (heroBear) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('start');
+            setTimeout(() => entry.target.classList.add('built'), 2600);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      observer.observe(heroBear);
+    }
   </script>
 </body>
 </html>
