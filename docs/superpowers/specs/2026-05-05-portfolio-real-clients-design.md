@@ -48,9 +48,9 @@ export type Service =
 export type Client = {
   slug: string;          // url-safe, hand-curated, stable
   name: string;          // display name
-  services: Service[];   // service tags. ORDER MATTERS — first tag is the
-                         // primary service, used as the FilmStill badge on
-                         // the subpage and as the OG description lead.
+  services: readonly Service[];   // service tags. ORDER MATTERS — first tag is the
+                                  // primary service, used as the FilmStill badge on
+                                  // the subpage and as the OG description lead.
 
   // Optional spotlight fields. All real or absent — never invented.
   // Their presence promotes the client into richer rendering automatically.
@@ -60,17 +60,19 @@ export type Client = {
   scene?: string;        // e.g. "INT. KITCHEN — DAY" — cinema slate flavor
   synopsis?: string;
   featured?: boolean;    // shows "Now Showing" badge on Index, eligible for Hero
-  scene_order?: number;  // sort key for future Selected Scenes section
+  sceneOrder?: number;   // sort key for future Selected Scenes section
 };
 
-export const clients: Client[] = [ /* 19 entries, alphabetical */ ];
+export const clients: readonly Client[] = [ /* 19 entries, alphabetical */ ];
 
 export const getClient = (slug: string): Client | undefined =>
   clients.find(c => c.slug === slug);
 
-export const getAdjacentClients = (slug: string): { prev: Client; next: Client } => {
-  const i = clients.findIndex(c => c.slug === slug);
-  // Wraps around — reel is a loop, not a paginated list.
+export const getAdjacentClients = (client: Client): { prev: Client; next: Client } => {
+  const i = clients.findIndex((c) => c.slug === client.slug);
+  if (i === -1) {
+    throw new Error(`Client "${client.slug}" is not in the roster`);
+  }
   return {
     prev: i > 0 ? clients[i - 1] : clients[clients.length - 1],
     next: i < clients.length - 1 ? clients[i + 1] : clients[0],
@@ -277,7 +279,7 @@ A single component, `<ClientPage client={client} />`, that renders whatever real
 None as of 2026-05-05. All structural decisions made through brainstorming dialogue:
 
 - **Approach:** Keep the chrome with optional fields (Approach D), populate progressively.
-- **Spotlight sections:** Cut for V1 (Approach A) — re-enabled per-client when `featured` / `scene_order` is set.
+- **Spotlight sections:** Cut for V1 (Approach A) — re-enabled per-client when `featured` / `sceneOrder` is set.
 - **Archive Manifest:** Auto-derived counts from real services (top 6).
 - **Subpage policy:** Stub renders today, becomes the shared template (Approach C).
 - **Index row:** Drop subtitle category tag; let services wrap freely instead of truncating.
