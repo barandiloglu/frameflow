@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
   clients,
+  getFrameNumber,
   getServiceCounts,
   getDistinctServiceCount,
   type Client,
@@ -14,7 +15,6 @@ import {
 const TOTAL_CLIENTS = clients.length;
 const DISTINCT_SERVICES = getDistinctServiceCount();
 const TOP_SERVICES = getServiceCounts().slice(0, 6);
-const FRAME_NUMBER = (i: number) => String(i + 1).padStart(3, "0");
 
 export default function PortfolioPage() {
   return (
@@ -211,7 +211,7 @@ export default function PortfolioPage() {
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.6, delay: i * 0.04 }}
               >
-                <IndexRow client={c} frameNumber={FRAME_NUMBER(i)} />
+                <IndexRow client={c} frameNumber={getFrameNumber(c)} />
               </motion.div>
             ))}
           </div>

@@ -16,7 +16,9 @@ export type Client = {
   name: string;
   /**
    * Service tags. ORDER MATTERS — the first tag is the primary service,
-   * used as the FilmStill badge and the OG description lead.
+   * used as the FilmStill badge and the OG description lead. Tags should
+   * be unique within the array; the subpage uses each tag as a React key
+   * when rendering the service-pill list.
    */
   services: readonly Service[];
 
@@ -77,6 +79,19 @@ export const getAdjacentClients = (
     prev: i > 0 ? clients[i - 1] : clients[clients.length - 1],
     next: i < clients.length - 1 ? clients[i + 1] : clients[0],
   };
+};
+
+/**
+ * Returns the zero-padded frame number for a client (e.g. "001"-"019")
+ * based on its position in the alphabetical roster. Throws if the client
+ * isn't in the roster (caller bug).
+ */
+export const getFrameNumber = (client: Client): string => {
+  const i = clients.indexOf(client);
+  if (i === -1) {
+    throw new Error(`Client "${client.slug}" is not in the roster`);
+  }
+  return String(i + 1).padStart(3, "0");
 };
 
 const SERVICE_COUNTS: ReadonlyArray<{ service: Service; count: number }> = (() => {

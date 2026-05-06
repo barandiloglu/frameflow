@@ -4,6 +4,7 @@ import {
   clients,
   getClient,
   getAdjacentClients,
+  getFrameNumber,
 } from "@/data/clients";
 import { ClientPage } from "./ClientPage";
 
@@ -18,7 +19,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const client = getClient(slug);
-  if (!client) return { title: "Not found — FrameFlow" };
+  if (!client) notFound();
 
   const description = `${client.name} · ${client.services.join(" · ")}`;
   const url = `/portfolio/${client.slug}`;
@@ -38,9 +39,7 @@ export default async function Page({ params }: Props) {
   if (!client) notFound();
 
   const adjacent = getAdjacentClients(client);
-  const frameNumber = String(
-    clients.findIndex((c) => c.slug === slug) + 1
-  ).padStart(3, "0");
+  const frameNumber = getFrameNumber(client);
 
   return (
     <ClientPage
