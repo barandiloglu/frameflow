@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
+import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
 
 type Props = { client: Client };
 
@@ -12,8 +14,18 @@ export function BigBearsPage({ client }: Props) {
   const menuPages = client.menu ?? [];
   const photos = client.photos ?? [];
 
+  const frameNumber = getFrameNumber(client);
+
   return (
     <>
+      <LoadingTransition
+        frameNumber={frameNumber}
+        clientName={client.name}
+        scope={client.services}
+        location={client.location}
+        year={client.year}
+      />
+
       {/* Google Fonts (React 19 hoists <link> to <head>) */}
       <link
         rel="preconnect"
