@@ -301,14 +301,17 @@ export function LoadingTransition({
           font-feature-settings: "tnum" 1;
         }
 
-        /* CENTER STAGE */
+        /* CENTER STAGE — flex column, vertically centered in the
+           middle row that the loader's outer grid carved out. */
         .lt-stage {
-          display: grid;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           gap: 28px;
-          align-content: center;
           max-width: 1200px;
           width: 100%;
           margin: 0 auto;
+          min-height: 0;
         }
 
         .lt-eyebrow {
