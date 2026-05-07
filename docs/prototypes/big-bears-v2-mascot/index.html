@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Big Bears — Maximalist Mascot · FrameFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@300;400;600;800;900&family=Caveat+Brush&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bb-yellow:  #f3a805;
+      --bb-orange:  #b73f13;
+      --bb-red:     #922700;
+      --bb-cream:   #fffff3;
+      --bb-ink:     #1a0e08;
+      --display:    "Lilita One", system-ui, sans-serif;
+      --body:       "Nunito", system-ui, sans-serif;
+      --hand:       "Caveat Brush", cursive;
+      --mono:       "JetBrains Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body {
+      background: var(--bb-yellow);
+      color: var(--bb-ink);
+      font-family: var(--body);
+      font-weight: 600;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+
+    /* TICKER */
+    .ticker {
+      background: var(--bb-red);
+      color: var(--bb-yellow);
+      overflow: hidden;
+      padding: 14px 0;
+      border-top: 4px solid var(--bb-ink);
+      border-bottom: 4px solid var(--bb-ink);
+    }
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: tick 30s linear infinite;
+      gap: 36px;
+    }
+    .ticker-track span {
+      font-family: var(--display);
+      font-size: 22px;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .ticker-track span::after {
+      content: "★";
+      color: var(--bb-cream);
+    }
+    @keyframes tick { to { transform: translateX(-50%); } }
+
+    /* TOP RAIL */
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 32px;
+      background: var(--bb-yellow);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: var(--bb-red);
+    }
+    .top a { color: var(--bb-red); text-decoration: none; font-weight: 600; }
+    .top .frame-no {
+      background: var(--bb-red);
+      color: var(--bb-yellow);
+      padding: 4px 10px;
+      letter-spacing: 0.2em;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      padding: 80px 40px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★";
+      position: absolute;
+      top: 30px; left: 0; right: 0;
+      font-family: var(--display);
+      font-size: 22px;
+      color: var(--bb-red);
+      letter-spacing: 0.6em;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--hand);
+      font-size: 32px;
+      color: var(--bb-red);
+      transform: rotate(-2deg);
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .hero-wordmark {
+      font-family: var(--display);
+      font-size: clamp(72px, 12vw, 200px);
+      line-height: 0.85;
+      color: var(--bb-cream);
+      text-shadow: 6px 6px 0 var(--bb-red), 12px 12px 0 var(--bb-ink);
+      letter-spacing: -0.01em;
+      max-width: 14ch;
+      margin: 0 auto;
+      transform: rotate(-1deg);
+    }
+    .hero-bear {
+      width: clamp(280px, 32vw, 460px);
+      margin: 24px auto 24px;
+      display: block;
+      animation: bear-bounce 4s ease-in-out infinite;
+      filter: drop-shadow(0 20px 30px rgba(146, 39, 0, 0.4));
+    }
+    @keyframes bear-bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      25%      { transform: translateY(-8px) rotate(3deg); }
+      50%      { transform: translateY(-12px) rotate(-2deg); }
+      75%      { transform: translateY(-4px) rotate(2deg); }
+    }
+
+    .hero-tag {
+      font-family: var(--display);
+      font-size: clamp(28px, 3.6vw, 56px);
+      color: var(--bb-red);
+      transform: rotate(1deg);
+      max-width: 18ch;
+      margin: 0 auto;
+      line-height: 1;
+    }
+    .hero-tag .underline {
+      position: relative;
+      display: inline-block;
+    }
+    .hero-tag .underline::after {
+      content: "";
+      position: absolute;
+      bottom: -8px; left: -4px; right: -4px;
+      height: 6px;
+      background: var(--bb-cream);
+      transform: skewX(-12deg);
+      z-index: -1;
+    }
+
+    /* INTRO — letter from the bear */
+    .intro {
+      background: var(--bb-cream);
+      padding: 100px 32px;
+      text-align: center;
+      border-top: 4px solid var(--bb-ink);
+      border-bottom: 4px solid var(--bb-ink);
+      position: relative;
+    }
+    .intro::before, .intro::after {
+      content: "";
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      background-image: radial-gradient(circle at center, var(--bb-red) 6px, transparent 7px);
+      background-size: 16px 16px;
+      opacity: 0.3;
+    }
+    .intro::before { top: 24px; left: 24px; }
+    .intro::after { bottom: 24px; right: 24px; }
+    .intro-bear-mini {
+      width: 88px;
+      margin: 0 auto 24px;
+      animation: wiggle 3s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-4deg); }
+      50%      { transform: rotate(4deg); }
+    }
+    .intro h2 {
+      font-family: var(--display);
+      font-size: clamp(48px, 6vw, 96px);
+      line-height: 0.95;
+      max-width: 16ch;
+      margin: 0 auto 24px;
+      color: var(--bb-ink);
+    }
+    .intro h2 em {
+      font-family: var(--hand);
+      font-style: normal;
+      color: var(--bb-orange);
+      font-size: 1.2em;
+      vertical-align: -0.05em;
+    }
+    .intro p {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 21px;
+      line-height: 1.55;
+      max-width: 56ch;
+      margin: 0 auto 16px;
+      color: var(--bb-ink);
+    }
+    .intro p strong { background: var(--bb-yellow); padding: 2px 6px; }
+
+    /* IDENTITY — sticker palette */
+    .identity {
+      padding: 100px 32px;
+      background: var(--bb-yellow);
+      position: relative;
+      overflow: hidden;
+    }
+    .identity h2 {
+      font-family: var(--display);
+      font-size: clamp(56px, 8vw, 124px);
+      line-height: 0.9;
+      color: var(--bb-cream);
+      text-shadow: 4px 4px 0 var(--bb-red);
+      text-align: center;
+      max-width: 18ch;
+      margin: 0 auto 60px;
+      transform: rotate(-1deg);
+    }
+    .palette-stickers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .sticker {
+      position: relative;
+      width: clamp(160px, 20vw, 260px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow:
+        inset 0 0 0 4px var(--bb-cream),
+        inset 0 0 0 5px var(--bb-ink),
+        4px 4px 0 var(--bb-ink);
+      font-family: var(--display);
+      transform: rotate(var(--rotate, 0deg));
+      transition: transform 0.3s;
+      cursor: default;
+    }
+    .sticker:hover { transform: rotate(0deg) scale(1.05); }
+    .sticker .name { font-size: 28px; line-height: 1; }
+    .sticker .hex { font-family: var(--mono); font-size: 11px; opacity: 0.7; letter-spacing: 0.18em; font-weight: 400; }
+    .sticker .role { font-family: var(--mono); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 400; opacity: 0.6; }
+    .sticker--yellow { background: var(--bb-yellow); color: var(--bb-ink); --rotate: -8deg; }
+    .sticker--orange { background: var(--bb-orange); color: var(--bb-cream); --rotate: 5deg; }
+    .sticker--red    { background: var(--bb-red);    color: var(--bb-cream); --rotate: -3deg; }
+    .sticker--cream  { background: var(--bb-cream);  color: var(--bb-ink); --rotate: 6deg; }
+
+    .type-banner {
+      background: var(--bb-cream);
+      border: 4px solid var(--bb-ink);
+      box-shadow: 8px 8px 0 var(--bb-red);
+      padding: 40px;
+      max-width: 880px;
+      margin: 0 auto;
+      transform: rotate(-0.5deg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .type-banner .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-orange);
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .type-banner .display-show {
+      font-family: var(--display);
+      font-size: 88px;
+      line-height: 0.85;
+      color: var(--bb-ink);
+    }
+    .type-banner .body-show {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--bb-ink);
+    }
+    .type-banner .body-show strong { background: var(--bb-yellow); padding: 1px 6px; font-weight: 800; }
+
+    /* MARK ZONE */
+    .mark-zone {
+      background: var(--bb-red);
+      color: var(--bb-cream);
+      padding: 100px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .mark-zone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(243, 168, 5, 0.35) 0, transparent 8%),
+        radial-gradient(circle at 80% 70%, rgba(243, 168, 5, 0.35) 0, transparent 6%),
+        radial-gradient(circle at 70% 20%, rgba(243, 168, 5, 0.35) 0, transparent 5%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .mark-zone .label-hand {
+      font-family: var(--hand);
+      font-size: 36px;
+      color: var(--bb-yellow);
+      transform: rotate(-2deg);
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .mark-zone h2 {
+      font-family: var(--display);
+      font-size: clamp(56px, 7vw, 104px);
+      line-height: 0.95;
+      color: var(--bb-cream);
+      max-width: 16ch;
+      margin: 0 auto 60px;
+    }
+    .mark-zone h2 em {
+      font-family: var(--hand);
+      font-style: normal;
+      color: var(--bb-yellow);
+      font-size: 1.15em;
+    }
+    .mark-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 32px;
+      align-items: center;
+    }
+    .mark-row img {
+      width: 100%;
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.3));
+      transition: transform 0.4s;
+    }
+    .mark-row .small { transform: scale(0.6) rotate(-8deg); }
+    .mark-row .big { transform: scale(1.1) rotate(2deg); }
+    .mark-row .small-r { transform: scale(0.6) rotate(8deg); }
+    .mark-row .small:hover { transform: scale(0.7) rotate(0); }
+    .mark-row .big:hover { transform: scale(1.15) rotate(0); }
+    .mark-row .small-r:hover { transform: scale(0.7) rotate(0); }
+
+    /* PHOTOS — full-bleed scrolling row */
+    .photos {
+      background: var(--bb-yellow);
+      padding: 80px 0;
+      border-top: 4px solid var(--bb-ink);
+    }
+    .photos h2 {
+      font-family: var(--display);
+      font-size: clamp(48px, 6vw, 96px);
+      color: var(--bb-cream);
+      text-shadow: 4px 4px 0 var(--bb-red);
+      text-align: center;
+      max-width: 18ch;
+      margin: 0 auto 40px;
+      padding: 0 32px;
+    }
+    .photos h2 em {
+      font-family: var(--hand);
+      font-style: normal;
+      color: var(--bb-red);
+    }
+    .photo-row {
+      display: flex;
+      gap: 16px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    .photo-row::-webkit-scrollbar { height: 6px; }
+    .photo-row::-webkit-scrollbar-thumb { background: var(--bb-red); }
+    .photo-row figure {
+      flex: 0 0 320px;
+      aspect-ratio: 3 / 4;
+      border: 4px solid var(--bb-ink);
+      box-shadow: 8px 8px 0 var(--bb-red);
+      position: relative;
+      overflow: hidden;
+      scroll-snap-align: start;
+      transition: transform 0.4s;
+    }
+    .photo-row figure:hover { transform: translateY(-6px) rotate(-1deg); }
+    .photo-row img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-row figcaption {
+      position: absolute;
+      bottom: 8px; left: 12px;
+      background: var(--bb-yellow);
+      color: var(--bb-ink);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      padding: 4px 8px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    /* MENU */
+    .menu-zone {
+      background: var(--bb-orange);
+      color: var(--bb-cream);
+      padding: 100px 32px;
+      text-align: center;
+      border-top: 4px solid var(--bb-ink);
+      border-bottom: 4px solid var(--bb-ink);
+    }
+    .menu-zone h2 {
+      font-family: var(--display);
+      font-size: clamp(56px, 7vw, 112px);
+      line-height: 0.95;
+      max-width: 18ch;
+      margin: 0 auto 12px;
+      color: var(--bb-cream);
+      text-shadow: 4px 4px 0 var(--bb-red);
+    }
+    .menu-zone .menu-cap {
+      font-family: var(--hand);
+      font-size: 32px;
+      color: var(--bb-yellow);
+      transform: rotate(-2deg);
+      display: inline-block;
+      margin-bottom: 48px;
+    }
+    .menu-pinboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .menu-pinboard figure {
+      background: var(--bb-cream);
+      padding: 12px 12px 24px;
+      box-shadow: 6px 6px 0 var(--bb-ink);
+      transition: transform 0.4s;
+      position: relative;
+    }
+    .menu-pinboard figure::before {
+      content: "";
+      position: absolute;
+      top: -8px; left: 50%;
+      transform: translateX(-50%);
+      width: 22px; height: 22px;
+      background: var(--bb-red);
+      border-radius: 50%;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+    .menu-pinboard figure:nth-child(1) { transform: rotate(-2deg); }
+    .menu-pinboard figure:nth-child(3) { transform: rotate(2deg); }
+    .menu-pinboard figure:hover { transform: rotate(0) translateY(-6px); }
+    .menu-pinboard img { width: 100%; }
+    .menu-pinboard figcaption {
+      font-family: var(--display);
+      font-size: 18px;
+      color: var(--bb-orange);
+      margin-top: 12px;
+    }
+
+    /* WRAPPER */
+    .wrap-zone {
+      padding: 0;
+      background: var(--bb-ink);
+      position: relative;
+    }
+    .wrap-zone img {
+      width: 100%;
+      height: clamp(360px, 60vh, 600px);
+      object-fit: cover;
+      display: block;
+    }
+    .wrap-info {
+      background: var(--bb-yellow);
+      padding: 60px 32px;
+      text-align: center;
+      border-top: 4px solid var(--bb-ink);
+    }
+    .wrap-info h2 {
+      font-family: var(--display);
+      font-size: clamp(48px, 6vw, 88px);
+      color: var(--bb-ink);
+      max-width: 18ch;
+      margin: 0 auto 16px;
+    }
+    .wrap-info h2 em {
+      font-family: var(--hand);
+      font-style: normal;
+      color: var(--bb-red);
+      font-size: 1.2em;
+    }
+    .wrap-info p {
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 19px;
+      line-height: 1.5;
+      max-width: 60ch;
+      margin: 0 auto 24px;
+      color: var(--bb-ink);
+    }
+    .wrap-info .specs {
+      display: inline-flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: var(--bb-red);
+    }
+    .wrap-info .specs span b {
+      font-family: var(--display);
+      font-size: 18px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--bb-ink);
+      margin-left: 4px;
+    }
+
+    /* END */
+    .end {
+      background: var(--bb-red);
+      color: var(--bb-cream);
+      padding: 100px 32px;
+      text-align: center;
+      border-top: 4px solid var(--bb-ink);
+    }
+    .end .lead {
+      font-family: var(--hand);
+      font-size: 36px;
+      color: var(--bb-yellow);
+      transform: rotate(-2deg);
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .end h2 {
+      font-family: var(--display);
+      font-size: clamp(48px, 6vw, 96px);
+      line-height: 0.95;
+      max-width: 18ch;
+      margin: 0 auto 24px;
+      color: var(--bb-cream);
+    }
+    .end h2 em {
+      font-family: var(--hand);
+      font-style: normal;
+      color: var(--bb-yellow);
+      font-size: 1.15em;
+    }
+    .end p {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 19px;
+      line-height: 1.6;
+      max-width: 50ch;
+      margin: 0 auto 36px;
+      color: rgba(255, 255, 243, 0.85);
+    }
+    .end a {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bb-yellow);
+      color: var(--bb-ink);
+      padding: 18px 32px;
+      font-family: var(--display);
+      font-size: 22px;
+      letter-spacing: 0;
+      text-decoration: none;
+      box-shadow: 6px 6px 0 var(--bb-ink);
+      transition: transform 0.2s;
+    }
+    .end a:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--bb-ink); }
+
+    @media (max-width: 1080px) {
+      .mark-row { grid-template-columns: 1fr; gap: 24px; }
+      .menu-pinboard { grid-template-columns: 1fr; }
+      .menu-pinboard figure { transform: none !important; }
+      .type-banner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <a href="../../../">← Portfolio</a>
+  <span class="frame-no">★ #005 ★</span>
+  <span>Big Bears · Toronto · 2024</span>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>BIG BEARS</span><span>BAKED POTATO</span><span>LOADED BY BEARS</span><span>EST. 2024</span><span>TORONTO</span><span>HOT POTATO</span>
+    <span>BIG BEARS</span><span>BAKED POTATO</span><span>LOADED BY BEARS</span><span>EST. 2024</span><span>TORONTO</span><span>HOT POTATO</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-eyebrow">A short film about a hot potato →</span>
+  <h1 class="hero-wordmark">Big Bears Baked Potato</h1>
+  <img class="hero-bear" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="Big Bears" />
+  <p class="hero-tag">Loaded by <span class="underline">Bears.</span></p>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>★ MEAT ★ POTATO ★ TOFU ★ TOMATO ★ NATURAL ★ CHEESE ★ CHICKEN ★ GARLIC ★ ONION ★ LETTUCE ★ FRESH</span>
+    <span>★ MEAT ★ POTATO ★ TOFU ★ TOMATO ★ NATURAL ★ CHEESE ★ CHICKEN ★ GARLIC ★ ONION ★ LETTUCE ★ FRESH</span>
+  </div>
+</div>
+
+<!-- INTRO -->
+<section class="intro">
+  <img class="intro-bear-mini" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="" />
+  <h2>A spud with <em>personality.</em></h2>
+  <p>Big Bears arrived with one product — the loaded baked potato — and a question: <strong>how do you make a humble starch feel like a destination?</strong></p>
+  <p>The mascot earned the shades. The wordmark earned the size. The wrapper turned every ingredient on the menu into a pattern that sells the brand from a block away.</p>
+</section>
+
+<!-- IDENTITY -->
+<section class="identity">
+  <h2>Yellow does the work.</h2>
+  <div class="palette-stickers">
+    <div class="sticker sticker--yellow">
+      <span class="role">Primary 60%</span>
+      <span class="name">Yellow</span>
+      <span class="hex">F3A805</span>
+    </div>
+    <div class="sticker sticker--orange">
+      <span class="role">Secondary 25%</span>
+      <span class="name">Orange</span>
+      <span class="hex">B73F13</span>
+    </div>
+    <div class="sticker sticker--red">
+      <span class="role">Accent 10%</span>
+      <span class="name">Red</span>
+      <span class="hex">922700</span>
+    </div>
+    <div class="sticker sticker--cream">
+      <span class="role">Surface 5%</span>
+      <span class="name">Cream</span>
+      <span class="hex">FFFFF3</span>
+    </div>
+  </div>
+
+  <div class="type-banner">
+    <div>
+      <p class="label">Display · Lilita One</p>
+      <p class="display-show">Aa Bb 0123</p>
+    </div>
+    <div>
+      <p class="label">Body · Nunito 600</p>
+      <p class="body-show">A potato is a small private rebellion <strong>against the cold.</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>SMALL · $11.99</span><span>BEAR SIZE · $17.99</span><span>+ 2 SAUCES</span><span>VEGGIES $2 · MEATS $3.5</span><span>MORE SAUCE $0.50</span>
+    <span>SMALL · $11.99</span><span>BEAR SIZE · $17.99</span><span>+ 2 SAUCES</span><span>VEGGIES $2 · MEATS $3.5</span><span>MORE SAUCE $0.50</span>
+  </div>
+</div>
+
+<!-- MARK ZONE -->
+<section class="mark-zone">
+  <span class="label-hand">Meet the bear ↓</span>
+  <h2>The bear earned <em>the shades.</em></h2>
+  <div class="mark-row">
+    <img class="small" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="" />
+    <img class="big" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="Big Bears mark" />
+    <img class="small-r" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="" />
+  </div>
+</section>
+
+<!-- PHOTOS — scroll row -->
+<section class="photos">
+  <h2>From <em>the line.</em></h2>
+  <div class="photo-row">
+    <figure><img src="../../../public/portfolio/big-bears/photos/01-toppings-bar-wide.jpg" alt="" /><figcaption>01 · Toppings Bar</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/02-staff-service.jpg" alt="" /><figcaption>02 · Service</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/04-build-corn.jpg" alt="" /><figcaption>04 · Scoop</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/06-bowl-pulled.jpg" alt="" /><figcaption>06 · Pulled</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/09-bowl-vegan.jpg" alt="" /><figcaption>09 · Vegan</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/10-bowl-beans.jpg" alt="" /><figcaption>10 · Beans</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/11-pass-chili.jpg" alt="" /><figcaption>11 · Chili</figcaption></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/12-takeout-sidewalk.jpg" alt="" /><figcaption>12 · Takeout</figcaption></figure>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-zone">
+  <span class="menu-cap">Three pages, twelve potatoes</span>
+  <h2>Pick your <span style="color: var(--bb-yellow);">Bear Size.</span></h2>
+  <div class="menu-pinboard">
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-01.png" alt="Menu spread 01" />
+      <figcaption>Spread 01 · Signatures</figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-02.png" alt="Menu spread 02" />
+      <figcaption>Spread 02 · Sides &amp; drinks</figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-03.png" alt="Menu spread 03" />
+      <figcaption>Spread 03 · International</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- WRAPPER -->
+<section class="wrap-zone">
+  <img src="../../../public/portfolio/big-bears/wrapper/wrapper-front.png" alt="Big Bears wrapper pattern" />
+</section>
+<section class="wrap-info">
+  <h2>Every wrapper, <em>a billboard.</em></h2>
+  <p>The take-away wrapper turns every ingredient on the menu into a typographic pattern. Wrap a potato, sell a brand.</p>
+  <div class="specs">
+    <span>Stock<b>Kraft 60gsm</b></span>
+    <span>Ink<b>Bear Yellow</b></span>
+    <span>Format<b>320×320 mm</b></span>
+  </div>
+</section>
+
+<!-- END -->
+<section class="end">
+  <span class="lead">Roll the credits ↓</span>
+  <h2>Send the next one <em>over.</em></h2>
+  <p>If your brand needs the same kind of attention — full identity, packaging, photography, the menu to tie it together — we&rsquo;re booking the next slot now.</p>
+  <a href="#">Start a project →</a>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>FRAMEFLOW</span><span>BIG BEARS</span><span>2024</span><span>TORONTO</span><span>BRAND BUILD</span><span>★</span>
+    <span>FRAMEFLOW</span><span>BIG BEARS</span><span>2024</span><span>TORONTO</span><span>BRAND BUILD</span><span>★</span>
+  </div>
+</div>
+
+</body>
+</html>
