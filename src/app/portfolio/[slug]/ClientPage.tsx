@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FilmStill } from "@/components/portfolio/FilmStill";
+import { BrandScene } from "@/components/portfolio/scenes/BrandScene";
 import type { Client } from "@/data/clients";
 
 type Props = {
@@ -120,6 +121,15 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
           </motion.div>
         </div>
       </section>
+
+      {/* Scene 1 — Brand (frames 03/04/05) */}
+      {client.brand && (
+        <BrandScene
+          brand={client.brand}
+          clientName={client.name}
+          frameNumber={frameNumber}
+        />
+      )}
 
       {/* PREV / NEXT NAV */}
       <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-12">
