@@ -26,67 +26,76 @@ export function MenuScene({ menu }: Props) {
         <span className="mn-pulse">Print · Take 01</span>
       </div>
 
-      {/* HERO PAGE — large, centered, click-to-switch via thumbs below */}
-      <motion.figure
-        key={current.src}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
-        className="mn-page"
-      >
-        <span className="mn-bracket mn-tl" aria-hidden />
-        <span className="mn-bracket mn-tr" aria-hidden />
-        <span className="mn-bracket mn-bl" aria-hidden />
-        <span className="mn-bracket mn-br" aria-hidden />
+      {/* TWO-COLUMN: hero left, thumbs vertical right */}
+      <div className="mn-viewer">
+        <motion.figure
+          key={current.src}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+          className="mn-page"
+        >
+          <span className="mn-bracket mn-tl" aria-hidden />
+          <span className="mn-bracket mn-tr" aria-hidden />
+          <span className="mn-bracket mn-bl" aria-hidden />
+          <span className="mn-bracket mn-br" aria-hidden />
 
-        <div className="mn-page-tag">
-          <span className="mn-page-no">
-            {String(active + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
-          </span>
-          <span className="mn-page-label">
-            {current.label ?? `Spread ${String(active + 1).padStart(2, "0")}`}
-          </span>
-        </div>
-
-        <div className="mn-page-img">
-          <Image
-            src={current.src}
-            alt={current.alt}
-            width={1600}
-            height={1066}
-            sizes="(max-width: 880px) 100vw, 80vw"
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
-        </div>
-      </motion.figure>
-
-      {/* THUMBS — switch active page */}
-      <div className="mn-thumbs">
-        {menu.map((page, i) => (
-          <button
-            key={page.src}
-            type="button"
-            onClick={() => setActive(i)}
-            className={`mn-thumb ${i === active ? "mn-thumb-active" : ""}`}
-            aria-label={`Show ${page.label ?? `Spread ${i + 1}`}`}
-          >
-            <span className="mn-thumb-img">
-              <Image
-                src={page.src}
-                alt=""
-                fill
-                sizes="(max-width: 880px) 33vw, 280px"
-                style={{ objectFit: "contain", background: "#fffff3" }}
-              />
+          <div className="mn-page-tag">
+            <span className="mn-page-no">
+              {String(active + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
             </span>
-            <span className="mn-thumb-label">
-              <span className="mn-thumb-no">
-                {String(i + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
+            <span className="mn-page-label">
+              {current.label ?? `Spread ${String(active + 1).padStart(2, "0")}`}
+            </span>
+          </div>
+
+          <div className="mn-page-img">
+            <Image
+              src={current.src}
+              alt={current.alt}
+              width={1600}
+              height={1066}
+              sizes="(max-width: 1080px) 100vw, 65vw"
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                maxHeight: "calc(100vh - 220px)",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+        </motion.figure>
+
+        {/* RIGHT — thumb column */}
+        <div className="mn-thumbs">
+          <p className="mn-thumbs-eyebrow">All spreads</p>
+          {menu.map((page, i) => (
+            <button
+              key={page.src}
+              type="button"
+              onClick={() => setActive(i)}
+              className={`mn-thumb ${i === active ? "mn-thumb-active" : ""}`}
+              aria-label={`Show ${page.label ?? `Spread ${i + 1}`}`}
+            >
+              <span className="mn-thumb-img">
+                <Image
+                  src={page.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1080px) 33vw, 220px"
+                  style={{ objectFit: "contain", background: "#fffff3" }}
+                />
               </span>
-              {page.label ?? `Spread ${String(i + 1).padStart(2, "0")}`}
-            </span>
-          </button>
-        ))}
+              <span className="mn-thumb-label">
+                <span className="mn-thumb-no">
+                  {String(i + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
+                </span>
+                {page.label ?? `Spread ${String(i + 1).padStart(2, "0")}`}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <style jsx>{`
@@ -98,7 +107,7 @@ export function MenuScene({ menu }: Props) {
           --bb-toast: #c46a2c;
 
           margin: 0 52px;
-          padding: 96px 0;
+          padding: 64px 0;
           border-bottom: 1px solid var(--ff-ivory-15);
         }
         .mn-eyebrow {
@@ -110,7 +119,7 @@ export function MenuScene({ menu }: Props) {
           display: flex;
           align-items: center;
           gap: 14px;
-          margin: 0 0 56px;
+          margin: 0 0 36px;
         }
         .mn-rule { display: block; width: 36px; height: 1px; background: var(--ff-amber); }
 
@@ -118,7 +127,7 @@ export function MenuScene({ menu }: Props) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 0 32px;
+          padding: 0 0 24px;
           font-family: var(--ff-mono);
           font-size: 10px;
           letter-spacing: 0.26em;
@@ -138,12 +147,19 @@ export function MenuScene({ menu }: Props) {
           50% { box-shadow: 0 0 0 6px rgba(196, 106, 44, 0); }
         }
 
+        /* TWO-COLUMN VIEWER */
+        .mn-viewer {
+          display: grid;
+          grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+          gap: 24px;
+          align-items: start;
+        }
+
         /* HERO PAGE */
         .mn-page {
           position: relative;
-          margin: 0 auto;
+          margin: 0;
           padding: 24px;
-          max-width: 1100px;
           background: #1c1a18;
           box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.5);
           isolation: isolate;
@@ -182,14 +198,24 @@ export function MenuScene({ menu }: Props) {
           z-index: 1;
           margin-top: 24px;
           background: #fffff3;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        /* THUMB ROW */
+        /* RIGHT — VERTICAL THUMB STACK */
         .mn-thumbs {
-          margin-top: 24px;
-          display: grid;
-          grid-template-columns: repeat(${menu.length}, 1fr);
-          gap: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .mn-thumbs-eyebrow {
+          font-family: var(--ff-mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ff-amber);
+          margin: 0 0 8px;
         }
 
         .mn-thumb {
@@ -200,14 +226,15 @@ export function MenuScene({ menu }: Props) {
           cursor: pointer;
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                      border-color 0.3s ease,
-                      opacity 0.3s ease;
+          gap: 6px;
+          transition:
+            transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+            border-color 0.3s ease,
+            opacity 0.3s ease;
           opacity: 0.6;
           color: var(--ff-ivory);
         }
-        .mn-thumb:hover { opacity: 0.95; transform: translateY(-3px); }
+        .mn-thumb:hover { opacity: 0.95; transform: translateX(-3px); }
         .mn-thumb-active {
           opacity: 1;
           border-color: var(--ff-amber);
@@ -235,11 +262,18 @@ export function MenuScene({ menu }: Props) {
           color: var(--ff-amber);
         }
 
+        @media (max-width: 1080px) {
+          .mn-viewer { grid-template-columns: 1fr; }
+          .mn-thumbs {
+            flex-direction: row;
+            overflow-x: auto;
+          }
+          .mn-thumb { flex: 0 0 240px; }
+        }
         @media (max-width: 880px) {
-          .mn-section { margin-left: 18px; margin-right: 18px; padding: 60px 0; }
+          .mn-section { margin-left: 18px; margin-right: 18px; padding: 48px 0; }
           .mn-page { padding: 18px; }
-          .mn-page-img { margin-top: 22px; }
-          .mn-thumbs { grid-template-columns: 1fr 1fr 1fr; }
+          .mn-thumb { flex: 0 0 180px; }
         }
 
         @media (prefers-reduced-motion: reduce) {

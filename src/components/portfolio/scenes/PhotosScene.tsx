@@ -53,31 +53,9 @@ export function PhotosScene({ photos }: Props) {
         <span className="ps-pulse">Reel · Take 01</span>
       </div>
 
-      {/* THREE-COLUMN VIEWING ROOM: left meta · hero · right meta */}
+      {/* TWO-COLUMN VIEWING ROOM: hero left, slate + contact sheet right */}
       <div className="ps-viewer">
-        {/* LEFT META — counter + photography credit */}
-        <div className="ps-side ps-side-left">
-          <div className="ps-side-top">
-            <span className="ps-side-eyebrow">Now showing</span>
-            <span className="ps-side-counter">
-              <b>{String(active + 1).padStart(2, "0")}</b>
-              <span className="ps-side-counter-sep">/</span>
-              <span className="ps-side-counter-total">
-                {String(photos.length).padStart(2, "0")}
-              </span>
-            </span>
-          </div>
-          <div className="ps-side-bottom">
-            <span className="ps-side-label">Photography</span>
-            <span className="ps-side-val">Big Bears</span>
-            <span className="ps-side-label" style={{ marginTop: 16 }}>
-              Year
-            </span>
-            <span className="ps-side-val">2024</span>
-          </div>
-        </div>
-
-        {/* HERO — portrait 4:5 */}
+        {/* HERO — portrait 4:5, height-constrained */}
         <div
           ref={heroRef}
           className={`ps-hero ${paused ? "ps-paused" : ""}`}
@@ -98,7 +76,7 @@ export function PhotosScene({ photos }: Props) {
                 src={p.src}
                 alt={p.alt}
                 fill
-                sizes="(max-width: 880px) 100vw, 50vw"
+                sizes="(max-width: 1080px) 100vw, 50vw"
                 priority={i === 0}
                 style={{ objectFit: "cover" }}
               />
@@ -114,47 +92,49 @@ export function PhotosScene({ photos }: Props) {
           </div>
         </div>
 
-        {/* RIGHT META — slate label + reel info */}
-        <div className="ps-side ps-side-right">
-          <div className="ps-side-top">
-            <span className="ps-side-eyebrow">Slate</span>
-            <span className="ps-side-slate">{current.slate}</span>
+        {/* RIGHT PANEL — slate, counter, contact-sheet grid */}
+        <div className="ps-panel">
+          <div className="ps-panel-top">
+            <p className="ps-panel-eyebrow">Now showing</p>
+            <h3 className="ps-panel-slate">{current.slate}</h3>
+            <p className="ps-panel-counter">
+              <span className="ps-panel-num">
+                {String(active + 1).padStart(2, "0")}
+              </span>
+              <span className="ps-panel-sep"> / </span>
+              <span className="ps-panel-total">
+                {String(photos.length).padStart(2, "0")}
+              </span>
+            </p>
           </div>
-          <div className="ps-side-bottom">
-            <span className="ps-side-label">Take</span>
-            <span className="ps-side-val ps-side-val-italic">01</span>
-            <span className="ps-side-label" style={{ marginTop: 16 }}>
-              Reel
-            </span>
-            <span className="ps-side-val ps-side-val-italic">2024</span>
-          </div>
-        </div>
-      </div>
 
-      {/* FILMSTRIP — 35mm aesthetic with sprocket perforations */}
-      <div className="ps-filmstrip">
-        <span className="ps-perfs ps-perfs-top" aria-hidden />
-        <div className="ps-filmstrip-track">
-          {photos.map((p, i) => (
-            <button
-              key={p.src}
-              type="button"
-              onClick={() => setActive(i)}
-              className={`ps-cell ${i === active ? "ps-cell-active" : ""}`}
-              aria-label={`Show ${p.slate}`}
-            >
-              <Image
-                src={p.src}
-                alt=""
-                fill
-                sizes="(max-width: 880px) 25vw, 8vw"
-                style={{ objectFit: "cover" }}
-              />
-              <span className="ps-cell-no">{String(i + 1).padStart(2, "0")}</span>
-            </button>
-          ))}
+          <div className="ps-contact-sheet">
+            <span className="ps-perfs ps-perfs-top" aria-hidden />
+            <div className="ps-contact-grid">
+              {photos.map((p, i) => (
+                <button
+                  key={p.src}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  className={`ps-cell ${i === active ? "ps-cell-active" : ""}`}
+                  aria-label={`Show ${p.slate}`}
+                >
+                  <Image
+                    src={p.src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1080px) 30vw, 12vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <span className="ps-cell-no">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <span className="ps-perfs ps-perfs-bottom" aria-hidden />
+          </div>
         </div>
-        <span className="ps-perfs ps-perfs-bottom" aria-hidden />
       </div>
 
       <style jsx>{`
@@ -167,7 +147,7 @@ export function PhotosScene({ photos }: Props) {
           --font-display: "Fraunces", Georgia, serif;
 
           margin: 0 52px;
-          padding: 96px 0;
+          padding: 64px 0;
           border-bottom: 1px solid var(--ff-ivory-15);
         }
         .ps-eyebrow {
@@ -179,7 +159,7 @@ export function PhotosScene({ photos }: Props) {
           display: flex;
           align-items: center;
           gap: 14px;
-          margin: 0 0 56px;
+          margin: 0 0 36px;
         }
         .ps-rule {
           display: block;
@@ -192,7 +172,7 @@ export function PhotosScene({ photos }: Props) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 0 32px;
+          padding: 0 0 24px;
           font-family: var(--ff-mono);
           font-size: 10px;
           letter-spacing: 0.26em;
@@ -218,107 +198,30 @@ export function PhotosScene({ photos }: Props) {
           50% { box-shadow: 0 0 0 6px rgba(212, 63, 27, 0); }
         }
 
-        /* THREE-COLUMN VIEWING ROOM ------------------------------- */
+        /* TWO-COLUMN LAYOUT --------------------------------------- */
         .ps-viewer {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
           gap: 32px;
           align-items: stretch;
         }
 
-        .ps-side {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 24px 0;
-          font-family: var(--ff-mono);
-        }
-        .ps-side-right { text-align: right; align-items: flex-end; }
-
-        .ps-side-eyebrow {
-          display: block;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--ff-amber);
-          margin-bottom: 18px;
-        }
-        .ps-side-counter {
-          display: flex;
-          align-items: baseline;
-          gap: 8px;
-          font-family: var(--font-display);
-          font-style: italic;
-          font-size: clamp(72px, 8vw, 120px);
-          line-height: 0.85;
-          letter-spacing: -0.02em;
-          color: var(--ff-ivory);
-        }
-        .ps-side-counter b { font-weight: 400; }
-        .ps-side-counter-sep {
-          font-family: var(--ff-mono);
-          font-style: normal;
-          font-size: 0.4em;
-          letter-spacing: 0.2em;
-          color: rgba(255, 254, 235, 0.4);
-          margin: 0 4px;
-        }
-        .ps-side-counter-total {
-          font-family: var(--ff-mono);
-          font-style: normal;
-          font-size: 0.32em;
-          letter-spacing: 0.18em;
-          color: rgba(255, 254, 235, 0.55);
-        }
-
-        .ps-side-slate {
-          font-family: var(--font-display);
-          font-style: italic;
-          font-size: clamp(28px, 2.6vw, 44px);
-          letter-spacing: -0.02em;
-          line-height: 1.05;
-          color: var(--ff-ivory);
-          display: block;
-          max-width: 12ch;
-          /* fade in/out as it changes */
-          animation: ps-slate-in 0.6s ease;
-        }
-        @keyframes ps-slate-in {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .ps-side-bottom {
-          display: flex;
-          flex-direction: column;
-        }
-        .ps-side-label {
-          font-size: 9px;
-          letter-spacing: 0.30em;
-          text-transform: uppercase;
-          color: rgba(255, 254, 235, 0.4);
-          margin-bottom: 4px;
-        }
-        .ps-side-val {
-          font-family: var(--font-display);
-          font-style: italic;
-          font-size: 24px;
-          letter-spacing: -0.01em;
-          color: var(--ff-ivory);
-          line-height: 1;
-        }
-        .ps-side-val-italic { font-family: var(--font-display); font-style: italic; }
-
-        /* HERO ----------------------------------------------------- */
+        /* HERO — height-constrained 4:5 portrait */
         .ps-hero {
           position: relative;
           aspect-ratio: 4 / 5;
+          max-height: calc(100vh - 200px);
           width: 100%;
           margin: 0;
           overflow: hidden;
           isolation: isolate;
           background: #1c1a18;
           box-shadow: 0 50px 80px -30px rgba(0, 0, 0, 0.5);
+          /* let it shrink within the column instead of pushing height */
+          align-self: start;
+          justify-self: end;
+          /* compute max-width from height limit so 4:5 fits the available height */
+          max-width: calc((100vh - 200px) * 4 / 5);
         }
         .ps-bracket {
           position: absolute;
@@ -352,36 +255,13 @@ export function PhotosScene({ photos }: Props) {
           opacity: 0.4;
         }
 
-        /* dark gradient at the bottom for slate legibility */
-        .ps-hero::after {
-          content: "";
-          position: absolute;
-          left: 0; right: 0; bottom: 0;
-          height: 35%;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
-          pointer-events: none;
-          z-index: 4;
-        }
-
-        .ps-counter {
-          position: absolute;
-          top: 30px; left: 36px;
-          font-family: var(--ff-mono);
-          font-size: 11px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--ff-ivory);
-          opacity: 0.85;
-          z-index: 6;
-          text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-        }
-        .ps-counter b { color: var(--ff-ivory); font-weight: 500; }
-
         .ps-progress-track {
           position: absolute;
-          top: 36px; right: 36px;
-          width: 120px; height: 1px;
-          background: rgba(255, 254, 235, 0.2);
+          top: 22px;
+          right: 22px;
+          width: 100px;
+          height: 1px;
+          background: rgba(255, 254, 235, 0.25);
           z-index: 6;
           overflow: hidden;
         }
@@ -399,41 +279,67 @@ export function PhotosScene({ photos }: Props) {
           100% { transform: scaleX(1); }
         }
 
-        .ps-slate {
-          position: absolute;
-          bottom: 36px; left: 36px; right: 36px;
-          font-family: var(--font-display);
-          font-style: italic;
-          font-size: clamp(28px, 3.5vw, 48px);
-          letter-spacing: -0.025em;
-          line-height: 1;
-          color: var(--ff-ivory);
-          z-index: 6;
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+        /* RIGHT PANEL --------------------------------------------- */
+        .ps-panel {
+          display: flex;
+          flex-direction: column;
+          gap: 28px;
+          align-self: stretch;
         }
-        .ps-slate small {
-          display: block;
+
+        .ps-panel-top { display: flex; flex-direction: column; gap: 18px; }
+        .ps-panel-eyebrow {
           font-family: var(--ff-mono);
-          font-style: normal;
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
+          color: var(--ff-amber);
+          margin: 0;
+        }
+        .ps-panel-slate {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-weight: 400;
+          font-size: clamp(36px, 3.6vw, 56px);
+          letter-spacing: -0.025em;
+          line-height: 1.05;
           color: var(--ff-ivory);
-          opacity: 0.75;
-          margin-bottom: 10px;
+          margin: 0;
+          /* slight in-animation when slate changes */
+          animation: ps-slate-in 0.6s ease;
+        }
+        @keyframes ps-slate-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .ps-panel-counter {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-size: clamp(48px, 5vw, 80px);
+          line-height: 0.85;
+          letter-spacing: -0.02em;
+          margin: 0;
+          color: var(--ff-ivory);
+        }
+        .ps-panel-sep,
+        .ps-panel-total {
+          font-family: var(--ff-mono);
+          font-style: normal;
+          font-size: 0.4em;
+          letter-spacing: 0.18em;
+          color: rgba(255, 254, 235, 0.55);
+          vertical-align: 0.4em;
         }
 
-        /* FILMSTRIP ------------------------------------------------ */
-        .ps-filmstrip {
+        /* CONTACT SHEET — 35mm aesthetic, 4-col x 3-row grid */
+        .ps-contact-sheet {
           position: relative;
-          margin-top: 32px;
           background: #0c0a09;
           padding: 18px 12px;
           box-shadow:
             0 1px 0 rgba(255, 255, 235, 0.06) inset,
             0 30px 60px -25px rgba(0, 0, 0, 0.5);
         }
-
         .ps-perfs {
           position: absolute;
           left: 12px; right: 12px;
@@ -451,11 +357,12 @@ export function PhotosScene({ photos }: Props) {
         .ps-perfs-top { top: 4px; }
         .ps-perfs-bottom { bottom: 4px; }
 
-        .ps-filmstrip-track {
+        .ps-contact-grid {
           display: grid;
-          grid-template-columns: repeat(12, 1fr);
-          gap: 3px;
-          padding: 16px 0;
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: repeat(3, 1fr);
+          gap: 4px;
+          padding: 14px 0;
         }
 
         .ps-cell {
@@ -485,7 +392,6 @@ export function PhotosScene({ photos }: Props) {
           outline-offset: -2px;
           z-index: 2;
         }
-
         .ps-cell::after {
           content: "";
           position: absolute;
@@ -508,20 +414,12 @@ export function PhotosScene({ photos }: Props) {
 
         @media (max-width: 1080px) {
           .ps-viewer { grid-template-columns: 1fr; gap: 24px; }
-          .ps-side { padding: 0; flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 24px; }
-          .ps-side-right { text-align: left; align-items: flex-start; }
-          .ps-side-counter { font-size: 56px; }
-          .ps-side-slate { font-size: 24px; }
+          .ps-hero { max-width: 100%; max-height: 80vh; justify-self: center; }
+          .ps-contact-grid { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); }
         }
         @media (max-width: 880px) {
-          .ps-section { margin-left: 18px; margin-right: 18px; padding: 60px 0; }
-          .ps-progress-track { top: 14px; right: 14px; width: 70px; }
-          .ps-filmstrip { overflow-x: auto; padding: 18px 12px 22px; }
-          .ps-filmstrip-track {
-            grid-template-columns: repeat(12, 80px);
-            min-width: max-content;
-          }
-          .ps-perfs { left: 12px; right: auto; width: max-content; }
+          .ps-section { margin-left: 18px; margin-right: 18px; padding: 48px 0; }
+          .ps-contact-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); }
         }
 
         @media (prefers-reduced-motion: reduce) {
