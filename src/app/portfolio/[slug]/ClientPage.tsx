@@ -7,6 +7,9 @@ import { Footer } from "@/components/Footer";
 import { FilmStill } from "@/components/portfolio/FilmStill";
 import { BrandScene } from "@/components/portfolio/scenes/BrandScene";
 import { MarkScene } from "@/components/portfolio/scenes/MarkScene";
+import { PhotosScene } from "@/components/portfolio/scenes/PhotosScene";
+import { MenuScene } from "@/components/portfolio/scenes/MenuScene";
+import { WrapperScene } from "@/components/portfolio/scenes/WrapperScene";
 import type { Client } from "@/data/clients";
 
 type Props = {
@@ -140,6 +143,21 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
           year={client.year}
           location={client.location}
         />
+      )}
+
+      {/* Scene 3 — Photos (frame 09) */}
+      {client.photos && client.photos.length > 0 && (
+        <PhotosScene photos={client.photos} />
+      )}
+
+      {/* Scene 4 — Menu (frame 07) */}
+      {client.menu && client.menu.length > 0 && (
+        <MenuScene menu={client.menu} />
+      )}
+
+      {/* Scene 5 — Wrapper (frame 08) */}
+      {client.wrapper && client.wrapper.length > 0 && (
+        <WrapperScene wrapper={client.wrapper} />
       )}
 
       {/* PREV / NEXT NAV */}
