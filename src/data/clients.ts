@@ -46,25 +46,7 @@ export const clients: readonly Client[] = [
   { slug: "adrians-wasaga-beach",        name: "Adrian's Wasaga Beach",                     services: ["Social Media"] },
   { slug: "asd-laminate",                name: "ASD Laminate",                              services: ["Ad Management", "Social Media"] },
   { slug: "aydin-cpa",                   name: "AYDIN CPA",                                 services: ["Photography", "Website Design"] },
-  {
-    slug: "big-bears-baked-potato",
-    name: "Big Bears Baked Potato",
-    services: ["Branding", "Design", "Logo", "Photography", "Social Media", "Videography", "Website Design"],
-    // PROTOTYPE — illustrative brand data only. Replace with the real
-    // Big Bears palette + type stack before the prototype merges.
-    brand: {
-      palette: [
-        { name: "Toast",  hex: "#C46A2C" },
-        { name: "Char",   hex: "#2B1410" },
-        { name: "Cream",  hex: "#F5EBD8" },
-        { name: "Ember",  hex: "#D43F1B" },
-      ],
-      typefaces: [
-        { role: "Display", name: "Recoleta" },
-        { role: "Body",    name: "Inter" },
-      ],
-    },
-  },
+  { slug: "big-bears-baked-potato",      name: "Big Bears Baked Potato",                    services: ["Branding", "Design", "Logo", "Photography", "Social Media", "Videography", "Website Design"] },
   { slug: "canapy-furniture",            name: "Canapy Furniture",                          services: ["Ad Management", "Photography", "Social Media", "Videography"] },
   { slug: "connectr",                    name: "ConnecTR",                                  services: ["Photography", "Videography"] },
   { slug: "ctbdh",                       name: "CTBDH",                                     services: ["Logo", "Videography"] },

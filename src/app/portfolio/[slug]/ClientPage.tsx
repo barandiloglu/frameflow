@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FilmStill } from "@/components/portfolio/FilmStill";
-import { BrandPanel } from "@/components/portfolio/BrandPanel";
 import type { Client } from "@/data/clients";
 
 type Props = {
@@ -117,12 +116,6 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
               <RichBody client={client} />
             ) : (
               <InPostPanel />
-            )}
-
-            {client.brand && (
-              <div className="mt-10">
-                <BrandPanel brand={client.brand} />
-              </div>
             )}
           </motion.div>
         </div>
