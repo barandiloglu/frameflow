@@ -197,13 +197,16 @@ export function LoadingTransition({
           z-index: 9999;
           background: #1c1a18;
           color: #ffffeb;
-          display: grid;
-          grid-template-rows: auto 1fr auto;
+          display: flex;
+          flex-direction: column;
           padding: 32px 52px;
           font-family: "JetBrains Mono", ui-monospace, monospace;
           transform-origin: right center;
           animation: lt-flicker 7.5s steps(1) infinite;
         }
+        .lt-top    { flex: 0 0 auto; }
+        .lt-bottom { flex: 0 0 auto; }
+        .lt-stage  { flex: 1 1 auto; }
         @keyframes lt-flicker {
           0%, 96%, 100% { filter: brightness(1) contrast(1); }
           97%           { filter: brightness(0.92) contrast(1.08); }
