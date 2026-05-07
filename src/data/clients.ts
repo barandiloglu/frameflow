@@ -209,7 +209,11 @@ export const getAdjacentClients = (
  * isn't in the roster (caller bug).
  */
 export const getFrameNumber = (client: Client): string => {
-  const i = clients.indexOf(client);
+  /* findIndex by slug rather than indexOf by reference — the latter
+     breaks across the server/client component boundary in Next.js,
+     because serialized props come back as a fresh object whose
+     reference is not === the original array element. */
+  const i = clients.findIndex((c) => c.slug === client.slug);
   if (i === -1) {
     throw new Error(`Client "${client.slug}" is not in the roster`);
   }
