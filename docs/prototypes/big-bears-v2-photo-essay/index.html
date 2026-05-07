@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Big Bears — Photo Essay · FrameFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@300;400;600;800&family=Fraunces:ital,wght@0,400;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bb-yellow:  #f3a805;
+      --bb-orange:  #b73f13;
+      --bb-red:     #922700;
+      --bb-cream:   #fffff3;
+      --bb-ink:     #1a0e08;
+      --display:    "Lilita One", system-ui, sans-serif;
+      --body:       "Nunito", system-ui, sans-serif;
+      --editorial:  "Fraunces", Georgia, serif;
+      --mono:       "JetBrains Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body {
+      background: var(--bb-ink);
+      color: var(--bb-cream);
+      font-family: var(--body);
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+
+    /* TOP RAIL */
+    .top {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 40px;
+      background: linear-gradient(to bottom, rgba(26, 14, 8, 0.85), transparent);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      mix-blend-mode: normal;
+    }
+    .top a { color: inherit; text-decoration: none; opacity: 0.85; transition: opacity 0.2s; }
+    .top a:hover { opacity: 1; }
+    .top .right { display: flex; align-items: center; gap: 28px; }
+    .top .frame-no { color: var(--bb-yellow); font-weight: 600; }
+
+    /* ============================================================ */
+    /*  COVER — full-bleed photo with brand text overlaid          */
+    /* ============================================================ */
+    .cover {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .cover-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(26, 14, 8, 0.45) 0%, transparent 30%, transparent 60%, rgba(26, 14, 8, 0.85) 100%),
+        linear-gradient(90deg, rgba(26, 14, 8, 0.6) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .cover-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: 120px 60px 80px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 32px;
+    }
+    .cover-eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--bb-yellow);
+    }
+    .cover-text {
+      align-self: end;
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .cover-wordmark {
+      font-family: var(--display);
+      font-size: clamp(72px, 10vw, 196px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 14ch;
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+    }
+    .cover-wordmark em {
+      font-style: italic;
+      font-family: var(--editorial);
+      color: var(--bb-yellow);
+      font-size: 0.92em;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 243, 0.18);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 243, 0.6);
+    }
+    .cover-meta b {
+      display: block;
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--bb-cream);
+      text-transform: none;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .scroll-cue {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 243, 0.7);
+      animation: scroll-bob 2.4s ease-in-out infinite;
+    }
+    @keyframes scroll-bob {
+      0%, 100% { transform: translate(-50%, 0); opacity: 0.7; }
+      50%      { transform: translate(-50%, -6px); opacity: 1; }
+    }
+
+    /* ============================================================ */
+    /*  CHAPTER — narrative paragraph                              */
+    /* ============================================================ */
+    .chapter {
+      padding: 140px 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+      gap: 80px;
+      align-items: start;
+    }
+    .chapter-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      position: sticky;
+      top: 100px;
+    }
+    .chapter-label .num {
+      font-family: var(--display);
+      font-style: normal;
+      font-size: clamp(64px, 7vw, 112px);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      color: var(--bb-yellow);
+      text-transform: none;
+      display: block;
+      margin-top: 12px;
+    }
+    .chapter-headline {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(40px, 4.5vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 22ch;
+      margin-bottom: 36px;
+    }
+    .chapter-headline em {
+      font-style: normal;
+      font-family: var(--display);
+      color: var(--bb-yellow);
+      font-size: 0.92em;
+    }
+    .chapter-body {
+      font-size: 19px;
+      line-height: 1.7;
+      color: rgba(255, 255, 243, 0.7);
+      max-width: 60ch;
+    }
+    .chapter-body p + p { margin-top: 1.2em; }
+    .chapter-body strong { color: var(--bb-cream); font-weight: 600; }
+
+    /* ============================================================ */
+    /*  PHOTO BREAK — full bleed                                    */
+    /* ============================================================ */
+    .photo-break {
+      position: relative;
+      width: 100%;
+      height: 90vh;
+      overflow: hidden;
+    }
+    .photo-break img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .photo-break::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 60%, rgba(26, 14, 8, 0.85) 100%);
+    }
+    .photo-break .caption {
+      position: absolute;
+      bottom: 40px; left: 60px; right: 60px;
+      z-index: 2;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 60px;
+      align-items: end;
+    }
+    .photo-break .caption h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 4vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 16ch;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+    .photo-break .caption .meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 243, 0.7);
+      text-align: right;
+    }
+    .photo-break .caption .meta b {
+      display: block;
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--bb-cream);
+      text-transform: none;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ============================================================ */
+    /*  PHOTO PAIR — two stills side by side                        */
+    /* ============================================================ */
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 12px;
+    }
+    .photo-pair figure {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+    .photo-pair img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .photo-pair figcaption {
+      position: absolute;
+      bottom: 16px;
+      left: 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-cream);
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ============================================================ */
+    /*  CONTACT SHEET — small 12-up grid                           */
+    /* ============================================================ */
+    .contact {
+      padding: 120px 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .contact-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      margin-bottom: 18px;
+    }
+    .contact-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--bb-yellow);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .contact h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(40px, 5vw, 80px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 18ch;
+      margin-bottom: 60px;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .contact-grid figure {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+    .contact-grid img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: saturate(0.85);
+      transition: filter 0.3s, transform 0.4s;
+    }
+    .contact-grid figure:hover img {
+      filter: saturate(1.1);
+      transform: scale(1.04);
+    }
+
+    /* ============================================================ */
+    /*  IDENTITY STRIP — palette + type as a horizontal block      */
+    /* ============================================================ */
+    .identity-strip {
+      background: var(--bb-cream);
+      color: var(--bb-ink);
+      padding: 100px 60px;
+    }
+    .identity-strip-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 80px;
+      max-width: 1500px;
+      margin: 0 auto;
+      align-items: center;
+    }
+    .identity-strip-grid .left .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-orange);
+      margin-bottom: 18px;
+    }
+    .identity-strip-grid .left h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(36px, 4vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--bb-ink);
+      margin-bottom: 32px;
+      max-width: 18ch;
+    }
+    .identity-strip-grid .left p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: rgba(26, 14, 8, 0.75);
+      max-width: 50ch;
+    }
+    .identity-strip-grid .right {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .palette-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .palette-row .swatch {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .palette-row .swatch .hex {
+      align-self: flex-end;
+      font-size: 8px;
+      opacity: 0.7;
+    }
+    .palette-row .yellow { background: var(--bb-yellow); color: var(--bb-ink); }
+    .palette-row .orange { background: var(--bb-orange); color: var(--bb-cream); }
+    .palette-row .red    { background: var(--bb-red);    color: var(--bb-cream); }
+    .palette-row .cream  { background: var(--bb-cream);  color: var(--bb-ink); border: 1px solid rgba(26, 14, 8, 0.1); }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(26, 14, 8, 0.12);
+    }
+    .type-row .role {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bb-orange);
+      margin-bottom: 6px;
+    }
+    .type-row .face {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(26, 14, 8, 0.5);
+      margin-bottom: 14px;
+    }
+    .type-row .display-spec {
+      font-family: var(--display);
+      font-size: 64px;
+      line-height: 0.85;
+      color: var(--bb-ink);
+    }
+    .type-row .body-spec {
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--bb-ink);
+    }
+
+    /* ============================================================ */
+    /*  MARK — over a photo                                         */
+    /* ============================================================ */
+    .mark-over {
+      position: relative;
+      height: 90vh;
+      overflow: hidden;
+    }
+    .mark-over img.bg {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.55) saturate(1.1);
+    }
+    .mark-over::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(243, 168, 5, 0.25), transparent 50%),
+        linear-gradient(180deg, rgba(26, 14, 8, 0.5) 0%, rgba(26, 14, 8, 0.7) 100%);
+      pointer-events: none;
+    }
+    .mark-over-content {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 2;
+      padding: 60px;
+    }
+    .mark-over img.mark {
+      width: clamp(280px, 32vw, 460px);
+      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
+    }
+    .mark-over .caption {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      right: 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 60px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 243, 0.7);
+      z-index: 3;
+    }
+    .mark-over .caption h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(28px, 3vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: var(--bb-cream);
+      text-transform: none;
+      max-width: 18ch;
+    }
+
+    /* ============================================================ */
+    /*  MENU — printed objects                                      */
+    /* ============================================================ */
+    .menu {
+      padding: 140px 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .menu-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      margin-bottom: 18px;
+    }
+    .menu-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--bb-yellow);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .menu h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(40px, 5vw, 80px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 18ch;
+      margin-bottom: 60px;
+    }
+    .menu h3 em {
+      font-family: var(--display);
+      font-style: normal;
+      color: var(--bb-yellow);
+      font-size: 0.92em;
+    }
+    .menu-stack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .menu-stack figure {
+      background: var(--bb-cream);
+      padding: 12px;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
+      transform: rotate(-1deg);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .menu-stack figure:nth-child(2) { transform: rotate(0.6deg) translateY(-20px); }
+    .menu-stack figure:nth-child(3) { transform: rotate(-0.4deg) translateY(10px); }
+    .menu-stack figure:hover { transform: rotate(0deg) translateY(-12px); }
+    .menu-stack img { width: 100%; }
+    .menu-stack figcaption {
+      margin-top: 10px;
+      padding: 0 6px 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(26, 14, 8, 0.6);
+      display: flex;
+      justify-content: space-between;
+    }
+    .menu-stack figcaption b { color: var(--bb-orange); }
+
+    /* ============================================================ */
+    /*  WRAPPER — full bleed                                        */
+    /* ============================================================ */
+    .wrap-section {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .wrap-section img {
+      width: 100%;
+      height: clamp(360px, 65vh, 700px);
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .wrap-info {
+      padding: 80px 60px;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
+    .wrap-info .left .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      margin-bottom: 18px;
+    }
+    .wrap-info .left h3 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(40px, 4.5vw, 72px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      max-width: 14ch;
+    }
+    .wrap-info .left h3 em {
+      font-family: var(--display);
+      font-style: normal;
+      color: var(--bb-yellow);
+    }
+    .wrap-info .right p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 243, 0.7);
+      margin-bottom: 32px;
+      max-width: 50ch;
+    }
+    .wrap-info .right .specs {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 243, 0.15);
+    }
+    .wrap-info .specs .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 243, 0.5);
+    }
+    .wrap-info .specs .row b {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--bb-cream);
+      text-transform: none;
+      font-weight: 500;
+    }
+
+    /* ============================================================ */
+    /*  END                                                         -->
+    /* ============================================================ */
+    .end {
+      padding: 120px 60px 140px;
+      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .end .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bb-yellow);
+      margin-bottom: 28px;
+    }
+    .end h2 {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(40px, 4.8vw, 80px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--bb-cream);
+      margin-bottom: 24px;
+    }
+    .end h2 em {
+      font-family: var(--display);
+      font-style: normal;
+      color: var(--bb-yellow);
+    }
+    .end p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 243, 0.65);
+      max-width: 52ch;
+      margin: 0 auto 40px;
+    }
+    .end a {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: var(--bb-yellow);
+      color: var(--bb-ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .end a:hover { background: var(--bb-cream); }
+
+    @media (max-width: 1080px) {
+      .cover-content, .chapter, .contact, .menu, .wrap-info, .identity-strip { padding-left: 28px; padding-right: 28px; }
+      .chapter-grid, .identity-strip-grid, .wrap-info { grid-template-columns: 1fr; gap: 40px; }
+      .photo-break .caption { grid-template-columns: 1fr; gap: 12px; }
+      .photo-break .caption .meta { text-align: left; }
+      .photo-pair { grid-template-columns: 1fr; padding: 0; gap: 4px; }
+      .photo-pair figure { aspect-ratio: 4 / 3; }
+      .contact-grid { grid-template-columns: repeat(3, 1fr); }
+      .menu-stack { grid-template-columns: 1fr; }
+      .menu-stack figure { transform: none !important; }
+      .cover-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <a href="../../../">← Portfolio</a>
+  <div class="right">
+    <span class="frame-no">005</span>
+    <span>Big Bears · Toronto · 2024</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!--  COVER — full-bleed photo as the hero                       -->
+<!-- ============================================================ -->
+<section class="cover">
+  <img class="cover-img" src="../../../public/portfolio/big-bears/photos/06-bowl-pulled.jpg" alt="" />
+  <div class="cover-content">
+    <p class="cover-eyebrow">FF#005 · Brand · Photography · Menu · Wrapper</p>
+    <div class="cover-text">
+      <h1 class="cover-wordmark">Big Bears <em>Baked</em> Potato</h1>
+    </div>
+    <div class="cover-meta">
+      <div>Year<b>2024</b></div>
+      <div>Location<b>Toronto</b></div>
+      <div>Scope<b>Brand build</b></div>
+      <div>Studio<b>FrameFlow</b></div>
+    </div>
+  </div>
+  <span class="scroll-cue">Scroll · 06 chapters</span>
+</section>
+
+<!-- ============================================================ -->
+<!--  CHAPTER 01 — the brief                                     -->
+<!-- ============================================================ -->
+<section class="chapter">
+  <div class="chapter-grid">
+    <div class="chapter-label">
+      Chapter 01
+      <span class="num">The brief</span>
+    </div>
+    <div>
+      <h2 class="chapter-headline">A spud with <em>a personality.</em></h2>
+      <div class="chapter-body">
+        <p>Big Bears arrived with a single product — the loaded baked potato — and a question: how do you make a humble starch feel <strong>like a destination</strong>?</p>
+        <p>The mascot earned the shades. The wordmark earned the size. The wrapper turned every ingredient on the menu into a typographic pattern that sells the brand from a block away. Then we shot the food.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  PHOTO BREAK 01                                             -->
+<!-- ============================================================ -->
+<section class="photo-break">
+  <img src="../../../public/portfolio/big-bears/photos/01-toppings-bar-wide.jpg" alt="" />
+  <div class="caption">
+    <h3>Twenty bins of every &mdash; thing.</h3>
+    <div class="meta">
+      Frame 01<b>INT. Toppings Bar — Wide</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  PHOTO PAIR 01                                              -->
+<!-- ============================================================ -->
+<section class="photo-pair">
+  <figure>
+    <img src="../../../public/portfolio/big-bears/photos/02-staff-service.jpg" alt="" />
+    <figcaption>02 · INT. Counter — Service</figcaption>
+  </figure>
+  <figure>
+    <img src="../../../public/portfolio/big-bears/photos/04-build-corn.jpg" alt="" />
+    <figcaption>04 · CU. Build — Scoop</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<!--  IDENTITY STRIP                                             -->
+<!-- ============================================================ -->
+<section class="identity-strip">
+  <div class="identity-strip-grid">
+    <div class="left">
+      <p class="label">Chapter 02 · Identity</p>
+      <h3>Yellow does most <em>of the work.</em></h3>
+      <p>Four colors, two typefaces. Bear Yellow carries 60% of every surface — wrappers, menus, awnings, signage. Burnt Orange and Deep Red show up for emphasis. Cream is the blank page underneath.</p>
+    </div>
+    <div class="right">
+      <div class="palette-row">
+        <div class="swatch yellow"><span>Yellow</span><span class="hex">#F3A805</span></div>
+        <div class="swatch orange"><span>Orange</span><span class="hex">#B73F13</span></div>
+        <div class="swatch red"><span>Red</span><span class="hex">#922700</span></div>
+        <div class="swatch cream"><span>Cream</span><span class="hex">#FFFFF3</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="role">Display</p>
+          <p class="face">Lilita One</p>
+          <p class="display-spec">Aa</p>
+        </div>
+        <div>
+          <p class="role">Body</p>
+          <p class="face">Nunito · 300/400/600</p>
+          <p class="body-spec">A potato is a small private rebellion against the cold.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  MARK — over photo                                          -->
+<!-- ============================================================ -->
+<section class="mark-over">
+  <img class="bg" src="../../../public/portfolio/big-bears/photos/11-pass-chili.jpg" alt="" />
+  <div class="mark-over-content">
+    <img class="mark" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="Big Bears mark" />
+  </div>
+  <div class="caption">
+    <h3>The bear earned the shades.</h3>
+    <div>03 · The mark<br/><span style="font-family: var(--editorial); font-style: italic; color: var(--bb-cream); text-transform: none; font-size: 18px;">Primary lockup · 2024</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  PHOTO BREAK 02                                             -->
+<!-- ============================================================ -->
+<section class="photo-break">
+  <img src="../../../public/portfolio/big-bears/photos/12-takeout-sidewalk.jpg" alt="" />
+  <div class="caption">
+    <h3>One spud, every topping, on the sidewalk.</h3>
+    <div class="meta">
+      Frame 12<b>POV. First Bite</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  CONTACT SHEET                                              -->
+<!-- ============================================================ -->
+<section class="contact">
+  <p class="contact-eyebrow">Chapter 04 · Photography</p>
+  <h3>Twelve frames from <em>the line.</em></h3>
+  <div class="contact-grid">
+    <figure><img src="../../../public/portfolio/big-bears/photos/01-toppings-bar-wide.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/02-staff-service.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/03-toppings-detail.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/04-build-corn.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/05-build-pickle.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/06-bowl-pulled.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/07-counter-trio.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/08-bowl-cabbage.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/09-bowl-vegan.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/10-bowl-beans.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/11-pass-chili.jpg" alt="" /></figure>
+    <figure><img src="../../../public/portfolio/big-bears/photos/12-takeout-sidewalk.jpg" alt="" /></figure>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  MENU                                                       -->
+<!-- ============================================================ -->
+<section class="menu">
+  <p class="menu-eyebrow">Chapter 05 · The menu</p>
+  <h3>Three pages, twelve potatoes, <em>one Bear Size.</em></h3>
+  <div class="menu-stack">
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-01.png" alt="Menu spread 01" />
+      <figcaption><span>Spread 01</span><b>Signatures</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-02.png" alt="Menu spread 02" />
+      <figcaption><span>Spread 02</span><b>Sides &amp; drinks</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/menu/menu-03.png" alt="Menu spread 03" />
+      <figcaption><span>Spread 03</span><b>International</b></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  WRAPPER                                                    -->
+<!-- ============================================================ -->
+<section class="wrap-section">
+  <img src="../../../public/portfolio/big-bears/wrapper/wrapper-front.png" alt="Big Bears wrapper" />
+  <div class="wrap-info">
+    <div class="left">
+      <p class="label">Chapter 06 · Wrapper</p>
+      <h3><em>Loaded</em><br/>by Bears.</h3>
+    </div>
+    <div class="right">
+      <p>The take-away wrapper turns every ingredient on the menu into a typographic pattern. Every wrapper is a billboard, every billboard is a brand book.</p>
+      <div class="specs">
+        <div class="row">Stock<b>Kraft · 60gsm</b></div>
+        <div class="row">Ink<b>Bear Yellow</b></div>
+        <div class="row">Format<b>320 × 320 mm</b></div>
+        <div class="row">Use<b>Take-away · Tray liner</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!--  END                                                        -->
+<!-- ============================================================ -->
+<section class="end">
+  <p class="badge">Designed by FrameFlow · Toronto · 2024</p>
+  <h2>Roll the credits, <em>cut to next.</em></h2>
+  <p>If your brand needs the same kind of attention — full identity, packaging, photography, and the menu to tie it together — we&rsquo;re booking the next slot now.</p>
+  <a href="#">Start a project →</a>
+</section>
+
+</body>
+</html>
