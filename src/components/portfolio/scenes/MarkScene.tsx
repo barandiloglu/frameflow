@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import type { Brand, LogoVariant } from "@/data/clients";
 
 type Props = {
@@ -11,27 +11,52 @@ type Props = {
   location?: string;
 };
 
+/* Hard-coded studio backdrop — clients usually don't have a true "ink" in
+   their palette, and we want the Mark hero to feel like a photo studio
+   regardless. The brand-primary color comes in as the spotlight. */
+const STUDIO_BG = "#1c1a18";
+const STUDIO_FG = "#fffeeb";
+
 export function MarkScene({ brand, logos, year, location }: Props) {
   if (logos.length === 0) return null;
   const primary = logos[0];
 
-  /* palette resolution */
-  const ink =
-    brand?.palette.find((p) => p.role === "ink") ??
-    brand?.palette.find((p) => p.role === "secondary") ?? { hex: "#2b1410", name: "ink" };
-  const surface =
-    brand?.palette.find((p) => p.role === "surface") ?? { hex: "#fffff3", name: "surface" };
+  /* palette resolution — primary + accent only; bg comes from STUDIO_BG */
   const accent =
     brand?.palette.find((p) => p.role === "accent") ?? { hex: "#922700", name: "accent" };
   const primaryCol =
     brand?.palette.find((p) => p.role === "primary") ?? { hex: "#f3a805", name: "primary" };
 
   const sceneVars: React.CSSProperties & Record<string, string> = {
-    "--ms-bg": ink.hex,
-    "--ms-fg": surface.hex,
+    "--ms-bg": STUDIO_BG,
+    "--ms-fg": STUDIO_FG,
     "--ms-accent": accent.hex,
     "--ms-primary": primaryCol.hex,
   };
+
+  /* Iris-in reveal triggered by IntersectionObserver — robust across
+     SSR/hydration timing. State change flips a class that drives a CSS
+     transition (clip-path + opacity), so the logo is always rendered
+     and only its visibility animates. */
+  const [revealed, setRevealed] = useState(false);
+  const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setRevealed(true);
+            obs.disconnect();
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <section aria-label="Brand mark" className="ms-section" style={sceneVars}>
@@ -66,14 +91,8 @@ export function MarkScene({ brand, logos, year, location }: Props) {
         </div>
 
         {/* Center — the logo with iris-in reveal */}
-        <div className="ms-stage">
-          <motion.div
-            className="ms-mark-wrap"
-            initial={{ clipPath: "circle(0% at 50% 50%)", opacity: 0 }}
-            whileInView={{ clipPath: "circle(75% at 50% 50%)", opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.2, ease: [0.7, 0, 0.2, 1] }}
-          >
+        <div className="ms-stage" ref={stageRef}>
+          <div className={`ms-mark-wrap ${revealed ? "ms-revealed" : ""}`}>
             <Image
               src={primary.src}
               alt={primary.alt}
@@ -82,7 +101,7 @@ export function MarkScene({ brand, logos, year, location }: Props) {
               priority={false}
               className="ms-mark"
             />
-          </motion.div>
+          </div>
         </div>
 
         {/* Right column — usage specs */}
@@ -297,10 +316,20 @@ export function MarkScene({ brand, logos, year, location }: Props) {
           width: clamp(220px, 26vw, 360px);
           aspect-ratio: 1 / 1;
           position: relative;
-          /* gentle breathing once revealed (clip-path animation finishes ~1.5s
-             after viewport entry; the breathing reads as ambient regardless) */
+          opacity: 0;
+          transform: scale(0.85);
+          clip-path: circle(0% at 50% 50%);
+          transition:
+            opacity 0.6s ease,
+            transform 1.2s cubic-bezier(0.7, 0, 0.2, 1),
+            clip-path 1.2s cubic-bezier(0.7, 0, 0.2, 1);
+        }
+        .ms-mark-wrap.ms-revealed {
+          opacity: 1;
+          transform: scale(1);
+          clip-path: circle(80% at 50% 50%);
           animation: ms-breathe 5s ease-in-out 1.5s infinite;
-          transform-origin: center center;
+          animation-fill-mode: backwards;
         }
         @keyframes ms-breathe {
           0%, 100% { transform: scale(1); }
