@@ -15,19 +15,16 @@ type Props = {
   year?: string;
 };
 
-const START_DELAY = 1700; // ms — when the loading bar starts filling
-const FILL_DURATION = 1600; // ms — how long the bar takes to fill
-const PEEL_DELAY = 200; // ms — gap between bar full and peel
-const PEEL_DURATION = 1000; // ms — how long the peel-away animation runs
+const START_DELAY = 1700;
+const FILL_DURATION = 1600;
+const PEEL_DELAY = 200;
+const PEEL_DURATION = 1000;
 
 /**
- * The cinematic loading transition that sits on top of every featured
- * client subpage. Plays for ~3.5s on mount, then peels away to reveal
- * the destination underneath.
+ * Cinematic loading transition that sits on top of every featured
+ * client subpage. ~3.5s, then peels away to reveal the destination.
  *
- * The loader lives in FrameFlow's design system (graphite + amber +
- * mono) so the studio's cohesion is preserved at this layer; the
- * destination underneath can be the client's bespoke world.
+ * Direct port of docs/prototypes/big-bears-loading/index.html.
  */
 export function LoadingTransition({
   frameNumber,
@@ -41,7 +38,7 @@ export function LoadingTransition({
   const [percent, setPercent] = useState(0);
   const [clock, setClock] = useState("00:01:23");
 
-  /* Lock body scroll while the loader is visible. */
+  /* lock body scroll while visible */
   useEffect(() => {
     if (typeof document === "undefined") return;
     const prev = document.body.style.overflow;
@@ -51,7 +48,7 @@ export function LoadingTransition({
     };
   }, []);
 
-  /* Tick the percent counter while the bar fills. */
+  /* tick the percent counter while the bar fills */
   useEffect(() => {
     if (done) return;
     const startTimer = setTimeout(() => {
@@ -69,21 +66,21 @@ export function LoadingTransition({
     return () => clearTimeout(startTimer);
   }, [done]);
 
-  /* Auto-dismiss after the bar finishes. */
+  /* auto-dismiss after the bar finishes */
   useEffect(() => {
     const totalLifetime = START_DELAY + FILL_DURATION + PEEL_DELAY;
     const t = setTimeout(() => setDone(true), totalLifetime);
     return () => clearTimeout(t);
   }, []);
 
-  /* Once peeled, unmount fully so it doesn't block clicks at all. */
+  /* unmount after the peel finishes */
   useEffect(() => {
     if (!done) return;
     const t = setTimeout(() => setUnmounted(true), PEEL_DURATION + 100);
     return () => clearTimeout(t);
   }, [done]);
 
-  /* Live clock for vibe. */
+  /* live clock */
   useEffect(() => {
     let s = 83;
     const id = setInterval(() => {
@@ -98,23 +95,21 @@ export function LoadingTransition({
 
   if (unmounted) return null;
 
-  /* Char cascade — wrap each non-space char in a span with staggered delay */
+  /* char cascade — wrap each non-space char of clientName */
   const baseDelay = 0.6;
   const step = 0.04;
-  let charIdx = 0;
+  let charI = 0;
   const titleChars = Array.from(clientName).map((ch) => {
     if (ch === " ") {
-      const node = (
-        <span key={`sp-${charIdx}`}>&nbsp;</span>
-      );
-      charIdx++;
+      const node = <span key={`sp-${charI}`}>&nbsp;</span>;
+      charI++;
       return node;
     }
-    const delay = baseDelay + charIdx * step;
-    charIdx++;
+    const delay = baseDelay + charI * step;
+    charI++;
     return (
       <span
-        key={`ch-${charIdx}`}
+        key={`ch-${charI}`}
         className="lt-char"
         style={{ animationDelay: `${delay}s` }}
       >
@@ -122,8 +117,6 @@ export function LoadingTransition({
       </span>
     );
   });
-
-  const skip = () => setDone(true);
 
   return (
     <div
@@ -139,7 +132,7 @@ export function LoadingTransition({
 
       <div className="lt-top">
         <span className="lt-live">REC · NOW LOADING</span>
-        <div className="lt-top-right">
+        <div className="lt-right">
           <span>FF_ARCHIVE</span>
           <span>VOL 2026</span>
           <span className="lt-clock">{clock}</span>
@@ -147,10 +140,7 @@ export function LoadingTransition({
       </div>
 
       <div className="lt-stage">
-        <p className="lt-eyebrow">
-          <span className="lt-eyebrow-rule" />
-          Now showing — next on the reel
-        </p>
+        <p className="lt-eyebrow">Now showing — next on the reel</p>
         <p className="lt-frameno">
           <b>Reel · {frameNumber}</b>
           {location ? ` · ${location}` : ""}
@@ -180,10 +170,14 @@ export function LoadingTransition({
 
       <div className="lt-bottom">
         <div className="lt-status">
-          <span className="lt-status-label">Status</span>
-          <span className="lt-status-val">Cueing take 01</span>
+          <span className="lt-label">Status</span>
+          <span className="lt-val">Cueing take 01</span>
         </div>
-        <button type="button" className="lt-skip" onClick={skip}>
+        <button
+          type="button"
+          className="lt-skip"
+          onClick={() => setDone(true)}
+        >
           Skip intro →
         </button>
       </div>
@@ -191,6 +185,9 @@ export function LoadingTransition({
       {done && <span className="lt-edge" aria-hidden />}
 
       <style jsx>{`
+        /* ---- 1:1 port of docs/prototypes/big-bears-loading
+           with class prefix lt- and centering via flex column. ---- */
+
         .lt-loader {
           position: fixed;
           inset: 0;
@@ -206,7 +203,18 @@ export function LoadingTransition({
         }
         .lt-top    { flex: 0 0 auto; }
         .lt-bottom { flex: 0 0 auto; }
-        .lt-stage  { flex: 1 1 auto; }
+        .lt-stage  {
+          flex: 1 1 auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 28px;
+          max-width: 1200px;
+          width: 100%;
+          margin: 0 auto;
+          min-height: 0;
+        }
+
         @keyframes lt-flicker {
           0%, 96%, 100% { filter: brightness(1) contrast(1); }
           97%           { filter: brightness(0.92) contrast(1.08); }
@@ -214,6 +222,7 @@ export function LoadingTransition({
           99%           { filter: brightness(0.97) contrast(1.04); }
         }
 
+        /* film grain */
         .lt-loader::before {
           content: "";
           position: absolute;
@@ -228,6 +237,7 @@ export function LoadingTransition({
           mix-blend-mode: overlay;
           opacity: 0.5;
         }
+        /* light leak */
         .lt-loader::after {
           content: "";
           position: absolute;
@@ -235,16 +245,8 @@ export function LoadingTransition({
           pointer-events: none;
           z-index: 0;
           background:
-            radial-gradient(
-              ellipse 50% 40% at 75% 25%,
-              rgba(196, 154, 74, 0.18),
-              transparent 60%
-            ),
-            radial-gradient(
-              ellipse 60% 50% at 20% 80%,
-              rgba(212, 63, 27, 0.12),
-              transparent 65%
-            );
+            radial-gradient(ellipse 50% 40% at 75% 25%, rgba(196, 154, 74, 0.18), transparent 60%),
+            radial-gradient(ellipse 60% 50% at 20% 80%, rgba(212, 63, 27, 0.12), transparent 65%);
           animation: lt-leak 9s ease-in-out infinite;
         }
         @keyframes lt-leak {
@@ -254,21 +256,36 @@ export function LoadingTransition({
 
         .lt-loader > * { position: relative; z-index: 2; }
 
-        /* corner brackets */
+        /* ---- corner brackets ---------------------------------- */
         .lt-bracket {
           position: absolute;
           width: 28px;
           height: 28px;
-          border-color: #c19a4a;
           opacity: 0.55;
-          z-index: 3;
+          z-index: 4;
         }
-        .lt-tl { top: 22px; left: 22px;     border-top: 1px solid; border-left: 1px solid; }
-        .lt-tr { top: 22px; right: 22px;    border-top: 1px solid; border-right: 1px solid; }
-        .lt-bl { bottom: 22px; left: 22px;  border-bottom: 1px solid; border-left: 1px solid; }
-        .lt-br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+        .lt-tl {
+          top: 22px; left: 22px;
+          border-top: 1px solid #c19a4a;
+          border-left: 1px solid #c19a4a;
+        }
+        .lt-tr {
+          top: 22px; right: 22px;
+          border-top: 1px solid #c19a4a;
+          border-right: 1px solid #c19a4a;
+        }
+        .lt-bl {
+          bottom: 22px; left: 22px;
+          border-bottom: 1px solid #c19a4a;
+          border-left: 1px solid #c19a4a;
+        }
+        .lt-br {
+          bottom: 22px; right: 22px;
+          border-bottom: 1px solid #c19a4a;
+          border-right: 1px solid #c19a4a;
+        }
 
-        /* TOP RAIL */
+        /* ---- top rail ----------------------------------------- */
         .lt-top {
           display: flex;
           justify-content: space-between;
@@ -277,7 +294,6 @@ export function LoadingTransition({
           letter-spacing: 0.28em;
           text-transform: uppercase;
           color: rgba(255, 255, 235, 0.6);
-          font-weight: 400;
         }
         .lt-live {
           display: inline-flex;
@@ -298,39 +314,30 @@ export function LoadingTransition({
         @keyframes lt-pulse {
           50% { box-shadow: 0 0 0 6px rgba(212, 63, 27, 0); }
         }
-        .lt-top-right { display: flex; gap: 24px; }
+        .lt-right {
+          display: flex;
+          gap: 24px;
+        }
         .lt-clock {
           color: #c19a4a;
           font-feature-settings: "tnum" 1;
         }
 
-        /* CENTER STAGE — flex column, vertically centered in the
-           middle row that the loader's outer grid carved out. */
-        .lt-stage {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 28px;
-          max-width: 1200px;
-          width: 100%;
-          margin: 0 auto;
-          min-height: 0;
-        }
-
+        /* ---- center stage ------------------------------------- */
         .lt-eyebrow {
           font-size: 11px;
           letter-spacing: 0.34em;
           text-transform: uppercase;
           color: #c19a4a;
+          margin: 0;
           display: flex;
           align-items: center;
           gap: 14px;
-          margin: 0;
           opacity: 0;
           animation: lt-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
         }
-        .lt-eyebrow-rule {
-          display: block;
+        .lt-eyebrow::before {
+          content: "";
           width: 36px;
           height: 1px;
           background: #c19a4a;
@@ -358,8 +365,8 @@ export function LoadingTransition({
           line-height: 0.9;
           letter-spacing: -0.025em;
           color: #ffffeb;
-          max-width: 16ch;
           margin: 0;
+          max-width: 16ch;
         }
         .lt-char {
           display: inline-block;
@@ -412,9 +419,8 @@ export function LoadingTransition({
           transform-origin: left;
           animation: lt-fill 1.6s linear 1.7s forwards;
         }
-        @keyframes lt-fill {
-          to { transform: scaleX(1); }
-        }
+        @keyframes lt-fill { to { transform: scaleX(1); } }
+
         .lt-bar-percent {
           font-size: 10px;
           letter-spacing: 0.28em;
@@ -425,7 +431,7 @@ export function LoadingTransition({
           text-align: right;
         }
 
-        /* BOTTOM RAIL */
+        /* ---- bottom rail -------------------------------------- */
         .lt-bottom {
           display: flex;
           justify-content: space-between;
@@ -435,8 +441,8 @@ export function LoadingTransition({
           text-transform: uppercase;
           color: rgba(255, 255, 235, 0.4);
         }
-        .lt-status-label { color: rgba(255, 255, 235, 0.4); }
-        .lt-status-val   { color: #c19a4a; margin-left: 8px; }
+        .lt-label { color: rgba(255, 255, 235, 0.4); }
+        .lt-val   { color: #c19a4a; margin-left: 8px; }
         .lt-skip {
           cursor: pointer;
           background: transparent;
@@ -454,7 +460,7 @@ export function LoadingTransition({
           color: #1c1a18;
         }
 
-        /* PEEL TRANSITION */
+        /* ---- peel transition ---------------------------------- */
         .lt-loader.lt-done {
           animation: lt-flicker 7.5s steps(1) infinite,
                      lt-peel 1s cubic-bezier(0.7, 0, 0.2, 1) forwards;
@@ -465,7 +471,6 @@ export function LoadingTransition({
           100% { clip-path: inset(0 100% 0 0); }
         }
 
-        /* ember-glowing trailing edge during the peel */
         .lt-edge {
           position: absolute;
           top: 0; right: 0; bottom: 0;
@@ -496,7 +501,7 @@ export function LoadingTransition({
           .lt-tl, .lt-bl { left: 14px; }
           .lt-tr, .lt-br { right: 14px; }
           .lt-top { font-size: 9px; gap: 12px; flex-wrap: wrap; }
-          .lt-top-right { gap: 14px; }
+          .lt-right { gap: 14px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
