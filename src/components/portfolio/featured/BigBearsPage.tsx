@@ -58,6 +58,8 @@ export function BigBearsPage({ client }: Props) {
             <span>EST. 2024</span><span>TORONTO</span><span>HOT POTATO</span>
             <span>BIG BEARS</span><span>BAKED POTATO</span><span>LOADED BY BEARS</span>
             <span>EST. 2024</span><span>TORONTO</span><span>HOT POTATO</span>
+            <span>BIG BEARS</span><span>BAKED POTATO</span><span>LOADED BY BEARS</span>
+            <span>EST. 2024</span><span>TORONTO</span><span>HOT POTATO</span>
           </div>
         </div>
 
@@ -85,6 +87,7 @@ export function BigBearsPage({ client }: Props) {
         {/* TICKER 2 — ingredients */}
         <div className="bb-ticker">
           <div className="bb-ticker-track">
+            <span>★ MEAT ★ POTATO ★ TOFU ★ TOMATO ★ NATURAL ★ CHEESE ★ CHICKEN ★ GARLIC ★ ONION ★ LETTUCE ★ FRESH</span>
             <span>★ MEAT ★ POTATO ★ TOFU ★ TOMATO ★ NATURAL ★ CHEESE ★ CHICKEN ★ GARLIC ★ ONION ★ LETTUCE ★ FRESH</span>
             <span>★ MEAT ★ POTATO ★ TOFU ★ TOMATO ★ NATURAL ★ CHEESE ★ CHICKEN ★ GARLIC ★ ONION ★ LETTUCE ★ FRESH</span>
           </div>
@@ -159,6 +162,9 @@ export function BigBearsPage({ client }: Props) {
         {/* TICKER 3 — pricing */}
         <div className="bb-ticker">
           <div className="bb-ticker-track">
+            <span>SMALL · $11.99</span><span>BEAR SIZE · $17.99</span>
+            <span>+ 2 SAUCES</span><span>VEGGIES $2 · MEATS $3.5</span>
+            <span>MORE SAUCE $0.50</span>
             <span>SMALL · $11.99</span><span>BEAR SIZE · $17.99</span>
             <span>+ 2 SAUCES</span><span>VEGGIES $2 · MEATS $3.5</span>
             <span>MORE SAUCE $0.50</span>
@@ -297,6 +303,8 @@ export function BigBearsPage({ client }: Props) {
             <span>TORONTO</span><span>BRAND BUILD</span><span>★</span>
             <span>FRAMEFLOW</span><span>BIG BEARS</span><span>2024</span>
             <span>TORONTO</span><span>BRAND BUILD</span><span>★</span>
+            <span>FRAMEFLOW</span><span>BIG BEARS</span><span>2024</span>
+            <span>TORONTO</span><span>BRAND BUILD</span><span>★</span>
           </div>
         </div>
 
@@ -389,8 +397,13 @@ export function BigBearsPage({ client }: Props) {
           content: "★";
           color: var(--bb-cream);
         }
+        /* track contains 3 copies of the content; -33.333% = move by
+           one copy, putting the second copy in the first copy's
+           position so the loop is visually seamless. With only 2
+           copies + -50%, wider viewports would see empty space at
+           the end of each cycle. */
         @keyframes bb-tick {
-          to { transform: translateX(-50%); }
+          to { transform: translateX(-33.333%); }
         }
 
         /* HERO --------------------------------------------------- */
