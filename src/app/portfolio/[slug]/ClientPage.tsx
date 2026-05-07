@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FilmStill } from "@/components/portfolio/FilmStill";
 import { BrandScene } from "@/components/portfolio/scenes/BrandScene";
+import { MarkScene } from "@/components/portfolio/scenes/MarkScene";
 import type { Client } from "@/data/clients";
 
 type Props = {
@@ -128,6 +129,16 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
           brand={client.brand}
           clientName={client.name}
           frameNumber={frameNumber}
+        />
+      )}
+
+      {/* Scene 2 — Mark (frame 06) */}
+      {client.logos && client.logos.length > 0 && (
+        <MarkScene
+          brand={client.brand}
+          logos={client.logos}
+          year={client.year}
+          location={client.location}
         />
       )}
 
