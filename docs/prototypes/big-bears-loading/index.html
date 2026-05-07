@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loading Big Bears · FrameFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&family=Lilita+One&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --ff-graphite:      #353230;
+      --ff-graphite-deep: #1c1a18;
+      --ff-ivory:         #ffffeb;
+      --ff-amber:         #c19a4a;
+      --ff-ember:         #d43f1b;
+
+      --bb-yellow:  #f3a805;
+      --bb-red:     #922700;
+      --bb-cream:   #fffff3;
+      --bb-ink:     #1a0e08;
+
+      --ff-display: "Fraunces", Georgia, serif;
+      --ff-mono:    "JetBrains Mono", ui-monospace, monospace;
+      --bb-display: "Lilita One", system-ui, sans-serif;
+
+      --ease-cinematic: cubic-bezier(0.7, 0, 0.2, 1);
+      --ease-soft:      cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body {
+      background: var(--ff-graphite-deep);
+      color: var(--ff-ivory);
+      font-family: var(--ff-mono);
+      overflow: hidden;
+      height: 100%;
+    }
+
+    /* ============================================================ */
+    /*  DESTINATION (Big Bears placeholder, sits underneath)        */
+    /* ============================================================ */
+    .destination {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: var(--bb-yellow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    /* simulated marquee ticker on the destination */
+    .dest-ticker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--bb-red);
+      color: var(--bb-yellow);
+      padding: 12px 0;
+      overflow: hidden;
+      border-top: 4px solid var(--bb-ink);
+      border-bottom: 4px solid var(--bb-ink);
+    }
+    .dest-ticker-track {
+      display: flex;
+      gap: 36px;
+      width: max-content;
+      animation: dest-tick 30s linear infinite;
+      padding-left: 36px;
+    }
+    .dest-ticker span {
+      font-family: var(--bb-display);
+      font-size: 22px;
+      white-space: nowrap;
+    }
+    @keyframes dest-tick { to { transform: translateX(-50%); } }
+
+    .dest-bear {
+      width: clamp(220px, 24vw, 360px);
+      height: auto;
+      filter: drop-shadow(0 24px 40px rgba(146, 39, 0, 0.4));
+    }
+    .dest-wordmark {
+      font-family: var(--bb-display);
+      font-size: clamp(56px, 9vw, 140px);
+      line-height: 0.85;
+      color: var(--bb-cream);
+      text-shadow: 5px 5px 0 var(--bb-red), 10px 10px 0 var(--bb-ink);
+      letter-spacing: -0.01em;
+      max-width: 14ch;
+      transform: rotate(-1deg);
+    }
+    .dest-tag {
+      font-family: var(--bb-display);
+      font-size: clamp(24px, 3vw, 40px);
+      color: var(--bb-red);
+      transform: rotate(1deg);
+    }
+
+    /* ============================================================ */
+    /*  LOADING SCREEN — sits on top                                */
+    /* ============================================================ */
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: var(--ff-graphite-deep);
+      color: var(--ff-ivory);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 32px 52px;
+      transform-origin: right center;
+      animation: loader-flicker 7.5s steps(1) infinite;
+    }
+    @keyframes loader-flicker {
+      0%, 96%, 100% { filter: brightness(1) contrast(1); }
+      97%           { filter: brightness(0.92) contrast(1.08); }
+      98%           { filter: brightness(1.04) contrast(0.97); }
+      99%           { filter: brightness(0.97) contrast(1.04); }
+    }
+
+    /* film grain */
+    .loader::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 235, 0.04) 0 1px,
+        transparent 1px 3px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+    }
+
+    /* light leak */
+    .loader::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 75% 25%, rgba(196, 154, 74, 0.18), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(212, 63, 27, 0.12), transparent 65%);
+      animation: loader-leak 9s ease-in-out infinite;
+    }
+    @keyframes loader-leak {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50%      { opacity: 1.05; transform: scale(1.04); }
+    }
+
+    .loader > * { position: relative; z-index: 2; }
+
+    /* TOP RAIL */
+    .l-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 235, 0.6);
+    }
+    .l-top .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ff-ember);
+      font-weight: 500;
+    }
+    .l-top .live::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--ff-ember);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(212, 63, 27, 0.5);
+      animation: l-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes l-pulse {
+      50% { box-shadow: 0 0 0 6px rgba(212, 63, 27, 0); }
+    }
+    .l-top .right {
+      display: flex;
+      gap: 24px;
+    }
+    .l-top .clock {
+      color: var(--ff-amber);
+      font-feature-settings: "tnum" 1;
+    }
+
+    /* CENTER STAGE */
+    .l-stage {
+      display: grid;
+      grid-template-rows: auto auto auto auto auto;
+      gap: 28px;
+      align-content: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .l-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      animation: rise 0.6s var(--ease-soft) 0.2s forwards;
+    }
+    .l-eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: var(--ff-amber);
+    }
+
+    .l-frameno {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 3vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--ff-ivory);
+      opacity: 0;
+      animation: rise 0.7s var(--ease-soft) 0.4s forwards;
+    }
+    .l-frameno b { color: var(--ff-amber); font-weight: 400; }
+
+    .l-title {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(56px, 8vw, 144px);
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      color: var(--ff-ivory);
+      max-width: 16ch;
+    }
+    .l-title .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(70%) rotate(6deg);
+      animation: l-char-drop 0.85s var(--ease-cinematic) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes l-char-drop {
+      to { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+
+    /* LOADING BAR */
+    .l-bar-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      margin-top: 16px;
+      opacity: 0;
+      animation: rise 0.7s var(--ease-soft) 1.6s forwards;
+    }
+    .l-bar {
+      position: relative;
+      height: 2px;
+      background: rgba(255, 255, 235, 0.15);
+      overflow: hidden;
+    }
+    .l-bar-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--ff-amber);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: l-fill 1.6s linear 1.7s forwards;
+    }
+    @keyframes l-fill {
+      0%   { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+    .l-bar-percent {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+      font-feature-settings: "tnum" 1;
+      width: 72px;
+      text-align: right;
+    }
+
+    /* SCOPE TAGS */
+    .l-scope {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      opacity: 0;
+      animation: rise 0.7s var(--ease-soft) 1.0s forwards;
+    }
+    .l-tag {
+      border: 1px solid rgba(196, 154, 74, 0.35);
+      padding: 6px 12px;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ff-amber);
+    }
+
+    /* BOTTOM RAIL */
+    .l-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 235, 0.4);
+    }
+    .l-bottom .status .label { color: rgba(255, 255, 235, 0.4); }
+    .l-bottom .status .val   { color: var(--ff-amber); margin-left: 8px; }
+    .l-bottom .skip {
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 235, 0.2);
+      color: var(--ff-ivory);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+    .l-bottom .skip:hover {
+      background: var(--ff-amber);
+      color: var(--ff-graphite-deep);
+    }
+
+    /* corner brackets */
+    .l-bracket {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: var(--ff-amber);
+      opacity: 0.55;
+    }
+    .l-tl { top: 22px; left: 22px;     border-top: 1px solid; border-left: 1px solid; }
+    .l-tr { top: 22px; right: 22px;    border-top: 1px solid; border-right: 1px solid; }
+    .l-bl { bottom: 22px; left: 22px;  border-bottom: 1px solid; border-left: 1px solid; }
+    .l-br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* ============================================================ */
+    /*  TRANSITION — when .done is added, peel away                */
+    /* ============================================================ */
+    .loader.done {
+      animation: loader-flicker 7.5s steps(1) infinite,
+                 loader-peel 1.0s var(--ease-cinematic) 0.2s forwards;
+    }
+    @keyframes loader-peel {
+      0% {
+        transform: scaleX(1);
+        clip-path: inset(0 0 0 0);
+      }
+      100% {
+        transform: scaleX(1);
+        clip-path: inset(0 100% 0 0);
+      }
+    }
+    /* ember glow on the trailing edge during peel */
+    .loader.done::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 6px;
+      background: var(--ff-amber);
+      box-shadow: 0 0 40px var(--ff-ember), 0 0 80px var(--ff-amber);
+      opacity: 0;
+      animation: edge-glow 1.0s ease 0.2s forwards;
+      pointer-events: none;
+      z-index: 5;
+    }
+    @keyframes edge-glow {
+      0%   { opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* ============================================================ */
+    /*  REPLAY BUTTON — visible after the transition               */
+    /* ============================================================ */
+    .replay {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      background: var(--ff-graphite-deep);
+      color: var(--ff-amber);
+      border: 1px solid var(--ff-amber);
+      padding: 12px 20px;
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .replay.visible { opacity: 0.85; }
+    .replay:hover { background: var(--ff-amber); color: var(--ff-graphite-deep); opacity: 1; }
+
+    /* destination ANIMATIONS — kick in after transition */
+    .destination .dest-bear,
+    .destination .dest-wordmark,
+    .destination .dest-tag {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .loader.done ~ .destination .dest-bear {
+      animation: dest-rise 0.8s var(--ease-soft) 0.6s forwards;
+    }
+    .loader.done ~ .destination .dest-wordmark {
+      animation: dest-rise 0.9s var(--ease-soft) 0.8s forwards;
+    }
+    .loader.done ~ .destination .dest-tag {
+      animation: dest-rise 0.9s var(--ease-soft) 1.0s forwards;
+    }
+    @keyframes dest-rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 880px) {
+      .loader { padding: 24px; }
+      .l-bracket { width: 22px; height: 22px; }
+      .l-tl, .l-tr { top: 14px; }
+      .l-bl, .l-br { bottom: 14px; }
+      .l-tl, .l-bl { left: 14px; }
+      .l-tr, .l-br { right: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .loader, .loader::after, .l-bar-fill, .l-title .char,
+      .destination .dest-bear, .destination .dest-wordmark, .destination .dest-tag {
+        animation-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DESTINATION (sits underneath) -->
+  <div class="destination">
+    <div class="dest-ticker">
+      <div class="dest-ticker-track">
+        <span>★ BIG BEARS ★ BAKED POTATO ★ LOADED BY BEARS ★ EST. 2024 ★ TORONTO ★</span>
+        <span>★ BIG BEARS ★ BAKED POTATO ★ LOADED BY BEARS ★ EST. 2024 ★ TORONTO ★</span>
+      </div>
+    </div>
+    <img class="dest-bear" src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="Big Bears" />
+    <h1 class="dest-wordmark">Big Bears Baked Potato</h1>
+    <p class="dest-tag">Loaded by Bears.</p>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div class="loader" id="loader">
+    <span class="l-bracket l-tl" aria-hidden></span>
+    <span class="l-bracket l-tr" aria-hidden></span>
+    <span class="l-bracket l-bl" aria-hidden></span>
+    <span class="l-bracket l-br" aria-hidden></span>
+
+    <div class="l-top">
+      <span class="live">REC · NOW LOADING</span>
+      <div class="right">
+        <span>FF_ARCHIVE</span>
+        <span>VOL 2026</span>
+        <span class="clock" id="clock">00:01:23</span>
+      </div>
+    </div>
+
+    <div class="l-stage">
+      <p class="l-eyebrow">Now showing — next on the reel</p>
+      <p class="l-frameno"><b>Reel · 005</b> · Toronto · 2024</p>
+      <h1 class="l-title" data-cascade>Big Bears Baked Potato</h1>
+      <div class="l-scope">
+        <span class="l-tag">Brand</span>
+        <span class="l-tag">Logo</span>
+        <span class="l-tag">Photography</span>
+        <span class="l-tag">Menu</span>
+        <span class="l-tag">Wrapper</span>
+      </div>
+      <div class="l-bar-wrap">
+        <div class="l-bar"><span class="l-bar-fill"></span></div>
+        <span class="l-bar-percent" id="percent">000 %</span>
+      </div>
+    </div>
+
+    <div class="l-bottom">
+      <div class="status">
+        <span class="label">Status</span>
+        <span class="val">Cueing take 01</span>
+      </div>
+      <button class="skip" id="skip">Skip intro →</button>
+    </div>
+  </div>
+
+  <button class="replay" id="replay">Replay ↻</button>
+
+  <script>
+    // Char cascade for the title
+    document.querySelectorAll('[data-cascade]').forEach((el) => {
+      const baseDelay = 0.6;
+      const step = 0.04;
+      let i = 0;
+      const text = el.textContent;
+      el.textContent = '';
+      for (const ch of text) {
+        if (ch === ' ' || ch === '\n') {
+          el.appendChild(document.createTextNode(ch));
+          i++;
+          continue;
+        }
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ch;
+        span.style.animationDelay = (baseDelay + i * step) + 's';
+        el.appendChild(span);
+        i++;
+      }
+    });
+
+    // Animate the percent counter to match the loading bar
+    const percent = document.getElementById('percent');
+    const totalMs = 1600;   // matches l-fill duration
+    const startDelay = 1700; // matches l-fill delay
+    setTimeout(() => {
+      const start = performance.now();
+      const tick = (now) => {
+        const elapsed = now - start;
+        const pct = Math.min(100, Math.round((elapsed / totalMs) * 100));
+        percent.textContent = String(pct).padStart(3, '0') + ' %';
+        if (pct < 100) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, startDelay);
+
+    // Trigger transition after the bar fills
+    const loader = document.getElementById('loader');
+    const replay = document.getElementById('replay');
+    const skip = document.getElementById('skip');
+
+    const showReplay = () => replay.classList.add('visible');
+    const finish = () => {
+      loader.classList.add('done');
+      setTimeout(showReplay, 1400);
+    };
+    const totalLifetime = startDelay + totalMs + 200; // 3.5s
+    const timeoutId = setTimeout(finish, totalLifetime);
+
+    skip.addEventListener('click', () => {
+      clearTimeout(timeoutId);
+      finish();
+    });
+
+    replay.addEventListener('click', () => {
+      // simple reload to replay the whole sequence
+      location.reload();
+    });
+
+    // Live clock for vibe
+    const clockEl = document.getElementById('clock');
+    let s = 83;
+    setInterval(() => {
+      s++;
+      const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+      const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      clockEl.textContent = `${hh}:${mm}:${ss}`;
+    }, 1000);
+  </script>
+
+</body>
+</html>
