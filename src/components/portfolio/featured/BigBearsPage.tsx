@@ -54,14 +54,16 @@ export function BigBearsPage({ client }: Props) {
           <span className="bb-hero-eyebrow">A short film about a hot potato →</span>
           <h1 className="bb-hero-wordmark">{client.name}</h1>
           {logo && (
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              width={460}
-              height={460}
-              priority
-              className="bb-hero-bear"
-            />
+            <div className="bb-hero-bear-wrap">
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                priority
+                sizes="(max-width: 880px) 280px, 460px"
+                style={{ objectFit: "contain" }}
+              />
+            </div>
           )}
           <p className="bb-hero-tag">
             Loaded by <span className="bb-hero-underline">Bears.</span>
@@ -79,13 +81,9 @@ export function BigBearsPage({ client }: Props) {
         {/* INTRO */}
         <section className="bb-intro">
           {logo && (
-            <Image
-              src={logo.src}
-              alt=""
-              width={88}
-              height={88}
-              className="bb-intro-bear"
-            />
+            <div className="bb-intro-bear-wrap">
+              <Image src={logo.src} alt="" fill sizes="88px" style={{ objectFit: "contain" }} />
+            </div>
           )}
           <h2>
             A spud with <em>personality.</em>
@@ -166,27 +164,15 @@ export function BigBearsPage({ client }: Props) {
           </h2>
           {logo && (
             <div className="bb-mark-row">
-              <Image
-                src={logo.src}
-                alt=""
-                width={300}
-                height={300}
-                className="bb-mark-img bb-mark-small-l"
-              />
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={420}
-                height={420}
-                className="bb-mark-img bb-mark-big"
-              />
-              <Image
-                src={logo.src}
-                alt=""
-                width={300}
-                height={300}
-                className="bb-mark-img bb-mark-small-r"
-              />
+              <div className="bb-mark-cell bb-mark-small-l">
+                <Image src={logo.src} alt="" fill sizes="240px" style={{ objectFit: "contain" }} />
+              </div>
+              <div className="bb-mark-cell bb-mark-big">
+                <Image src={logo.src} alt={logo.alt} fill sizes="(max-width: 880px) 280px, 360px" style={{ objectFit: "contain" }} />
+              </div>
+              <div className="bb-mark-cell bb-mark-small-r">
+                <Image src={logo.src} alt="" fill sizes="240px" style={{ objectFit: "contain" }} />
+              </div>
             </div>
           )}
         </section>
@@ -203,10 +189,9 @@ export function BigBearsPage({ client }: Props) {
                   <Image
                     src={p.src}
                     alt={p.alt}
-                    width={480}
-                    height={640}
-                    className="bb-photo-img"
+                    fill
                     sizes="320px"
+                    style={{ objectFit: "cover" }}
                   />
                   <figcaption>{p.slate}</figcaption>
                 </figure>
@@ -248,10 +233,9 @@ export function BigBearsPage({ client }: Props) {
             <Image
               src={wrapper.src}
               alt={wrapper.alt}
-              width={1920}
-              height={1080}
+              fill
               sizes="100vw"
-              className="bb-wrap-img"
+              style={{ objectFit: "cover" }}
             />
           </section>
         )}
@@ -401,8 +385,12 @@ export function BigBearsPage({ client }: Props) {
         .bb-hero {
           position: relative;
           padding: 80px 40px 60px;
-          text-align: center;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 0;
         }
         .bb-hero::before {
           content: "★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★";
@@ -433,15 +421,15 @@ export function BigBearsPage({ client }: Props) {
           text-shadow: 6px 6px 0 var(--bb-red), 12px 12px 0 var(--bb-ink);
           letter-spacing: -0.01em;
           max-width: 14ch;
-          margin: 0 auto;
+          margin: 0;
           transform: rotate(-1deg);
           font-weight: 400;
         }
-        .bb-hero-bear {
+        .bb-hero-bear-wrap {
+          position: relative;
           width: clamp(280px, 32vw, 460px);
-          height: auto;
-          margin: 24px auto;
-          display: block;
+          aspect-ratio: 1 / 1;
+          margin: 24px 0;
           animation: bb-bounce 4s ease-in-out infinite;
           filter: drop-shadow(0 20px 30px rgba(146, 39, 0, 0.4));
         }
@@ -496,7 +484,8 @@ export function BigBearsPage({ client }: Props) {
         }
         .bb-intro::before { top: 24px; left: 24px; }
         .bb-intro::after { bottom: 24px; right: 24px; }
-        .bb-intro-bear {
+        .bb-intro-bear-wrap {
+          position: relative;
           width: 88px;
           height: 88px;
           margin: 0 auto 24px;
@@ -686,10 +675,12 @@ export function BigBearsPage({ client }: Props) {
           margin: 0 auto;
           gap: 32px;
           align-items: center;
+          justify-items: center;
         }
-        .bb-mark-img {
+        .bb-mark-cell {
+          position: relative;
+          aspect-ratio: 1 / 1;
           width: 100%;
-          height: auto;
           filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.3));
           transition: transform 0.4s;
         }
@@ -743,11 +734,6 @@ export function BigBearsPage({ client }: Props) {
           margin: 0;
         }
         .bb-photo:hover { transform: translateY(-6px) rotate(-1deg); }
-        .bb-photo-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
         .bb-photo figcaption {
           position: absolute;
           bottom: 8px;
@@ -839,12 +825,9 @@ export function BigBearsPage({ client }: Props) {
           padding: 0;
           background: var(--bb-ink);
           position: relative;
-        }
-        .bb-wrap-img {
           width: 100%;
           height: clamp(360px, 60vh, 600px);
-          object-fit: cover;
-          display: block;
+          overflow: hidden;
         }
         .bb-wrap-info {
           background: var(--bb-yellow);
