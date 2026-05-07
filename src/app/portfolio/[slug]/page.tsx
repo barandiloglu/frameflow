@@ -7,6 +7,7 @@ import {
   getFrameNumber,
 } from "@/data/clients";
 import { ClientPage } from "./ClientPage";
+import { FEATURED_PAGES } from "./featured";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -39,6 +40,13 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const client = getClient(slug);
   if (!client) notFound();
+
+  /* Featured clients render their own bespoke component — designed in
+     their own brand voice, not the FF Reel chrome. */
+  const Featured = FEATURED_PAGES[slug];
+  if (Featured) {
+    return <Featured client={client} />;
+  }
 
   const adjacent = getAdjacentClients(client);
   const frameNumber = getFrameNumber(client);
