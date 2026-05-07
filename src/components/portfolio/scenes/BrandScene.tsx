@@ -143,6 +143,11 @@ export function BrandScene({ brand, clientName, frameNumber }: Props) {
                 </motion.p>
               )}
             </div>
+
+            {/* giant ghost numeral on the right — fills the void */}
+            <span className="bs-ghost-no" aria-hidden>
+              01
+            </span>
           </div>
 
           <div className="bs-credit">
@@ -466,6 +471,26 @@ export function BrandScene({ brand, clientName, frameNumber }: Props) {
           max-width: 1500px;
           width: 100%;
           margin: 0 auto;
+          position: relative;
+          z-index: 2;
+        }
+
+        /* giant ghost numeral — fills the right-hand void */
+        .bs-ghost-no {
+          position: absolute;
+          right: -5%;
+          bottom: -8%;
+          font-family: var(--brand-display);
+          font-style: italic;
+          font-weight: 400;
+          font-size: clamp(280px, 36vw, 520px);
+          line-height: 0.85;
+          letter-spacing: -0.04em;
+          color: var(--brand-surface);
+          opacity: 0.10;
+          pointer-events: none;
+          user-select: none;
+          z-index: 1;
         }
 
         /* eyebrow */
@@ -499,13 +524,13 @@ export function BrandScene({ brand, clientName, frameNumber }: Props) {
         .bs-wordmark {
           font-family: var(--brand-display);
           font-weight: 400;
-          font-size: clamp(64px, 11vw, 184px);
+          font-size: clamp(80px, 14vw, 240px);
           line-height: 0.92;
           letter-spacing: -0.025em;
           color: var(--brand-surface);
           margin: 0;
           text-wrap: balance;
-          max-width: 12ch;
+          max-width: 9ch;
           cursor: default;
           transition: letter-spacing 0.5s var(--ease-soft);
         }
@@ -523,14 +548,16 @@ export function BrandScene({ brand, clientName, frameNumber }: Props) {
 
         /* TAGLINE */
         .bs-tagline {
-          margin: 32px 0 0;
+          margin: 36px 0 0;
           max-width: 680px;
-          font-family: var(--brand-body);
+          font-family: var(--brand-display);
+          font-style: italic;
           font-weight: 400;
-          font-size: clamp(20px, 1.8vw, 28px);
-          line-height: 1.5;
-          letter-spacing: -0.005em;
+          font-size: clamp(28px, 2.6vw, 44px);
+          line-height: 1.2;
+          letter-spacing: -0.015em;
           color: var(--brand-surface);
+          opacity: 0.92;
         }
 
         /* BOTTOM CREDITS */

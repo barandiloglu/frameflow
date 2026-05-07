@@ -1,13 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import type { MenuPage } from "@/data/clients";
 
 type Props = { menu: readonly MenuPage[] };
 
 export function MenuScene({ menu }: Props) {
+  const [active, setActive] = useState(0);
   if (menu.length === 0) return null;
+  const current = menu[active];
 
   return (
     <section aria-label="Menu prop" className="mn-section">
@@ -23,41 +26,66 @@ export function MenuScene({ menu }: Props) {
         <span className="mn-pulse">Print · Take 01</span>
       </div>
 
-      <div className="mn-stack">
+      {/* HERO PAGE — large, centered, click-to-switch via thumbs below */}
+      <motion.figure
+        key={current.src}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+        className="mn-page"
+      >
+        <span className="mn-bracket mn-tl" aria-hidden />
+        <span className="mn-bracket mn-tr" aria-hidden />
+        <span className="mn-bracket mn-bl" aria-hidden />
+        <span className="mn-bracket mn-br" aria-hidden />
+
+        <div className="mn-page-tag">
+          <span className="mn-page-no">
+            {String(active + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
+          </span>
+          <span className="mn-page-label">
+            {current.label ?? `Spread ${String(active + 1).padStart(2, "0")}`}
+          </span>
+        </div>
+
+        <div className="mn-page-img">
+          <Image
+            src={current.src}
+            alt={current.alt}
+            width={1600}
+            height={1066}
+            sizes="(max-width: 880px) 100vw, 80vw"
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        </div>
+      </motion.figure>
+
+      {/* THUMBS — switch active page */}
+      <div className="mn-thumbs">
         {menu.map((page, i) => (
-          <motion.figure
+          <button
             key={page.src}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-            className="mn-page"
+            type="button"
+            onClick={() => setActive(i)}
+            className={`mn-thumb ${i === active ? "mn-thumb-active" : ""}`}
+            aria-label={`Show ${page.label ?? `Spread ${i + 1}`}`}
           >
-            <span className="mn-bracket mn-tl" aria-hidden />
-            <span className="mn-bracket mn-tr" aria-hidden />
-            <span className="mn-bracket mn-bl" aria-hidden />
-            <span className="mn-bracket mn-br" aria-hidden />
-
-            <div className="mn-page-tag">
-              <span className="mn-page-no">
-                {String(i + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
-              </span>
-              <span className="mn-page-label">
-                {page.label ?? `Spread ${String(i + 1).padStart(2, "0")}`}
-              </span>
-            </div>
-
-            <div className="mn-page-img">
+            <span className="mn-thumb-img">
               <Image
                 src={page.src}
-                alt={page.alt}
-                width={1600}
-                height={1066}
-                sizes="(max-width: 880px) 100vw, 80vw"
-                style={{ width: "100%", height: "auto", display: "block" }}
+                alt=""
+                fill
+                sizes="(max-width: 880px) 33vw, 280px"
+                style={{ objectFit: "contain", background: "#fffff3" }}
               />
-            </div>
-          </motion.figure>
+            </span>
+            <span className="mn-thumb-label">
+              <span className="mn-thumb-no">
+                {String(i + 1).padStart(2, "0")} / {String(menu.length).padStart(2, "0")}
+              </span>
+              {page.label ?? `Spread ${String(i + 1).padStart(2, "0")}`}
+            </span>
+          </button>
         ))}
       </div>
 
@@ -110,22 +138,16 @@ export function MenuScene({ menu }: Props) {
           50% { box-shadow: 0 0 0 6px rgba(196, 106, 44, 0); }
         }
 
-        .mn-stack {
-          display: flex;
-          flex-direction: column;
-          gap: 60px;
-        }
-
+        /* HERO PAGE */
         .mn-page {
           position: relative;
-          margin: 0;
-          padding: 32px;
+          margin: 0 auto;
+          padding: 24px;
+          max-width: 1100px;
           background: #1c1a18;
           box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.5);
           isolation: isolate;
-          transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .mn-page:hover { transform: translateY(-4px); }
 
         .mn-bracket {
           position: absolute;
@@ -134,14 +156,14 @@ export function MenuScene({ menu }: Props) {
           opacity: 0.5;
           z-index: 2;
         }
-        .mn-tl { top: 14px; left: 14px;     border-top: 1px solid; border-left: 1px solid; }
-        .mn-tr { top: 14px; right: 14px;    border-top: 1px solid; border-right: 1px solid; }
-        .mn-bl { bottom: 14px; left: 14px;  border-bottom: 1px solid; border-left: 1px solid; }
-        .mn-br { bottom: 14px; right: 14px; border-bottom: 1px solid; border-right: 1px solid; }
+        .mn-tl { top: 12px; left: 12px;     border-top: 1px solid; border-left: 1px solid; }
+        .mn-tr { top: 12px; right: 12px;    border-top: 1px solid; border-right: 1px solid; }
+        .mn-bl { bottom: 12px; left: 12px;  border-bottom: 1px solid; border-left: 1px solid; }
+        .mn-br { bottom: 12px; right: 12px; border-bottom: 1px solid; border-right: 1px solid; }
 
         .mn-page-tag {
           position: absolute;
-          top: 18px;
+          top: 16px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 3;
@@ -158,15 +180,66 @@ export function MenuScene({ menu }: Props) {
         .mn-page-img {
           position: relative;
           z-index: 1;
-          margin-top: 28px;
+          margin-top: 24px;
           background: #fffff3;
+        }
+
+        /* THUMB ROW */
+        .mn-thumbs {
+          margin-top: 24px;
+          display: grid;
+          grid-template-columns: repeat(${menu.length}, 1fr);
+          gap: 12px;
+        }
+
+        .mn-thumb {
+          position: relative;
+          padding: 8px;
+          background: #1c1a18;
+          border: 1px solid transparent;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                      border-color 0.3s ease,
+                      opacity 0.3s ease;
+          opacity: 0.6;
+          color: var(--ff-ivory);
+        }
+        .mn-thumb:hover { opacity: 0.95; transform: translateY(-3px); }
+        .mn-thumb-active {
+          opacity: 1;
+          border-color: var(--ff-amber);
+        }
+
+        .mn-thumb-img {
+          position: relative;
+          aspect-ratio: 3 / 2;
+          background: #fffff3;
+          overflow: hidden;
+        }
+
+        .mn-thumb-label {
+          font-family: var(--ff-mono);
+          font-size: 9px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: rgba(255, 254, 235, 0.7);
+          padding: 0 4px 4px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .mn-thumb-no {
+          color: var(--ff-amber);
         }
 
         @media (max-width: 880px) {
           .mn-section { margin-left: 18px; margin-right: 18px; padding: 60px 0; }
-          .mn-stack { gap: 32px; }
-          .mn-page { padding: 22px; }
+          .mn-page { padding: 18px; }
           .mn-page-img { margin-top: 22px; }
+          .mn-thumbs { grid-template-columns: 1fr 1fr 1fr; }
         }
 
         @media (prefers-reduced-motion: reduce) {

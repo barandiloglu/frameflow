@@ -53,48 +53,81 @@ export function PhotosScene({ photos }: Props) {
         <span className="ps-pulse">Reel · Take 01</span>
       </div>
 
-      {/* HERO — portrait 4:5, centered */}
-      <div
-        ref={heroRef}
-        className={`ps-hero ${paused ? "ps-paused" : ""}`}
-        aria-live="polite"
-      >
-        <span className="ps-bracket ps-tl" aria-hidden />
-        <span className="ps-bracket ps-tr" aria-hidden />
-        <span className="ps-bracket ps-bl" aria-hidden />
-        <span className="ps-bracket ps-br" aria-hidden />
-
-        {photos.map((p, i) => (
-          <div
-            key={p.src}
-            className={`ps-frame ${i === active ? "ps-active" : ""}`}
-            aria-hidden={i !== active}
-          >
-            <Image
-              src={p.src}
-              alt={p.alt}
-              fill
-              sizes="(max-width: 880px) 100vw, 720px"
-              priority={i === 0}
-              style={{ objectFit: "cover" }}
-            />
-            <span className="ps-grain" aria-hidden />
+      {/* THREE-COLUMN VIEWING ROOM: left meta · hero · right meta */}
+      <div className="ps-viewer">
+        {/* LEFT META — counter + photography credit */}
+        <div className="ps-side ps-side-left">
+          <div className="ps-side-top">
+            <span className="ps-side-eyebrow">Now showing</span>
+            <span className="ps-side-counter">
+              <b>{String(active + 1).padStart(2, "0")}</b>
+              <span className="ps-side-counter-sep">/</span>
+              <span className="ps-side-counter-total">
+                {String(photos.length).padStart(2, "0")}
+              </span>
+            </span>
           </div>
-        ))}
-
-        <div className="ps-counter">
-          <b>{String(active + 1).padStart(2, "0")}</b>
-          <span style={{ opacity: 0.5 }}>
-            &nbsp;/&nbsp;{String(photos.length).padStart(2, "0")}
-          </span>
-        </div>
-        <div className="ps-progress-track">
-          <span className="ps-progress-bar" key={`progress-${active}-${paused}`} />
+          <div className="ps-side-bottom">
+            <span className="ps-side-label">Photography</span>
+            <span className="ps-side-val">Big Bears</span>
+            <span className="ps-side-label" style={{ marginTop: 16 }}>
+              Year
+            </span>
+            <span className="ps-side-val">2024</span>
+          </div>
         </div>
 
-        <div className="ps-slate">
-          <small>Frame {String(active + 1).padStart(2, "0")}</small>
-          {current.slate}
+        {/* HERO — portrait 4:5 */}
+        <div
+          ref={heroRef}
+          className={`ps-hero ${paused ? "ps-paused" : ""}`}
+          aria-live="polite"
+        >
+          <span className="ps-bracket ps-tl" aria-hidden />
+          <span className="ps-bracket ps-tr" aria-hidden />
+          <span className="ps-bracket ps-bl" aria-hidden />
+          <span className="ps-bracket ps-br" aria-hidden />
+
+          {photos.map((p, i) => (
+            <div
+              key={p.src}
+              className={`ps-frame ${i === active ? "ps-active" : ""}`}
+              aria-hidden={i !== active}
+            >
+              <Image
+                src={p.src}
+                alt={p.alt}
+                fill
+                sizes="(max-width: 880px) 100vw, 50vw"
+                priority={i === 0}
+                style={{ objectFit: "cover" }}
+              />
+              <span className="ps-grain" aria-hidden />
+            </div>
+          ))}
+
+          <div className="ps-progress-track">
+            <span
+              className="ps-progress-bar"
+              key={`progress-${active}-${paused}`}
+            />
+          </div>
+        </div>
+
+        {/* RIGHT META — slate label + reel info */}
+        <div className="ps-side ps-side-right">
+          <div className="ps-side-top">
+            <span className="ps-side-eyebrow">Slate</span>
+            <span className="ps-side-slate">{current.slate}</span>
+          </div>
+          <div className="ps-side-bottom">
+            <span className="ps-side-label">Take</span>
+            <span className="ps-side-val ps-side-val-italic">01</span>
+            <span className="ps-side-label" style={{ marginTop: 16 }}>
+              Reel
+            </span>
+            <span className="ps-side-val ps-side-val-italic">2024</span>
+          </div>
         </div>
       </div>
 
@@ -185,12 +218,103 @@ export function PhotosScene({ photos }: Props) {
           50% { box-shadow: 0 0 0 6px rgba(212, 63, 27, 0); }
         }
 
+        /* THREE-COLUMN VIEWING ROOM ------------------------------- */
+        .ps-viewer {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+          gap: 32px;
+          align-items: stretch;
+        }
+
+        .ps-side {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 24px 0;
+          font-family: var(--ff-mono);
+        }
+        .ps-side-right { text-align: right; align-items: flex-end; }
+
+        .ps-side-eyebrow {
+          display: block;
+          font-size: 9px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ff-amber);
+          margin-bottom: 18px;
+        }
+        .ps-side-counter {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-family: var(--font-display);
+          font-style: italic;
+          font-size: clamp(72px, 8vw, 120px);
+          line-height: 0.85;
+          letter-spacing: -0.02em;
+          color: var(--ff-ivory);
+        }
+        .ps-side-counter b { font-weight: 400; }
+        .ps-side-counter-sep {
+          font-family: var(--ff-mono);
+          font-style: normal;
+          font-size: 0.4em;
+          letter-spacing: 0.2em;
+          color: rgba(255, 254, 235, 0.4);
+          margin: 0 4px;
+        }
+        .ps-side-counter-total {
+          font-family: var(--ff-mono);
+          font-style: normal;
+          font-size: 0.32em;
+          letter-spacing: 0.18em;
+          color: rgba(255, 254, 235, 0.55);
+        }
+
+        .ps-side-slate {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-size: clamp(28px, 2.6vw, 44px);
+          letter-spacing: -0.02em;
+          line-height: 1.05;
+          color: var(--ff-ivory);
+          display: block;
+          max-width: 12ch;
+          /* fade in/out as it changes */
+          animation: ps-slate-in 0.6s ease;
+        }
+        @keyframes ps-slate-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .ps-side-bottom {
+          display: flex;
+          flex-direction: column;
+        }
+        .ps-side-label {
+          font-size: 9px;
+          letter-spacing: 0.30em;
+          text-transform: uppercase;
+          color: rgba(255, 254, 235, 0.4);
+          margin-bottom: 4px;
+        }
+        .ps-side-val {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-size: 24px;
+          letter-spacing: -0.01em;
+          color: var(--ff-ivory);
+          line-height: 1;
+        }
+        .ps-side-val-italic { font-family: var(--font-display); font-style: italic; }
+
         /* HERO ----------------------------------------------------- */
         .ps-hero {
           position: relative;
           aspect-ratio: 4 / 5;
-          max-width: 720px;
-          margin: 0 auto;
+          width: 100%;
+          margin: 0;
           overflow: hidden;
           isolation: isolate;
           background: #1c1a18;
@@ -382,13 +506,16 @@ export function PhotosScene({ photos }: Props) {
           text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
         }
 
+        @media (max-width: 1080px) {
+          .ps-viewer { grid-template-columns: 1fr; gap: 24px; }
+          .ps-side { padding: 0; flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 24px; }
+          .ps-side-right { text-align: left; align-items: flex-start; }
+          .ps-side-counter { font-size: 56px; }
+          .ps-side-slate { font-size: 24px; }
+        }
         @media (max-width: 880px) {
           .ps-section { margin-left: 18px; margin-right: 18px; padding: 60px 0; }
-          .ps-hero { max-width: 100%; }
-          .ps-counter, .ps-progress-track { top: 14px; }
-          .ps-progress-track { right: 14px; width: 70px; }
-          .ps-counter { left: 14px; }
-          .ps-slate { left: 14px; right: 14px; bottom: 14px; }
+          .ps-progress-track { top: 14px; right: 14px; width: 70px; }
           .ps-filmstrip { overflow-x: auto; padding: 18px 12px 22px; }
           .ps-filmstrip-track {
             grid-template-columns: repeat(12, 80px);

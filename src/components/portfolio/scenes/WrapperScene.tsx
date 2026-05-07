@@ -38,28 +38,66 @@ export function WrapperScene({ wrapper }: Props) {
           08
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-          className="wp-print-wrap"
-        >
-          <div className="wp-print">
-            <Image
-              src={primary.src}
-              alt={primary.alt}
-              width={1600}
-              height={900}
-              sizes="(max-width: 880px) 100vw, 960px"
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-              }}
-            />
+        <div className="wp-grid">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            className="wp-print-wrap"
+          >
+            <div className="wp-print">
+              <Image
+                src={primary.src}
+                alt={primary.alt}
+                width={1600}
+                height={900}
+                sizes="(max-width: 880px) 100vw, 720px"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                }}
+              />
+            </div>
+          </motion.div>
+
+          {/* RIGHT INFO COLUMN — usage specs */}
+          <div className="wp-info">
+            <p className="wp-info-eyebrow">
+              <span className="wp-info-rule" />
+              Print spec
+            </p>
+            <h3 className="wp-info-title">
+              <em>Loaded</em>
+              <br />
+              by Bears.
+            </h3>
+            <p className="wp-info-body">
+              The take-away wrapper turns the brand wordmark and bear monogram
+              into a typographic pattern — every ingredient on the menu, every
+              bear, on every sheet of kraft.
+            </p>
+            <div className="wp-info-specs">
+              <div className="wp-info-spec">
+                <span className="wp-info-label">Stock</span>
+                <span className="wp-info-val">Kraft · 60gsm</span>
+              </div>
+              <div className="wp-info-spec">
+                <span className="wp-info-label">Ink</span>
+                <span className="wp-info-val">Bear Yellow</span>
+              </div>
+              <div className="wp-info-spec">
+                <span className="wp-info-label">Format</span>
+                <span className="wp-info-val">320 × 320 mm</span>
+              </div>
+              <div className="wp-info-spec">
+                <span className="wp-info-label">Use</span>
+                <span className="wp-info-val">Take-away · Tray liner</span>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="wp-credit">
           <span>
@@ -216,17 +254,21 @@ export function WrapperScene({ wrapper }: Props) {
           font-weight: 400;
         }
 
-        .wp-print-wrap {
+        .wp-grid {
           position: relative;
           z-index: 2;
           display: grid;
-          place-items: center;
+          grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+          gap: 56px;
+          align-items: center;
           padding: 56px 0 32px;
+        }
+
+        .wp-print-wrap {
           perspective: 2000px;
         }
         .wp-print {
           width: 100%;
-          max-width: 960px;
           transform: rotateY(-2deg) rotateX(2deg);
           transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
           box-shadow:
@@ -235,6 +277,77 @@ export function WrapperScene({ wrapper }: Props) {
         }
         .wp-print:hover {
           transform: rotateY(2deg) rotateX(-2deg);
+        }
+
+        /* RIGHT INFO COLUMN */
+        .wp-info {
+          color: var(--ff-ivory);
+        }
+        .wp-info-eyebrow {
+          font-family: var(--ff-mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ff-amber);
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 24px;
+        }
+        .wp-info-rule {
+          display: block;
+          width: 28px;
+          height: 1px;
+          background: var(--ff-amber);
+        }
+        .wp-info-title {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-weight: 400;
+          font-size: clamp(48px, 5vw, 80px);
+          line-height: 0.92;
+          letter-spacing: -0.025em;
+          color: var(--ff-ivory);
+          margin: 0 0 28px;
+        }
+        .wp-info-title em {
+          color: #f3a805;
+        }
+        .wp-info-body {
+          font-family: "Nunito", system-ui, sans-serif;
+          font-weight: 300;
+          font-size: 15px;
+          line-height: 1.65;
+          color: rgba(255, 254, 235, 0.7);
+          margin: 0 0 36px;
+          max-width: 38ch;
+        }
+        .wp-info-specs {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          padding-top: 24px;
+          border-top: 1px solid rgba(255, 254, 235, 0.12);
+        }
+        .wp-info-spec {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 16px;
+          font-family: var(--ff-mono);
+        }
+        .wp-info-label {
+          font-size: 9px;
+          letter-spacing: 0.30em;
+          text-transform: uppercase;
+          color: rgba(255, 254, 235, 0.5);
+        }
+        .wp-info-val {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-size: 18px;
+          letter-spacing: -0.01em;
+          color: var(--ff-ivory);
         }
 
         .wp-credit {
@@ -260,12 +373,14 @@ export function WrapperScene({ wrapper }: Props) {
           letter-spacing: 0.22em;
         }
 
+        @media (max-width: 1080px) {
+          .wp-grid { grid-template-columns: 1fr; gap: 32px; }
+        }
         @media (max-width: 880px) {
           .wp-section { margin-left: 18px; margin-right: 18px; padding: 60px 0; }
           .wp-stage { padding: 56px 24px; min-height: 0; }
           .wp-studio-tag { top: 18px; left: 18px; font-size: 9px; }
           .wp-take { top: 18px; right: 18px; font-size: 18px; }
-          .wp-print-wrap { padding: 64px 0 16px; }
           .wp-print:hover { transform: rotateY(-2deg) rotateX(2deg); }
         }
 
