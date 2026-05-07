@@ -37,15 +37,21 @@ export function LoadingTransition({
   const [percent, setPercent] = useState(0);
   const [clock, setClock] = useState("00:01:23");
 
-  /* lock body scroll while visible */
+  /* lock body scroll while visible. Restore when the loader is done
+     (the cleanup function never fires by itself because the component
+     stays mounted by its parent — it just renders null after unmount). */
   useEffect(() => {
     if (typeof document === "undefined") return;
-    const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = "";
     };
   }, []);
+  useEffect(() => {
+    if (done && typeof document !== "undefined") {
+      document.body.style.overflow = "";
+    }
+  }, [done]);
 
   /* tick the percent counter */
   useEffect(() => {
@@ -94,27 +100,38 @@ export function LoadingTransition({
 
   if (unmounted) return null;
 
-  /* char cascade */
+  /* char cascade — split into words first so each word is atomic for
+     line wrapping (each char is display: inline-block, so without a
+     word wrapper the browser would happily break "Potato" into "Po"
+     and "tato"). */
   const baseDelay = 0.6;
   const step = 0.04;
   let charI = 0;
-  const titleChars = Array.from(clientName).map((ch) => {
-    if (ch === " ") {
-      const node = <span key={`sp-${charI}`}>&nbsp;</span>;
+  const titleNodes = clientName.split(" ").flatMap((word, wi, arr) => {
+    const charSpans = Array.from(word).map((ch) => {
+      const delay = baseDelay + charI * step;
       charI++;
-      return node;
-    }
-    const delay = baseDelay + charI * step;
-    charI++;
-    return (
-      <span
-        key={`ch-${charI}`}
-        className="ffl-char"
-        style={{ animationDelay: `${delay}s` }}
-      >
-        {ch}
+      return (
+        <span
+          key={`c-${wi}-${charI}`}
+          className="ffl-char"
+          style={{ animationDelay: `${delay}s` }}
+        >
+          {ch}
+        </span>
+      );
+    });
+    const wordEl = (
+      <span key={`w-${wi}`} className="ffl-word">
+        {charSpans}
       </span>
     );
+    if (wi === arr.length - 1) return [wordEl];
+    /* keep an actual space character between words so the line can
+       break here. The cascade index advances by one to preserve
+       prototype rhythm. */
+    charI++;
+    return [wordEl, " "];
   });
 
   return (
@@ -149,7 +166,7 @@ export function LoadingTransition({
             {year ? ` · ${year}` : ""}
           </p>
           <h1 className="ffl-title" aria-label={clientName}>
-            {titleChars}
+            {titleNodes}
           </h1>
           {scope.length > 0 && (
             <div className="ffl-scope">
@@ -369,6 +386,10 @@ const LOADER_CSS = `
   color: #ffffeb;
   margin: 0;
   max-width: 16ch;
+}
+.ffl-word {
+  display: inline-block;
+  white-space: nowrap;
 }
 .ffl-char {
   display: inline-block;
