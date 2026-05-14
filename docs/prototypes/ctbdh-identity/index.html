@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CTBDH — Mark & Identity (spread prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+/>
+<style>
+  :root{
+    --paper:   #f4eee2;
+    --paper-2: #ebe2cf;
+    --paper-d: #d8c9aa;
+    --rule:    #c2b289;
+    --ink:     #1a120a;
+    --ink-2:   #574a36;
+    --ink-3:   #8a7c64;
+    --red:     #b91d1d;
+    --red-d:   #7a0e0e;
+    --black:   #0a0a0a;
+    --black-2: #141414;
+
+    --serif: "Fraunces", Georgia, serif;
+    --sans:  "Inter", system-ui, sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body{
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+  }
+  /* paper grain */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.18  0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  }
+
+  /* tiny context strip so we can see how it joins the page */
+  .context-pre, .context-post{
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 48px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: center;
+  }
+  .context-pre b, .context-post b { color: var(--red); font-weight: 500; }
+
+  /* ───────────────────────────────────────────────
+     MARK & IDENTITY SPREAD
+     ─────────────────────────────────────────────── */
+  .ct-identity{
+    padding: 120px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* HEAD ─────────────────────────────────────── */
+  .ct-identity-head{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: end;
+    padding-bottom: 72px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 72px;
+  }
+  .ct-identity-head .lead .label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .ct-identity-head .lead h2{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(36px, 4.4vw, 64px);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .ct-identity-head .lead h2 b { font-style: normal; font-weight: 400; }
+  .ct-identity-head .lead .turkish{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+  .ct-identity-head .body p{
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    margin-bottom: 18px;
+    max-width: 56ch;
+  }
+  .ct-identity-head .body p:last-child { margin-bottom: 0; }
+  .ct-identity-head .body em{ color: var(--red); font-style: italic; }
+  .ct-identity-head .body strong{ color: var(--ink); font-weight: 600; }
+
+  /* STAGE — the lockup on its native black surface ─── */
+  .ct-identity-stage{
+    position: relative;
+    background: var(--black);
+    color: var(--paper);
+    padding: clamp(56px, 7vw, 96px) clamp(40px, 6vw, 96px);
+    border: 1px solid var(--black);
+    box-shadow:
+      0 1px 0 var(--paper-d) inset,
+      0 60px 80px -60px rgba(20,12,4,0.45);
+    margin-bottom: 18px;
+  }
+  .ct-identity-stage::before{
+    content:"";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(244,238,226,0.06);
+    pointer-events: none;
+  }
+  .ct-identity-stage-rail{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(244,238,226,0.55);
+    margin-bottom: clamp(40px, 5vw, 64px);
+    position: relative;
+    z-index: 1;
+  }
+  .ct-identity-stage-rail .red { color: var(--red); }
+  .ct-identity-stage-rail .dot{
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    vertical-align: middle;
+    margin: 0 8px 2px;
+  }
+  .ct-identity-stage-lockup{
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .ct-identity-stage-cap{
+    margin-top: clamp(48px, 6vw, 72px);
+    padding-top: 32px;
+    border-top: 1px solid rgba(244,238,226,0.12);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(244,238,226,0.5);
+    position: relative;
+    z-index: 1;
+  }
+  .ct-identity-stage-cap b { color: var(--paper); font-weight: 500; }
+  .ct-identity-stage-caption{
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: center;
+    margin-bottom: 72px;
+  }
+  .ct-identity-stage-caption b { color: var(--red); font-weight: 500; }
+
+  /* DESIGN NOTES grid (ligature, wordmark, system) ─── */
+  .ct-identity-notes{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 80px;
+  }
+  .ct-identity-notes > article{
+    padding: 36px 32px;
+    border-left: 1px solid var(--rule);
+  }
+  .ct-identity-notes > article:first-child{ border-left: 0; }
+  .ct-identity-notes .n{
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .ct-identity-notes h4{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .ct-identity-notes p{
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  /* VARIANTS — three usage frames ─────────────── */
+  .ct-identity-variants{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .ct-identity-variants figure{
+    display: flex;
+    flex-direction: column;
+  }
+  .ct-identity-variants .frame{
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--rule);
+    display: grid;
+    place-items: center;
+    padding: 14%;
+    position: relative;
+  }
+  .ct-identity-variants .frame.dark{
+    background: var(--black);
+    border-color: var(--black);
+  }
+  .ct-identity-variants .frame.paper{
+    background: var(--paper-2);
+  }
+  .ct-identity-variants .frame.cobrand{
+    background: var(--paper);
+    padding: 8%;
+    flex-direction: column;
+  }
+  .ct-identity-variants .frame img{
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .ct-identity-variants figcaption{
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    gap: 16px;
+  }
+  .ct-identity-variants figcaption .role{ color: var(--red); font-weight: 500; }
+  .ct-identity-variants figcaption .spec{ color: var(--ink-2); }
+
+  /* co-brand mini composition */
+  .cobrand-card{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    height: 100%;
+    background: var(--paper);
+    padding: 14% 12%;
+    border: 1px solid var(--rule);
+    text-align: left;
+  }
+  .cobrand-card .cb-top{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cobrand-card .cb-top .cb-mark{
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .cobrand-card .cb-top .cb-mark img{ width:100%; height:100%; object-fit: contain; }
+  .cobrand-card .cb-top .cb-mem{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .cobrand-card .cb-tag{
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .cobrand-card .cb-foot{
+    margin-top: auto;
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* responsive */
+  @media (max-width: 960px){
+    .ct-identity{ padding: 80px 28px; }
+    .ct-identity-head{ grid-template-columns: 1fr; gap: 28px; padding-bottom: 48px; margin-bottom: 48px; }
+    .ct-identity-notes{ grid-template-columns: 1fr; }
+    .ct-identity-notes > article{ border-left: 0; border-top: 1px solid var(--rule); }
+    .ct-identity-notes > article:first-child{ border-top: 0; }
+    .ct-identity-variants{ grid-template-columns: 1fr; gap: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONTEXT ABOVE (Foreword sign-off) -->
+<div class="context-pre">
+  · End of Foreword · <b>CTBDH Editorial</b> · Concord &amp; Toronto · MMXXV ·
+</div>
+
+<!-- ─────────────────────────────────────────────
+     MARK & IDENTITY · the new spread
+     ───────────────────────────────────────────── -->
+<section class="ct-identity">
+
+  <!-- HEAD -->
+  <header class="ct-identity-head">
+    <div class="lead">
+      <p class="label">Mark · İşaret · II</p>
+      <h2>
+        A ligature for <b>a network.</b>
+      </h2>
+      <p class="turkish">Bir ağ için, tek bir bağ.</p>
+    </div>
+    <div class="body">
+      <p>
+        Before the films, the <strong>flag.</strong> The mark we made for CTBDH is
+        a lower-case <em>ct</em> ligature: the C&rsquo;s arc and the T&rsquo;s
+        stem share a single curve, the way two business cards share a coffee
+        table. One letter for <strong>Canada</strong>, one for <strong>Türkiye</strong>
+        — and a slash through both, dropping from upper right to lower left
+        like a signature underline.
+      </p>
+      <p>
+        It lives in two registers. <em>Red on black</em> is the network voice
+        — the umbrella, the masthead, the credit card. <em>Mark alone on
+        paper</em> is the field voice — for member businesses to flag
+        affiliation on their own surfaces without adopting CTBDH&rsquo;s house
+        styling wholesale.
+      </p>
+    </div>
+  </header>
+
+  <!-- STAGE: primary lockup on black -->
+  <div class="ct-identity-stage">
+    <div class="ct-identity-stage-rail">
+      <span><span class="red">●</span> &nbsp; Primary lockup · master</span>
+      <span>Black &middot; <span class="dot"></span> Red &middot; <span class="dot" style="background:#f4eee2"></span> Paper</span>
+      <span>Plate № <span class="red">II.01</span></span>
+    </div>
+    <img class="ct-identity-stage-lockup"
+         src="/portfolio/ctbdh/logo/ctbdh-primary.png"
+         alt="CTBDH primary lockup — red ct ligature with white wordmark on black" />
+    <div class="ct-identity-stage-cap">
+      <span><b>Wordmark</b> · Canada &middot; Türkiye &middot; Business &middot; Development &middot; Hub</span>
+      <span>Mark <b>red #B91D1D</b> &nbsp;/&nbsp; Surface <b>black #0A0A0A</b></span>
+      <span>Clearspace <b>= 1× cap-height</b></span>
+    </div>
+  </div>
+  <p class="ct-identity-stage-caption">
+    fig. ii — the lockup on its native surface. <b>red on black, always.</b>
+  </p>
+
+  <!-- DESIGN NOTES -->
+  <div class="ct-identity-notes">
+    <article>
+      <p class="n">No. 01 · The ligature</p>
+      <h4>Two letters, one curve.</h4>
+      <p>
+        The C and the T share a single bowl — the C&rsquo;s arc continues
+        directly into the T&rsquo;s crossbar without breaking. It&rsquo;s the
+        whole brief in one shape: two countries, one handshake.
+      </p>
+    </article>
+    <article>
+      <p class="n">No. 02 · The slash</p>
+      <h4>A line across both.</h4>
+      <p>
+        A diagonal stroke cuts from the T&rsquo;s shoulder down through the
+        bowl of the C — half punctuation, half passport stamp. It binds the
+        two letters into a single glyph so the mark reads as a unit, not a
+        pair.
+      </p>
+    </article>
+    <article>
+      <p class="n">No. 03 · The wordmark</p>
+      <h4>Bilingual by default.</h4>
+      <p>
+        <em>Canada · Türkiye · Business · Development · Hub.</em> Five words,
+        five lines, Inter 500. Türkiye keeps its diacritic; the wordmark is
+        never anglicised. The stack falls to the right of the mark in the
+        primary lockup.
+      </p>
+    </article>
+  </div>
+
+  <!-- VARIANTS -->
+  <div class="ct-identity-variants">
+    <figure>
+      <div class="frame dark">
+        <img src="/portfolio/ctbdh/logo/ctbdh-primary.png" alt="CTBDH primary lockup" />
+      </div>
+      <figcaption>
+        <span class="role">II.a · Primary</span>
+        <span class="spec">Black &middot; Red &middot; Paper</span>
+      </figcaption>
+    </figure>
+    <figure>
+      <div class="frame paper">
+        <img src="/portfolio/ctbdh/logo/ctbdh-mark.png" alt="CTBDH ct ligature mark" />
+      </div>
+      <figcaption>
+        <span class="role">II.b · Mark only</span>
+        <span class="spec">Paper &middot; Red mark</span>
+      </figcaption>
+    </figure>
+    <figure>
+      <div class="cobrand-card">
+        <div class="cb-top">
+          <span class="cb-mark"><img src="/portfolio/ctbdh/logo/ctbdh-mark.png" alt="" /></span>
+          <span class="cb-mem">Atlas Food &amp; Beverage</span>
+        </div>
+        <span class="cb-tag">Member · Concord, ON · est. 2014</span>
+        <span class="cb-foot">— A CTBDH member business —</span>
+      </div>
+      <figcaption>
+        <span class="role">II.c · Member co-brand</span>
+        <span class="spec">Member surfaces &middot; affiliation tag</span>
+      </figcaption>
+    </figure>
+  </div>
+
+</section>
+
+<!-- CONTEXT BELOW (Programme head) -->
+<div class="context-post">
+  Programme · I &nbsp;—&nbsp; the screenings, <b>in order.</b> &nbsp;—&nbsp; <b>10</b> films · 16:9 · ~24 min total
+</div>
+
+</body>
+</html>

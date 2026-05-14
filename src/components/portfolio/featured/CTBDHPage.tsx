@@ -412,6 +412,217 @@ export function CTBDHPage({ client }: Props) {
           </div>
         </section>
 
+        {/* MARK & IDENTITY ------------------------------------ */}
+        <section className="ct-identity">
+          <header className="ct-identity-head">
+            <div className="lead">
+              <p className="label">Mark · İşaret · II</p>
+              <h2>
+                A ligature for <b>a network.</b>
+              </h2>
+              <p className="turkish">Bir ağ için, tek bir bağ.</p>
+            </div>
+            <div className="body">
+              <p>
+                Before the films, the <strong>flag.</strong> The mark we made
+                for CTBDH is a lower-case <em>ct</em> ligature: the C&rsquo;s
+                arc and the T&rsquo;s stem share a single curve, the way two
+                business cards share a coffee table. One letter for{" "}
+                <strong>Canada</strong>, one for <strong>Türkiye</strong> —
+                and a slash through both, dropping from upper right to lower
+                left like a signature underline.
+              </p>
+              <p>
+                It lives in two registers. <em>Red on black</em> is the
+                network voice — the umbrella, the masthead, the credit card.{" "}
+                <em>Mark alone on paper</em> is the field voice — for member
+                businesses to flag affiliation on their own surfaces without
+                adopting CTBDH&rsquo;s house styling wholesale.
+              </p>
+            </div>
+          </header>
+
+          <div className="ct-identity-stage">
+            <div className="ct-identity-stage-rail">
+              <span>
+                <span className="red">●</span> &nbsp; Primary lockup · master
+              </span>
+              <span>
+                Black &middot;{" "}
+                <span className="dot" /> Red &middot;{" "}
+                <span className="dot paper" /> Paper
+              </span>
+              <span>
+                Plate № <span className="red">II.01</span>
+              </span>
+            </div>
+            <Image
+              className="ct-identity-stage-lockup"
+              src="/portfolio/ctbdh/logo/ctbdh-primary.png"
+              alt="CTBDH primary lockup — red ct ligature with white wordmark on black"
+              width={960}
+              height={960}
+            />
+            <div className="ct-identity-stage-cap">
+              <span>
+                <b>Wordmark</b> · Canada &middot; Türkiye &middot; Business
+                &middot; Development &middot; Hub
+              </span>
+              <span>
+                Mark <b>red #B91D1D</b> &nbsp;/&nbsp; Surface{" "}
+                <b>black #0A0A0A</b>
+              </span>
+              <span>
+                Clearspace <b>= 1× cap-height</b>
+              </span>
+            </div>
+          </div>
+          <p className="ct-identity-stage-caption">
+            fig. ii — the lockup on its native surface.{" "}
+            <b>red on black, always.</b>
+          </p>
+
+          <div className="ct-identity-notes">
+            <article>
+              <p className="n">No. 01 · The ligature</p>
+              <h4>Two letters, one curve.</h4>
+              <p>
+                The C and the T share a single bowl — the C&rsquo;s arc
+                continues directly into the T&rsquo;s crossbar without
+                breaking. It&rsquo;s the whole brief in one shape: two
+                countries, one handshake.
+              </p>
+            </article>
+            <article>
+              <p className="n">No. 02 · The slash</p>
+              <h4>A line across both.</h4>
+              <p>
+                A diagonal stroke cuts from the T&rsquo;s shoulder down through
+                the bowl of the C — half punctuation, half passport stamp. It
+                binds the two letters into a single glyph so the mark reads as
+                a unit, not a pair.
+              </p>
+              <div className="ct-identity-mono">
+                <div className="thumb">
+                  <Image
+                    src="/portfolio/ctbdh/logo/ctbdh-mono.png"
+                    alt="CTBDH monochrome variant — cream mark on black, no brand red"
+                    width={1080}
+                    height={1350}
+                    sizes="120px"
+                  />
+                </div>
+                <span className="cap">
+                  Mono variant &middot; <b>without brand red.</b>
+                  <small>The system survives color removal.</small>
+                </span>
+              </div>
+            </article>
+            <article>
+              <p className="n">No. 03 · The wordmark</p>
+              <h4>Bilingual by default.</h4>
+              <p>
+                <em>Canada · Türkiye · Business · Development · Hub.</em>{" "}
+                Five words, five lines, Inter 500. Türkiye keeps its
+                diacritic; the wordmark is never anglicised. The stack falls
+                to the right of the mark in the primary lockup.
+              </p>
+            </article>
+          </div>
+
+          <div className="ct-identity-variants">
+            <figure>
+              <div className="frame dark">
+                <Image
+                  src="/portfolio/ctbdh/logo/ctbdh-primary.png"
+                  alt="CTBDH primary lockup"
+                  width={960}
+                  height={960}
+                />
+              </div>
+              <figcaption>
+                <span className="role">II.a · Primary</span>
+                <span className="spec">Black &middot; Red &middot; Paper</span>
+              </figcaption>
+            </figure>
+            <figure>
+              <div className="frame paper">
+                <Image
+                  src="/portfolio/ctbdh/logo/ctbdh-mark.png"
+                  alt="CTBDH ct ligature mark"
+                  width={960}
+                  height={960}
+                />
+              </div>
+              <figcaption>
+                <span className="role">II.b · Mark only</span>
+                <span className="spec">Paper &middot; Red mark</span>
+              </figcaption>
+            </figure>
+            <figure>
+              <div className="frame photo">
+                <Image
+                  src="/portfolio/ctbdh/brand/in-toronto.png"
+                  alt="CTBDH mark + wordmark over Toronto skyline with CN Tower"
+                  width={1080}
+                  height={1350}
+                  sizes="(max-width: 960px) 100vw, 33vw"
+                />
+              </div>
+              <figcaption>
+                <span className="role">II.c · In context</span>
+                <span className="spec">Toronto &middot; the home city</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          {/* IN APPLICATION ---------------------------------- */}
+          <div className="ct-identity-application">
+            <header className="ct-identity-application-head">
+              <p className="n">Plate № II.04 · In application</p>
+              <h3>
+                The system, <b>off the page.</b>
+              </h3>
+            </header>
+            <div className="ct-identity-application-row">
+              <figure>
+                <div className="ct-identity-application-frame">
+                  <Image
+                    src="/portfolio/ctbdh/brand/stationery.png"
+                    alt="CTBDH stationery — cream paper card and gold horizontal lockup"
+                    width={1080}
+                    height={1350}
+                    sizes="(max-width: 960px) 100vw, 50vw"
+                  />
+                </div>
+                <figcaption>
+                  <span className="role">II.d · Stationery</span>
+                  <span className="spec">
+                    Letterhead &middot; cards &middot; gold horizontal lockup
+                  </span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div className="ct-identity-application-frame">
+                  <Image
+                    src="/portfolio/ctbdh/brand/wordmark-sheet.png"
+                    alt="CTBDH wordmark — typographic specimen sheet with applications"
+                    width={1080}
+                    height={1350}
+                    sizes="(max-width: 960px) 100vw, 50vw"
+                  />
+                </div>
+                <figcaption>
+                  <span className="role">II.e · Wordmark sheet</span>
+                  <span className="spec">
+                    Typographic specimen &middot; print applications
+                  </span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
         {/* PROGRAMME HEAD */}
         <header id="programme" className="ct-prog-head">
           <span className="label">Programme · I</span>
@@ -768,6 +979,384 @@ export function CTBDHPage({ client }: Props) {
           font-weight: 500;
         }
         .ct-foreword .signoff b { color: var(--ink); font-weight: 500; }
+
+        /* MARK & IDENTITY */
+        .ct-identity {
+          padding: 120px 48px;
+          max-width: 1280px;
+          margin: 0 auto;
+          border-bottom: 1px solid var(--rule);
+        }
+        .ct-identity-head {
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          gap: 80px;
+          align-items: end;
+          padding-bottom: 72px;
+          border-bottom: 1px solid var(--rule);
+          margin-bottom: 72px;
+        }
+        .ct-identity-head .lead .label {
+          font-family: var(--mono);
+          font-size: 11px;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+          color: var(--red);
+          font-weight: 500;
+          margin-bottom: 18px;
+        }
+        .ct-identity-head .lead h2 {
+          font-family: var(--serif);
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(36px, 4.4vw, 64px);
+          letter-spacing: -0.025em;
+          line-height: 1.05;
+          color: var(--ink);
+          margin-bottom: 18px;
+        }
+        .ct-identity-head .lead h2 b { font-style: normal; font-weight: 400; }
+        .ct-identity-head .lead .turkish {
+          font-family: var(--serif);
+          font-style: italic;
+          font-weight: 300;
+          font-size: 18px;
+          color: var(--ink-2);
+        }
+        .ct-identity-head .body p {
+          font-family: var(--sans);
+          font-size: 17px;
+          line-height: 1.75;
+          color: var(--ink-2);
+          margin-bottom: 18px;
+          max-width: 56ch;
+        }
+        .ct-identity-head .body p:last-child { margin-bottom: 0; }
+        .ct-identity-head .body em { color: var(--red); font-style: italic; }
+        .ct-identity-head .body strong { color: var(--ink); font-weight: 600; }
+
+        .ct-identity-stage {
+          position: relative;
+          background: var(--black);
+          color: var(--paper);
+          padding: clamp(56px, 7vw, 96px) clamp(40px, 6vw, 96px);
+          border: 1px solid var(--black);
+          box-shadow:
+            0 1px 0 var(--paper-d) inset,
+            0 60px 80px -60px rgba(20, 12, 4, 0.45);
+          margin-bottom: 18px;
+        }
+        .ct-identity-stage::before {
+          content: "";
+          position: absolute;
+          inset: 12px;
+          border: 1px solid rgba(244, 238, 226, 0.06);
+          pointer-events: none;
+        }
+        .ct-identity-stage-rail {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+          color: rgba(244, 238, 226, 0.55);
+          margin-bottom: clamp(40px, 5vw, 64px);
+          position: relative;
+          z-index: 1;
+          flex-wrap: wrap;
+          gap: 14px;
+        }
+        .ct-identity-stage-rail .red { color: var(--red); }
+        .ct-identity-stage-rail .dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          background: var(--red);
+          border-radius: 50%;
+          vertical-align: middle;
+          margin: 0 8px 2px;
+        }
+        .ct-identity-stage-rail .dot.paper { background: var(--paper); }
+        .ct-identity-stage :global(.ct-identity-stage-lockup) {
+          display: block;
+          width: 100%;
+          height: auto;
+          max-width: 760px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 1;
+        }
+        .ct-identity-stage-cap {
+          margin-top: clamp(48px, 6vw, 72px);
+          padding-top: 32px;
+          border-top: 1px solid rgba(244, 238, 226, 0.12);
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 16px;
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(244, 238, 226, 0.5);
+          position: relative;
+          z-index: 1;
+        }
+        .ct-identity-stage-cap b { color: var(--paper); font-weight: 500; }
+        .ct-identity-stage-caption {
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ink-3);
+          text-align: center;
+          margin-bottom: 72px;
+        }
+        .ct-identity-stage-caption b { color: var(--red); font-weight: 500; }
+
+        .ct-identity-notes {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0;
+          border-top: 1px solid var(--rule);
+          border-bottom: 1px solid var(--rule);
+          margin-bottom: 80px;
+        }
+        .ct-identity-notes > article {
+          padding: 36px 32px;
+          border-left: 1px solid var(--rule);
+        }
+        .ct-identity-notes > article:first-child { border-left: 0; }
+        .ct-identity-notes .n {
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--red);
+          font-weight: 500;
+          margin-bottom: 14px;
+        }
+        .ct-identity-notes h4 {
+          font-family: var(--serif);
+          font-style: italic;
+          font-weight: 400;
+          font-size: 26px;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+          color: var(--ink);
+          margin-bottom: 14px;
+        }
+        .ct-identity-notes p {
+          font-family: var(--sans);
+          font-size: 14.5px;
+          line-height: 1.65;
+          color: var(--ink-2);
+        }
+        .ct-identity-notes em { color: var(--red); font-style: italic; }
+
+        .ct-identity-variants {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+        }
+        .ct-identity-variants figure {
+          display: flex;
+          flex-direction: column;
+          margin: 0;
+        }
+        .ct-identity-variants .frame {
+          aspect-ratio: 1 / 1;
+          border: 1px solid var(--rule);
+          display: grid;
+          place-items: center;
+          padding: 14%;
+          position: relative;
+        }
+        .ct-identity-variants .frame.dark {
+          background: var(--black);
+          border-color: var(--black);
+        }
+        .ct-identity-variants .frame.paper { background: var(--paper-2); }
+        .ct-identity-variants .frame.photo {
+          padding: 0;
+          border-color: var(--rule);
+          overflow: hidden;
+        }
+        .ct-identity-variants .frame :global(img) {
+          display: block;
+          width: 100%;
+          height: auto;
+          max-height: 100%;
+          object-fit: contain;
+        }
+        .ct-identity-variants .frame.photo :global(img) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .ct-identity-variants figcaption {
+          margin-top: 14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ink-3);
+          gap: 16px;
+        }
+        .ct-identity-variants figcaption .role {
+          color: var(--red);
+          font-weight: 500;
+        }
+        .ct-identity-variants figcaption .spec { color: var(--ink-2); }
+
+        /* Mono thumbnail inside "The slash" note column */
+        .ct-identity-mono {
+          margin-top: 22px;
+          padding-top: 22px;
+          border-top: 1px solid var(--rule);
+          display: grid;
+          grid-template-columns: 88px 1fr;
+          gap: 16px;
+          align-items: center;
+        }
+        .ct-identity-mono .thumb {
+          aspect-ratio: 4 / 5;
+          background: var(--black);
+          border: 1px solid var(--black);
+          padding: 12%;
+          display: grid;
+          place-items: center;
+        }
+        .ct-identity-mono .thumb :global(img) {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .ct-identity-mono .cap {
+          font-family: var(--mono);
+          font-size: 9.5px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--ink-3);
+          line-height: 1.5;
+        }
+        .ct-identity-mono .cap b { color: var(--ink); font-weight: 500; }
+        .ct-identity-mono .cap small {
+          display: block;
+          margin-top: 6px;
+          font-size: 8.5px;
+          color: var(--ink-3);
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+        }
+
+        /* IN APPLICATION strip */
+        .ct-identity-application {
+          margin-top: 80px;
+          padding-top: 64px;
+          border-top: 1px solid var(--rule);
+        }
+        .ct-identity-application-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          flex-wrap: wrap;
+          gap: 16px;
+          margin-bottom: 40px;
+        }
+        .ct-identity-application-head .n {
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+          color: var(--red);
+          font-weight: 500;
+        }
+        .ct-identity-application-head h3 {
+          font-family: var(--serif);
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(28px, 3.4vw, 44px);
+          letter-spacing: -0.025em;
+          line-height: 1.1;
+          color: var(--ink);
+        }
+        .ct-identity-application-head h3 b {
+          font-style: normal;
+          font-weight: 400;
+        }
+        .ct-identity-application-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+        }
+        .ct-identity-application-row figure {
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        .ct-identity-application-frame {
+          aspect-ratio: 4 / 5;
+          border: 1px solid var(--rule);
+          overflow: hidden;
+          background: var(--paper-2);
+          position: relative;
+        }
+        .ct-identity-application-frame :global(img) {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .ct-identity-application-row figcaption {
+          margin-top: 14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--ink-3);
+          gap: 16px;
+        }
+        .ct-identity-application-row figcaption .role {
+          color: var(--red);
+          font-weight: 500;
+        }
+        .ct-identity-application-row figcaption .spec { color: var(--ink-2); }
+
+        @media (max-width: 960px) {
+          .ct-identity { padding: 80px 28px; }
+          .ct-identity-head {
+            grid-template-columns: 1fr;
+            gap: 28px;
+            padding-bottom: 48px;
+            margin-bottom: 48px;
+          }
+          .ct-identity-notes { grid-template-columns: 1fr; }
+          .ct-identity-notes > article {
+            border-left: 0;
+            border-top: 1px solid var(--rule);
+          }
+          .ct-identity-notes > article:first-child { border-top: 0; }
+          .ct-identity-variants { grid-template-columns: 1fr; gap: 18px; }
+          .ct-identity-application { margin-top: 56px; padding-top: 48px; }
+          .ct-identity-application-row {
+            grid-template-columns: 1fr;
+            gap: 18px;
+          }
+          .ct-identity-mono {
+            grid-template-columns: 72px 1fr;
+            gap: 14px;
+          }
+        }
 
         /* PROGRAMME */
         .ct-prog-head {
