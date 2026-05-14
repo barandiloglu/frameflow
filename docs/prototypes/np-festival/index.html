@@ -1,0 +1,3481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Immigration Film Festival 2026 · Programme Catalogue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       NORTHERN PATHWAYS — IMMIGRATION FILM FESTIVAL · MMXXVI
+       A festival programme catalogue. Cinema visual language carries
+       substantive information about an immigration consultancy: each
+       service is a real film with synopsis, cast, runtime, rating.
+       Strict palette — RED + WHITE + OFF-WHITE + CHARCOAL only.
+    ==================================================================== */
+
+    :root {
+      --paper:    #f9f9f9;       /* off-white surface */
+      --paper-w:  #ffffff;       /* white */
+      --ink:      #2c2b2b;       /* charcoal — only ink */
+      --red:      #b92025;       /* maple red — only accent */
+
+      /* derived */
+      --ink-2:    rgba(44, 43, 43, 0.78);
+      --ink-3:    rgba(44, 43, 43, 0.55);
+      --ink-4:    rgba(44, 43, 43, 0.32);
+      --ink-5:    rgba(44, 43, 43, 0.14);
+      --paper-2:  rgba(44, 43, 43, 0.04);
+      --paper-3:  rgba(44, 43, 43, 0.08);
+      --on-dark:  rgba(255, 255, 255, 0.92);
+      --on-dark-2: rgba(255, 255, 255, 0.65);
+      --on-dark-3: rgba(255, 255, 255, 0.32);
+      --on-dark-4: rgba(255, 255, 255, 0.12);
+      --on-red:   rgba(255, 255, 255, 0.85);
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FESTIVAL CHROME — bulb-light strip used in many places
+    ============================================================ */
+    .bulbs {
+      height: 14px;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 24px 14px;
+      background-repeat: repeat-x;
+      background-position: center;
+    }
+    .bulbs.dark {
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-color: var(--ink);
+    }
+
+    /* ============================================================
+       PROGRAMME COVER — the catalogue cover
+    ============================================================ */
+    .cover {
+      background: var(--ink);
+      color: var(--paper-w);
+      position: relative;
+      overflow: hidden;
+      padding: 0 0 80px;
+    }
+    .cover::before {
+      /* subtle radial spotlight */
+      content: "";
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1200px;
+      height: 1200px;
+      background: radial-gradient(circle, rgba(185,32,37,0.18), transparent 60%);
+      pointer-events: none;
+    }
+    .cover-strip {
+      padding: 14px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      border-bottom: 1px solid var(--on-dark-3);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+      position: relative;
+      z-index: 2;
+    }
+    .cover-strip b { color: var(--red); font-weight: 800; }
+    .cover-strip .center { text-align: center; letter-spacing: 0.4em; color: var(--paper-w); }
+    .cover-strip .right { text-align: right; }
+    .cover-strip .right b { color: var(--paper-w); }
+    @media (max-width: 720px) {
+      .cover-strip { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .cover-strip .right, .cover-strip .left { text-align: center; }
+    }
+
+    .cover-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .cover-pre {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-pre::before, .cover-pre::after {
+      content: "";
+      flex: 1;
+      max-width: 80px;
+      height: 1.5px;
+      background: var(--red);
+    }
+    .cover-pre::before { max-width: 80px; }
+    .cover-pre::after { flex: 0 0 0; }
+
+    .cover-title {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(56px, 10.5vw, 184px);
+      line-height: 0.82;
+      letter-spacing: -0.05em;
+      color: var(--paper-w);
+      margin-bottom: 28px;
+    }
+    .cover-title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+
+    .cover-deck {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 56px;
+      align-items: end;
+      margin-bottom: 40px;
+    }
+    .cover-deck p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.6;
+      color: var(--on-dark-2);
+      max-width: 56ch;
+    }
+    .cover-deck p b { color: var(--paper-w); font-weight: 700; }
+    .cover-deck p em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .cover-card {
+      background: var(--paper-w);
+      color: var(--ink);
+      padding: 22px 24px;
+      border: 4px solid var(--red);
+      box-shadow:
+        inset 0 0 0 4px var(--paper-w),
+        inset 0 0 0 8px var(--ink),
+        0 32px 56px -28px rgba(0,0,0,0.6);
+    }
+    .cover-card .ant {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 12px;
+    }
+    .cover-card dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .cover-card dl > div:last-child { border-bottom: 0; }
+    .cover-card dt { letter-spacing: 0.32em; }
+    .cover-card dd { color: var(--ink); font-weight: 800; letter-spacing: 0; }
+    .cover-card dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    .cover-card .stub {
+      margin-top: 12px;
+      padding: 8px;
+      background: var(--red);
+      color: var(--paper-w);
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+    }
+
+    .cover-foot {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-top: 24px;
+      border-top: 1.5px solid var(--on-dark-3);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .cover-foot b { color: var(--red); font-weight: 800; }
+    .cover-foot .center {
+      text-align: center;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      font-size: 14px;
+      color: var(--paper-w);
+    }
+    .cover-foot .center em { color: var(--red); }
+    .cover-foot .right { text-align: right; }
+    .cover-foot .right b { color: var(--paper-w); }
+    @media (max-width: 880px) {
+      .cover-inner { padding: 56px 22px 32px; }
+      .cover-deck { grid-template-columns: 1fr; gap: 32px; }
+      .cover-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .cover-foot .right, .cover-foot .center { text-align: center; }
+    }
+
+    /* ============================================================
+       LEAF — page divider (used between major sections)
+    ============================================================ */
+    .leaf {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 22px 48px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-top: 1px solid var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .leaf b { color: var(--ink); font-weight: 800; }
+    .leaf em { font-style: italic; font-weight: 500; color: var(--red); letter-spacing: 0.04em; text-transform: none; }
+    .leaf .center { text-align: center; }
+    .leaf .right { text-align: right; }
+    .leaf.dark { background: var(--ink); color: var(--on-dark-2); border-top-color: var(--on-dark-3); }
+    .leaf.dark b { color: var(--paper-w); }
+    @media (max-width: 720px) {
+      .leaf { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 18px 22px; font-size: 9px; }
+      .leaf .right, .leaf .center { text-align: center; }
+    }
+
+    /* ============================================================
+       DIRECTOR'S LETTER (pp. 02–03) — substantive intro
+    ============================================================ */
+    .letter {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+    .letter-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .letter-text { min-width: 0; }
+    .letter-pre {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .letter-pre::before {
+      content: "";
+      flex: 0 0 56px;
+      height: 1.5px;
+      background: var(--red);
+    }
+    .letter h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 36px;
+    }
+    .letter h2 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+
+    .letter-body {
+      column-count: 2;
+      column-gap: 40px;
+      column-rule: 1px solid var(--ink-5);
+      orphans: 3;
+      widows: 3;
+    }
+    .letter-body p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      margin-bottom: 1.05em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .letter-body p:first-child::first-letter {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 80px;
+      line-height: 0.78;
+      float: left;
+      padding: 8px 12px 0 0;
+      color: var(--red);
+    }
+    .letter-body p strong { font-weight: 700; color: var(--ink); }
+    .letter-body p em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .letter-sig {
+      margin-top: 32px;
+      padding-top: 22px;
+      border-top: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .letter-sig .scribble {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -0.025em;
+      color: var(--red);
+      padding: 4px 8px 6px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .letter-sig .who h5 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .letter-sig .who p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+    }
+
+    .letter-portrait {
+      background: var(--paper-w);
+      border: 1.5px solid var(--ink);
+      padding: 14px 14px 18px;
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.22);
+      position: relative;
+    }
+    .letter-portrait .tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 88px;
+      height: 22px;
+      background: var(--red);
+      mix-blend-mode: multiply;
+      opacity: 0.92;
+    }
+    .letter-portrait .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .letter-portrait .ph img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: contrast(1.04) saturate(0.96);
+    }
+    .letter-portrait .cap {
+      padding-top: 12px;
+      border-top: 4px solid var(--red);
+      margin-top: 12px;
+    }
+    .letter-portrait .cap h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .letter-portrait .cap .role {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+    .letter-portrait .cap dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      border-top: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .letter-portrait .cap dl > div:first-child { border-top: 0; }
+    .letter-portrait .cap dl dt { letter-spacing: 0.28em; }
+    .letter-portrait .cap dl dd { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .letter { padding: 56px 22px; }
+      .letter-grid { grid-template-columns: 1fr; gap: 36px; }
+      .letter-body { column-count: 1; }
+    }
+
+    /* ============================================================
+       FESTIVAL IN NUMBERS (page 04) — annual-report-style stats
+       presented as festival statistics
+    ============================================================ */
+    .stats {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 64px 48px 96px;
+    }
+    .stats-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .stats-head .ord {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(48px, 6vw, 88px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+    }
+    .stats-head .text { padding-bottom: 6px; }
+    .stats-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .stats-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(28px, 3.8vw, 52px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .stats-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .stats-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .stats-head .meta b { color: var(--ink); font-weight: 800; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border-top: 1.5px solid var(--ink);
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .stats-row > div {
+      padding: 28px 18px 32px;
+      border-left: 1px solid var(--ink);
+    }
+    .stats-row > div:first-child { border-left: 0; }
+    .stats-row dt {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 4.8vw, 64px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .stats-row dt em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .stats-row dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      line-height: 1.4;
+    }
+    .stats-row dd small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--ink-3);
+      margin-top: 4px;
+      text-transform: none;
+    }
+
+    @media (max-width: 1080px) { .stats-row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .stats { padding: 40px 22px 56px; }
+    }
+
+    /* ============================================================
+       PROGRAMME CONTENTS PAGE
+    ============================================================ */
+    .toc {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      border-top: 1px solid var(--ink-5);
+    }
+    .toc h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 4.6vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 28px;
+    }
+    .toc h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .toc ol { list-style: none; padding: 0; }
+    .toc li {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: 70px 1fr auto auto;
+      gap: 24px;
+      align-items: baseline;
+    }
+    .toc li:last-child { border-bottom: 0; }
+    .toc li .pn {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .toc li .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .toc li .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .toc li .name small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-3);
+      letter-spacing: -0.005em;
+    }
+    .toc li .runtime {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      max-width: 18ch;
+    }
+    .toc li .runtime b { color: var(--ink); font-weight: 800; }
+    .toc li .pg {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--ink-3);
+      text-align: right;
+      min-width: 64px;
+    }
+    .toc li .pg b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .toc { padding: 56px 22px; }
+      .toc li { grid-template-columns: 50px 1fr auto; }
+      .toc li .runtime { display: none; }
+    }
+
+    /* ============================================================
+       PROGRAMME — the films (each service)
+    ============================================================ */
+    .programme {
+      background: var(--paper);
+    }
+
+    .film {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+      border-top: 1px solid var(--ink-5);
+    }
+    .film:first-child { border-top: 0; }
+
+    .film-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.55fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .film-grid.alt {
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.95fr);
+    }
+    .film-grid.alt > .one-sheet { order: 2; }
+
+    /* the one-sheet poster */
+    .one-sheet {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      box-shadow: 0 32px 64px -24px rgba(0,0,0,0.4);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .one-sheet:hover { transform: translateY(-6px); }
+
+    /* poster type overlays — common */
+    .one-sheet .laurels {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+    .one-sheet .laurels .l, .one-sheet .laurels .r { opacity: 0.78; }
+
+    .one-sheet .title-block {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 6;
+    }
+    .one-sheet .ttl {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(24px, 3vw, 44px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+    .one-sheet .ttl em { font-style: italic; font-weight: 500; }
+    .one-sheet .tag {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.35;
+      max-width: 26ch;
+    }
+    .one-sheet .tag em { font-weight: 700; font-style: italic; }
+    .one-sheet .credits {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      z-index: 5;
+    }
+    .one-sheet .rating {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      z-index: 5;
+    }
+    .one-sheet .rating small {
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      margin-top: 1px;
+      opacity: 0.78;
+    }
+
+    /* === Poster 01 — EXPRESS ENTRY (red field, white bar, charcoal arrow) === */
+    .one-sheet.s01 { background: var(--red); color: var(--paper-w); }
+    .one-sheet.s01::before {
+      content: "";
+      position: absolute;
+      top: 30%;
+      left: -10%;
+      width: 130%;
+      height: 28%;
+      background: var(--paper-w);
+      transform: skewY(-12deg);
+    }
+    .one-sheet.s01::after {
+      content: "";
+      position: absolute;
+      top: 38%;
+      right: 12%;
+      width: 0;
+      height: 0;
+      border-left: 88px solid var(--ink);
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+      transform: rotate(-12deg);
+    }
+    .one-sheet.s01 .ttl em { color: var(--paper-w); }
+    .one-sheet.s01 .rating { background: var(--paper-w); color: var(--ink); border: 2px solid var(--ink); }
+
+    /* === Poster 02 — FAMILY CONNECT (off-white, two interlocked rings, soft + warm) === */
+    .one-sheet.s02 { background: var(--paper); color: var(--ink); }
+    .one-sheet.s02::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: 14%;
+      width: 38%;
+      aspect-ratio: 1;
+      border: 14px solid var(--red);
+      border-radius: 50%;
+    }
+    .one-sheet.s02::after {
+      content: "";
+      position: absolute;
+      top: 24%;
+      left: 40%;
+      width: 38%;
+      aspect-ratio: 1;
+      border: 14px solid var(--ink);
+      border-radius: 50%;
+    }
+    .one-sheet.s02 .ttl em { color: var(--red); }
+    .one-sheet.s02 .rating { background: var(--paper-w); color: var(--ink); border: 2px solid var(--ink); }
+
+    /* === Poster 03 — TEMPORARY RESIDENCE (split charcoal/paper, red diamond) === */
+    .one-sheet.s03 { background: var(--paper); color: var(--ink); }
+    .one-sheet.s03::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--ink) 0% 50%, transparent 50% 100%);
+    }
+    .one-sheet.s03::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30%;
+      aspect-ratio: 1;
+      background: var(--red);
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+    .one-sheet.s03 .ttl em { color: var(--red); }
+    .one-sheet.s03 .laurels .l, .one-sheet.s03 .laurels .r,
+    .one-sheet.s03 .credits { color: var(--paper-w); }
+    .one-sheet.s03 .rating { background: var(--paper-w); color: var(--ink); border: 2px solid var(--ink); }
+    .one-sheet.s03 .title-block { color: var(--ink); }
+
+    /* === Poster 04 — THE PR CARD (charcoal field, paper card, red stripe) === */
+    .one-sheet.s04 { background: var(--ink); color: var(--paper-w); }
+    .one-sheet.s04::before {
+      content: "";
+      position: absolute;
+      top: 22%;
+      left: 14%;
+      right: 14%;
+      bottom: 36%;
+      background: var(--paper-w);
+      box-shadow: 8px 8px 0 var(--red);
+    }
+    .one-sheet.s04::after {
+      content: "";
+      position: absolute;
+      top: 28%;
+      left: 22%;
+      right: 22%;
+      height: 12px;
+      background: var(--red);
+    }
+    .one-sheet.s04 .ttl em { color: var(--paper-w); }
+    .one-sheet.s04 .rating { background: var(--paper-w); color: var(--ink); border: 2px solid var(--ink); }
+
+    /* === Poster 05 — CITIZENSHIP (paper field, red M-tree silhouette) === */
+    .one-sheet.s05 { background: var(--paper-w); color: var(--ink); }
+    .one-sheet.s05::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 80px solid transparent;
+      border-right: 80px solid transparent;
+      border-bottom: 130px solid var(--red);
+    }
+    .one-sheet.s05::after {
+      content: "";
+      position: absolute;
+      top: 47%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 130px;
+      background: var(--ink);
+    }
+    .one-sheet.s05 .ttl em { color: var(--red); }
+    .one-sheet.s05 .rating { background: var(--ink); color: var(--paper-w); }
+
+    /* film side: number + title + everything */
+    .film-side { min-width: 0; }
+    .film-num {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .film-num::before {
+      content: "";
+      flex: 0 0 36px;
+      height: 1.5px;
+      background: var(--red);
+    }
+    .film-num b {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 80px;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      line-height: 0.85;
+      margin-left: 6px;
+    }
+
+    .film-title {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 0.9;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .film-title em { font-style: italic; font-weight: 500; color: var(--red); }
+    .film-tag {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(16px, 1.6vw, 19px);
+      line-height: 1.45;
+      color: var(--ink-2);
+      margin-bottom: 28px;
+      max-width: 44ch;
+    }
+    .film-tag em { font-weight: 700; color: var(--red); font-style: italic; }
+
+    /* synopsis — substantive paragraph */
+    .synopsis {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      margin-bottom: 28px;
+      max-width: 64ch;
+    }
+    .synopsis strong { color: var(--ink); font-weight: 700; }
+    .synopsis em { font-style: italic; color: var(--red); font-weight: 500; }
+    .synopsis .smallcaps {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* the credits panel — tabular detail */
+    .credits-panel {
+      border: 1.5px solid var(--ink);
+      background: var(--paper-w);
+      padding: 0;
+    }
+    .credits-panel .head {
+      padding: 12px 18px;
+      background: var(--ink);
+      color: var(--paper-w);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      border-bottom: 4px solid var(--red);
+    }
+    .credits-panel .head .l {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .credits-panel .head .l em { font-style: italic; font-weight: 500; color: var(--red); letter-spacing: 0.04em; }
+    .credits-panel .head .r {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .credits-panel .head .r b { color: var(--paper-w); font-weight: 800; }
+
+    .credits-panel dl > div {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 14px;
+      padding: 11px 18px;
+      border-top: 1px dashed var(--ink-5);
+      align-items: baseline;
+    }
+    .credits-panel dl > div:first-child { border-top: 0; }
+    .credits-panel dt {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-panel dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .credits-panel dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    .credits-panel dd .pill {
+      display: inline-block;
+      padding: 2px 7px;
+      background: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin: 2px 4px 2px 0;
+    }
+    .credits-panel dd .pill.r { background: var(--red); color: var(--paper-w); }
+
+    .credits-panel .doctrine-row {
+      padding: 12px 18px;
+      background: var(--paper);
+      border-top: 1.5px solid var(--ink);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+    .credits-panel .doctrine-row .l {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-panel .doctrine-row .l b { color: var(--ink); font-weight: 800; letter-spacing: -0.005em; text-transform: none; font-size: 13px; margin-left: 8px; }
+    .credits-panel .doctrine-row .l b em { font-style: italic; font-weight: 500; color: var(--red); }
+    .credits-panel .doctrine-row .r {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--paper-w);
+      padding: 4px 10px;
+      border: 1px solid var(--ink);
+    }
+
+    /* festival quote / audience Q&A snippet — used after credits */
+    .qa {
+      margin-top: 28px;
+      padding: 22px 24px;
+      background: var(--ink);
+      color: var(--on-dark);
+      border-left: 6px solid var(--red);
+    }
+    .qa .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .qa blockquote {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--paper-w);
+      letter-spacing: -0.005em;
+    }
+    .qa blockquote em { font-style: italic; font-weight: 700; color: var(--red); }
+    .qa .from {
+      margin-top: 12px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .qa .from b { color: var(--paper-w); }
+
+    @media (max-width: 980px) {
+      .film { padding: 56px 22px; }
+      .film-grid, .film-grid.alt { grid-template-columns: 1fr; gap: 36px; }
+      .film-grid.alt > .one-sheet { order: 0; }
+      .film-num b { font-size: 56px; }
+    }
+
+    /* ============================================================
+       DIRECTOR PROFILE PAGE (after the films)
+    ============================================================ */
+    .director {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+      border-top: 4px double var(--ink);
+    }
+    .director-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .director-portrait {
+      background: var(--paper-w);
+      border: 4px solid var(--ink);
+      box-shadow: 8px 8px 0 var(--red), 0 24px 56px -28px rgba(0,0,0,0.28);
+      padding: 14px 14px 18px;
+      position: relative;
+    }
+    .director-portrait::before {
+      content: "DIRECTOR";
+      position: absolute;
+      top: 16px;
+      left: -12px;
+      padding: 6px 14px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      transform: rotate(-3deg);
+      z-index: 5;
+      box-shadow: 0 8px 16px -8px rgba(0,0,0,0.5);
+    }
+    .director-portrait .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .director-portrait .ph img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(0.96); }
+    .director-portrait .nameplate {
+      padding-top: 14px;
+      border-top: 4px solid var(--red);
+      margin-top: 14px;
+    }
+    .director-portrait .nameplate h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 24px;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .director-portrait .nameplate .role {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .director-portrait .nameplate dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-top: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .director-portrait .nameplate dl > div:first-child { border-top: 0; }
+    .director-portrait .nameplate dl dt { letter-spacing: 0.28em; }
+    .director-portrait .nameplate dl dd { color: var(--ink); font-weight: 800; }
+
+    .director-bio { min-width: 0; padding-top: 8px; }
+    .director-bio .pre {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .director-bio h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .director-bio h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .director-bio p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      max-width: 64ch;
+    }
+    .director-bio p strong { font-weight: 700; color: var(--ink); }
+    .director-bio p em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .filmography {
+      margin-top: 28px;
+      padding: 18px 22px;
+      background: var(--paper);
+      border-left: 6px solid var(--red);
+    }
+    .filmography .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .filmography ul {
+      list-style: none;
+      padding: 0;
+    }
+    .filmography ul li {
+      padding: 6px 0;
+      border-top: 1px dashed var(--ink-5);
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      gap: 12px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      align-items: baseline;
+    }
+    .filmography ul li:first-child { border-top: 0; }
+    .filmography ul li .yr {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+    }
+    .filmography ul li .meta {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    @media (max-width: 880px) {
+      .director { padding: 56px 22px; }
+      .director-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    /* ============================================================
+       BOX OFFICE — calculator with substantial framing
+    ============================================================ */
+    .boxoffice {
+      background: var(--ink);
+      color: var(--paper-w);
+      padding: 96px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .boxoffice .bulbs-top, .boxoffice .bulbs-bot {
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 24px 14px;
+      background-repeat: repeat-x;
+      pointer-events: none;
+    }
+    .boxoffice .bulbs-top { top: 0; }
+    .boxoffice .bulbs-bot { bottom: 0; }
+
+    .bo-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .bo-text { min-width: 0; }
+    .bo-text .pre {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .bo-text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--paper-w);
+      margin-bottom: 22px;
+    }
+    .bo-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .bo-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--on-dark-2);
+      margin-bottom: 1em;
+      max-width: 50ch;
+    }
+    .bo-text p strong { font-weight: 700; color: var(--paper-w); }
+    .bo-text p em { font-style: italic; color: var(--red); font-weight: 500; }
+    .bo-text .pull {
+      margin-top: 22px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border-left: 4px solid var(--red);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--on-dark);
+    }
+    .bo-text .pull b { color: var(--red); font-weight: 800; }
+
+    /* the box-office display unit */
+    .booth {
+      background: var(--paper-w);
+      color: var(--ink);
+      border: 6px solid var(--paper-w);
+      box-shadow:
+        inset 0 0 0 4px var(--ink),
+        0 32px 64px -32px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .booth::before {
+      content: "BOX OFFICE";
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 22px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+
+    .booth-head {
+      padding: 22px 30px;
+      background: var(--paper);
+      border-bottom: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .booth-head .left {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .booth-head .left b { color: var(--red); font-weight: 800; }
+    .booth-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.18em;
+      color: var(--ink);
+    }
+    .booth-head .center small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.4em;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    .booth-head .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      text-align: right;
+    }
+    .booth-head .right::before { content: "● "; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+
+    .booth-body {
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+    }
+    .booth-form { display: flex; flex-direction: column; gap: 8px; }
+    .booth-form .head {
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 6px;
+    }
+    .booth-form .head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .booth-form .head h4 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .booth-form .head p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+    .booth-form .row {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 14px;
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+    }
+    .booth-form .row.on { border-color: var(--red); background: var(--paper-w); }
+    .booth-form .row .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .booth-form .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+    .booth-form .row .v {
+      padding: 5px 8px;
+      background: var(--paper-w);
+      border: 1px solid var(--ink-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .booth-form .row.on .v { color: var(--red); border-color: var(--red); }
+
+    .booth-screen {
+      background: var(--ink);
+      color: var(--paper-w);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .booth-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.18) 2px 3px);
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+    }
+    .booth-screen .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      position: relative;
+      z-index: 2;
+    }
+    .booth-screen .ticket-no {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 88px;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: var(--paper-w);
+      position: relative;
+      z-index: 2;
+    }
+    .booth-screen .ticket-no small {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-3);
+    }
+    .booth-screen dl {
+      border-top: 1px solid var(--on-dark-3);
+      padding-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .booth-screen dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--on-dark-4);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--on-dark-2);
+    }
+    .booth-screen dl > div b { color: var(--red); font-weight: 800; }
+    .booth-screen .ticket {
+      margin-top: auto;
+      padding: 11px 14px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .booth-foot {
+      padding: 14px 30px;
+      background: var(--paper);
+      border-top: 1.5px dashed var(--ink-5);
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 18px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .booth-foot b { color: var(--ink); font-weight: 800; }
+    .booth-foot em { font-style: italic; font-weight: 500; color: var(--red); }
+    .booth-foot .stub {
+      width: 36px;
+      height: 20px;
+      background: var(--ink);
+      color: var(--paper-w);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+    }
+
+    @media (max-width: 980px) {
+      .boxoffice { padding: 56px 22px; }
+      .bo-grid { grid-template-columns: 1fr; gap: 36px; }
+      .booth-body { grid-template-columns: 1fr; padding: 22px; }
+      .booth-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 14px 22px; }
+    }
+
+    /* ============================================================
+       PRESS WALL — social posts as press materials
+    ============================================================ */
+    .press {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+    .press-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .press-head .seat {
+      width: 64px;
+      height: 64px;
+      background: var(--ink);
+      color: var(--paper-w);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1px;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .press-head .seat small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+    }
+    .press-head .text { padding-bottom: 6px; }
+    .press-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .press-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .press-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .press-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .press-head .meta b { color: var(--ink); font-weight: 800; }
+
+    .press-deck {
+      max-width: 60ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 36px;
+    }
+    .press-deck b { color: var(--ink); font-weight: 700; }
+    .press-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .press-wall {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 36px 22px;
+      padding: 32px 28px;
+      background: var(--ink);
+      position: relative;
+    }
+    .press-wall::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 28px 14px;
+      background-repeat: repeat-x;
+      background-position: top center;
+      height: 14px;
+    }
+    .press-wall::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 28px 14px;
+      background-repeat: repeat-x;
+      background-position: bottom center;
+      height: 14px;
+    }
+
+    .press-poster {
+      position: relative;
+      background: var(--paper-w);
+      padding: 8px 8px 14px;
+      box-shadow: 0 16px 32px -16px rgba(0,0,0,0.5);
+      transition: transform 0.4s, box-shadow 0.4s;
+      z-index: 2;
+    }
+    /* tape strip on top */
+    .press-poster::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 60px;
+      height: 18px;
+      background: var(--red);
+      mix-blend-mode: multiply;
+      opacity: 0.78;
+    }
+    .press-poster:nth-child(odd) { transform: rotate(-1.4deg); }
+    .press-poster:nth-child(even) { transform: rotate(0.8deg); }
+    .press-poster:nth-child(3n+1) { transform: rotate(-0.6deg); }
+    .press-poster:nth-child(5n+1)::before { width: 76px; transform: translateX(-50%) rotate(2deg); }
+    .press-poster:nth-child(5n+2)::before { width: 56px; transform: translateX(-50%) rotate(-4deg); }
+    .press-poster:hover {
+      transform: rotate(0deg) translateY(-4px) scale(1.03);
+      box-shadow: 0 24px 40px -12px rgba(0,0,0,0.55);
+      z-index: 5;
+    }
+
+    .press-poster .photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .press-poster .photo > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .press-poster:hover .photo > img { transform: scale(1.05); }
+    .press-poster .photo .top {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .press-poster .photo .top b { color: var(--red); }
+    .press-poster .photo .pages {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 7px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .press-poster .photo .pages::before { content: "▦"; font-size: 9px; }
+    .press-poster .photo .pages.live { background: var(--paper-w); color: var(--red); }
+    .press-poster .photo .pages.live::before { content: "▶"; }
+
+    .press-poster .cap {
+      padding: 10px 4px 4px;
+    }
+    .press-poster .cap .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.05;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .press-poster .cap .ttl em { font-style: italic; font-weight: 500; color: var(--red); }
+    .press-poster .cap .info {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .press-poster .cap .info b { color: var(--red); font-weight: 800; }
+    .press-poster .cap .film {
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .press-poster .cap .film b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 1080px) { .press-wall { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 720px) {
+      .press { padding: 56px 22px; }
+      .press-wall { grid-template-columns: repeat(3, 1fr); padding: 24px 18px; gap: 24px 14px; }
+    }
+    @media (max-width: 480px) {
+      .press-wall { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ============================================================
+       MARQUEE THEATRE — the website rendered as the cinema marquee
+    ============================================================ */
+    .marquee-theatre {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+      border-top: 1px solid var(--ink-5);
+    }
+    .mt-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .mt-head .seat {
+      width: 64px;
+      height: 64px;
+      background: var(--red);
+      color: var(--paper-w);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1px;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .mt-head .seat small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--paper-w);
+      opacity: 0.78;
+    }
+    .mt-head .text { padding-bottom: 6px; }
+    .mt-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .mt-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .mt-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .mt-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .mt-head .meta b { color: var(--ink); font-weight: 800; }
+
+    /* the marquee frame */
+    .marquee-frame {
+      background: var(--paper-w);
+      border: 6px solid var(--ink);
+      box-shadow:
+        inset 0 0 0 4px var(--paper-w),
+        inset 0 0 0 8px var(--ink),
+        0 32px 80px -32px rgba(0,0,0,0.5);
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-frame::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      height: 14px;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 24px 14px;
+      background-repeat: repeat-x;
+      z-index: 3;
+    }
+    .marquee-frame::after {
+      content: "";
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      height: 14px;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 24px 14px;
+      background-repeat: repeat-x;
+      z-index: 3;
+    }
+    .marquee-frame .inner {
+      padding: 32px 32px;
+      background: var(--paper);
+      margin: 22px;
+      position: relative;
+    }
+    .marquee-frame .inner::before, .marquee-frame .inner::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 4px var(--paper), 0 0 0 6px var(--ink);
+    }
+    .marquee-frame .inner::before { left: -11px; }
+    .marquee-frame .inner::after { right: -11px; }
+
+    /* "now playing" sign over the website */
+    .now-playing {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--ink);
+      color: var(--paper-w);
+      margin-bottom: 18px;
+      border-bottom: 4px solid var(--red);
+    }
+    .now-playing .left {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .now-playing .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .now-playing .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .now-playing .right::before { content: "● "; animation: pulse 1.6s ease-in-out infinite; }
+
+    /* faithful site mockup */
+    .site-faithful { background: var(--paper-w); }
+    .site-faithful .chrome {
+      background: var(--paper);
+      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-faithful .chrome .dots { display: flex; gap: 4px; }
+    .site-faithful .chrome .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--ink-4);
+    }
+    .site-faithful .chrome .dots span:first-child { background: var(--red); }
+    .site-faithful .chrome .url {
+      padding: 4px 10px;
+      background: var(--paper-w);
+      border: 1px solid var(--ink-5);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .site-faithful .chrome .url::before { content: "🔒  "; }
+    .site-faithful .chrome .lang {
+      display: inline-flex;
+      gap: 2px;
+      padding: 2px;
+      background: var(--paper-w);
+      border: 1px solid var(--ink-5);
+    }
+    .site-faithful .chrome .lang span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+    }
+    .site-faithful .chrome .lang .on { background: var(--red); color: var(--paper-w); }
+
+    .site-faithful .nav {
+      padding: 16px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-faithful .nav .brand { display: flex; align-items: center; gap: 10px; }
+    .site-faithful .nav .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .site-faithful .nav .brand .wm {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .site-faithful .nav .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-top: 3px;
+    }
+    .site-faithful .nav .menu {
+      display: flex; justify-content: center; gap: 22px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-faithful .nav .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+    .site-faithful .nav .right { display: flex; align-items: center; gap: 10px; }
+    .site-faithful .nav .right .lt {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: var(--paper); border: 1px solid var(--ink-5);
+    }
+    .site-faithful .nav .right .lt span {
+      padding: 4px 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      color: var(--ink-3);
+    }
+    .site-faithful .nav .right .lt .on { background: var(--ink); color: var(--paper-w); }
+    .site-faithful .nav .right .book {
+      padding: 8px 14px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .site-faithful .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: 32px;
+      align-items: center;
+      padding: 36px 36px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-faithful .hero .text { min-width: 0; }
+    .site-faithful .hero .eb {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .site-faithful .hero h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .site-faithful .hero h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-faithful .hero p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin-bottom: 14px;
+    }
+    .site-faithful .hero p b { font-weight: 700; color: var(--ink); }
+    .site-faithful .hero .ctas { display: flex; gap: 8px; }
+    .site-faithful .hero .ctas a {
+      padding: 8px 14px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .site-faithful .hero .ctas .p { background: var(--red); color: var(--paper-w); }
+    .site-faithful .hero .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-faithful .hero .photo {
+      background: var(--paper-w);
+      border: 1px solid var(--ink-5);
+      padding: 8px 8px 12px;
+      max-width: 200px;
+    }
+    .site-faithful .hero .photo .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .site-faithful .hero .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-faithful .hero .photo .who {
+      padding-top: 8px;
+      border-top: 2px solid var(--red);
+      margin-top: 8px;
+    }
+    .site-faithful .hero .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--ink);
+    }
+    .site-faithful .hero .photo .who p {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin: 2px 0 0;
+    }
+
+    .site-faithful .ff-foot {
+      background: var(--paper);
+      padding: 18px 36px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+    .site-faithful .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-faithful .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-faithful .ff-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .marquee-theatre { padding: 56px 22px; }
+      .marquee-frame .inner { padding: 22px 16px; margin: 14px; }
+      .marquee-frame .inner::before, .marquee-frame .inner::after { display: none; }
+      .now-playing { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .now-playing .left, .now-playing .right { text-align: center; }
+      .site-faithful .nav .menu { display: none; }
+      .site-faithful .hero { grid-template-columns: 1fr; gap: 18px; padding: 22px; }
+      .site-faithful .ff-foot { padding: 14px 22px; grid-template-columns: 1fr; gap: 8px; text-align: center; }
+    }
+
+    /* ============================================================
+       COMING NEXT SEASON (year ahead)
+    ============================================================ */
+    .coming {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+    }
+    .coming-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .coming-head .seat {
+      width: 64px; height: 64px;
+      background: var(--paper-w);
+      color: var(--ink);
+      border: 4px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1px;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .coming-head .seat small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+    }
+    .coming-head .text { padding-bottom: 6px; }
+    .coming-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .coming-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .coming-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .coming-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .coming-head .meta b { color: var(--red); font-weight: 800; }
+
+    .coming-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .coming-card {
+      background: var(--paper-w);
+      border: 1.5px solid var(--ink);
+      padding: 28px 26px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .coming-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: var(--red);
+    }
+    .coming-card .stamp {
+      position: absolute;
+      top: 18px;
+      right: -10px;
+      padding: 5px 14px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transform: rotate(4deg);
+      box-shadow: 0 8px 16px -8px rgba(0,0,0,0.3);
+    }
+    .coming-card .num {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .coming-card h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .coming-card h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .coming-card p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 14px;
+    }
+    .coming-card p strong { font-weight: 700; color: var(--ink); }
+    .coming-card p em { font-style: italic; color: var(--red); font-weight: 500; }
+    .coming-card .meta-row {
+      padding-top: 12px;
+      border-top: 1px dashed var(--ink-5);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .coming-card .meta-row b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .coming { padding: 56px 22px; }
+      .coming-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       END CREDITS
+    ============================================================ */
+    .end-credits {
+      background: var(--ink);
+      color: var(--paper-w);
+      padding: 96px 48px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .end-credits::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle at center, var(--red) 4.5px, transparent 5px);
+      background-size: 24px 14px;
+      background-repeat: repeat-x;
+    }
+    .end-credits-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end-credits-inner .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end-credits-inner h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--paper-w);
+      margin-bottom: 36px;
+    }
+    .end-credits-inner h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .credits-roll {
+      max-width: 720px;
+      margin: 0 auto;
+      border-top: 1.5px solid var(--on-dark-3);
+      border-bottom: 1.5px solid var(--on-dark-3);
+    }
+    .credits-roll .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      padding: 14px 0;
+      border-top: 1px dashed var(--on-dark-4);
+      align-items: baseline;
+    }
+    .credits-roll .row:first-child { border-top: 0; }
+    .credits-roll .role {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-roll .name {
+      text-align: left;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--paper-w);
+    }
+    .credits-roll .name em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .credits-end {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1.5px solid var(--on-dark-3);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-end::before, .credits-end::after { content: "—"; margin: 0 12px; color: var(--on-dark-3); }
+    .credits-end b { color: var(--paper-w); font-weight: 800; }
+
+    .end-cta {
+      margin-top: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 26px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+    .end-cta:hover { background: var(--paper-w); color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .end-credits { padding: 56px 22px 40px; }
+      .credits-roll .row { grid-template-columns: 1fr; gap: 4px; text-align: center; }
+      .credits-roll .role, .credits-roll .name { text-align: center; }
+    }
+
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: var(--on-dark-2);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--on-dark-3);
+    }
+    .colophon strong { color: var(--paper-w); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       PROGRAMME COVER
+  ==================================================================== -->
+  <section class="cover">
+    <span class="bulbs"></span>
+    <header class="cover-strip">
+      <span class="left">FrameFlow · Reel <b>019</b></span>
+      <span class="center">Programme Catalogue · Volume <b>I</b></span>
+      <span class="right">Toronto · <b>MMXXVI</b></span>
+    </header>
+
+    <div class="cover-inner">
+      <p class="cover-pre">A FrameFlow Festival Production · 2026</p>
+
+      <h1 class="cover-title">The <em>Immigration</em><br>Film Festival<em>.</em></h1>
+
+      <div class="cover-deck">
+        <p>The complete programme of <b>Northern Pathways Immigration Consulting</b> &mdash; a Toronto regulated practice led by an RCIC-IRB. Five films premièring this season, one box office, and a press wall in the lobby of <em>real material from the firm&rsquo;s Turkish-language handle.</em></p>
+        <aside class="cover-card">
+          <p class="ant">— Programme · this issue</p>
+          <dl>
+            <div><dt>Films</dt><dd>05 <em>· service issues</em></dd></div>
+            <div><dt>Director</dt><dd>Burcu Akyol <em>RCIC</em></dd></div>
+            <div><dt>Studio</dt><dd>FrameFlow</dd></div>
+            <div><dt>Locales</dt><dd>EN <em>·</em> TR</dd></div>
+            <div><dt>Edition</dt><dd>I · MMXXVI</dd></div>
+          </dl>
+          <p class="stub">★ ADMIT ONE ★</p>
+        </aside>
+      </div>
+
+      <footer class="cover-foot">
+        <span class="left">Curated &amp; designed by · <b>Frame Flow</b></span>
+        <span class="center">A practice in <em>two languages,</em> screened in one programme.</span>
+        <span class="right">Catalogue №<b>019</b></span>
+      </footer>
+    </div>
+    <span class="bulbs"></span>
+  </section>
+
+  <!-- =================================================================
+       DIRECTOR'S LETTER
+  ==================================================================== -->
+  <section class="letter reveal">
+    <div class="letter-grid">
+      <div class="letter-text">
+        <p class="letter-pre">Letter from the Director · pp. 02–03</p>
+        <h2>A note from <em>the cockpit.</em></h2>
+
+        <div class="letter-body">
+          <p>Most of our prospective clients arrive through Turkish-language search and word-of-mouth. They are looking for two things at once: <em>warmth</em> and <em>authority</em>. A regulated immigration consultancy must be both, and a programme like this one has to feel that way too. In this catalogue you will find five films &mdash; one for each of our practice areas &mdash; presented as the work it actually is, with the standard a Regulated Canadian Immigration Consultant is required to bring to it.</p>
+
+          <p>FrameFlow Studio joined the firm in spring 2025. The brief was short. <strong>Findable. Bookable. Trustworthy.</strong> In two languages. The work that followed is the schedule you see here: a marketing site at <em>northernpathways.ca</em> with twelve routes per locale; a regulator-grade <strong>CRS calculator</strong> at the box office; a <strong>Six Selection Factors</strong> eligibility checker with a 67/100 cutoff; a live IRCC draws tracker indexing every Express Entry &amp; PNP draw since 2015; and a Turkish-language Instagram, <em>@kanadadayeniyasam</em>, that mirrors every draw to the diaspora the morning it lands.</p>
+
+          <p>Each film carries a real <strong>synopsis</strong>, a <strong>runtime</strong> derived from IRCC processing times, and a rating that signals procedural complexity. The cast is the underlying programmes &mdash; FSWP, CEC, PNP, spousal sponsorship, the PGWP, and so on. The director, in every case, is the captain who signs the manifest.</p>
+
+          <p>If our work this year has a thesis, it is this: <em>treat clients as individuals, not case numbers.</em> The five films that follow are an attempt to do that on screen.</p>
+        </div>
+
+        <div class="letter-sig">
+          <span class="scribble">B. Akyol</span>
+          <div class="who">
+            <h5>Burcu Akyol</h5>
+            <p>Director · RCIC-IRB · CICC</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="letter-portrait">
+        <span class="tape" aria-hidden="true"></span>
+        <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB"></div>
+        <div class="cap">
+          <h4>Burcu Akyol</h4>
+          <p class="role">Director · RCIC-IRB</p>
+          <dl>
+            <div><dt>Licence</dt><dd>RCIC-IRB</dd></div>
+            <div><dt>College</dt><dd>CICC</dd></div>
+            <div><dt>Board</dt><dd>CAPIC</dd></div>
+            <div><dt>Faculty</dt><dd>Queen&rsquo;s</dd></div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FESTIVAL IN NUMBERS
+  ==================================================================== -->
+  <section class="stats reveal">
+    <header class="stats-head">
+      <span class="ord">04<em>.</em></span>
+      <div class="text">
+        <p class="lbl">— Festival in figures · pp. 04 —</p>
+        <h2>The <em>festival,</em> in numbers.</h2>
+      </div>
+      <p class="meta">Reporting period<br><b>Spring 2025 — 2026</b></p>
+    </header>
+
+    <dl class="stats-row">
+      <div>
+        <dt>05<em>·</em></dt>
+        <dd>Films premièring<small>Service issues · this season</small></dd>
+      </div>
+      <div>
+        <dt>12<em>×</em></dt>
+        <dd>Routes per locale<small>EN+TR · 24 routes total</small></dd>
+      </div>
+      <div>
+        <dt>02<em>·</em></dt>
+        <dd>Box-office tools<small>CRS &amp; FSWP calculators</small></dd>
+      </div>
+      <div>
+        <dt>156<em>+</em></dt>
+        <dd>Draws indexed<small>IRCC EE &amp; PNP · since 2015</small></dd>
+      </div>
+      <div>
+        <dt>248</dt>
+        <dd>Press posters<small>@kanadadayeniyasam · 2026</small></dd>
+      </div>
+      <div>
+        <dt>14.<em>2k</em></dt>
+        <dd>Diaspora audience<small>Turkish-language followers</small></dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       PROGRAMME — TABLE OF CONTENTS
+  ==================================================================== -->
+  <section class="toc reveal">
+    <h2>The <em>programme</em> · 5 films.</h2>
+    <ol>
+      <li>
+        <span class="pn">№ 01</span>
+        <div>
+          <p class="name">Express <em>Entry</em><small>A federal selection drama in five acts &mdash; FSWP · CEC · PNP · French · Healthcare.</small></p>
+        </div>
+        <span class="runtime">12 — 18 mo<br><b>PG</b> · Procedural</span>
+        <span class="pg">P. <b>06</b></span>
+      </li>
+      <li>
+        <span class="pn">№ 02</span>
+        <div>
+          <p class="name">Family <em>Connect</em><small>A domestic drama about reuniting families across borders &mdash; spousal · common-law · parents.</small></p>
+        </div>
+        <span class="runtime">12 — 36 mo<br><b>G</b> · General</span>
+        <span class="pg">P. <b>10</b></span>
+      </li>
+      <li>
+        <span class="pn">№ 03</span>
+        <div>
+          <p class="name">Temporary <em>Residence</em><small>A short-form anthology &mdash; visitor · study · work · PGWP · LMIA-exempt.</small></p>
+        </div>
+        <span class="runtime">30 — 90 days<br><b>PG</b> · Procedural</span>
+        <span class="pg">P. <b>14</b></span>
+      </li>
+      <li>
+        <span class="pn">№ 04</span>
+        <div>
+          <p class="name">The <em>PR Card</em><small>A documentary about residency obligations &mdash; renewal · PRTD · 730/1825 days.</small></p>
+        </div>
+        <span class="runtime">6 — 12 mo<br><b>G</b> · General</span>
+        <span class="pg">P. <b>18</b></span>
+      </li>
+      <li>
+        <span class="pn">№ 05</span>
+        <div>
+          <p class="name"><em>Citizenship</em><small>The trilogy capstone &mdash; 1,095 days · knowledge test · Oath ceremony.</small></p>
+        </div>
+        <span class="runtime">12 — 18 mo<br><b>PG</b> · Procedural</span>
+        <span class="pg">P. <b>22</b></span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- =================================================================
+       PROGRAMME — THE FIVE FILMS
+  ==================================================================== -->
+  <div class="programme">
+
+    <!-- FILM 01 — EXPRESS ENTRY -->
+    <article class="film reveal">
+      <div class="film-grid">
+        <article class="one-sheet s01">
+          <p class="laurels"><span class="l">TIFF · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. AKYOL · 5 acts · 1 line</p>
+          <span class="rating">PG<small>PROC</small></span>
+          <div class="title-block">
+            <p class="ttl">EXPRESS<br><em>ENTRY.</em></p>
+            <p class="tag">A score · a programme · <em>a flight.</em></p>
+          </div>
+        </article>
+
+        <div class="film-side">
+          <p class="film-num">FILM № <b>01</b></p>
+          <h2 class="film-title">Express <em>Entry.</em></h2>
+          <p class="film-tag">A federal selection drama in five acts &mdash; <em>biography plotted against IRCC&rsquo;s grid.</em></p>
+
+          <p class="synopsis"><span class="smallcaps">An applicant&rsquo;s biography</span> &mdash; age, education, language proficiency, work history, adaptability &mdash; is plotted against IRCC&rsquo;s <strong>Comprehensive Ranking System</strong>. The lead character receives an <em>Invitation to Apply</em> at one of the federal draw cutoffs (currently a moving target between 421 and 736 depending on category) or doesn&rsquo;t. Counsel works to maximise the score across all four sections (Core, Spouse, Skill Transferability, Additional) and to time the application against the next favourable category-based draw &mdash; Healthcare, French, Trades, PNP. Includes the <strong>Federal Skilled Worker, Canadian Experience Class,</strong> and <strong>Provincial Nominee</strong> streams as supporting features.</p>
+
+          <article class="credits-panel">
+            <header class="head">
+              <span class="l">Credits · <em>FILM № 01</em></span>
+              <span class="r">Cert. <b>NP-001</b></span>
+            </header>
+            <dl>
+              <div><dt>Cast</dt><dd>
+                <span class="pill r">FSWP</span>
+                <span class="pill">CEC</span>
+                <span class="pill">PNP</span>
+                <span class="pill">French</span>
+                <span class="pill">Healthcare</span>
+                <span class="pill">Trades</span>
+              </dd></div>
+              <div><dt>Studios</dt><dd>IRCC <em>·</em> Provincial Authorities</dd></div>
+              <div><dt>Director</dt><dd>Burcu Akyol <em>· RCIC-IRB</em></dd></div>
+              <div><dt>Runtime</dt><dd>12 – 18 months <em>· profile to CoPR</em></dd></div>
+              <div><dt>Rating</dt><dd>PG <em>· Procedural Guidance required</em></dd></div>
+              <div><dt>Output</dt><dd>1 PDF · signed by counsel of record</dd></div>
+            </dl>
+            <div class="doctrine-row">
+              <span class="l">→ Doctrine <b>Knowledge &amp; <em>Expertise.</em></b></span>
+              <span class="r">D-04</span>
+            </div>
+          </article>
+
+          <aside class="qa">
+            <p class="lbl">— On screen at the calculator</p>
+            <blockquote>The score is the score &mdash; <em>but the strategy is everything.</em> A 487 in April can become a 537 by November if we play the right note.</blockquote>
+            <p class="from"><b>—</b> Capt. Akyol · audience Q&amp;A</p>
+          </aside>
+        </div>
+      </div>
+    </article>
+
+    <!-- FILM 02 — FAMILY CONNECT -->
+    <article class="film reveal">
+      <div class="film-grid alt">
+        <article class="one-sheet s02">
+          <p class="laurels"><span class="l">TIFF · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. AKYOL · domestic</p>
+          <span class="rating">G<small>FAM</small></span>
+          <div class="title-block">
+            <p class="ttl">FAMILY<br><em>CONNECT.</em></p>
+            <p class="tag">Two rings, <em>one line.</em></p>
+          </div>
+        </article>
+
+        <div class="film-side">
+          <p class="film-num">FILM № <b>02</b></p>
+          <h2 class="film-title">Family <em>Connect.</em></h2>
+          <p class="film-tag">A domestic drama about reuniting families across borders &mdash; <em>sponsorship as the central act.</em></p>
+
+          <p class="synopsis"><span class="smallcaps">The lead character</span> &mdash; a Canadian citizen or permanent resident &mdash; sponsors a partner, child, or parent. Counsel prepares the <strong>sponsorship undertaking</strong> (a 3–20-year financial commitment depending on relationship), the application package, and the response to procedural fairness if it lands. The <em>parents and grandparents stream</em> runs on a 36-month lottery cycle. <strong>Spousal sponsorship</strong> requires the bona fides of the relationship to be demonstrated through joint accounts, leases, photographs &mdash; the audit is humane but it is an audit. Counsel translates the relationship into the documentation IRCC will accept.</p>
+
+          <article class="credits-panel">
+            <header class="head">
+              <span class="l">Credits · <em>FILM № 02</em></span>
+              <span class="r">Cert. <b>NP-002</b></span>
+            </header>
+            <dl>
+              <div><dt>Cast</dt><dd>
+                <span class="pill r">Spousal</span>
+                <span class="pill">Common-law</span>
+                <span class="pill">Conjugal</span>
+                <span class="pill">Parents &amp; GPs</span>
+                <span class="pill">Dependent children</span>
+              </dd></div>
+              <div><dt>Studios</dt><dd>IRCC <em>·</em> CBSA <em>(overseas)</em></dd></div>
+              <div><dt>Director</dt><dd>Burcu Akyol <em>· RCIC-IRB</em></dd></div>
+              <div><dt>Runtime</dt><dd>12 – 24 mo <em>(spousal)</em> · 36 mo <em>(P&amp;GP lottery)</em></dd></div>
+              <div><dt>Rating</dt><dd>G <em>· general audience</em></dd></div>
+              <div><dt>Output</dt><dd>Sponsorship undertaking · application package · IRCC follow-up</dd></div>
+            </dl>
+            <div class="doctrine-row">
+              <span class="l">→ Doctrine <b>Personalised <em>Service.</em></b></span>
+              <span class="r">D-02</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </article>
+
+    <!-- FILM 03 — TEMPORARY RESIDENCE -->
+    <article class="film reveal">
+      <div class="film-grid">
+        <article class="one-sheet s03">
+          <p class="laurels"><span class="l">TIFF · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. AKYOL · short stay</p>
+          <span class="rating">PG<small>PROC</small></span>
+          <div class="title-block">
+            <p class="ttl">TEMPORARY<br><em>RESIDENCE.</em></p>
+            <p class="tag">Visitor · <em>study</em> · work.</p>
+          </div>
+        </article>
+
+        <div class="film-side">
+          <p class="film-num">FILM № <b>03</b></p>
+          <h2 class="film-title">Temporary <em>Residence.</em></h2>
+          <p class="film-tag">A short-form anthology of three storylines that share a common arc &mdash; <em>dual intent, ties home, means of support.</em></p>
+
+          <p class="synopsis"><span class="smallcaps">Three storylines</span> &mdash; Visitor, Study, Work &mdash; that share a common arc: the applicant proves <strong>dual intent,</strong> sufficient ties to the home country, and means of support for the duration of the stay. The visa officer is the antagonist of every act, and the antagonist is fair if you give the antagonist what is required. Counsel selects the right permit class (the <em>Post-Graduation Work Permit,</em> the <em>LMIA-exempt</em> work permit under one of the 30+ exemption categories, or a study permit at a Designated Learning Institution), prepares the application, and anticipates the reasons for refusal &mdash; <strong>insufficient ties, inadequate funds, intent to remain.</strong></p>
+
+          <article class="credits-panel">
+            <header class="head">
+              <span class="l">Credits · <em>FILM № 03</em></span>
+              <span class="r">Cert. <b>NP-003</b></span>
+            </header>
+            <dl>
+              <div><dt>Cast</dt><dd>
+                <span class="pill r">Visitor record</span>
+                <span class="pill">Study permit</span>
+                <span class="pill">Work permit</span>
+                <span class="pill">PGWP</span>
+                <span class="pill">LMIA-exempt</span>
+                <span class="pill">Open WP</span>
+              </dd></div>
+              <div><dt>Studios</dt><dd>IRCC <em>·</em> ESDC <em>(LMIA cases)</em> · DLIs</dd></div>
+              <div><dt>Director</dt><dd>Burcu Akyol <em>· RCIC-IRB</em></dd></div>
+              <div><dt>Runtime</dt><dd>30 – 90 days <em>· typical VAC processing</em></dd></div>
+              <div><dt>Rating</dt><dd>PG <em>· Procedural Guidance required</em></dd></div>
+              <div><dt>Output</dt><dd>Permit · refusal-prevention memo · re-application strategy</dd></div>
+            </dl>
+            <div class="doctrine-row">
+              <span class="l">→ Doctrine <b>Transparency <em>· in pricing.</em></b></span>
+              <span class="r">D-03</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </article>
+
+    <!-- FILM 04 — THE PR CARD -->
+    <article class="film reveal">
+      <div class="film-grid alt">
+        <article class="one-sheet s04">
+          <p class="laurels"><span class="l">TIFF · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. AKYOL · documentary</p>
+          <span class="rating">G<small>RES</small></span>
+          <div class="title-block">
+            <p class="ttl">THE PR<br><em>CARD.</em></p>
+            <p class="tag">A travel doc, <em>renewed.</em></p>
+          </div>
+        </article>
+
+        <div class="film-side">
+          <p class="film-num">FILM № <b>04</b></p>
+          <h2 class="film-title">The <em>PR Card.</em></h2>
+          <p class="film-tag">A documentary about residency obligations &mdash; <em>730 days inside, in any rolling 1,825.</em></p>
+
+          <p class="synopsis"><span class="smallcaps">Permanent residents must spend</span> <strong>730 days inside Canada</strong> in any rolling 5-year period to maintain status. Counsel prepares the renewal, defends the residency calculation against an underage with humanitarian considerations or a pending appeal at the IRB, or applies for a <strong>Permanent Resident Travel Document</strong> for clients abroad whose card has expired. The document is necessary to board a Canada-bound flight. Counsel calculates days, prepares evidence (passport stamps, employer letters, travel records), and represents at the IAD if removal is initiated.</p>
+
+          <article class="credits-panel">
+            <header class="head">
+              <span class="l">Credits · <em>FILM № 04</em></span>
+              <span class="r">Cert. <b>NP-004</b></span>
+            </header>
+            <dl>
+              <div><dt>Cast</dt><dd>
+                <span class="pill r">PR card renewal</span>
+                <span class="pill">Residency calc</span>
+                <span class="pill">PRTD</span>
+                <span class="pill">H&amp;C</span>
+              </dd></div>
+              <div><dt>Studios</dt><dd>IRCC <em>·</em> IRB Immigration Appeals Division</dd></div>
+              <div><dt>Director</dt><dd>Burcu Akyol <em>· RCIC-IRB</em></dd></div>
+              <div><dt>Runtime</dt><dd>6 – 12 mo <em>(renewal)</em> · 1 – 4 wk <em>(PRTD)</em></dd></div>
+              <div><dt>Rating</dt><dd>G <em>· general audience</em></dd></div>
+              <div><dt>Output</dt><dd>Renewed PR card · PRTD · IAD representation</dd></div>
+            </dl>
+            <div class="doctrine-row">
+              <span class="l">→ Doctrine <b>Transparency <em>· in process.</em></b></span>
+              <span class="r">D-03</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </article>
+
+    <!-- FILM 05 — CITIZENSHIP -->
+    <article class="film reveal">
+      <div class="film-grid">
+        <article class="one-sheet s05">
+          <p class="laurels"><span class="l">TIFF · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. AKYOL · final act</p>
+          <span class="rating">PG<small>FIN</small></span>
+          <div class="title-block">
+            <p class="ttl">CITIZEN<em>SHIP.</em></p>
+            <p class="tag">The final <em>act</em> · the long arc.</p>
+          </div>
+        </article>
+
+        <div class="film-side">
+          <p class="film-num">FILM № <b>05</b></p>
+          <h2 class="film-title">Citizen<em>ship.</em></h2>
+          <p class="film-tag">The trilogy capstone &mdash; <em>1,095 days, a knowledge test, and the Oath.</em></p>
+
+          <p class="synopsis"><span class="smallcaps">After</span> <strong>1,095 days of physical presence</strong> in the previous five years, a permanent resident applies for Canadian citizenship. The lead studies for the knowledge test (a written or oral assessment of Canadian rights, responsibilities, history, geography, and government), sits the assessment, and takes the <em>Oath of Citizenship</em> at a ceremony presided over by a citizenship judge. Counsel prepares the application, attends the test if required, and represents at the ceremony. The runtime in IRCC&rsquo;s current backlog is approximately 12–18 months from filing to oath; resumption and retention applications follow a similar arc.</p>
+
+          <article class="credits-panel">
+            <header class="head">
+              <span class="l">Credits · <em>FILM № 05</em></span>
+              <span class="r">Cert. <b>NP-005</b></span>
+            </header>
+            <dl>
+              <div><dt>Cast</dt><dd>
+                <span class="pill r">Citizenship app</span>
+                <span class="pill">Knowledge test</span>
+                <span class="pill">Oath ceremony</span>
+                <span class="pill">Resumption</span>
+                <span class="pill">Retention</span>
+              </dd></div>
+              <div><dt>Studios</dt><dd>IRCC <em>·</em> Office of the Citizenship Commission</dd></div>
+              <div><dt>Director</dt><dd>Burcu Akyol <em>· RCIC-IRB</em></dd></div>
+              <div><dt>Runtime</dt><dd>12 – 18 months <em>· filing to Oath</em></dd></div>
+              <div><dt>Rating</dt><dd>PG <em>· final-act gravitas</em></dd></div>
+              <div><dt>Output</dt><dd>Certificate of Canadian Citizenship</dd></div>
+            </dl>
+            <div class="doctrine-row">
+              <span class="l">→ Doctrine <b>Ethical <em>Guidance.</em></b></span>
+              <span class="r">D-01</span>
+            </div>
+          </article>
+
+          <aside class="qa">
+            <p class="lbl">— Closing remarks</p>
+            <blockquote>The Oath is not the end of an immigration journey &mdash; <em>it is the day a client stops needing me</em> for one. That is the day a counsel works toward.</blockquote>
+            <p class="from"><b>—</b> Capt. Akyol · post-screening</p>
+          </aside>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- =================================================================
+       DIRECTOR PROFILE
+  ==================================================================== -->
+  <section class="director reveal">
+    <div class="director-grid">
+      <aside class="director-portrait">
+        <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB"></div>
+        <div class="nameplate">
+          <h3>Burcu Akyol</h3>
+          <p class="role">RCIC-IRB · Director · Festival 2026</p>
+          <dl>
+            <div><dt>Licence</dt><dd>RCIC-IRB</dd></div>
+            <div><dt>Member</dt><dd>CICC <em>good standing</em></dd></div>
+            <div><dt>Board</dt><dd>CAPIC</dd></div>
+            <div><dt>Faculty</dt><dd>Queen&rsquo;s · adjunct</dd></div>
+            <div><dt>Hub</dt><dd>Toronto · YYZ</dd></div>
+            <div><dt>Languages</dt><dd>EN <em>·</em> TR</dd></div>
+            <div><dt>Practising since</dt><dd>2019</dd></div>
+          </dl>
+        </div>
+      </aside>
+
+      <div class="director-bio">
+        <p class="pre">— Director profile · the captain</p>
+        <h2>Burcu <em>Akyol.</em></h2>
+
+        <p>Director of all five films in this season&rsquo;s programme; principal of <strong>Northern Pathways Immigration Consulting</strong>; <em>Regulated Canadian Immigration Consultant</em> (RCIC-IRB) in good standing with the College of Immigration and Citizenship Consultants. Adjunct professor at <strong>Queen&rsquo;s University</strong> teaching the regulatory framework she practises within. Board Member of the <strong>Canadian Association of Professional Immigration Consultants</strong>.</p>
+
+        <p>Akyol opened the practice in 2019 with a thesis: that a regulated immigration consultancy can be both warm and authoritative if &mdash; and only if &mdash; the regulator&rsquo;s standard becomes the floor, not the ceiling. The practice grew through Turkish-language word-of-mouth in the diaspora; today most of its prospects arrive through search in their first language, and find a counsel who speaks both.</p>
+
+        <p>She represents at the Immigration Appeals Division, the Refugee Protection Division, and on procedural fairness at all levels. She does not <em>file what counsel cannot stand behind</em> &mdash; doctrine 01 of the operating manual, made operational on every page of the website.</p>
+
+        <article class="filmography">
+          <p class="lbl">— Selected filmography</p>
+          <ul>
+            <li><span class="yr">2026</span><span>The Immigration Film Festival · Vol. I</span><span class="meta">5 films · this catalogue</span></li>
+            <li><span class="yr">2025</span><span>The Web Application · CRS &amp; FSWP calculators</span><span class="meta">2 tools · 1 PDF</span></li>
+            <li><span class="yr">2025</span><span>northernpathways.ca · multilingual launch</span><span class="meta">12 routes · EN+TR</span></li>
+            <li><span class="yr">2019 — present</span><span>Practising RCIC · Toronto</span><span class="meta">Counsel of record · ongoing</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       BOX OFFICE — calculator
+  ==================================================================== -->
+  <section class="boxoffice reveal">
+    <span class="bulbs-top"></span>
+    <div class="bo-grid">
+      <div class="bo-text">
+        <p class="pre">— The box office · pre-screening test</p>
+        <h2>Buy your <em>ticket</em> at the box office.</h2>
+        <p>Before any film screens, the <strong>Comprehensive Ranking System</strong> calculator runs at the front of house. Fifteen fields. Six categories. Rules current to <em>IRCC&rsquo;s 2026 grid</em> &mdash; including the removal of arranged-employment points and the return of category-based draws.</p>
+        <p>The score on screen tells you whether your ticket admits to film 01, 02, 03, or whether you sit in the lobby for a season. Each session ends on a <strong>signed PDF stub</strong> that the captain (counsel of record) tears at admission &mdash; the same PDF the client takes to a consult.</p>
+        <p class="pull">→ Box office runs on doctrine <b>03</b> · transparency in pricing.</p>
+      </div>
+
+      <article class="booth">
+        <header class="booth-head">
+          <span class="left">Window <b>02</b> / 06</span>
+          <span class="center">CRS · CORE / HUMAN CAPITAL<small>Pre-screening test · open</small></span>
+          <span class="right">Live</span>
+        </header>
+
+        <div class="booth-body">
+          <div class="booth-form">
+            <header class="head">
+              <p class="lbl">Declare your points</p>
+              <h4>What&rsquo;s your CRS?</h4>
+              <p>Each field is tooltipped to IRCC&rsquo;s 2026 specification. The score updates live; the box office prints the receipt.</p>
+            </header>
+            <div class="row on">
+              <span class="k">Age <small>at point of application · 32 years</small></span>
+              <span class="v">110 / 110</span>
+            </div>
+            <div class="row on">
+              <span class="k">Education <small>Master&rsquo;s · ECA verified</small></span>
+              <span class="v">135 / 150</span>
+            </div>
+            <div class="row on">
+              <span class="k">CLB · English <small>CLB 9 · all four skills</small></span>
+              <span class="v">124 / 136</span>
+            </div>
+            <div class="row on">
+              <span class="k">French · NCLC <small>NCLC 7+ · bonus path</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+            <div class="row">
+              <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+              <span class="v">35 / 80</span>
+            </div>
+            <div class="row">
+              <span class="k">Foreign work <small>3+ years · skilled, paid</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+          </div>
+
+          <aside class="booth-screen">
+            <p class="lbl">Ticket No.</p>
+            <p class="ticket-no">487<small>CRS / 1200</small></p>
+            <dl>
+              <div><span>A · Core</span><b>404</b></div>
+              <div><span>B · Spouse</span><b>—</b></div>
+              <div><span>C · Transfer</span><b>50</b></div>
+              <div><span>D · Additional</span><b>33</b></div>
+            </dl>
+            <span class="ticket">↓ Print ticket · PDF</span>
+          </aside>
+        </div>
+
+        <footer class="booth-foot">
+          <span>Stub <b>NP/CRS-487</b> · <em>signed by counsel</em></span>
+          <span><b>14:32 ET</b> · Toronto</span>
+          <span class="stub">★ TKT</span>
+        </footer>
+      </article>
+    </div>
+    <span class="bulbs-bot"></span>
+  </section>
+
+  <!-- =================================================================
+       PRESS WALL — social posts
+  ==================================================================== -->
+  <section class="press reveal">
+    <header class="press-head">
+      <span class="seat">B<small>FOYER</small></span>
+      <div class="text">
+        <p class="lbl">— Press wall · the lobby —</p>
+        <h2>Posters in the <em>foyer.</em></h2>
+      </div>
+      <p class="meta">10 distinct posts · 4:5<br><b>@kanadadayeniyasam</b></p>
+    </header>
+
+    <p class="press-deck">Press materials from the firm&rsquo;s Turkish-language Instagram, pinned to the festival foyer wall. <strong>248 posters this season; 10 catalogued here as press.</strong> Eight are multi-slide carousels (4 to 9 slides each); two are live-webinar promotional sheets. Each tile is keyed to a film in the programme.</p>
+
+    <div class="press-wall">
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+          <span class="top">№ <b>01</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Express Entry · <em>kamuoyu görüşü.</em></p>
+          <p class="info">tr · IRCC · <b>23 Apr — 24 May</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa update">
+          <span class="top">№ <b>02</b></span>
+          <span class="pages">1 / 4</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Süper Vize · <em>gelir esnekliği.</em></p>
+          <p class="info">tr · super visa · <b>2026</b></p>
+          <p class="film">FILM <b>№ 02</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Doctor immigration">
+          <span class="top">№ <b>03</b></span>
+          <span class="pages">1 / 4</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Doktor açığı · <em>yeni adımlar.</em></p>
+          <p class="info">tr · healthcare · <b>RCIC note</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan 2026-2028">
+          <span class="top">№ <b>04</b></span>
+          <span class="pages">1 / 9</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Levels Plan · <em>2026 – 2028.</em></p>
+          <p class="info">tr · levels plan · <b>9-slide</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit visa officer">
+          <span class="top">№ <b>05</b></span>
+          <span class="pages">1 / 8</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Vize memuru · <em>neye bakar?</em></p>
+          <p class="info">tr · study · <b>NP × EduPathways</b></p>
+          <p class="film">FILM <b>№ 03</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+          <span class="top">№ <b>06</b></span>
+          <span class="pages">1 / 3</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Yeni Yaşam · <em>Ankara &amp; İstanbul.</em></p>
+          <p class="info">tr · seminar · <b>13 / 20 Ekim</b></p>
+          <p class="film">FILM <b>№ 02</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP">
+          <span class="top">№ <b>07</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Ontario · <em>OINP yeni programlar.</em></p>
+          <p class="info">tr · OINP · <b>Bill 30 · 2025</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+          <span class="top">№ <b>08</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">OINP · <em>18 Mart davet turu.</em></p>
+          <p class="info">tr · ontario · <b>2026</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+          <span class="top">№ <b>09</b></span>
+          <span class="pages live">Live</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Webinar · <em>PGWP rules.</em></p>
+          <p class="info">tr · 22 Aralık 25 · <b>Burcu Akyol</b></p>
+          <p class="film">FILM <b>№ 03</b></p>
+        </div>
+      </article>
+
+      <article class="press-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+          <span class="top">№ <b>10</b></span>
+          <span class="pages live">Live</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Webinar · <em>Levels Plan PR.</em></p>
+          <p class="info">tr · 11 Kasım 25 · <b>Burcu Akyol</b></p>
+          <p class="film">FILM <b>№ 01</b></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARQUEE THEATRE — website as the marquee
+  ==================================================================== -->
+  <section class="marquee-theatre reveal">
+    <header class="mt-head">
+      <span class="seat">A1<small>SCREEN</small></span>
+      <div class="text">
+        <p class="lbl">— Marquee · the theatre —</p>
+        <h2>Now showing at <em>northernpathways.ca.</em></h2>
+      </div>
+      <p class="meta">12 routes · EN+TR<br><b>Live · since 2026</b></p>
+    </header>
+
+    <article class="marquee-frame">
+      <div class="inner">
+        <header class="now-playing">
+          <span class="left">NOW PLAYING</span>
+          <span class="center">★ THE COMPLETE FESTIVAL · 5 FILMS ★</span>
+          <span class="right">LIVE</span>
+        </header>
+
+        <article class="site-faithful">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+          </header>
+
+          <nav class="nav">
+            <span class="brand">
+              <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+              <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+            </span>
+            <nav class="menu">
+              <span class="on">Home</span>
+              <span>Our Team</span>
+              <span>Fees</span>
+              <span>Events</span>
+              <span>Blog</span>
+            </nav>
+            <div class="right">
+              <span class="lt"><span class="on">EN</span><span>TR</span></span>
+              <span class="book">Book a Consultation</span>
+            </div>
+          </nav>
+
+          <div class="hero">
+            <div class="text">
+              <p class="eb">— Northern Pathways · RCIC-IRB —</p>
+              <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+              <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility assessments, strategic guidance, and legal representation for permanent residency, study permits, and family sponsorship.</p>
+              <div class="ctas">
+                <a class="p">Book a Consultation</a>
+                <a class="s">Explore Services</a>
+              </div>
+            </div>
+            <aside class="photo">
+              <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+              <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+            </aside>
+          </div>
+
+          <footer class="ff-foot">
+            <span class="left">© 2026 Northern Pathways · All Rights Reserved.</span>
+            <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+          </footer>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       COMING NEXT SEASON
+  ==================================================================== -->
+  <section class="coming reveal">
+    <header class="coming-head">
+      <span class="seat">06<small>NEXT</small></span>
+      <div class="text">
+        <p class="lbl">— Coming next season · Vol. II —</p>
+        <h2>Three films <em>in development.</em></h2>
+      </div>
+      <p class="meta">Vol. <b>II</b> · 2027</p>
+    </header>
+
+    <div class="coming-grid">
+      <article class="coming-card">
+        <span class="stamp">DEV</span>
+        <p class="num">06<em>.</em></p>
+        <h3>The Client <em>Portal.</em></h3>
+        <p>An authenticated <strong>web application</strong> &mdash; secure document upload, consult scheduling, status tracking, and IRCC submission timeline. Bilingual. Behind a login. Client-facing only.</p>
+        <p class="meta-row"><span>Pre-production</span><span><b>Q1 2027</b></span></p>
+      </article>
+
+      <article class="coming-card">
+        <span class="stamp">DEV</span>
+        <p class="num">07<em>.</em></p>
+        <h3>The PNP <em>Calculator.</em></h3>
+        <p>A third regulator-grade tool covering the <strong>Provincial Nominee Programme</strong> &mdash; Ontario, BC, Alberta in the first release, with a route to Quebec&rsquo;s CSQ. Bilingual; PDF-signed.</p>
+        <p class="meta-row"><span>Pre-production</span><span><b>Q2 2027</b></span></p>
+      </article>
+
+      <article class="coming-card">
+        <span class="stamp">DEV</span>
+        <p class="num">08<em>.</em></p>
+        <h3>The <em>Editorial.</em></h3>
+        <p>A monthly newsletter mirroring the Instagram explainers in long-form &mdash; <em>plain-language commentary</em> on each IRCC draw, sent the morning after. EN and TR.</p>
+        <p class="meta-row"><span>Pre-production</span><span><b>Ongoing</b></span></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END CREDITS
+  ==================================================================== -->
+  <section class="end-credits reveal">
+    <div class="end-credits-inner">
+      <p class="lbl">— Roll the credits —</p>
+      <h2>End <em>credits.</em></h2>
+
+      <div class="credits-roll">
+        <div class="row">
+          <span class="role">Director</span>
+          <span class="name">Burcu Akyol <em>RCIC-IRB</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Studio of record</span>
+          <span class="name">FrameFlow · <em>Toronto</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 01 · Ethical</span>
+          <span class="name">Counsel of record · <em>signed</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 02 · Personalised</span>
+          <span class="name">The home page · <em>by name</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 03 · Transparent</span>
+          <span class="name">Box office · <em>open</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 04 · Knowledge</span>
+          <span class="name">156+ draws · <em>indexed</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 05 · Care</span>
+          <span class="name">Two languages · <em>two registers</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Programme catalogue</span>
+          <span class="name">Designed &amp; printed by <em>Frame Flow</em></span>
+        </div>
+      </div>
+
+      <p class="credits-end">A <b>FrameFlow Studio</b> production · 2026</p>
+
+      <a class="end-cta">Book the next première →</a>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · The Immigration Film Festival</span>
+    <span class="right">A <strong>FrameFlow</strong> production</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

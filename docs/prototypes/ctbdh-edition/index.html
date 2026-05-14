@@ -1,0 +1,1972 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CTBDH — The Edition (FrameFlow / Prototype 04)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · REEL · CTBDH
+       Prototype 04 — "The Edition" (Annual × Reel hybrid)
+
+       Combines Annual's editorial register (cream paper, Fraunces
+       italic, bilingual EN/TR foreword and feature spreads) with
+       Reel's "screenings, in order" programme list — a numbered
+       index of all ten films sitting between the foreword and the
+       deep magazine features. Clicking a screening anchors down to
+       the corresponding feature.
+    ==================================================================== */
+
+    :root {
+      --paper:    #f4eee2;
+      --paper-2:  #ebe2cf;
+      --paper-d:  #d8c9aa;
+      --rule:     #c2b289;
+      --ink:      #1a120a;
+      --ink-2:    #574a36;
+      --ink-3:    #8a7c64;
+      --red:      #b91d1d;
+      --red-d:    #7a0e0e;
+      --black:    #0a0a0a;
+      --black-2:  #141414;
+
+      --serif:   "Fraunces", Georgia, serif;
+      --sans:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.65;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.18  0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .rail {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: rgba(244, 238, 226, 0.92);
+      border-bottom: 1px solid var(--rule);
+      backdrop-filter: blur(8px);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      gap: 16px;
+      font-weight: 500;
+    }
+    .rail .back { color: var(--ink); white-space: nowrap; }
+    .rail .back:hover { color: var(--red); }
+    .rail .frame {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 5px 12px;
+      letter-spacing: 0.24em;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .rail .meta { white-space: nowrap; color: var(--red); letter-spacing: 0.32em; }
+    @media (max-width: 640px) {
+      .rail { padding: 12px 16px; gap: 12px; font-size: 9px; }
+      .rail .meta { display: none; }
+    }
+
+    /* ============================================================
+       COVER SPREAD
+    ============================================================ */
+    .cover {
+      padding: 100px 48px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+      text-align: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .cover .pre {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      font-weight: 500;
+    }
+    .cover .pre .red { color: var(--red); }
+    .cover-mark {
+      width: clamp(96px, 12vw, 144px);
+      height: auto;
+      margin: 0 auto 32px;
+      display: block;
+    }
+    .cover h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(56px, 9vw, 144px);
+      letter-spacing: -0.03em;
+      line-height: 0.92;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .cover h1 em {
+      font-style: italic;
+      color: var(--red);
+      font-weight: 300;
+    }
+    .cover .turkish {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(20px, 2.4vw, 30px);
+      color: var(--ink-2);
+      max-width: 32ch;
+      margin: 0 auto 56px;
+      line-height: 1.4;
+    }
+    .cover .turkish::before, .cover .turkish::after {
+      content: "—";
+      color: var(--red);
+      margin: 0 12px;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      max-width: 880px;
+      margin: 0 auto;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .cover-meta > div {
+      padding: 22px 14px;
+      border-left: 1px solid var(--rule);
+      text-align: center;
+    }
+    .cover-meta > div:first-child { border-left: 0; }
+    .cover-meta dt {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .cover-meta dd {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 28px;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       FOREWORD
+    ============================================================ */
+    .foreword {
+      padding: 120px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+      border-bottom: 1px solid var(--rule);
+    }
+    .foreword .head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .foreword .head h2 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(36px, 4.4vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .foreword .head h2 b { font-style: normal; font-weight: 400; }
+    .foreword .head .turkish {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--red);
+      line-height: 1.4;
+    }
+    .foreword .body p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      max-width: 60ch;
+    }
+    .foreword .body p strong { color: var(--ink); font-weight: 500; }
+    .foreword .body p em { color: var(--red); font-style: italic; font-weight: 500; }
+    .foreword .body p:first-child::first-letter {
+      float: left;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 5em;
+      line-height: 0.85;
+      padding: 0.05em 0.12em 0 0;
+      color: var(--red);
+    }
+    .foreword .signoff {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .foreword .signoff b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       PROGRAMME — "screenings, in order" — lifted from Reel,
+       restyled for cream paper. Sits between foreword and features.
+    ============================================================ */
+    .programme-head {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 100px 48px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      border-bottom: 1px solid var(--rule);
+    }
+    .programme-head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .programme-head h3 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(32px, 4.4vw, 64px);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .programme-head h3 b { font-style: normal; color: var(--red); font-weight: 400; }
+    .programme-head .count {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .programme-head .count b { color: var(--ink); font-weight: 500; }
+
+    .programme {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 100px;
+    }
+    .screening {
+      display: grid;
+      grid-template-columns: 64px 280px 1fr 180px 140px;
+      gap: 32px;
+      align-items: center;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.3s;
+    }
+    .screening:hover {
+      background: linear-gradient(90deg, transparent 0%, rgba(185, 29, 29, 0.05) 50%, transparent 100%);
+    }
+    .scr-num {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      line-height: 1;
+    }
+    .scr-poster {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--black-2) 0%, var(--black) 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .scr-poster:hover { transform: translateY(-2px); }
+    .scr-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(185, 29, 29, 0.18), transparent 60%);
+    }
+    .scr-poster img {
+      max-width: 60%;
+      max-height: 60%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.5s, opacity 0.4s;
+    }
+    .scr-poster:hover img { transform: scale(1.06); opacity: 1; }
+    .scr-poster.keep img { filter: none; }
+    .scr-poster .tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 8px;
+      background: rgba(244, 238, 226, 0.92);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+      z-index: 3;
+      font-weight: 500;
+    }
+    .scr-poster .play {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 28px; height: 28px;
+      background: var(--red);
+      color: var(--paper);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      z-index: 3;
+      transition: transform 0.3s;
+    }
+    .scr-poster:hover .play { transform: scale(1.1); }
+
+    .scr-meta .name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(20px, 2vw, 26px);
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .scr-meta .name b { font-style: normal; }
+    .scr-meta .sector {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .scr-meta .syn {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 50ch;
+    }
+    .scr-runtime {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 38px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .scr-runtime small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-style: normal;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+    .scr-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 500;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      justify-self: end;
+      cursor: pointer;
+    }
+    .scr-cta:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--paper);
+    }
+    .scr-cta .arr { transition: transform 0.2s; }
+    .scr-cta:hover .arr { transform: translateY(2px); }
+
+    /* ============================================================
+       INTERSTITIAL — bridge between programme and feature spreads
+    ============================================================ */
+    .bridge {
+      padding: 80px 48px;
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .bridge .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .bridge p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.3;
+      color: var(--ink);
+      max-width: 30ch;
+      margin: 0 auto 14px;
+    }
+    .bridge p em { color: var(--red); font-weight: 400; }
+    .bridge .turkish {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 18px;
+      color: var(--ink-2);
+      margin: 0 auto;
+      max-width: 32ch;
+    }
+
+    /* ============================================================
+       FEATURE — magazine spread per business (alternating)
+    ============================================================ */
+    .feature {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 6fr 5fr;
+      gap: 56px;
+      align-items: start;
+      border-bottom: 1px solid var(--rule);
+      scroll-margin-top: 64px;
+    }
+    .feature.flip > .feature-poster-block { order: 2; }
+    .feature-poster-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      /* Stay with the reader as the text column scrolls — fixes the
+         empty space the shorter 16:9 poster otherwise leaves. The
+         block sticks 80px below the viewport top (under the rail)
+         until .feature ends. Disabled on mobile, where the spread
+         stacks naturally. */
+      position: sticky;
+      top: 80px;
+      align-self: start;
+    }
+    .feature-poster-notes {
+      margin-top: 8px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+    }
+    .feature-poster-notes .head {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .feature-poster-notes dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .feature-poster-notes dl > div {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .feature-poster-notes dl > div:nth-child(odd) { padding-right: 14px; }
+    .feature-poster-notes dl > div:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--rule); }
+    .feature-poster-notes dt {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .feature-poster-notes dd {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 15px;
+      color: var(--ink);
+    }
+    .feature-poster {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: var(--black);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .feature-poster-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      padding: 4px 2px 0;
+    }
+    .feature-poster-meta .info {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .feature-poster-meta .info b { color: var(--ink); font-weight: 500; }
+    .feature-poster-meta .watch {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 500;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .feature-poster-meta .watch:hover {
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .feature-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(185, 29, 29, 0.18), transparent 60%);
+    }
+    .feature-poster .logo {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .feature-poster .logo img {
+      max-width: 60%;
+      max-height: 60%;
+      filter: brightness(0) invert(1);
+      opacity: 0.95;
+      transition: transform 0.5s, opacity 0.4s;
+    }
+    .feature-poster .logo.keep img { filter: none; }
+    .feature-poster:hover .logo img { transform: scale(1.05); opacity: 1; }
+    .feature-poster .stamp {
+      position: absolute;
+      top: 14px; left: 14px;
+      padding: 6px 10px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 500;
+      z-index: 2;
+    }
+    .feature-poster .runtime {
+      position: absolute;
+      bottom: 14px; right: 14px;
+      padding: 5px 10px;
+      background: rgba(244, 238, 226, 0.92);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      font-weight: 500;
+      z-index: 2;
+    }
+    .feature-poster .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(244, 238, 226, 0.92);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: transform 0.4s, background 0.3s;
+      z-index: 2;
+    }
+    .feature-poster:hover .play {
+      transform: translate(-50%, -50%) scale(1.08);
+      background: var(--red);
+      color: var(--paper);
+    }
+
+    .feature-text { padding-top: 6px; }
+    .feature-text .num {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(72px, 10vw, 144px);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .feature-text .turkish {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 16px;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .feature-text h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(36px, 4.4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .feature-text h3 em { font-style: italic; color: var(--red); font-weight: 400; }
+    .feature-text .sector {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 22px;
+    }
+    .feature-text .blurb {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 44ch;
+      margin-bottom: 24px;
+    }
+    .feature-text .blurb strong { color: var(--ink); font-weight: 500; }
+    .feature-text .quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--ink);
+      max-width: 32ch;
+      padding: 18px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      margin: 24px 0;
+    }
+    .feature-text .quote::before { content: "“ "; color: var(--red); }
+    .feature-text .quote::after  { content: " ”"; color: var(--red); }
+    .feature-text dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .feature-text dl > div {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .feature-text dl > div:nth-child(odd) { padding-right: 14px; }
+    .feature-text dl > div:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--rule); }
+    .feature-text dt {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .feature-text dd {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--ink);
+    }
+    .feature-text .back-to-prog {
+      margin-top: 24px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      display: inline-block;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .feature-text .back-to-prog:hover { color: var(--red); border-color: var(--red); }
+
+    /* ============================================================
+       INTERLUDE — proverb (kept from Annual)
+    ============================================================ */
+    .interlude {
+      padding: 80px 48px;
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .interlude .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .interlude p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(24px, 3.2vw, 40px);
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .interlude p em { color: var(--red); font-weight: 400; }
+    .interlude .src {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       MARKS — palette + type
+    ============================================================ */
+    .marks {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .marks h3 {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.black { background: var(--black); color: var(--paper); }
+    .pchip.red { background: var(--red); color: var(--paper); }
+    .pchip.bone { background: var(--paper); color: var(--ink); }
+    .pchip.tonal { background: var(--paper-2); color: var(--ink); border-color: var(--rule); }
+    .pchip .role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .pchip .name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+    }
+    .pchip .hex {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      opacity: 0.85;
+    }
+    .type-stack { display: flex; flex-direction: column; }
+    .trow {
+      padding: 16px 0;
+      border-top: 1px solid var(--rule);
+    }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow:last-child { border-bottom: 1px solid var(--rule); }
+    .trow .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .trow .specimen.h {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 38px;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .trow .specimen.m {
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--ink);
+    }
+    .trow .specimen.b {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .trow .specimen.l {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .trow .specimen.t {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--red);
+    }
+
+    /* ============================================================
+       SCOPE
+    ============================================================ */
+    .scope {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--rule);
+    }
+    .scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .scope-head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .scope-head h3 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .scope-head h3 b { font-style: normal; font-weight: 400; }
+    .scope-head .total {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+    }
+    .scope-row .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .scope-row .name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 26px;
+      color: var(--ink);
+    }
+    .scope-row .desc {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .scope-row .out {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      font-weight: 500;
+    }
+    .scope-row .out b {
+      display: block;
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 20px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       END / COLOPHON
+    ============================================================ */
+    .end {
+      padding: 140px 48px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .end h3 b { font-style: normal; font-weight: 400; }
+    .end .turkish {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(20px, 2.4vw, 28px);
+      color: var(--red);
+      margin-bottom: 24px;
+    }
+    .end p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 26px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cta:hover { background: var(--red); border-color: var(--red); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .foot .ce { text-align: center; color: var(--red); letter-spacing: 0.5em; font-weight: 500; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--red); }
+    .foot b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1080px) {
+      .screening {
+        grid-template-columns: 50px 220px 1fr;
+        gap: 18px 24px;
+      }
+      .scr-runtime, .scr-cta { grid-column: 2 / 4; }
+      .scr-cta { justify-self: start; }
+      .scr-runtime { display: flex; gap: 12px; align-items: baseline; font-size: 26px; }
+      .scr-runtime small { margin-top: 0; }
+    }
+    @media (max-width: 900px) {
+      .cover { padding: 60px 22px 50px; }
+      .cover .pre { gap: 14px; font-size: 9px; }
+      .cover-meta { grid-template-columns: 1fr 1fr; }
+      .cover-meta > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--rule); }
+      .cover-meta > div:nth-child(4) { border-top: 1px solid var(--rule); }
+      .foreword { padding: 60px 22px; grid-template-columns: 1fr; gap: 32px; }
+      .programme-head { padding: 60px 22px 22px; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .programme-head .label { grid-column: 1 / -1; }
+      .programme { padding: 0 22px 60px; }
+      .screening { grid-template-columns: 50px 1fr; padding: 22px 0; gap: 16px; }
+      .scr-poster { grid-column: 1 / -1; }
+      .scr-meta { grid-column: 2 / 3; }
+      .scr-runtime, .scr-cta { grid-column: 1 / -1; }
+      .bridge { padding: 60px 22px; }
+      .feature { padding: 60px 22px; grid-template-columns: 1fr; gap: 36px; }
+      .feature.flip > .feature-poster-block { order: 0; }
+      .feature-poster-block { position: static; }
+      .feature-poster-notes dl { grid-template-columns: 1fr; }
+      .feature-poster-notes dl > div:nth-child(even) { padding-left: 0; border-left: 0; }
+      .feature-poster-notes dl > div:nth-child(odd) { padding-right: 0; }
+      .interlude { padding: 60px 22px; }
+      .marks { grid-template-columns: 1fr; gap: 48px; padding: 60px 22px; }
+      .palette { grid-template-columns: 1fr 1fr; }
+      .scope { padding: 60px 22px; }
+      .scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .scope-head .label { grid-column: 1 / -1; }
+      .scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .scope-row .out { text-align: left; }
+      .end { padding: 80px 22px 60px; }
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+      .feature-text dl { grid-template-columns: 1fr; }
+      .feature-text dl > div:nth-child(even) { padding-left: 0; border-left: 0; }
+      .feature-text dl > div:nth-child(odd) { padding-right: 0; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 1.1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .feature-poster .logo img, .scr-poster img { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <a href="../" class="back">← Portfolio</a>
+    <span class="frame">★ #C-XX ★</span>
+    <span class="meta">CTBDH · Toronto · 2025</span>
+  </header>
+
+  <!-- =================================================================
+       COVER
+  ==================================================================== -->
+  <section class="cover">
+    <div class="pre">
+      <span>Volume I</span>
+      <span class="red">·</span>
+      <span>The Edition</span>
+      <span class="red">·</span>
+      <span>Spring MMXXV</span>
+    </div>
+
+    <img class="cover-mark" src="../../../public/portfolio/ctbdh/logo/ctbdh-mark.png" alt="CTBDH mark">
+
+    <h1>An Edition<br>of <em>Ten Stories.</em></h1>
+    <p class="turkish">On hikâye, bir programda, bir yıllıkta.</p>
+
+    <dl class="cover-meta">
+      <div><dt>Members</dt><dd>10</dd></div>
+      <div><dt>Sectors</dt><dd>06</dd></div>
+      <div><dt>Films</dt><dd>10</dd></div>
+      <div><dt>Year</dt><dd>2025</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       FOREWORD
+  ==================================================================== -->
+  <section class="foreword reveal">
+    <div class="head">
+      <p class="label">Foreword · Önsöz</p>
+      <h2>A note from <b>the Hub.</b></h2>
+      <p class="turkish">Toronto'dan Konya'ya — bir köprü.</p>
+    </div>
+
+    <div class="body">
+      <p>The Canada Türkiye Business Development Hub was founded on a small idea: that a Turkish-Canadian founder in Toronto and a small manufacturer in Konya share more than a flag colour. They share a line of contacts, a way of doing favours, and an unspoken belief that <strong>introductions are infrastructure.</strong></p>
+      <p>This Edition collects ten stories from our membership — businesses we filmed across the GTA over the spring of 2025, with FrameFlow on the camera. The <em>Programme</em> below is the at-a-glance index — ten screenings, in order. Beneath it, each story unfolds at length: a portrait, a quote, a short feature.</p>
+      <p>Read the Programme to find the screening that speaks to you. Read the Features for the long version.</p>
+      <div class="signoff">— <b>CTBDH Editorial</b> · Concord &amp; Toronto · 2025</div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PROGRAMME — "screenings, in order" (lifted from Reel)
+  ==================================================================== -->
+  <header id="programme" class="programme-head reveal">
+    <span class="label">Programme · I</span>
+    <h3>The screenings, <b>in order.</b></h3>
+    <span class="count"><b>10</b> films · 16:9 · ~24 min total</span>
+  </header>
+
+  <section class="programme">
+    <article class="screening reveal">
+      <span class="scr-num">i.</span>
+      <a class="scr-poster" href="#feature-01">
+        <span class="tag">FF · 01</span>
+        <img src="../../../public/portfolio/ctbdh/members/asd-laminat.png" alt="ASD Laminat">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">ASD Laminat</h4>
+        <p class="sector">Surfaces · Manufacturing · Concord</p>
+        <p class="syn">A laminate workshop with a workshop's discipline — colour samples chosen by hand, a cutting line you can hear from the parking lot.</p>
+      </div>
+      <p class="scr-runtime">2:34<small>Runtime</small></p>
+      <a href="#feature-01" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">ii.</span>
+      <a class="scr-poster keep" href="#feature-02">
+        <span class="tag">FF · 02</span>
+        <img src="../../../public/portfolio/ctbdh/members/atlas-food-beverage.png" alt="Atlas Food &amp; Beverage">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Atlas Food &amp; Beverage</h4>
+        <p class="sector">Food &amp; Drink · Distribution · GTA</p>
+        <p class="syn">Distribution that opens a kitchen door — Anatolian flavours onto Canadian shelves, the long phone calls home.</p>
+      </div>
+      <p class="scr-runtime">2:48<small>Runtime</small></p>
+      <a href="#feature-02" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">iii.</span>
+      <a class="scr-poster keep" href="#feature-03">
+        <span class="tag">FF · 03</span>
+        <img src="../../../public/portfolio/ctbdh/members/aydin-cpa.png" alt="Aydin CPA">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Aydin CPA</h4>
+        <p class="sector">Accounting · Professional Services · North York</p>
+        <p class="syn">A bilingual CPA practice that takes founders from first invoice to first audit. Calls in two languages.</p>
+      </div>
+      <p class="scr-runtime">2:12<small>Runtime</small></p>
+      <a href="#feature-03" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">iv.</span>
+      <a class="scr-poster keep" href="#feature-04">
+        <span class="tag">FF · 04</span>
+        <img src="../../../public/portfolio/ctbdh/members/bookkeeping-bizz.png" alt="Bookkeeping Bizz">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Bookkeeping Bizz</h4>
+        <p class="sector">Bookkeeping · Small Business · Toronto</p>
+        <p class="syn">Cloud-first books for founders who didn't open a business to do their own books.</p>
+      </div>
+      <p class="scr-runtime">2:18<small>Runtime</small></p>
+      <a href="#feature-04" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">v.</span>
+      <a class="scr-poster keep" href="#feature-05">
+        <span class="tag">FF · 05</span>
+        <img src="../../../public/portfolio/ctbdh/members/grp-rugs.png" alt="GRP Rugs">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">GRP Rugs</h4>
+        <p class="sector">Home · Retail · Concord</p>
+        <p class="syn">A rug warehouse the size of a city block — Gaziantep before lunch, Toronto after.</p>
+      </div>
+      <p class="scr-runtime">2:42<small>Runtime</small></p>
+      <a href="#feature-05" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">vi.</span>
+      <a class="scr-poster keep" href="#feature-06">
+        <span class="tag">FF · 06</span>
+        <img src="../../../public/portfolio/ctbdh/members/jc-professional.png" alt="JC Professional">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">JC Professional Co.</h4>
+        <p class="sector">Tax &amp; Advisory · Professional Services · Toronto</p>
+        <p class="syn">A multi-disciplinary practice for founders who are also husbands, wives and immigrants.</p>
+      </div>
+      <p class="scr-runtime">2:24<small>Runtime</small></p>
+      <a href="#feature-06" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">vii.</span>
+      <a class="scr-poster keep" href="#feature-07">
+        <span class="tag">FF · 07</span>
+        <img src="../../../public/portfolio/ctbdh/members/neo-project-consulting.png" alt="NEO Project Consulting">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">NEO Project Consulting</h4>
+        <p class="sector">Consulting · Construction · Mississauga</p>
+        <p class="syn">Project management for new builds and reno gut-jobs — three trades, one schedule.</p>
+      </div>
+      <p class="scr-runtime">2:36<small>Runtime</small></p>
+      <a href="#feature-07" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">viii.</span>
+      <a class="scr-poster keep" href="#feature-08">
+        <span class="tag">FF · 08</span>
+        <img src="../../../public/portfolio/ctbdh/members/northern-pathways.png" alt="Northern Pathways">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Northern Pathways Immigration</h4>
+        <p class="sector">Immigration · Consulting · Toronto</p>
+        <p class="syn">A regulated immigration practice run by people who arrived themselves.</p>
+      </div>
+      <p class="scr-runtime">2:54<small>Runtime</small></p>
+      <a href="#feature-08" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">ix.</span>
+      <a class="scr-poster" href="#feature-09">
+        <span class="tag">FF · 09</span>
+        <img src="../../../public/portfolio/ctbdh/members/sapphirus.png" alt="Sapphirus">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Sapphirus</h4>
+        <p class="sector">Lifestyle · Brand · Toronto</p>
+        <p class="syn">A small brand with a sharp mark, built between Istanbul and Toronto.</p>
+      </div>
+      <p class="scr-runtime">2:08<small>Runtime</small></p>
+      <a href="#feature-09" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">x.</span>
+      <a class="scr-poster keep" href="#feature-10">
+        <span class="tag">FF · 10</span>
+        <img src="../../../public/portfolio/ctbdh/members/urla-fine-foods.png" alt="Urla Fine Foods">
+        <span class="play" aria-hidden>▶</span>
+      </a>
+      <div class="scr-meta">
+        <h4 class="name">Urla Fine Foods</h4>
+        <p class="sector">Food · Specialty · Etobicoke</p>
+        <p class="syn">An Aegean larder in the GTA — olive oil, pepper paste, a founder who still calls the village.</p>
+      </div>
+      <p class="scr-runtime">2:46<small>Runtime</small></p>
+      <a href="#feature-10" class="scr-cta">Read story <span class="arr">↓</span></a>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       BRIDGE — between programme and feature spreads
+  ==================================================================== -->
+  <section class="bridge reveal">
+    <p class="label">— The features —</p>
+    <p>Below, the <em>long version</em> of each story.</p>
+    <p class="turkish">Hikâyelerin uzun hâli, sayfa sayfa.</p>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 01 — ASD Laminat
+  ==================================================================== -->
+  <section id="feature-01" class="feature reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 01</span>
+        <div class="logo"><img src="../../../public/portfolio/ctbdh/members/asd-laminat.png" alt="ASD Laminat"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:34</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 01 · 16:9 · <b>2:34</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">01.</p>
+      <p class="turkish">Birinci hikâye — <em>yüzeyler.</em></p>
+      <h3>The colour samples are still <em>chosen by hand.</em></h3>
+      <p class="sector">ASD Laminat · Surfaces · Manufacturing · Concord ON</p>
+      <p class="blurb">A laminate workshop with a workshop's discipline. <strong>Started in Bursa</strong>, now shipping sheets across the GTA — colour, texture, edge profile, and a cutting line you can hear from the parking lot.</p>
+      <p class="quote">We don't sell sheets. We sell what the sheet ends up holding up.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2014</dd></div>
+        <div><dt>Location</dt><dd>Concord, ON</dd></div>
+        <div><dt>Sector</dt><dd>Surfaces</dd></div>
+        <div><dt>Runtime</dt><dd>2:34</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 02 — Atlas Food (flipped)
+  ==================================================================== -->
+  <section id="feature-02" class="feature flip reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 02</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/atlas-food-beverage.png" alt="Atlas Food &amp; Beverage"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:48</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 02 · 16:9 · <b>2:48</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">02.</p>
+      <p class="turkish">İkinci hikâye — <em>mutfak kapısı.</em></p>
+      <h3>Distribution that opens <em>a kitchen door.</em></h3>
+      <p class="sector">Atlas Food &amp; Beverage · Food · Distribution · GTA</p>
+      <p class="blurb">Mehmet Gedik on what it takes to put Anatolian flavours on Canadian shelves — sourcing, customs, the long phone calls home, and the Tuesday route through every Turkish grocer between Etobicoke and Pickering.</p>
+      <p class="quote">If the chef trusts the box, the chef trusts the spice.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2018</dd></div>
+        <div><dt>Location</dt><dd>GTA</dd></div>
+        <div><dt>Sector</dt><dd>Food · Drink</dd></div>
+        <div><dt>Runtime</dt><dd>2:48</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 03 — Aydin CPA
+  ==================================================================== -->
+  <section id="feature-03" class="feature reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 03</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/aydin-cpa.png" alt="Aydin CPA"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:12</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 03 · 16:9 · <b>2:12</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">03.</p>
+      <p class="turkish">Üçüncü hikâye — <em>ilk faturadan ilk denetime.</em></p>
+      <h3>From first invoice to <em>first audit.</em></h3>
+      <p class="sector">Aydin CPA · Accounting · North York ON</p>
+      <p class="blurb">A bilingual CPA practice where calls are taken in two languages and explanations are given in three. We filmed a morning at the firm — HST returns on the wall, the founder's daughter at the front desk, the founder himself on a call to a client in Mersin.</p>
+      <p class="quote">The first audit is a small ceremony. We try to make it feel that way.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2010</dd></div>
+        <div><dt>Location</dt><dd>North York, ON</dd></div>
+        <div><dt>Sector</dt><dd>Professional Services</dd></div>
+        <div><dt>Runtime</dt><dd>2:12</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       INTERLUDE — proverb
+  ==================================================================== -->
+  <section class="interlude reveal">
+    <p class="label">— A proverb —</p>
+    <p>Komşu komşunun <em>külüne muhtaçtır.</em></p>
+    <p style="font-size: 16px; color: var(--ink-2);">A neighbour needs even the ashes of his neighbour.</p>
+    <p class="src">Anatolian saying · still useful</p>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 04 — Bookkeeping Bizz (flipped)
+  ==================================================================== -->
+  <section id="feature-04" class="feature flip reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 04</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/bookkeeping-bizz.png" alt="Bookkeeping Bizz"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:18</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 04 · 16:9 · <b>2:18</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">04.</p>
+      <p class="turkish">Dördüncü hikâye — <em>defter.</em></p>
+      <h3>Books for everyone who <em>didn't open a business</em> to do their own books.</h3>
+      <p class="sector">Bookkeeping Bizz · Small Business · Toronto ON</p>
+      <p class="blurb">Cloud-first, plain-spoken, monthly. A practice built for founders who want to know their numbers but don't want a spreadsheet relationship — and who'd like a real human on the email when something feels off in March.</p>
+      <p class="quote">A clean ledger is the cheapest sleep aid in the GTA.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2021</dd></div>
+        <div><dt>Location</dt><dd>Toronto, ON</dd></div>
+        <div><dt>Sector</dt><dd>Bookkeeping</dd></div>
+        <div><dt>Runtime</dt><dd>2:18</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 05 — GRP Rugs
+  ==================================================================== -->
+  <section id="feature-05" class="feature reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 05</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/grp-rugs.png" alt="GRP Rugs"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:42</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 05 · 16:9 · <b>2:42</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">05.</p>
+      <p class="turkish">Beşinci hikâye — <em>halı.</em></p>
+      <h3>Gaziantep before lunch, <em>Toronto after.</em></h3>
+      <p class="sector">GRP Rugs · Home · Retail · Concord ON</p>
+      <p class="blurb">A rug warehouse the size of a city block, organised by colour, fibre, knots-per-inch and country of origin. The buyer keeps three phone numbers in one rotation: a weaver in Anatolia, a designer in Yorkville, and a builder in Markham.</p>
+      <p class="quote">Every rug is a flat house. We pay attention to its rooms.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2015</dd></div>
+        <div><dt>Location</dt><dd>Concord, ON</dd></div>
+        <div><dt>Sector</dt><dd>Home · Retail</dd></div>
+        <div><dt>Runtime</dt><dd>2:42</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 06 — JC Professional (flipped)
+  ==================================================================== -->
+  <section id="feature-06" class="feature flip reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 06</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/jc-professional.png" alt="JC Professional"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:24</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 06 · 16:9 · <b>2:24</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">06.</p>
+      <p class="turkish">Altıncı hikâye — <em>uzun konuşma.</em></p>
+      <h3>For founders who are also <em>husbands, wives, immigrants.</em></h3>
+      <p class="sector">JC Professional Co. · Tax &amp; Advisory · Toronto ON</p>
+      <p class="blurb">A multi-disciplinary practice with the rare habit of taking the long conversation before any of the short ones. Tax, audit, advisory, and the gentle work of explaining a Canadian financial system to founders who learned a different one first.</p>
+      <p class="quote">Numbers are a second language for most of our clients. We take care with the translation.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2008</dd></div>
+        <div><dt>Location</dt><dd>Toronto, ON</dd></div>
+        <div><dt>Sector</dt><dd>Professional Services</dd></div>
+        <div><dt>Runtime</dt><dd>2:24</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 07 — NEO Project Consulting
+  ==================================================================== -->
+  <section id="feature-07" class="feature reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 07</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/neo-project-consulting.png" alt="NEO Project Consulting"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:36</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 07 · 16:9 · <b>2:36</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">07.</p>
+      <p class="turkish">Yedinci hikâye — <em>şantiye.</em></p>
+      <h3>Three trades, <em>one schedule.</em></h3>
+      <p class="sector">NEO Project Consulting · Consulting · Mississauga ON</p>
+      <p class="blurb">Project management for new builds and reno gut-jobs. Site visits between Mississauga and Markham, drawings that translate three trades into one schedule, and a foreman's clipboard that has a Pantone chip taped to the back.</p>
+      <p class="quote">A schedule that the trades respect is the only kind of schedule.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2017</dd></div>
+        <div><dt>Location</dt><dd>Mississauga, ON</dd></div>
+        <div><dt>Sector</dt><dd>Consulting</dd></div>
+        <div><dt>Runtime</dt><dd>2:36</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 08 — Northern Pathways (flipped)
+  ==================================================================== -->
+  <section id="feature-08" class="feature flip reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 08</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/northern-pathways.png" alt="Northern Pathways"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:54</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 08 · 16:9 · <b>2:54</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">08.</p>
+      <p class="turkish">Sekizinci hikâye — <em>geliş.</em></p>
+      <h3>Run by people who <em>arrived themselves.</em></h3>
+      <p class="sector">Northern Pathways Immigration · Consulting · Toronto ON</p>
+      <p class="blurb">A regulated immigration practice with a particular kind of empathy — the consultants are former applicants. Express Entry, study permits, the slow files, and the small celebrations on the day a PR card lands in the mailbox.</p>
+      <p class="quote">A file is a person. We try to remember that on the days the system forgets.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2019</dd></div>
+        <div><dt>Location</dt><dd>Toronto, ON</dd></div>
+        <div><dt>Sector</dt><dd>Immigration</dd></div>
+        <div><dt>Runtime</dt><dd>2:54</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 09 — Sapphirus
+  ==================================================================== -->
+  <section id="feature-09" class="feature reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 09</span>
+        <div class="logo"><img src="../../../public/portfolio/ctbdh/members/sapphirus.png" alt="Sapphirus"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:08</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 09 · 16:9 · <b>2:08</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">09.</p>
+      <p class="turkish">Dokuzuncu hikâye — <em>ince çizgi.</em></p>
+      <h3>A small brand with <em>a sharp mark.</em></h3>
+      <p class="sector">Sapphirus · Lifestyle · Toronto ON</p>
+      <p class="blurb">Built between Istanbul and Toronto with a logo as taut as a drawn bowstring. We filmed the workshop, the model, and the moment the line is finally hung in store — six minutes of dailies edited into a two-minute argument.</p>
+      <p class="quote">A mark earns its line every time you see it on a shelf.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2020</dd></div>
+        <div><dt>Location</dt><dd>Toronto, ON</dd></div>
+        <div><dt>Sector</dt><dd>Lifestyle</dd></div>
+        <div><dt>Runtime</dt><dd>2:08</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 10 — Urla Fine Foods (flipped)
+  ==================================================================== -->
+  <section id="feature-10" class="feature flip reveal">
+    <div class="feature-poster-block">
+      <div class="feature-poster">
+        <span class="stamp">FF · 10</span>
+        <div class="logo keep"><img src="../../../public/portfolio/ctbdh/members/urla-fine-foods.png" alt="Urla Fine Foods"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:46</span>
+      </div>
+      <div class="feature-poster-meta">
+        <span class="info">FF · 10 · 16:9 · <b>2:46</b></span>
+        <a href="#" class="watch">Watch the film →</a>
+      </div>
+      <div class="feature-poster-notes">
+        <p class="head">Shoot specifications</p>
+        <dl>
+          <div><dt>Master</dt><dd>16:9 H.264</dd></div>
+          <div><dt>Crew</dt><dd>FrameFlow Studio</dd></div>
+          <div><dt>Audio</dt><dd>Dialogue + amb.</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="num">10.</p>
+      <p class="turkish">Onuncu hikâye — <em>Ege'den.</em></p>
+      <h3>An Aegean larder <em>in the GTA.</em></h3>
+      <p class="sector">Urla Fine Foods · Food · Specialty · Etobicoke ON</p>
+      <p class="blurb">Olive oil, pepper paste, sun-dried tomato, and a founder who still calls the village every Sunday. Filmed in the warehouse that smells, faintly, of summer — and at a kitchen-table tasting that ran twenty minutes longer than it was supposed to.</p>
+      <p class="quote">An olive oil is a place. We're trying to bottle ours honestly.</p>
+      <dl>
+        <div><dt>Founded</dt><dd>2016</dd></div>
+        <div><dt>Location</dt><dd>Etobicoke, ON</dd></div>
+        <div><dt>Sector</dt><dd>Food · Specialty</dd></div>
+        <div><dt>Runtime</dt><dd>2:46</dd></div>
+      </dl>
+      <a href="#programme" class="back-to-prog">↑ Back to programme</a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · two flags, one colour</h3>
+      <div class="palette">
+        <div class="pchip black">
+          <span class="role">Mark · 25%</span>
+          <div>
+            <p class="name">Stage Black</p>
+            <p class="hex">#0A0A0A</p>
+          </div>
+        </div>
+        <div class="pchip red">
+          <span class="role">Primary · 20%</span>
+          <div>
+            <p class="name">CTBDH Red</p>
+            <p class="hex">#B91D1D</p>
+          </div>
+        </div>
+        <div class="pchip bone">
+          <span class="role">Surface · 50%</span>
+          <div>
+            <p class="name">Cream</p>
+            <p class="hex">#F4EEE2</p>
+          </div>
+        </div>
+        <div class="pchip tonal">
+          <span class="role">Tonal · 5%</span>
+          <div>
+            <p class="name">Paper</p>
+            <p class="hex">#EBE2CF</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · Fraunces + Inter</h3>
+      <div class="type-stack">
+        <div class="trow">
+          <p class="label">Display · Fraunces Italic</p>
+          <p class="specimen h">Aa Bb · 0123</p>
+        </div>
+        <div class="trow">
+          <p class="label">Subhead · Inter 500</p>
+          <p class="specimen m">An edition of ten stories.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Body · Inter 400</p>
+          <p class="specimen b">A network of Turkish-Canadian small and medium enterprises across the GTA.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Mono Label</p>
+          <p class="specimen l">Concord · Toronto · MMXXV</p>
+        </div>
+        <div class="trow">
+          <p class="label">Türkçe · Italic</p>
+          <p class="specimen t">Komşu komşunun külüne muhtaçtır.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <div class="scope-head">
+      <span class="label">Scope · kapsam</span>
+      <h3>What we made for <b>CTBDH.</b></h3>
+      <span class="total">02 services</span>
+    </div>
+    <div class="scope-row">
+      <span class="num">01.</span>
+      <span class="name">Logo &amp; Identity</span>
+      <p class="desc">A red-on-black mark for the network — the lower-case ct ligature where C and T share a single curve, plus a bilingual wordmark and a brand kit for member businesses to flag their CTBDH affiliation.</p>
+      <p class="out"><b>1</b>identity system</p>
+    </div>
+    <div class="scope-row">
+      <span class="num">02.</span>
+      <span class="name">Videography</span>
+      <p class="desc">Ten commercial business-story films — one for each member. Filmed on location at workshops, warehouses, offices and shops across the GTA. 16:9 master delivered with 1:1 and 9:16 cut-downs for social.</p>
+      <p class="out"><b>10</b>films · 16:9</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END / COLOPHON
+  ==================================================================== -->
+  <section class="end reveal">
+    <p class="label">— Colophon —</p>
+    <h3>Add the <b>next</b> <em>chapter.</em></h3>
+    <p class="turkish">Sıradaki bölümü <em>siz yazın.</em></p>
+    <p>Volume II is being assembled. If you run a Turkish-Canadian business with a story worth filming — or you'd like to host the next print night — write us.</p>
+    <a class="cta" href="#">Submit a story <span class="arr">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Bound by <b>FrameFlow</b> · Toronto · MMXXV</span>
+    <span class="ce">CTBDH · Edition</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

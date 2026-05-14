@@ -1,0 +1,2422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Stamp Album (FrameFlow / Prototype 13)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 13 — "The Stamp Album"
+
+       Visa stamps × postage stamps × commemorative philately. The
+       engagement is rendered as a collector's album: leather cover,
+       gilt foil, plate dividers, mounted stamps with perforated
+       edges and postmarks, first-day covers, customs declarations.
+       Each post becomes a commemorative stamp; carousels become
+       stamp strips and sheets. Catalogued by FrameFlow. Set in
+       Montserrat. Inks: red, charcoal, paper, off-white. Mounted
+       in Toronto, MMXXVI.
+    ==================================================================== */
+
+    :root {
+      --paper:      #f3ebd3;       /* aged album cardstock */
+      --paper-2:    #ebe2c4;
+      --paper-3:    #e2d8b3;
+      --paper-4:    #fcf8ea;       /* fresh stamp paper */
+      --rule:       #c9bf9c;
+      --rule-2:     #a89d76;
+      --rule-3:     #847a52;
+      --ink:        #1f1d18;
+      --ink-2:      #3a3730;
+      --ink-3:      #6a6552;
+      --ink-4:      #9d9678;
+      --red:        #b92025;
+      --red-d:      #7d1416;
+      --red-l:      #f6e3e4;
+
+      --leather:    #2a1612;
+      --leather-2:  #3d1c18;
+      --gold:       #b08c3e;
+      --gold-2:     #d4ad58;
+
+      --type:       "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* aged album paper texture — heavier than logbook to feel archival */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.075;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.20  0 0 0 0 0.10  0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 700; }
+    .rail .center { text-align: center; letter-spacing: 0.4em; }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       COVER — leather-bound album
+    ============================================================ */
+    .cover-wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 56px 48px 48px;
+    }
+    .cover {
+      background:
+        radial-gradient(ellipse at top left, rgba(255,255,255,0.06), transparent 65%),
+        radial-gradient(ellipse at bottom right, rgba(0,0,0,0.55), transparent 65%),
+        linear-gradient(135deg, var(--leather-2) 0%, var(--leather) 100%);
+      color: var(--paper);
+      padding: 88px 72px 72px;
+      position: relative;
+      box-shadow:
+        inset 0 0 0 8px rgba(0,0,0,0.22),
+        inset 0 0 0 9px rgba(255,255,255,0.05),
+        0 32px 80px -24px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)' opacity='0.4'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+      opacity: 0.55;
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      top: 32px; bottom: 32px; left: 32px; right: 32px;
+      border: 1.5px solid rgba(176, 140, 62, 0.55);
+      pointer-events: none;
+    }
+
+    .cover-inner {
+      position: relative;
+      z-index: 2;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .cover-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid rgba(176, 140, 62, 0.45);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 211, 0.78);
+    }
+    .cover-strip .left { display: flex; align-items: center; gap: 14px; }
+    .cover-strip .left .seal {
+      padding: 5px 11px;
+      border: 1.5px solid var(--gold-2);
+      color: var(--gold-2);
+      font-weight: 800;
+    }
+    .cover-strip .center {
+      text-align: center;
+      color: var(--gold-2);
+      letter-spacing: 0.5em;
+      font-weight: 800;
+    }
+    .cover-strip .right {
+      text-align: right;
+      color: rgba(243, 235, 211, 0.65);
+    }
+    .cover-strip .right b { color: var(--gold-2); font-weight: 800; }
+
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+      padding: 44px 0;
+    }
+    .cover-mini {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold-2);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-mini::before, .cover-mini::after {
+      content: "";
+      flex: 0 0 56px;
+      height: 1.5px;
+      background: var(--gold-2);
+      opacity: 0.55;
+    }
+    .cover-title {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper-4);
+      text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+    .cover-title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--gold-2);
+    }
+    .cover-sub {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(14px, 1.6vw, 18px);
+      line-height: 1.6;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 211, 0.78);
+      max-width: 60ch;
+    }
+    .cover-sub em {
+      font-style: italic;
+      color: var(--gold-2);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+    .cover-foot {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: end;
+      padding-top: 18px;
+      border-top: 1.5px solid rgba(176, 140, 62, 0.45);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 211, 0.65);
+    }
+    .cover-foot .left b { color: var(--gold-2); font-weight: 800; }
+    .cover-foot .center {
+      text-align: center;
+      color: var(--gold-2);
+      letter-spacing: 0.4em;
+    }
+    .cover-foot .center b { color: var(--paper); font-weight: 800; }
+    .cover-foot .right { text-align: right; }
+    .cover-foot .right b { color: var(--gold-2); font-weight: 800; }
+
+    /* corner monogram */
+    .cover-monogram {
+      position: absolute;
+      top: 56px;
+      right: 80px;
+      width: 96px;
+      height: 96px;
+      border: 1.5px solid var(--gold-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--gold-2);
+      z-index: 3;
+      box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.18);
+    }
+    .cover-monogram .x {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      margin-top: 4px;
+      color: rgba(212, 173, 88, 0.78);
+    }
+
+    @media (max-width: 880px) {
+      .cover-wrap { padding: 32px 22px; }
+      .cover { padding: 56px 32px; }
+      .cover-monogram { display: none; }
+      .cover-strip, .cover-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .cover-strip .right, .cover-strip .center,
+      .cover-foot .center, .cover-foot .right, .cover-foot .left { text-align: center; }
+      .cover-mini::before, .cover-mini::after { flex: 0 0 28px; }
+    }
+
+    /* ============================================================
+       PLATE — base interior page
+    ============================================================ */
+    .plate {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 64px;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+    .plate.last { border-bottom: 0; }
+    .plate.dark { background: var(--ink); color: var(--paper-4); border-bottom-color: var(--ink); }
+    .plate.cream { background: var(--paper-2); }
+    .plate.cardstock { background: var(--paper-4); }
+
+    /* corner registration marks (philatelic plate convention) */
+    .plate::before, .plate::after {
+      content: "";
+      position: absolute;
+      width: 22px; height: 22px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, currentColor 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, currentColor 0 1px, transparent 1px 100%);
+      background-size: 100% 50%, 50% 100%;
+      background-repeat: no-repeat;
+      opacity: 0.32;
+    }
+    .plate::before { top: 24px; left: 24px; }
+    .plate::after { bottom: 24px; right: 24px; transform: rotate(180deg); }
+    .plate.dark::before, .plate.dark::after { color: var(--gold-2); opacity: 0.55; }
+    .plate:not(.dark)::before, .plate:not(.dark)::after { color: var(--ink); }
+
+    .plate-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 56px;
+    }
+    .plate.dark .plate-head { border-bottom-color: var(--gold-2); }
+    .plate-head .pn {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 6px;
+    }
+    .plate.dark .plate-head .pn { color: var(--gold-2); }
+    .plate-head .pn b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .plate.dark .plate-head .pn b { color: var(--paper-4); }
+    .plate-head .title { padding-bottom: 6px; }
+    .plate-head .title h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .plate.dark .plate-head .title h2 { color: var(--paper-4); }
+    .plate-head .title h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .plate.dark .plate-head .title h2 em { color: var(--gold-2); }
+    .plate-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      max-width: 22ch;
+      line-height: 1.6;
+      padding-bottom: 6px;
+    }
+    .plate.dark .plate-head .meta { color: rgba(243,235,211,0.6); }
+    .plate-head .meta b { color: var(--ink); font-weight: 800; }
+    .plate.dark .plate-head .meta b { color: var(--paper-4); }
+
+    .plate-cap {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: baseline;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .plate.dark .plate-cap { border-top-color: rgba(243,235,211,0.32); color: rgba(243,235,211,0.6); }
+    .plate-cap b { color: var(--ink); font-weight: 800; }
+    .plate.dark .plate-cap b { color: var(--paper-4); }
+    .plate-cap em { font-style: italic; font-weight: 500; color: var(--red); }
+    .plate.dark .plate-cap em { color: var(--gold-2); }
+    .plate-cap .center { text-align: center; max-width: 60ch; margin: 0 auto; line-height: 1.7; letter-spacing: 0.18em; }
+    .plate-cap .right { text-align: right; }
+
+    @media (max-width: 880px) {
+      .plate { padding: 56px 22px; }
+      .plate::before, .plate::after { display: none; }
+      .plate-head { grid-template-columns: 1fr; gap: 12px; }
+      .plate-head .meta { text-align: left; max-width: none; }
+      .plate-cap { grid-template-columns: 1fr; gap: 8px; }
+      .plate-cap .right, .plate-cap .center { text-align: left; }
+    }
+
+    /* ============================================================
+       FRONTISPIECE — collector's notes
+    ============================================================ */
+    .frontis-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 56px;
+      align-items: start;
+    }
+    .frontis-text { min-width: 0; }
+    .frontis-text h1 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .frontis-text h1 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .frontis-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin-bottom: 1em;
+    }
+    .frontis-text p strong { font-weight: 700; color: var(--ink); }
+    .frontis-text p em { font-style: italic; font-weight: 500; color: var(--red); }
+    .frontis-text .signature-block {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .frontis-text .signature-block .scribble {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      padding: 0 4px 6px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .frontis-text .signature-block .who h5 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .frontis-text .signature-block .who p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin: 4px 0 0;
+    }
+
+    /* the album catalogue card */
+    .cat-card {
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 24px 26px;
+      box-shadow: 6px 8px 0 var(--paper-3);
+    }
+    .cat-card h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 14px;
+    }
+    .cat-card dl > div {
+      padding: 8px 0;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 12px;
+      align-items: baseline;
+    }
+    .cat-card dl > div:first-child { border-top: 0; padding-top: 0; }
+    .cat-card dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .cat-card dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .cat-card dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    .cat-card .seal {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1.5px solid var(--ink);
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .cat-card .seal b { color: var(--red); }
+
+    @media (max-width: 880px) {
+      .frontis-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ============================================================
+       STAMP — the central commemorative unit. 4:5 portrait, with
+       perforated edges, postmark, and denomination tab.
+    ============================================================ */
+    .stamp {
+      position: relative;
+      background: var(--paper-4);
+      padding: 12px;
+      /* perforation edge — radial-gradient dots on all four sides */
+      background-image:
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px);
+      background-size:
+        14px 12px,    /* top edge dots */
+        14px 12px,    /* bottom edge */
+        12px 14px,    /* left edge */
+        12px 14px;    /* right edge */
+      background-position:
+        0 -6px,
+        0 calc(100% + 6px),
+        -6px 0,
+        calc(100% + 6px) 0;
+      background-repeat:
+        repeat-x, repeat-x, repeat-y, repeat-y;
+      background-color: var(--paper-4);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.04),
+        0 18px 36px -22px rgba(0,0,0,0.4);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .stamp:hover {
+      transform: translateY(-4px) rotate(0deg);
+      z-index: 5;
+    }
+    /* the "image" is the post body, 4:5 ratio */
+    .stamp .body {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .stamp .body > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .stamp:hover .body > img { transform: scale(1.04); }
+
+    /* postmark — circular cancellation overlay, partially obscuring the stamp */
+    .stamp .postmark {
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2px solid var(--red);
+      transform: rotate(-12deg);
+      pointer-events: none;
+      z-index: 3;
+      background: rgba(185, 32, 37, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1px;
+      mix-blend-mode: multiply;
+    }
+    .stamp .postmark::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid var(--red);
+      border-radius: 50%;
+    }
+    .stamp .postmark.tr { top: -22px; right: -22px; }
+    .stamp .postmark.tl { top: -22px; left: -22px; transform: rotate(8deg); }
+    .stamp .postmark.bl { bottom: -22px; left: -22px; transform: rotate(-8deg); }
+    .stamp .postmark.br { bottom: -22px; right: -22px; transform: rotate(15deg); }
+    .stamp .postmark .pm-top {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+    .stamp .postmark .pm-mid {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      line-height: 1;
+    }
+    .stamp .postmark .pm-bot {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+
+    /* country tag — top of stamp */
+    .stamp .country {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 2;
+      mix-blend-mode: difference;
+      color: rgba(255,255,255,0.92);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .stamp .country .right { text-align: right; }
+
+    /* denomination — bottom-left tab */
+    .stamp .denom {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      padding: 4px 9px;
+      background: var(--red);
+      color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      z-index: 2;
+    }
+    .stamp .denom small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 6px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      margin-top: 1px;
+      opacity: 0.85;
+    }
+    /* catalogue ID — bottom-right */
+    .stamp .cat-id {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      padding: 3px 7px;
+      background: rgba(31, 29, 24, 0.85);
+      color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      z-index: 2;
+    }
+
+    /* mounting hinge / caption tag underneath the stamp */
+    .stamp-mount {
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 1.55;
+    }
+    .stamp-mount .ttl {
+      display: block;
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--red);
+      letter-spacing: -0.005em;
+      text-transform: none;
+      margin-bottom: 3px;
+    }
+    .stamp-mount b { color: var(--ink); font-weight: 800; }
+
+    /* ============================================================
+       PLATE I — SERVICE ISSUES (5 commemorative designs as illustrated stamps)
+    ============================================================ */
+    .service-stamps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+    .service-stamps .stamp {
+      transform: rotate(-1deg);
+    }
+    .service-stamps .stamp:nth-child(2) { transform: rotate(0.5deg); }
+    .service-stamps .stamp:nth-child(3) { transform: rotate(-0.5deg); }
+    .service-stamps .stamp:nth-child(4) { transform: rotate(1deg); }
+    .service-stamps .stamp:nth-child(5) { transform: rotate(-0.8deg); }
+
+    /* design body — typographic illustration since the services don't have photos */
+    .service-stamps .design {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--paper-3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 22px;
+    }
+    .service-stamps .design.red { background: var(--red); color: var(--paper-4); }
+    .service-stamps .design.dark { background: var(--ink); color: var(--paper-4); }
+    .service-stamps .design.cream { background: var(--paper-2); }
+    .service-stamps .design .glyph {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(48px, 5vw, 72px);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      color: var(--ink);
+    }
+    .service-stamps .design.red .glyph,
+    .service-stamps .design.dark .glyph { color: var(--paper-4); }
+    .service-stamps .design .glyph em { font-style: italic; font-weight: 500; color: var(--red); }
+    .service-stamps .design.red .glyph em { color: var(--paper-4); }
+    .service-stamps .design.dark .glyph em { color: var(--red); }
+    .service-stamps .design .icon {
+      width: 56px; height: 56px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 0 rgba(0,0,0,0.18));
+    }
+    .service-stamps .design.dark .icon, .service-stamps .design.red .icon {
+      filter: brightness(0) invert(1) drop-shadow(0 2px 0 rgba(0,0,0,0.4));
+    }
+    .service-stamps .design .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .service-stamps .design.red .name, .service-stamps .design.dark .name { color: var(--paper-4); }
+    .service-stamps .design .tag {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .service-stamps .design.red .tag { color: var(--paper-4); opacity: 0.85; }
+    .service-stamps .design.dark .tag { color: var(--red); }
+
+    @media (max-width: 980px) {
+      .service-stamps { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    }
+    @media (max-width: 540px) {
+      .service-stamps { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       PLATE II — FIRST-DAY COVER (the website as an envelope)
+    ============================================================ */
+    .fdc {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 28px 36px 36px;
+      box-shadow: 0 32px 80px -28px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    /* envelope flap suggestion — subtle V at top */
+    .fdc::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background:
+        linear-gradient(135deg, transparent 50%, var(--paper-3) 50%) 0 0 / 18px 4px repeat-x,
+        var(--paper-2);
+    }
+    .fdc-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      border-bottom: 1.5px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .fdc-strip .left b { color: var(--red); font-weight: 800; }
+    .fdc-strip .center { text-align: center; color: var(--red); letter-spacing: 0.5em; }
+    .fdc-strip .right { text-align: right; }
+    .fdc-strip .right b { color: var(--ink); font-weight: 800; }
+
+    /* "stamps affixed" row — small inline stamps on the top-right of the envelope */
+    .fdc-stamp-row {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+    .fdc-address {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 2;
+    }
+    .fdc-address .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .fdc-address .recipient {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      text-transform: none;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .fdc-address .recipient em { font-style: italic; font-weight: 500; color: var(--red); }
+    .fdc-address .lines {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
+    .fdc-stamps-affixed {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .fdc-stamps-affixed .stamp { transform: rotate(2deg); padding: 8px; }
+    .fdc-stamps-affixed .stamp:nth-child(2) { transform: rotate(-3deg); }
+    .fdc-stamps-affixed .stamp .denom { padding: 2px 5px; font-size: 9px; bottom: 12px; left: 12px; }
+    .fdc-stamps-affixed .stamp .denom small { display: none; }
+    .fdc-stamps-affixed .stamp .country { display: none; }
+    .fdc-stamps-affixed .stamp .cat-id { display: none; }
+
+    /* the website mock - faithfully rendered inside the envelope as the "letter" */
+    .fdc-letter {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      padding: 24px 28px 24px;
+      position: relative;
+    }
+    .fdc-letter::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: var(--red);
+    }
+    .fdc-letter-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 18px;
+    }
+    .fdc-letter-head .brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .fdc-letter-head .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .fdc-letter-head .brand .wm {
+      font-family: var(--type);
+      font-weight: 800; font-size: 12px;
+      letter-spacing: 0.06em; color: var(--ink); line-height: 1;
+    }
+    .fdc-letter-head .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600; font-size: 8px;
+      letter-spacing: 0.18em; color: var(--red);
+      margin-top: 3px;
+    }
+    .fdc-letter-head .menu {
+      display: flex; justify-content: center; gap: 16px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .fdc-letter-head .menu .on { color: var(--red); }
+    .fdc-letter-head .right {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .fdc-letter-head .right .lt {
+      display: inline-flex; gap: 2px; padding: 2px;
+      background: var(--paper-3); border: 1px solid var(--rule);
+    }
+    .fdc-letter-head .right .lt span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      color: var(--ink-3);
+    }
+    .fdc-letter-head .right .lt .on { background: var(--ink); color: var(--paper-4); }
+    .fdc-letter-head .right .book {
+      padding: 6px 11px;
+      background: var(--red); color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .fdc-letter-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 130px;
+      gap: 22px;
+      align-items: center;
+      padding: 20px 0 18px;
+    }
+    .fdc-letter-hero .text { min-width: 0; }
+    .fdc-letter-hero .ant {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+    }
+    .fdc-letter-hero h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.8vw, 32px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .fdc-letter-hero h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .fdc-letter-hero p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 12px;
+      line-height: 1.65; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 12px;
+    }
+    .fdc-letter-hero p b { font-weight: 700; color: var(--ink); }
+    .fdc-letter-hero .ctas { display: flex; gap: 6px; }
+    .fdc-letter-hero .ctas a {
+      padding: 7px 12px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .fdc-letter-hero .ctas .p { background: var(--red); color: var(--paper-4); }
+    .fdc-letter-hero .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .fdc-letter-hero .photo {
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+      padding: 6px 6px 10px;
+      max-width: 130px;
+    }
+    .fdc-letter-hero .photo .ph {
+      width: 100%; aspect-ratio: 4/5;
+      overflow: hidden; background: var(--paper-3);
+    }
+    .fdc-letter-hero .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .fdc-letter-hero .photo .who {
+      padding-top: 6px;
+      border-top: 2px solid var(--red);
+      margin-top: 6px;
+    }
+    .fdc-letter-hero .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink);
+    }
+    .fdc-letter-hero .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 1px 0 0;
+    }
+
+    .fdc-letter-foot {
+      padding: 12px 0 0;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px; align-items: center;
+    }
+    .fdc-letter-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .fdc-letter-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .fdc-letter-foot .credit b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 720px) {
+      .fdc { padding: 22px 22px 28px; }
+      .fdc-stamp-row { grid-template-columns: 1fr; gap: 18px; }
+      .fdc-letter-head .menu { display: none; }
+      .fdc-letter-hero { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    /* ============================================================
+       PLATE III — CUSTOMS DECLARATION (the CRS calculator as a form)
+    ============================================================ */
+    .customs {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 32px 80px -28px rgba(0,0,0,0.28);
+      overflow: hidden;
+      position: relative;
+    }
+    .customs::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background-image: repeating-linear-gradient(135deg, var(--red) 0 14px, var(--paper-4) 14px 28px);
+    }
+    .customs-head {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: var(--paper-4);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+      border-bottom: 4px solid var(--red);
+    }
+    .customs-head .left {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .customs-head .left b { color: var(--red); }
+    .customs-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(16px, 1.8vw, 22px);
+      letter-spacing: 0.18em;
+    }
+    .customs-head .center small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      color: rgba(243,235,211,0.55);
+      margin-top: 4px;
+    }
+    .customs-head .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(243,235,211,0.6);
+      text-align: right;
+    }
+    .customs-head .right b { color: var(--paper-4); font-weight: 800; }
+
+    .customs-body {
+      padding: 32px 36px 36px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+    }
+    .customs-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .customs-form .form-head {
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 6px;
+    }
+    .customs-form .form-head .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 10px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 6px;
+    }
+    .customs-form .form-head h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 18px;
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .customs-form .form-head p {
+      font-family: var(--type);
+      font-weight: 500; font-size: 12px;
+      color: var(--ink-3); margin-top: 4px; line-height: 1.55;
+    }
+    .customs-form .row {
+      display: grid;
+      grid-template-columns: auto 1fr 110px;
+      gap: 14px; align-items: center;
+      padding: 11px 14px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .customs-form .row.on { border-color: var(--red); background: var(--red-l); }
+    .customs-form .row .box {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--ink);
+      background: var(--paper-4);
+      position: relative;
+    }
+    .customs-form .row.on .box {
+      background: var(--ink);
+    }
+    .customs-form .row.on .box::after {
+      content: "✓";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .customs-form .row .k {
+      font-family: var(--type);
+      font-weight: 700; font-size: 13px;
+      color: var(--ink);
+    }
+    .customs-form .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      color: var(--ink-3);
+      margin-top: 3px;
+    }
+    .customs-form .row .v {
+      padding: 5px 8px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      color: var(--ink); text-align: center;
+    }
+    .customs-form .row.on .v { color: var(--red); border-color: var(--red); background: var(--paper-4); }
+
+    .customs-side {
+      background: var(--ink);
+      color: var(--paper-4);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    .customs-side::before {
+      content: "DECLARED";
+      position: absolute;
+      top: 18px;
+      right: -10px;
+      padding: 5px 12px;
+      background: var(--red);
+      color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      transform: rotate(8deg);
+      box-shadow: 0 4px 8px -4px rgba(0,0,0,0.5);
+    }
+    .customs-side .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--gold-2);
+    }
+    .customs-side .total {
+      font-family: var(--type);
+      font-weight: 800; font-size: 88px;
+      line-height: 0.85; letter-spacing: -0.04em;
+      color: var(--paper-4);
+    }
+    .customs-side .total small {
+      display: block; margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(243,235,211,0.55);
+    }
+    .customs-side dl {
+      border-top: 1px solid rgba(243,235,211,0.18);
+      padding-top: 12px;
+    }
+    .customs-side dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(243,235,211,0.08);
+      font-family: var(--type);
+      font-weight: 600; font-size: 11px;
+      color: rgba(243,235,211,0.78);
+    }
+    .customs-side dl > div b { color: var(--gold-2); font-weight: 800; }
+    .customs-side .pdf {
+      margin-top: auto;
+      padding: 11px 14px;
+      background: var(--red); color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* customs cancellation stamp at bottom */
+    .customs-foot {
+      padding: 18px 32px;
+      background: var(--paper-2);
+      border-top: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .customs-foot .scribble {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      padding: 4px 6px 4px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .customs-foot .center {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .customs-foot .center b { color: var(--red); font-weight: 800; }
+    .customs-foot .stamp-mark {
+      width: 76px; height: 76px;
+      border: 2px solid var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transform: rotate(-8deg);
+      color: var(--red);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-align: center;
+      line-height: 1.2;
+      background: rgba(185,32,37,0.05);
+    }
+    .customs-foot .stamp-mark b { font-size: 11px; letter-spacing: -0.01em; margin: 1px 0; }
+
+    @media (max-width: 880px) {
+      .customs-body { grid-template-columns: 1fr; padding: 22px; }
+      .customs-foot { grid-template-columns: 1fr; gap: 14px; text-align: center; padding: 18px 22px; }
+      .customs-foot .stamp-mark { margin: 0 auto; }
+    }
+
+    /* ============================================================
+       PLATE IV — DIASPORA SERIES (real posts as commemorative stamps)
+       4:5 portrait — perfect for stamps. Carousels = stamp sheets.
+    ============================================================ */
+    .album-page {
+      background: var(--paper-3);
+      border: 1.5px solid var(--ink);
+      padding: 28px 28px 32px;
+      position: relative;
+      box-shadow: 0 32px 80px -28px rgba(0,0,0,0.28);
+    }
+    /* faint grid lines like a real philatelic mounting page */
+    .album-page::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(31, 29, 24, 0.06) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, rgba(31, 29, 24, 0.06) 0 1px, transparent 1px 100%);
+      background-size: 80px 80px;
+    }
+    .album-page-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: baseline;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 2;
+    }
+    .album-page-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .album-page-head h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .album-page-head h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .album-page-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .album-page-head .meta b { color: var(--red); font-weight: 800; }
+
+    .stamp-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 36px 18px;
+      position: relative;
+      z-index: 2;
+      padding-top: 12px;
+    }
+    .stamp-grid .stamp:nth-child(odd) { transform: rotate(-1.4deg); }
+    .stamp-grid .stamp:nth-child(even) { transform: rotate(1deg); }
+    .stamp-grid .stamp:nth-child(3n+1) { transform: rotate(-0.6deg); }
+
+    /* a "block" — a multi-stamp sheet for carousels */
+    .stamp-block {
+      grid-column: span 2;
+      position: relative;
+      background: var(--paper-4);
+      padding: 14px;
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.04),
+        0 18px 36px -22px rgba(0,0,0,0.4);
+      transform: rotate(0.5deg);
+    }
+    /* perforated edges on the whole block */
+    .stamp-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px),
+        radial-gradient(circle at center, var(--paper-2) 4px, transparent 4.5px);
+      background-size: 14px 12px, 14px 12px, 12px 14px, 12px 14px;
+      background-position: 0 -6px, 0 calc(100% + 6px), -6px 0, calc(100% + 6px) 0;
+      background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    }
+    .stamp-block .block-head {
+      position: absolute;
+      top: -28px;
+      left: 8px;
+      padding: 4px 10px;
+      background: var(--ink);
+      color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+    .stamp-block .block-head b { color: var(--red); }
+    .stamp-block .pages {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      position: relative;
+      z-index: 2;
+    }
+    .stamp-block .pages .mini {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .stamp-block .pages .mini > img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .stamp-block .pages .mini .pn {
+      position: absolute;
+      top: 6px; right: 6px;
+      padding: 2px 5px;
+      background: var(--red);
+      color: var(--paper-4);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+    }
+    .stamp-block .block-cap {
+      position: relative;
+      z-index: 2;
+      padding: 12px 4px 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .stamp-block .block-cap .ttl {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--red);
+      letter-spacing: -0.005em;
+    }
+    .stamp-block .block-cap .id {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .stamp-block .block-cap .id b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 980px) {
+      .stamp-grid { grid-template-columns: repeat(2, 1fr); }
+      .stamp-block { grid-column: span 2; }
+    }
+    @media (max-width: 540px) {
+      .stamp-grid { grid-template-columns: 1fr; }
+      .stamp-block, .stamp-block .pages { grid-column: span 1; }
+    }
+
+    /* ============================================================
+       PLATE V — POSTMARK CANCELLATIONS (brand DNA values)
+    ============================================================ */
+    .postmarks {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+    .pmark {
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 22px 22px 24px;
+      position: relative;
+    }
+    .pmark .ring {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 2.5px solid var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .pmark .ring::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1.5px solid var(--red);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+    .pmark .ring .top {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .pmark .ring .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+    }
+    .pmark .ring .bot {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-d);
+    }
+    /* curved-feel text on the rings — handle with a smaller pseudo */
+    .pmark .ring::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border: 1px dashed var(--red);
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+    .pmark .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .pmark .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .pmark p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+    }
+    .pmark .tied {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-top: 8px;
+      border-top: 1px dashed var(--rule);
+    }
+    .pmark .tied b { color: var(--red); font-weight: 800; }
+    @media (max-width: 980px) { .postmarks { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .postmarks { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       COLOPHON
+    ============================================================ */
+    .colophon-page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 56px;
+      text-align: center;
+    }
+    .colophon-page h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .colophon-page h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .colophon-page p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin: 0 auto 1.2em;
+    }
+    .colophon-page p strong { font-weight: 800; color: var(--ink); }
+    .colophon-page p em { font-style: italic; font-weight: 500; color: var(--red); }
+    .colophon-page .end-mark {
+      margin-top: 36px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .colophon-page .end-mark::before, .colophon-page .end-mark::after {
+      content: "—";
+      margin: 0 12px;
+      color: var(--ink-3);
+    }
+    @media (max-width: 720px) { .colophon-page { padding: 56px 22px; } }
+
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(243,235,211,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper-4); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Stamp Album</span>
+    <span class="right">Cat. <b>NP/2026</b> · 5 plates</span>
+  </header>
+
+  <!-- =================================================================
+       COVER — leather-bound album
+  ==================================================================== -->
+  <section class="cover-wrap">
+    <article class="cover">
+      <span class="cover-monogram">
+        <span>NP</span>
+        <span class="x">PHILA · I</span>
+      </span>
+
+      <div class="cover-inner">
+        <div class="cover-strip">
+          <span class="left">
+            <span class="seal">VOL <b>I</b></span>
+            Mounted · <b>2026</b>
+          </span>
+          <span class="center">— A Philatelic Album —</span>
+          <span class="right">Toronto · <b>YYZ</b></span>
+        </div>
+
+        <div class="cover-body">
+          <p class="cover-mini">Northern Pathways Immigration Consulting</p>
+          <h1 class="cover-title">A Philatelic <em>Album.</em></h1>
+          <p class="cover-sub">Visa stamps · postage · commemorative issues. Each post mounted with perforated edges and a postmark. <em>Catalogued by FrameFlow Studio in Toronto, MMXXVI.</em></p>
+        </div>
+
+        <div class="cover-foot">
+          <span class="left"><b>Held by</b> · the Collector</span>
+          <span class="center">RCIC-IRB <b>·</b> CICC <b>·</b> CAPIC</span>
+          <span class="right"><b>Studio</b> · FrameFlow</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       FRONTISPIECE
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>00</b></p>
+      <div class="title">
+        <h2>A note from the <em>collector.</em></h2>
+      </div>
+      <p class="meta">Frontispiece<br><b>Vol. I · 2026</b></p>
+    </header>
+
+    <div class="frontis-grid">
+      <div class="frontis-text">
+        <p>
+          This album catalogues one season's work by FrameFlow Studio
+          for <strong>Northern Pathways Immigration Consulting</strong>
+          &mdash; a regulated practice led by an RCIC-IRB. Five
+          plates: a service-issue commemorative set, a first-day
+          cover for the website, a customs declaration form for the
+          calculator, a diaspora series collecting the season's
+          social posts as <em>mounted commemorative stamps,</em> and
+          a postmark plate cancelling the engagement against the
+          firm's five doctrines.
+        </p>
+        <p>
+          Stamps are mounted with their original perforated edges
+          intact. Postmarks are not retouched. Each catalogue number
+          maps to a doctrine in the firm&rsquo;s operating manual.
+          <em>Filed in good faith, in two languages, in one
+          typeface.</em>
+        </p>
+        <div class="signature-block">
+          <span class="scribble">FrameFlow</span>
+          <div class="who">
+            <h5>FrameFlow Studio</h5>
+            <p>Studio of Record · Toronto · MMXXVI</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="cat-card">
+        <h4>Catalogue Notes</h4>
+        <dl>
+          <div><dt>Series</dt><dd>NP / 2026 / Vol. I</dd></div>
+          <div><dt>Issued</dt><dd>2025 — 2026</dd></div>
+          <div><dt>Plates</dt><dd>05 · numbered I to V</dd></div>
+          <div><dt>Stamps</dt><dd>15 mounted · 10 distinct</dd></div>
+          <div><dt>Inks</dt><dd>charcoal <em>·</em> red <em>·</em> paper</dd></div>
+          <div><dt>Set in</dt><dd>Montserrat</dd></div>
+          <div><dt>Locale</dt><dd>EN <em>·</em> TR</dd></div>
+          <div><dt>Size</dt><dd>4 × 5 · portrait</dd></div>
+        </dl>
+        <p class="seal">Catalogued <b>·</b> Toronto · 2026</p>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>00</b> · Frontispiece</span>
+      <span class="center">A complete philatelic catalogue of one engagement &mdash; <em>tied to the firm's five doctrines.</em></span>
+      <span class="right">Cat. <b>NP/2026</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE I — SERVICE ISSUES
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>01</b></p>
+      <div class="title">
+        <h2>Service <em>issues.</em></h2>
+      </div>
+      <p class="meta">Five commemorative designs<br><b>NP-001 — NP-005</b></p>
+    </header>
+
+    <div class="service-stamps">
+      <article class="stamp">
+        <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+        <div class="design red">
+          <span class="tag">№ 01 · Economic</span>
+          <p class="glyph">EE<em>.</em></p>
+          <p class="name">Express Entry · FSWP · CEC · PNP</p>
+        </div>
+        <span class="denom">$ 487<small>CRS</small></span>
+        <span class="cat-id">NP-001</span>
+        <p class="stamp-mount"><span class="ttl">Economic Immigration · service issue</span><b>NP-001</b> · Doctrine 04 · Knowledge</p>
+      </article>
+
+      <article class="stamp">
+        <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+        <div class="design cream">
+          <span class="tag">№ 02 · Family</span>
+          <p class="glyph">FAM<em>.</em></p>
+          <p class="name">Spousal · partner · parents</p>
+        </div>
+        <span class="denom">$ 67<small>FSWP</small></span>
+        <span class="cat-id">NP-002</span>
+        <p class="stamp-mount"><span class="ttl">Family Sponsorship · service issue</span><b>NP-002</b> · Doctrine 02 · Personalised</p>
+      </article>
+
+      <article class="stamp">
+        <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+        <div class="design dark">
+          <span class="tag">№ 03 · Temporary</span>
+          <p class="glyph">TMP<em>.</em></p>
+          <p class="name">Visitor · study · work</p>
+        </div>
+        <span class="denom">$ 9<small>CLB</small></span>
+        <span class="cat-id">NP-003</span>
+        <p class="stamp-mount"><span class="ttl">Temporary Residence · service issue</span><b>NP-003</b> · Doctrine 02 · Personalised</p>
+      </article>
+
+      <article class="stamp">
+        <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+        <div class="design cream">
+          <span class="tag">№ 04 · PR Card</span>
+          <p class="glyph">PRC<em>.</em></p>
+          <p class="name">Renewals · travel documents</p>
+        </div>
+        <span class="denom">$ 5<small>YR</small></span>
+        <span class="cat-id">NP-004</span>
+        <p class="stamp-mount"><span class="ttl">PR Card · service issue</span><b>NP-004</b> · Doctrine 03 · Transparency</p>
+      </article>
+
+      <article class="stamp">
+        <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+        <div class="design red">
+          <span class="tag">№ 05 · Citizenship</span>
+          <p class="glyph">CIT<em>.</em></p>
+          <p class="name">Applications · residency</p>
+        </div>
+        <span class="denom">$ 3<small>YR</small></span>
+        <span class="cat-id">NP-005</span>
+        <p class="stamp-mount"><span class="ttl">Citizenship · service issue</span><b>NP-005</b> · Doctrine 01 · Ethical</p>
+      </article>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>01</b> · Service issues</span>
+      <span class="center">Five commemoratives, one issue per practice area. Denominations key to the firm's CRS / FSWP scoring.</span>
+      <span class="right">Issued · <b>2026</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE II — FIRST-DAY COVER (the website as an envelope)
+  ==================================================================== -->
+  <section class="plate cardstock reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>02</b></p>
+      <div class="title">
+        <h2>First-day <em>cover.</em></h2>
+      </div>
+      <p class="meta">Issue date · launch<br><b>northernpathways.ca</b></p>
+    </header>
+
+    <article class="fdc">
+      <header class="fdc-strip">
+        <span class="left">FDC <b>·</b> Northern Pathways</span>
+        <span class="center">— First-Day Cover · Issued 2026 —</span>
+        <span class="right">Affixed · <b>2 stamps</b></span>
+      </header>
+
+      <div class="fdc-stamp-row">
+        <div class="fdc-address">
+          <p class="ant">— Addressed to —</p>
+          <p class="recipient">The <em>prospective</em> client.</p>
+          <p class="lines">
+            5200 Yonge Street, 2nd floor<br>
+            North York, ON · M2N 5P6<br>
+            Canada · 1-365-777-7700
+          </p>
+        </div>
+
+        <div class="fdc-stamps-affixed">
+          <article class="stamp">
+            <div class="body" style="background: var(--red); padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-family: var(--type); font-weight: 800; font-size: 7px; letter-spacing: 0.32em; color: rgba(255,255,255,0.85);">CANADA · NP</span>
+              <span style="font-family: var(--type); font-weight: 900; font-size: 36px; letter-spacing: -0.04em; color: var(--paper-4); line-height: 0.85;">CIT.</span>
+              <span style="font-family: var(--type); font-weight: 700; font-size: 7px; letter-spacing: 0.18em; color: rgba(255,255,255,0.78);">2026 · ISSUE</span>
+            </div>
+            <span class="denom">$ 5</span>
+            <span class="postmark tr">
+              <span class="pm-top">Toronto</span>
+              <span class="pm-mid">02·26</span>
+              <span class="pm-bot">YYZ</span>
+            </span>
+          </article>
+          <article class="stamp">
+            <div class="body" style="background: var(--ink); padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+              <span style="font-family: var(--type); font-weight: 800; font-size: 7px; letter-spacing: 0.32em; color: var(--gold-2);">CANADA · NP</span>
+              <span style="font-family: var(--type); font-weight: 900; font-size: 36px; letter-spacing: -0.04em; color: var(--paper-4); line-height: 0.85;">EE<em style="font-style: italic; color: var(--red); font-weight: 500;">.</em></span>
+              <span style="font-family: var(--type); font-weight: 700; font-size: 7px; letter-spacing: 0.18em; color: rgba(243,235,211,0.55);">2026 · LAUNCH</span>
+            </div>
+            <span class="denom">$ 487</span>
+            <span class="postmark br">
+              <span class="pm-top">YYZ</span>
+              <span class="pm-mid">2026</span>
+              <span class="pm-bot">FDC</span>
+            </span>
+          </article>
+        </div>
+      </div>
+
+      <article class="fdc-letter">
+        <header class="fdc-letter-head">
+          <span class="brand">
+            <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+            <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+          </span>
+          <nav class="menu">
+            <span class="on">Home</span>
+            <span>Our Team</span>
+            <span>Fees</span>
+            <span>Events</span>
+            <span>Blog</span>
+          </nav>
+          <div class="right">
+            <span class="lt"><span class="on">EN</span><span>TR</span></span>
+            <span class="book">Book Consult</span>
+          </div>
+        </header>
+
+        <div class="fdc-letter-hero">
+          <div class="text">
+            <p class="ant">— Northern Pathways · RCIC-IRB —</p>
+            <h2>Guiding your <em>journey</em> with clarity.</h2>
+            <p>Welcome &mdash; led by <b>Burcu Akyol</b>, RCIC-IRB. Eligibility, strategy, and legal representation. Five practice areas, two languages, one regulated counsel of record.</p>
+            <div class="ctas">
+              <a class="p">Book a Consultation</a>
+              <a class="s">Explore Services</a>
+            </div>
+          </div>
+          <aside class="photo">
+            <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+            <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+          </aside>
+        </div>
+
+        <footer class="fdc-letter-foot">
+          <span class="left">© 2026 Northern Pathways · All Rights Reserved.</span>
+          <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+        </footer>
+      </article>
+    </article>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>02</b> · First-day cover</span>
+      <span class="center">The website as an envelope; two stamps affixed; the home page sealed inside as the letter. <em>Issued 2026.</em></span>
+      <span class="right">Cat. <b>FDC-NP-001</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE III — CUSTOMS DECLARATION (CRS calculator as a form)
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>03</b></p>
+      <div class="title">
+        <h2>Customs <em>declaration</em> form.</h2>
+      </div>
+      <p class="meta">CRS · 15 fields · 6 categories<br><b>1 PDF · signed by counsel</b></p>
+    </header>
+
+    <article class="customs">
+      <header class="customs-head">
+        <span class="left">Form <b>NP/CRS-487</b></span>
+        <span class="center">CRS DECLARATION OF POINTS<small>Issued under doctrine 03 · Transparency</small></span>
+        <span class="right">Issued by <b>RCIC-IRB</b></span>
+      </header>
+
+      <div class="customs-body">
+        <div class="customs-form">
+          <header class="form-head">
+            <p class="lbl">Section A · Core / Human Capital</p>
+            <h4>Declare every point.</h4>
+            <p>Fields required by IRCC's 2026 grid. Tick the box if the field has been verified by counsel of record.</p>
+          </header>
+
+          <div class="row on">
+            <span class="box"></span>
+            <span class="k">Age <small>at point of application · 32 years</small></span>
+            <span class="v">110 / 110</span>
+          </div>
+          <div class="row on">
+            <span class="box"></span>
+            <span class="k">Education <small>Master's degree · ECA verified</small></span>
+            <span class="v">135 / 150</span>
+          </div>
+          <div class="row on">
+            <span class="box"></span>
+            <span class="k">CLB · English <small>CLB 9 · all four skills</small></span>
+            <span class="v">124 / 136</span>
+          </div>
+          <div class="row on">
+            <span class="box"></span>
+            <span class="k">French · NCLC <small>NCLC 7+ bonus eligible</small></span>
+            <span class="v">25 / 50</span>
+          </div>
+          <div class="row">
+            <span class="box"></span>
+            <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+            <span class="v">35 / 80</span>
+          </div>
+          <div class="row">
+            <span class="box"></span>
+            <span class="k">Foreign work <small>3+ years · skilled, paid</small></span>
+            <span class="v">25 / 50</span>
+          </div>
+        </div>
+
+        <aside class="customs-side">
+          <p class="lbl">Total declared · CRS</p>
+          <p class="total">487<small>CRS / 1200</small></p>
+          <dl>
+            <div><span>A · Core</span><b>404</b></div>
+            <div><span>B · Spouse</span><b>—</b></div>
+            <div><span>C · Transfer</span><b>50</b></div>
+            <div><span>D · Additional</span><b>33</b></div>
+          </dl>
+          <span class="pdf">↓ Sign &amp; seal as PDF</span>
+        </aside>
+      </div>
+
+      <footer class="customs-foot">
+        <span class="scribble">B. Akyol</span>
+        <span class="center">Declared in good faith <b>·</b> 02 Apr 2026 <b>·</b> Toronto</span>
+        <span class="stamp-mark">CLEARED<br><b>RCIC</b><br>2026</span>
+      </footer>
+    </article>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>03</b> · Customs declaration</span>
+      <span class="center">The CRS calculator rendered as a customs form &mdash; <em>every point declared, signed, and cancelled by counsel of record.</em></span>
+      <span class="right">Form · <b>NP/CRS-487</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE IV — DIASPORA SERIES (real posts as commemorative stamps)
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>04</b></p>
+      <div class="title">
+        <h2>Diaspora <em>series.</em></h2>
+      </div>
+      <p class="meta">10 mounted · 8 sheets + 2 stamps<br><b>@kanadadayeniyasam · 2026</b></p>
+    </header>
+
+    <article class="album-page">
+      <header class="album-page-head">
+        <div>
+          <p class="lbl">Album page · IV / a</p>
+          <h3>Mounted from <em>@kanadadayeniyasam.</em></h3>
+        </div>
+        <p class="meta">Vol. I<br><b>248</b> issued · 10 catalogued</p>
+      </header>
+
+      <div class="stamp-grid">
+        <!-- Stamp NP-101: Carousel 01 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">04 · 2026</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+          </div>
+          <span class="denom">$ 6<small>SLIDES</small></span>
+          <span class="cat-id">NP-101</span>
+          <span class="postmark tr">
+            <span class="pm-top">YYZ</span>
+            <span class="pm-mid">23·04</span>
+            <span class="pm-bot">IRCC</span>
+          </span>
+          <p class="stamp-mount"><span class="ttl">Express Entry · kamuoyu görüşü.</span><b>NP-101</b> · Carousel · 1/6</p>
+        </article>
+
+        <!-- Stamp NP-102: Carousel 02 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa update">
+          </div>
+          <span class="denom">$ 4<small>SLIDES</small></span>
+          <span class="cat-id">NP-102</span>
+          <p class="stamp-mount"><span class="ttl">Süper Vize · gelir esnekliği.</span><b>NP-102</b> · Carousel · 1/4</p>
+        </article>
+
+        <!-- Stamp NP-103: Carousel 03 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">2026</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Doctor immigration">
+          </div>
+          <span class="denom">$ 4<small>SLIDES</small></span>
+          <span class="cat-id">NP-103</span>
+          <span class="postmark bl">
+            <span class="pm-top">RCIC</span>
+            <span class="pm-mid">DR.</span>
+            <span class="pm-bot">2026</span>
+          </span>
+          <p class="stamp-mount"><span class="ttl">Doktor açığı · yeni adımlar.</span><b>NP-103</b> · Carousel · 1/4</p>
+        </article>
+
+        <!-- BLOCK NP-104: Carousel 04 — the 9-slide Levels Plan (sheet) -->
+        <article class="stamp-block">
+          <span class="block-head">Sheet <b>NP-104</b> · 9-slide carousel</span>
+          <div class="pages">
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan slide 1">
+              <span class="pn">1 / 9</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-04/02.png" alt="Levels Plan slide 2">
+              <span class="pn">2 / 9</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-04/05.png" alt="Levels Plan slide 5">
+              <span class="pn">5 / 9</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-04/09.png" alt="Levels Plan slide 9">
+              <span class="pn">9 / 9</span>
+            </div>
+          </div>
+          <div class="block-cap">
+            <span class="ttl">Göç Seviyeleri · 2026 – 2028.</span>
+            <span class="id"><b>NP-104</b> · Sheet · 9 slides</span>
+          </div>
+        </article>
+
+        <!-- BLOCK NP-105: Carousel 05 — the 8-slide Study Permit (sheet) -->
+        <article class="stamp-block">
+          <span class="block-head">Sheet <b>NP-105</b> · 8-slide co-issue</span>
+          <div class="pages">
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit slide 1">
+              <span class="pn">1 / 8</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-05/02.png" alt="Study permit slide 2">
+              <span class="pn">2 / 8</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-05/04.png" alt="Study permit slide 4">
+              <span class="pn">4 / 8</span>
+            </div>
+            <div class="mini">
+              <img src="../../../public/portfolio/northern-pathways/social/carousel-05/08.png" alt="Study permit slide 8">
+              <span class="pn">8 / 8</span>
+            </div>
+          </div>
+          <div class="block-cap">
+            <span class="ttl">Vize memuru · neye bakar?</span>
+            <span class="id"><b>NP-105</b> · NP × EduPathways</span>
+          </div>
+        </article>
+
+        <!-- Stamp NP-106: Carousel 06 — Yeni Yaşam event -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">EVENT</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+          </div>
+          <span class="denom">$ 520<small>CAD</small></span>
+          <span class="cat-id">NP-106</span>
+          <span class="postmark tl">
+            <span class="pm-top">SEMINAR</span>
+            <span class="pm-mid">13·10</span>
+            <span class="pm-bot">ANK · IST</span>
+          </span>
+          <p class="stamp-mount"><span class="ttl">Yeni Yaşam · seminer.</span><b>NP-106</b> · Carousel · 1/3</p>
+        </article>
+
+        <!-- Stamp NP-107: Carousel 07 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">ON</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP">
+          </div>
+          <span class="denom">$ 6<small>SLIDES</small></span>
+          <span class="cat-id">NP-107</span>
+          <p class="stamp-mount"><span class="ttl">Ontario · OINP yeni programlar.</span><b>NP-107</b> · Carousel · 1/6</p>
+        </article>
+
+        <!-- Stamp NP-108: Carousel 08 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">DRAW</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+          </div>
+          <span class="denom">$ 6<small>SLIDES</small></span>
+          <span class="cat-id">NP-108</span>
+          <span class="postmark br">
+            <span class="pm-top">OINP</span>
+            <span class="pm-mid">18·03</span>
+            <span class="pm-bot">2026</span>
+          </span>
+          <p class="stamp-mount"><span class="ttl">OINP · 18 Mart davet turu.</span><b>NP-108</b> · Carousel · 1/6</p>
+        </article>
+
+        <!-- Stamp NP-109: Webinar 1 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">WEBINAR</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+          </div>
+          <span class="denom">$ FREE<small>LIVE</small></span>
+          <span class="cat-id">NP-109</span>
+          <p class="stamp-mount"><span class="ttl">Webinar · PGWP · 22 Aralık.</span><b>NP-109</b> · Live · webinar</p>
+        </article>
+
+        <!-- Stamp NP-110: Webinar 2 -->
+        <article class="stamp">
+          <span class="country"><span>Canada · NP</span><span class="right">WEBINAR</span></span>
+          <div class="body">
+            <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+          </div>
+          <span class="denom">$ FREE<small>LIVE</small></span>
+          <span class="cat-id">NP-110</span>
+          <span class="postmark tl">
+            <span class="pm-top">WEBINAR</span>
+            <span class="pm-mid">11·11</span>
+            <span class="pm-bot">2025</span>
+          </span>
+          <p class="stamp-mount"><span class="ttl">Webinar · Levels Plan · 11 Kasım.</span><b>NP-110</b> · Live · webinar</p>
+        </article>
+      </div>
+    </article>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>04</b> · Diaspora series</span>
+      <span class="center">Ten catalogued issues from the firm's Turkish-language handle. Two carousel posts mounted as <em>multi-stamp sheets</em>.</span>
+      <span class="right">Cat. <b>NP-101 — NP-110</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE V — POSTMARK CANCELLATIONS (brand DNA)
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="pn">Plate <b>05</b></p>
+      <div class="title">
+        <h2>Postmark <em>cancellations.</em></h2>
+      </div>
+      <p class="meta">Five doctrines · Brand DNA<br><b>D-01 — D-05</b></p>
+    </header>
+
+    <div class="postmarks">
+      <article class="pmark">
+        <div class="ring">
+          <span class="top">Doctrine</span>
+          <span class="num">01</span>
+          <span class="bot">Ethical</span>
+        </div>
+        <p class="name">Ethical <em>Guidance.</em></p>
+        <p>Every word the firm publishes is signed by an RCIC-IRB. The College's standard is the floor.</p>
+        <p class="tied">→ Tied to <b>Counsel of record</b></p>
+      </article>
+
+      <article class="pmark">
+        <div class="ring">
+          <span class="top">Doctrine</span>
+          <span class="num">02</span>
+          <span class="bot">Personal</span>
+        </div>
+        <p class="name">Personalised <em>Service.</em></p>
+        <p>The home page leads with Burcu's name. Clients meet a counsel, not a form.</p>
+        <p class="tied">→ Tied to <b>Plate II · website</b></p>
+      </article>
+
+      <article class="pmark">
+        <div class="ring">
+          <span class="top">Doctrine</span>
+          <span class="num">03</span>
+          <span class="bot">Transparent</span>
+        </div>
+        <p class="name">Transparency <em>· in pricing.</em></p>
+        <p>Fees listed up front. Calculator exposes every point. PDF signed by counsel.</p>
+        <p class="tied">→ Tied to <b>Plate III · customs form</b></p>
+      </article>
+
+      <article class="pmark">
+        <div class="ring">
+          <span class="top">Doctrine</span>
+          <span class="num">04</span>
+          <span class="bot">Knowledge</span>
+        </div>
+        <p class="name">Knowledge <em>&amp; Expertise.</em></p>
+        <p>156+ IRCC draws indexed since 2015. Live tracker. RCIC-grade commentary.</p>
+        <p class="tied">→ Tied to <b>NP-101 · 103 · 104 · 107 · 108</b></p>
+      </article>
+
+      <article class="pmark">
+        <div class="ring">
+          <span class="top">Doctrine</span>
+          <span class="num">05</span>
+          <span class="bot">Care</span>
+        </div>
+        <p class="name">Care <em>&amp; Lived Experience.</em></p>
+        <p>The diaspora arrives in two languages. We meet them in both.</p>
+        <p class="tied">→ Tied to <b>NP-106 · seminar</b></p>
+      </article>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>05</b> · Postmark cancellations</span>
+      <span class="center">Each doctrine acts as a <em>cancellation mark</em> &mdash; once a doctrine is tied to a deliverable, the engagement is signed.</span>
+      <span class="right">D-01 — <b>D-05</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       COLOPHON
+  ==================================================================== -->
+  <section class="plate cardstock last reveal">
+    <div class="colophon-page">
+      <h2>Colophon &mdash; <em>filed in good faith.</em></h2>
+      <p>
+        This album catalogues one season's work for Northern Pathways
+        Immigration Consulting, prepared by <strong>FrameFlow Studio</strong>
+        in Toronto, MMXXVI.
+      </p>
+      <p>
+        Set in <strong>Montserrat</strong> in weights 300 to 900,
+        with a single italic at 500. Inks: charcoal <em>#2C2B2B</em>,
+        paper white, off-white <em>#F9F9F9</em>, and a single saturated
+        accent &mdash; maple red, <em>#B92025</em>. Mounted on aged
+        cardstock, perforated to 11½ on all four sides.
+      </p>
+      <p>
+        Catalogued under the <strong>NP / 2026 / Vol. I</strong>
+        series. Each stamp's denomination keys to the firm's CRS or
+        FSWP scoring; each postmark cancels the engagement against
+        a doctrine in the operating manual. <em>If a stamp shows up
+        again next year, you'll know it's been re-issued.</em>
+      </p>
+
+      <p class="end-mark">End of album</p>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Stamp Album № I</span>
+    <span class="right">Catalogued by <strong>FrameFlow</strong></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

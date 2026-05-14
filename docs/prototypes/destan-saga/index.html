@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Destan — The Saga (FrameFlow / Prototype 01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Italianno&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       DESTAN · THE SAGA
+       Prototype 01 — literary edition / illuminated manuscript
+
+       The brand's name *destan* literally means "epic poem" in Turkish.
+       This prototype takes that literally — the page is bound, foliated,
+       set in Garamond, and structured as a printed book.
+    ==================================================================== */
+
+    :root {
+      --ivory:    #fbf3df;
+      --paper:    #f5e9c9;
+      --gold:     #a17a2a;
+      --gold-hi:  #e9b44a;
+      --burgundy: #73191c;
+      --burgundy-deep: #4f0d10;
+      --ink:      #1a0a08;
+      --rule:     #c9b787;
+
+      --display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+      --body:    "EB Garamond", Georgia, serif;
+      --hand:    "Italianno", cursive;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--ivory); color: var(--ink); }
+    body {
+      font-family: var(--body);
+      font-size: 18px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse at 30% 30%, rgba(161, 122, 42, 0.04), transparent 60%),
+        radial-gradient(ellipse at 70% 80%, rgba(115, 25, 28, 0.04), transparent 55%);
+    }
+
+    /* paper grain — fine speckle for the whole page */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.4;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.3  0 0 0 0 0.2  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    /* ============================================================
+       FRAMEFLOW TOP RAIL — minimal bridge to the FF chrome
+    ============================================================ */
+    .ff-rail {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--ivory);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .ff-rail a { color: inherit; text-decoration: none; }
+    .ff-rail a:hover { color: var(--gold); }
+    .ff-rail .ff-rail-mid { letter-spacing: 0.32em; }
+
+    /* ============================================================
+       COVER SPREAD — like a hardcover frontispiece
+    ============================================================ */
+    .cover {
+      min-height: calc(100vh - 38px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+    .cover::before {
+      /* the spine — vertical rule between recto/verso */
+      content: "";
+      position: absolute;
+      top: 8%;
+      bottom: 8%;
+      left: 50%;
+      width: 1px;
+      background: var(--rule);
+    }
+    .cover-verso, .cover-recto {
+      padding: 96px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 80vh;
+    }
+    .cover-verso {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .cover-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .cover-tagline {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(20px, 2.4vw, 32px);
+      color: var(--burgundy);
+      max-width: 24ch;
+      line-height: 1.3;
+    }
+    .cover-folio {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--ink);
+      opacity: 0.55;
+    }
+    .cover-recto {
+      align-items: center;
+      text-align: center;
+    }
+    .cover-flourish-top {
+      width: 60%;
+      max-width: 320px;
+      color: var(--gold);
+    }
+    .cover-flourish-top svg, .cover-flourish-bot svg, .cover-flourish-mid svg {
+      width: 100%;
+      height: auto;
+    }
+    .cover-translit {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .cover-translit em { font-weight: 600; font-style: italic; }
+    .cover-title {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(80px, 14vw, 200px);
+      letter-spacing: 0.06em;
+      color: var(--burgundy);
+      line-height: 0.95;
+      margin: 24px 0 8px;
+    }
+    .cover-flourish-mid {
+      width: 70%;
+      max-width: 360px;
+      color: var(--burgundy);
+      margin: 8px 0 28px;
+    }
+    .cover-subtitle {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(24px, 3.2vw, 42px);
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+    }
+    .cover-subtitle em {
+      font-family: var(--hand);
+      font-size: 1.65em;
+      color: var(--burgundy);
+      letter-spacing: 0;
+      font-style: normal;
+      display: block;
+      margin-top: 6px;
+    }
+    .cover-flourish-bot {
+      width: 60%;
+      max-width: 320px;
+      color: var(--gold);
+      margin: 28px 0 12px;
+    }
+    .cover-imprint {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: var(--burgundy);
+      text-transform: uppercase;
+      line-height: 1.8;
+    }
+
+    /* ============================================================
+       FRONTISPIECE — first plate, opposite the foreword
+    ============================================================ */
+    .frontispiece {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--rule);
+      min-height: 100vh;
+    }
+    .frontispiece-plate {
+      position: relative;
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+    .plate-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      box-shadow: 0 30px 60px -30px rgba(26, 10, 8, 0.45);
+    }
+    .plate-frame::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(251, 243, 223, 0.25);
+      pointer-events: none;
+    }
+    .plate-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.05) saturate(0.95);
+    }
+    .plate-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .plate-caption {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .frontispiece-text {
+      padding: 80px 80px 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 580px;
+    }
+    .folio {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .running-head {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      opacity: 0.6;
+      margin-bottom: 60px;
+    }
+    .text-block p {
+      font-family: var(--body);
+      font-size: 19px;
+      line-height: 1.7;
+      color: var(--ink);
+      margin-bottom: 1.1em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .text-block p em { color: var(--burgundy); }
+    .text-block p + p { text-indent: 2em; }
+    .dropcap {
+      float: left;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 5.6em;
+      line-height: 0.85;
+      padding: 0.05em 0.12em 0 0;
+      color: var(--burgundy);
+      font-style: normal;
+    }
+    .smallcaps {
+      font-variant: small-caps;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       CHAPTER OPENING — full-width with ornament
+    ============================================================ */
+    .chapter-opener {
+      padding: 160px 80px 100px;
+      text-align: center;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+    .chapter-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .chapter-rule {
+      width: 64px;
+      height: 1px;
+      background: var(--gold);
+      margin: 0 auto 22px;
+    }
+    .chapter-title {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(48px, 6.8vw, 96px);
+      letter-spacing: 0.04em;
+      color: var(--burgundy);
+      line-height: 1.05;
+    }
+    .chapter-title em {
+      font-family: var(--hand);
+      font-style: normal;
+      font-size: 1.4em;
+      color: var(--gold);
+      vertical-align: -0.1em;
+      letter-spacing: 0;
+    }
+    .chapter-blurb {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--ink);
+      max-width: 50ch;
+      margin: 24px auto 0;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+    .chapter-flourish {
+      width: 200px;
+      max-width: 60vw;
+      color: var(--gold);
+      margin: 32px auto 0;
+      display: block;
+    }
+
+    /* ============================================================
+       CHAPTER BODY — text + plate spread
+    ============================================================ */
+    .chapter-spread {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .chapter-spread.alt {
+      grid-template-columns: 1fr 1fr;
+    }
+    .chapter-spread .text-block {
+      padding: 100px 80px;
+    }
+    .chapter-spread .plate-block {
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+      background: rgba(161, 122, 42, 0.04);
+    }
+
+    .pull-quote {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 1.4;
+      color: var(--burgundy);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 24px 0;
+      margin: 36px 0;
+      text-align: center;
+    }
+    .pull-quote::before, .pull-quote::after {
+      content: "·";
+      color: var(--gold);
+      margin: 0 12px;
+      font-size: 1em;
+    }
+
+    .margin-gloss {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      border-left: 2px solid var(--gold);
+      padding: 4px 0 4px 14px;
+      margin: 28px 0;
+      max-width: 26ch;
+    }
+
+    /* ============================================================
+       PLATES GALLERY — numbered photo plates
+    ============================================================ */
+    .plates {
+      padding: 100px 60px 120px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .plates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 56px 40px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .plate-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .plate-card .plate-frame { aspect-ratio: 3 / 4; }
+    .plate-card .plate-frame.land { aspect-ratio: 4 / 3; }
+    .plate-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .plate-card-meta .num { color: var(--gold); }
+    .plate-card-cap {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--ink);
+    }
+
+    /* ============================================================
+       REEL OF FILMS — videos as poster cards
+    ============================================================ */
+    .reel {
+      padding: 120px 60px;
+      background: var(--burgundy);
+      color: var(--paper);
+      border-bottom: 1px solid var(--burgundy-deep);
+    }
+    .reel-head {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 64px;
+    }
+    .reel-head .chapter-num { color: var(--gold-hi); }
+    .reel-head .chapter-title { color: var(--paper); }
+    .reel-head .chapter-blurb { color: var(--paper); opacity: 0.75; }
+    .reel-head .chapter-rule { background: var(--gold-hi); }
+    .reel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .reel-card {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--gold-hi);
+      cursor: pointer;
+    }
+    .reel-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.65) contrast(1.1);
+      transition: filter 0.5s, transform 0.5s;
+    }
+    .reel-card:hover img { filter: brightness(0.85); transform: scale(1.04); }
+    .reel-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .reel-play-button {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-hi);
+      background: rgba(115, 25, 28, 0.6);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 32px;
+      color: var(--gold-hi);
+      transition: transform 0.5s;
+    }
+    .reel-card:hover .reel-play-button { transform: scale(1.1); }
+    .reel-card-meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 18px 24px;
+      background: linear-gradient(to top, rgba(26, 10, 8, 0.92), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+    .reel-card-cap {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--gold-hi);
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       MARKS OF THE HOUSE — palette + type
+    ============================================================ */
+    .marks {
+      padding: 140px 80px;
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+      border-bottom: 1px solid var(--rule);
+    }
+    .marks h3 {
+      font-family: var(--display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 38px;
+      color: var(--burgundy);
+      margin-bottom: 12px;
+    }
+    .marks .chapter-num { text-align: left; margin-bottom: 14px; }
+    .marks p {
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink);
+      max-width: 38ch;
+    }
+    .palette-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .palette-row {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      align-items: center;
+      gap: 24px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .palette-row:last-child { border-bottom: 0; }
+    .palette-chip {
+      width: 80px;
+      height: 60px;
+      border: 1px solid var(--ink);
+    }
+    .palette-name {
+      font-family: var(--display);
+      font-size: 22px;
+      color: var(--ink);
+      font-weight: 400;
+    }
+    .palette-name em {
+      font-family: var(--hand);
+      font-size: 1.4em;
+      color: var(--gold);
+      font-style: normal;
+      margin-left: 8px;
+      vertical-align: -0.1em;
+    }
+    .palette-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      text-align: right;
+    }
+
+    .type-specimen {
+      margin-top: 60px;
+      padding-top: 36px;
+      border-top: 1px solid var(--rule);
+    }
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .type-row:last-child { border-bottom: 0; }
+    .type-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .type-spec-display {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 38px;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+    .type-spec-body {
+      font-family: var(--body);
+      font-size: 19px;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .type-spec-hand {
+      font-family: var(--hand);
+      font-size: 38px;
+      color: var(--burgundy);
+      line-height: 1;
+    }
+    .type-spec-mono {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* ============================================================
+       COLOPHON — closing matter
+    ============================================================ */
+    .colophon {
+      padding: 120px 80px;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--rule);
+    }
+    .colophon-flourish {
+      width: 240px;
+      color: var(--gold);
+      margin: 0 auto 32px;
+    }
+    .colophon h4 {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      margin-bottom: 24px;
+    }
+    .colophon p {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .colophon p + p { margin-top: 16px; }
+    .colophon-credits {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      text-align: center;
+    }
+    .colophon-credits > div {
+      padding: 0 16px;
+      border-left: 1px solid var(--rule);
+    }
+    .colophon-credits > div:first-child { border-left: 0; }
+    .colophon-credits dt {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .colophon-credits dd {
+      font-family: var(--display);
+      font-size: 17px;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .finis {
+      padding: 100px 32px;
+      text-align: center;
+      background: var(--ivory);
+    }
+    .finis .word {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 42px;
+      letter-spacing: 0.6em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .finis-flourish {
+      width: 160px;
+      color: var(--gold);
+      margin: 24px auto;
+      display: block;
+    }
+    .finis-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+
+    /* responsive — collapse to single column below 880px */
+    @media (max-width: 880px) {
+      .cover { grid-template-columns: 1fr; }
+      .cover::before { display: none; }
+      .cover-verso, .cover-recto { padding: 60px 32px; min-height: auto; }
+      .frontispiece { grid-template-columns: 1fr; }
+      .frontispiece-plate, .frontispiece-text { padding: 48px 32px; }
+      .chapter-spread { grid-template-columns: 1fr; }
+      .chapter-spread .text-block, .chapter-spread .plate-block { padding: 60px 32px; }
+      .plates-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 24px; }
+      .reel-grid { grid-template-columns: 1fr; }
+      .marks { grid-template-columns: 1fr; padding: 80px 32px; gap: 48px; }
+      .colophon-credits { grid-template-columns: 1fr; gap: 24px; }
+      .colophon-credits > div { border-left: 0; border-top: 1px solid var(--rule); padding-top: 20px; }
+      .colophon-credits > div:first-child { border-top: 0; padding-top: 0; }
+      .chapter-opener { padding: 80px 32px 60px; }
+      .plates { padding: 80px 24px 100px; }
+      .reel { padding: 80px 24px; }
+      .ff-rail { padding: 10px 16px; font-size: 9px; }
+      .ff-rail .ff-rail-end { display: none; }
+    }
+
+    /* scroll-triggered reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 1.2s, transform 1.2s; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Reusable ornament (echo of the logo flourish) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ornH" viewBox="0 0 240 24">
+        <line x1="0" y1="12" x2="100" y2="12" stroke="currentColor" stroke-width="0.7"/>
+        <line x1="140" y1="12" x2="240" y2="12" stroke="currentColor" stroke-width="0.7"/>
+        <path d="M100 12 Q108 2 116 12 Q124 22 132 12 Q124 2 116 12 Q108 22 100 12 Z" fill="currentColor" opacity="0.85"/>
+        <circle cx="116" cy="12" r="1.6" fill="currentColor"/>
+      </symbol>
+      <symbol id="ornFlame" viewBox="0 0 200 80">
+        <line x1="0" y1="60" x2="60" y2="60" stroke="currentColor" stroke-width="0.7"/>
+        <line x1="140" y1="60" x2="200" y2="60" stroke="currentColor" stroke-width="0.7"/>
+        <path d="M60 60 C70 60 72 50 80 48 C72 50 70 40 80 36 C72 40 78 30 88 26 C82 32 90 22 100 14 C110 22 118 32 112 26 C122 30 128 40 120 36 C130 40 128 50 120 48 C128 50 130 60 140 60 Z" fill="currentColor" opacity="0.92"/>
+        <path d="M82 56 Q86 44 92 50 Q90 38 100 32 Q110 38 108 50 Q114 44 118 56" fill="none" stroke="var(--ivory, #fbf3df)" stroke-width="0.5"/>
+        <circle cx="46" cy="60" r="1.5" fill="currentColor"/>
+        <circle cx="154" cy="60" r="1.5" fill="currentColor"/>
+      </symbol>
+      <symbol id="ornDouble" viewBox="0 0 320 32">
+        <line x1="0" y1="10" x2="320" y2="10" stroke="currentColor" stroke-width="0.6"/>
+        <line x1="20" y1="22" x2="300" y2="22" stroke="currentColor" stroke-width="0.4"/>
+        <circle cx="160" cy="16" r="2.4" fill="currentColor"/>
+        <circle cx="120" cy="16" r="1.4" fill="currentColor"/>
+        <circle cx="200" cy="16" r="1.4" fill="currentColor"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- =================================================================
+       FRAMEFLOW RAIL
+  ==================================================================== -->
+  <header class="ff-rail">
+    <a href="../" class="ff-rail-start">← FrameFlow · Reel</a>
+    <span class="ff-rail-mid">VOLUME I · DESTAN</span>
+    <span class="ff-rail-end">Toronto · 2026 · Plates I–XV</span>
+  </header>
+
+  <!-- =================================================================
+       COVER SPREAD
+  ==================================================================== -->
+  <section class="cover">
+    <div class="cover-verso">
+      <p class="cover-eyebrow">A Reel by FrameFlow · Toronto</p>
+      <p class="cover-tagline">
+        In which a kebab house, opened on a quiet street in Toronto, writes its own legend in fire.
+      </p>
+      <p class="cover-folio">— viii —</p>
+    </div>
+    <div class="cover-recto">
+      <span class="cover-flourish-top"><svg><use href="#ornFlame"/></svg></span>
+      <p class="cover-translit"><em>destân</em>&nbsp;·&nbsp;Tk., n.&nbsp;an epic poem</p>
+      <h1 class="cover-title">DESTAN</h1>
+      <span class="cover-flourish-mid"><svg><use href="#ornDouble"/></svg></span>
+      <p class="cover-subtitle">
+        The Saga of
+        <em>Fire &amp; Salt.</em>
+      </p>
+      <span class="cover-flourish-bot"><svg><use href="#ornH"/></svg></span>
+      <p class="cover-imprint">
+        Volume I · Plates I–XV<br>
+        Bound at FrameFlow Studio · MMXXVI
+      </p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FRONTISPIECE & FOREWORD
+  ==================================================================== -->
+  <section class="frontispiece">
+    <div class="frontispiece-plate reveal">
+      <div class="plate-frame">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg" alt="The cag kebab rotates above the embers — frontispiece." />
+      </div>
+      <div class="plate-label">
+        <span>Plate&nbsp;·&nbsp;<span style="color: var(--gold)">I</span></span>
+        <span>The Rotation</span>
+      </div>
+      <p class="plate-caption">
+        “The roast turns slowly, that the fire may write upon every side.”
+      </p>
+    </div>
+    <div class="frontispiece-text reveal">
+      <p class="folio">— ix —</p>
+      <p class="running-head">Foreword · Of Fire &amp; Salt</p>
+      <div class="text-block">
+        <p>
+          <span class="dropcap">B</span>etween the two languages — <em>Türkçe</em> and the older language of fire — there is one shared word: <em class="smallcaps">destân</em>. To carry a saga forward, the storyteller sat close to the flame and spoke until the embers cooled. So it goes still, in a kitchen on a quiet Toronto street, where the cooks turn the roast slowly and the room learns the story by its smell.
+        </p>
+        <p>
+          What follows is not a menu. It is a <em>reel</em> — fifteen plates, a foreword, three chapters, a closing colophon — composed for Destan over the seasons of MMXXVI by <span class="smallcaps">FrameFlow</span>. Brand mark, photography, social, and the small bright work of advertising. An epic in a humble form.
+        </p>
+        <p>
+          Read it as you would a book that someone troubled to bind well. Slowly, with the fire close.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       CHAPTER I OPENER — OF THE FIRE
+  ==================================================================== -->
+  <section class="chapter-opener reveal">
+    <p class="chapter-num">Chapter the First</p>
+    <span class="chapter-rule"></span>
+    <h2 class="chapter-title">Of the <em>Fire.</em></h2>
+    <p class="chapter-blurb">
+      Of <em style="font-family: var(--body); font-style: italic; color: var(--burgundy);">cağ kebabı</em>, the rotating roast of Erzurum, and how it must be read at the moment of its darkest crust.
+    </p>
+    <svg class="chapter-flourish" viewBox="0 0 200 80" aria-hidden="true"><use href="#ornFlame"/></svg>
+  </section>
+
+  <!-- CH I body — text + plate II -->
+  <section class="chapter-spread">
+    <div class="text-block reveal" style="padding: 100px 80px;">
+      <p class="folio">— xii —</p>
+      <p class="running-head">I · Of the Fire</p>
+      <p>
+        The cağ — pronounced <em>djah</em> — was once the food of mountain weddings, the meat marinated three days in onion and salt, then bound horizontally upon the spit and turned, by hand, before a wall of beech embers. It is not <em>doner</em>. The doner stands. The cağ <em>lies down</em>. Where the doner is a tower, the cağ is a story.
+      </p>
+      <p>
+        At Destan, the spit is fed by oak, and the room is built so that the cook may stand beside the fire and watch it as one watches a long sentence resolve itself. The customer does not order. The customer is brought a plate when the meat is ready to be read.
+      </p>
+      <p class="pull-quote">
+        Where the <em>doner</em> stands, the <em>cağ</em> lies down.
+      </p>
+      <p>
+        It is, then, an <span class="smallcaps">epic in slow motion</span> — and the camera, like the cook, must learn patience. We made this work over four shoots, in light that asked to be waited on.
+      </p>
+    </div>
+    <div class="plate-block reveal">
+      <div class="plate-frame">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg" alt="The cag rolls slowly above the open flame." />
+      </div>
+      <div class="plate-label">
+        <span>Plate&nbsp;·&nbsp;<span style="color: var(--gold)">II</span></span>
+        <span>The Flame</span>
+      </div>
+      <p class="plate-caption">
+        “The fire writes upon the meat what the meat will say to the salt.”
+      </p>
+      <p class="margin-gloss">
+        Cağ kebabı, the rotating roast of Erzurum, is read at the moment of darkest crust.
+      </p>
+    </div>
+  </section>
+
+  <!-- CH I — second spread (plate, text reversed) -->
+  <section class="chapter-spread">
+    <div class="plate-block reveal" style="background: rgba(115, 25, 28, 0.04);">
+      <div class="plate-frame">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="The cag in mid-rotation, embers glowing." />
+      </div>
+      <div class="plate-label">
+        <span>Plate&nbsp;·&nbsp;<span style="color: var(--gold)">III</span></span>
+        <span>Mid-Rotation</span>
+      </div>
+      <p class="plate-caption">
+        “The crust thickens; the fat rises; the room holds its breath.”
+      </p>
+    </div>
+    <div class="text-block reveal" style="padding: 100px 80px;">
+      <p class="folio">— xiv —</p>
+      <p class="running-head">I · Of the Fire</p>
+      <p>
+        We learned the cook’s tempo by waiting through it. Three pulls of the lever, one long reach for the long blade, a glance to the doorway where the lamb-salt of the marinade had reached the threshold like an invitation. <em>That</em>, in our language, is the picture: the fire glances back, the cook glances back, the camera glances back — three witnesses to one rotation.
+      </p>
+      <p>
+        We showed early frames to the chef. He said only: “make it longer.” So we did.
+      </p>
+      <p class="pull-quote">
+        Three witnesses to one rotation.
+      </p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       CHAPTER II — OF THE CUT
+  ==================================================================== -->
+  <section class="chapter-opener reveal">
+    <p class="chapter-num">Chapter the Second</p>
+    <span class="chapter-rule"></span>
+    <h2 class="chapter-title">Of the <em>Cut.</em></h2>
+    <p class="chapter-blurb">
+      Of the long blade, the still hand, and the moment when an epic becomes a portion.
+    </p>
+    <svg class="chapter-flourish" viewBox="0 0 240 24" aria-hidden="true"><use href="#ornH"/></svg>
+  </section>
+
+  <section class="chapter-spread">
+    <div class="text-block reveal" style="padding: 100px 80px;">
+      <p class="folio">— xviii —</p>
+      <p class="running-head">II · Of the Cut</p>
+      <p>
+        <span class="dropcap">T</span>he cut, when it comes, is short. The blade is long enough that one pull can free a whole portion; the wrist must be soft enough that the meat remembers it was once cared for. Between the chef and the spit there is a black glove and a handle worn pale by ten thousand of these movements.
+      </p>
+      <p>
+        We made <span class="smallcaps">six frames</span> of this gesture, then chose three. Plate IV stands in for them all: the blade, the meat, the pale handle, the small line of fat caught in the act of falling.
+      </p>
+      <p class="margin-gloss">
+        Four shoots · 412 frames · 15 plates kept.
+      </p>
+    </div>
+    <div class="plate-block reveal">
+      <div class="plate-frame">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="The chef carves the rotating roast." />
+      </div>
+      <div class="plate-label">
+        <span>Plate&nbsp;·&nbsp;<span style="color: var(--gold)">IV</span></span>
+        <span>The Blade</span>
+      </div>
+      <p class="plate-caption">
+        “The cut is short, that the saga may be served warm.”
+      </p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       CHAPTER III — OF THE PLATE
+  ==================================================================== -->
+  <section class="chapter-opener reveal">
+    <p class="chapter-num">Chapter the Third</p>
+    <span class="chapter-rule"></span>
+    <h2 class="chapter-title">Of the <em>Plate.</em></h2>
+    <p class="chapter-blurb">
+      Of <em style="font-family: var(--body); font-style: italic; color: var(--burgundy);">adana</em>, of <em style="font-family: var(--body); font-style: italic; color: var(--burgundy);">ezme</em>, and of the table that holds them.
+    </p>
+    <svg class="chapter-flourish" viewBox="0 0 320 32" aria-hidden="true"><use href="#ornDouble"/></svg>
+  </section>
+
+  <section class="chapter-spread">
+    <div class="plate-block reveal">
+      <div class="plate-frame land" style="aspect-ratio: 4/3;">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="A spread of mezze, lavash, and adana on the wooden table." />
+      </div>
+      <div class="plate-label">
+        <span>Plate&nbsp;·&nbsp;<span style="color: var(--gold)">XV</span></span>
+        <span>The Spread</span>
+      </div>
+      <p class="plate-caption">
+        “A table set in Toronto, with the grammar of Anatolia.”
+      </p>
+    </div>
+    <div class="text-block reveal" style="padding: 100px 80px;">
+      <p class="folio">— xxiv —</p>
+      <p class="running-head">III · Of the Plate</p>
+      <p>
+        <span class="dropcap">A</span>n adana arrives in two long lines of <em>köfte</em>; ezme arrives in a copper bowl that holds its colour against the wood; lavash arrives folded twice. The plate, like the saga, is composed of pieces that only become themselves in one another’s company.
+      </p>
+      <p>
+        It is — though we are wary of the word — an <em>argument</em>. That food does not need to shout to be loud; that the heat is not lost when the dish is set down; that a kebab house can still believe in its own myth.
+      </p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PLATES GALLERY
+  ==================================================================== -->
+  <section class="plates">
+    <div class="reel-head" style="margin-bottom: 56px;">
+      <p class="chapter-num">Appendix the First</p>
+      <span class="chapter-rule"></span>
+      <h2 class="chapter-title" style="font-size: clamp(36px, 4.4vw, 56px);">The <em>Plates</em>, in full.</h2>
+      <p class="chapter-blurb">Fifteen frames, named in the order they were made. Click any to open at scale.</p>
+    </div>
+    <div class="plates-grid">
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;I</span><span>03·14·26</span></div><figcaption class="plate-card-cap">The rotation begins.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;II</span><span>01·04·26</span></div><figcaption class="plate-card-cap">The flame answers.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;III</span><span>02·15·26</span></div><figcaption class="plate-card-cap">Mid-rotation.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/04-cag-kebabi-vertical.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;IV</span><span>01·31·26</span></div><figcaption class="plate-card-cap">The roast at rest.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;V</span><span>03·14·26</span></div><figcaption class="plate-card-cap">The blade arrives.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/06-blade-on-meat.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;VI</span><span>03·14·26</span></div><figcaption class="plate-card-cap">A short cut.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/07-doner-tongs.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;VII</span><span>01·10·26</span></div><figcaption class="plate-card-cap">The doner, by way of contrast.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/08-skewers-smoke.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;VIII</span><span>01·10·26</span></div><figcaption class="plate-card-cap">Smoke, in two registers.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/09-skewers-coals.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;IX</span><span>01·10·26</span></div><figcaption class="plate-card-cap">The coals, kept low.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;X</span><span>02·15·26</span></div><figcaption class="plate-card-cap">Şiş tavuk.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;XI</span><span>03·14·26</span></div><figcaption class="plate-card-cap">A fish, bound for embers.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/12-peppers-coals.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;XII</span><span>03·14·26</span></div><figcaption class="plate-card-cap">Peppers, side by side.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/13-adana-plated.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;XIII</span><span>01·04·26</span></div><figcaption class="plate-card-cap">Adana, plated.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;XIV</span><span>01·31·26</span></div><figcaption class="plate-card-cap">Adana, on lavash.</figcaption></figure>
+      <figure class="plate-card reveal"><div class="plate-frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="" /></div><div class="plate-card-meta"><span class="num">PLATE&nbsp;XV</span><span>01·31·26</span></div><figcaption class="plate-card-cap">The table, set.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       REEL OF FILMS — videos as poster cards
+  ==================================================================== -->
+  <section class="reel">
+    <div class="reel-head reveal">
+      <p class="chapter-num">Appendix the Second</p>
+      <span class="chapter-rule"></span>
+      <h2 class="chapter-title">A Reel of <em>Films.</em></h2>
+      <p class="chapter-blurb">
+        Six short films cut from the four shoots — for social, for advertising, for the moment when a still photograph is not patient enough.
+      </p>
+    </div>
+    <div class="reel-grid">
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 01 · 0:18</span><span class="reel-card-cap">The Rotation, slow</span></div>
+      </figure>
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 02 · 0:09</span><span class="reel-card-cap">The Cut</span></div>
+      </figure>
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 03 · 0:15</span><span class="reel-card-cap">Şiş Tavuk on the coals</span></div>
+      </figure>
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 04 · 0:22</span><span class="reel-card-cap">A table, set</span></div>
+      </figure>
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 05 · 0:11</span><span class="reel-card-cap">Fish on flame</span></div>
+      </figure>
+      <figure class="reel-card reveal">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt="" />
+        <div class="reel-play"><span class="reel-play-button">▶</span></div>
+        <div class="reel-card-meta"><span>Film 06 · 0:14</span><span class="reel-card-cap">Adana, end to end</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS OF THE HOUSE — palette + type
+  ==================================================================== -->
+  <section class="marks">
+    <div class="reveal">
+      <p class="chapter-num">Appendix the Third</p>
+      <h3>Marks of the House.</h3>
+      <p>
+        The colours and the type are the brand’s small, quiet rules — the things the kitchen does not know about, and which keep the saga from going out of tune.
+      </p>
+    </div>
+    <div class="reveal">
+      <div class="palette-rows">
+        <div class="palette-row">
+          <span class="palette-chip" style="background: #73191c"></span>
+          <span class="palette-name">Burgundy <em>·  ateş</em></span>
+          <span class="palette-meta">#73191C · Primary</span>
+        </div>
+        <div class="palette-row">
+          <span class="palette-chip" style="background: #e9b44a"></span>
+          <span class="palette-name">Saffron Gold <em>·  altın</em></span>
+          <span class="palette-meta">#E9B44A · Accent</span>
+        </div>
+        <div class="palette-row">
+          <span class="palette-chip" style="background: #fbf3df; border-color: var(--rule)"></span>
+          <span class="palette-name">Ivory <em>·  fildişi</em></span>
+          <span class="palette-meta">#FBF3DF · Page</span>
+        </div>
+        <div class="palette-row">
+          <span class="palette-chip" style="background: #1a0a08"></span>
+          <span class="palette-name">Ink <em>·  mürekkep</em></span>
+          <span class="palette-meta">#1A0A08 · Body</span>
+        </div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="type-row">
+          <span class="type-tag">Display</span>
+          <div class="type-spec-display">Cormorant Garamond&nbsp;·&nbsp;<em>italic</em></div>
+        </div>
+        <div class="type-row">
+          <span class="type-tag">Body</span>
+          <div class="type-spec-body">EB Garamond — set at 18&nbsp;pt for paragraphs of fewer than 60&nbsp;characters; otherwise 19.</div>
+        </div>
+        <div class="type-row">
+          <span class="type-tag">Hand</span>
+          <div class="type-spec-hand">Italianno, used sparingly.</div>
+        </div>
+        <div class="type-row">
+          <span class="type-tag">Folio</span>
+          <div class="type-spec-mono">JetBrains Mono · 10/0.30em</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       COLOPHON
+  ==================================================================== -->
+  <section class="colophon reveal">
+    <svg class="colophon-flourish" viewBox="0 0 200 80" aria-hidden="true"><use href="#ornFlame"/></svg>
+    <h4>Colophon</h4>
+    <p>
+      Volume I of <em>Destan</em> was composed by FrameFlow at its Toronto studio, in the four seasons of MMXXVI. The body is set in EB Garamond, the display in Cormorant; the asides are written in Italianno, by hand.
+    </p>
+    <p>
+      The fifteen plates were photographed across four shoots in the kitchen of Destan Turkish Cuisine, who fed us each time and asked, in return, only that the fire be photographed honestly.
+    </p>
+
+    <dl class="colophon-credits">
+      <div>
+        <dt>Brand &amp; Direction</dt>
+        <dd>FrameFlow</dd>
+      </div>
+      <div>
+        <dt>Photography &amp; Film</dt>
+        <dd>FrameFlow Studio</dd>
+      </div>
+      <div>
+        <dt>Social &amp; Advertising</dt>
+        <dd>FrameFlow Reach</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="finis">
+    <div class="word">FINIS</div>
+    <svg class="finis-flourish" viewBox="0 0 240 24" aria-hidden="true"><use href="#ornH"/></svg>
+    <p class="finis-meta">Bound at FrameFlow Studio · Toronto · MMXXVI</p>
+  </section>
+
+  <script>
+    /* simple intersection-observer reveal */
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }
+      }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

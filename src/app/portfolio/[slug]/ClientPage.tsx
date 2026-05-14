@@ -323,10 +323,17 @@ function RichBody({ client }: { client: Client }) {
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ember mb-4 flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
-        Now showing
-      </p>
+      {client.wip ? (
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-amber mb-4 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse-dot" />
+          Work in progress
+        </p>
+      ) : (
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ember mb-4 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
+          Now showing
+        </p>
+      )}
       <p className="font-warm text-[15px] font-[300] leading-[1.85] text-on-surface-60 mb-10 max-w-[480px]">
         {client.synopsis}
       </p>

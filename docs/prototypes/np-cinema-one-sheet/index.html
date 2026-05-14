@@ -1,0 +1,2185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Cinema One-Sheet (FrameFlow / Prototype 15)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 15 — "The Cinema One-Sheet"
+
+       Saul Bass × Polish film posters × A24 festival lineage. Each
+       service becomes a one-sheet. Bold flat shapes built from CSS
+       (no illustrations needed); single dominant red against
+       charcoal and paper. Marquee = website. Box-office display =
+       calculator. Festival photographic poster wall = real social
+       posts at 4:5 (their native ratio). Director's chair = Burcu.
+
+       MONTSERRAT only. Locked palette. Maximum typographic ambition,
+       maximum restraint, single bold accent.
+    ==================================================================== */
+
+    :root {
+      --paper:    #f7f2e6;       /* warm festival catalogue paper */
+      --paper-2:  #efe9d8;
+      --paper-3:  #e6dfc6;
+      --paper-4:  #fcf8eb;
+      --rule:     #c9bfa3;
+      --rule-2:   #a39b81;
+      --ink:      #1a1814;
+      --ink-2:    #34302a;
+      --ink-3:    #6e695b;
+      --ink-4:    #9d9786;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* festival catalogue paper texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.05;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.20  0 0 0 0 0.16  0 0 0 0 0.10  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       MARQUEE STRIP — top theatrical rail
+    ============================================================ */
+    .marquee-strip {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border-bottom: 4px solid var(--red);
+    }
+    .marquee-strip b { color: var(--red); font-weight: 800; }
+    .marquee-strip .center { text-align: center; letter-spacing: 0.4em; color: var(--paper); }
+    .marquee-strip .right { text-align: right; }
+    .marquee-strip .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .marquee-strip { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .marquee-strip .right, .marquee-strip .left { text-align: center; }
+    }
+
+    /* ============================================================
+       MARQUEE — the festival headline (the website's role)
+    ============================================================ */
+    .marquee {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 56px 48px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .marquee::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background:
+        repeating-linear-gradient(90deg, var(--red) 0 24px, var(--paper) 24px 28px, var(--ink) 28px 52px);
+    }
+    /* festival "spotlight" radial glow */
+    .marquee::after {
+      content: "";
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(185, 32, 37, 0.18), transparent 60%);
+      pointer-events: none;
+    }
+
+    .marquee-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .marquee-meta {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(247, 242, 230, 0.18);
+      margin-bottom: 36px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(247, 242, 230, 0.55);
+    }
+    .marquee-meta .left b { color: var(--red); font-weight: 800; }
+    .marquee-meta .center { text-align: center; color: var(--red); letter-spacing: 0.5em; font-weight: 800; }
+    .marquee-meta .right { text-align: right; }
+    .marquee-meta .right b { color: var(--paper); font-weight: 800; }
+
+    .marquee-title {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(72px, 14vw, 240px);
+      line-height: 0.82;
+      letter-spacing: -0.05em;
+      color: var(--paper);
+      margin-bottom: 22px;
+      overflow-wrap: break-word;
+    }
+    .marquee-title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .marquee-title .punct { color: var(--red); }
+
+    .marquee-deck {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.55;
+      color: rgba(247, 242, 230, 0.78);
+      max-width: 56ch;
+      margin-bottom: 36px;
+    }
+    .marquee-deck b { color: var(--paper); font-weight: 700; }
+    .marquee-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    /* showtimes board — like a small "AT THIS PROGRAMME" panel under the marquee */
+    .showtimes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid rgba(247, 242, 230, 0.18);
+      border-bottom: 1px solid rgba(247, 242, 230, 0.18);
+      max-width: 760px;
+    }
+    .showtimes > div {
+      padding: 16px 18px;
+      border-left: 1px solid rgba(247, 242, 230, 0.18);
+    }
+    .showtimes > div:first-child { border-left: 0; padding-left: 0; }
+    .showtimes dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .showtimes dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--paper);
+    }
+    .showtimes dd em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    @media (max-width: 720px) {
+      .marquee { padding: 40px 22px 48px; }
+      .marquee-meta { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .marquee-meta .right, .marquee-meta .left { text-align: center; }
+      .showtimes { grid-template-columns: 1fr 1fr; }
+      .showtimes > div:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid rgba(247,242,230,0.18); padding-top: 14px; margin-top: 8px; }
+      .showtimes > div:nth-child(4) { border-top: 1px solid rgba(247,242,230,0.18); padding-top: 14px; margin-top: 8px; }
+    }
+
+    /* ============================================================
+       MARQUEE BANNER (the website rendered as theatre marquee)
+    ============================================================ */
+    .marquee-banner {
+      max-width: 1480px;
+      margin: 56px auto 0;
+      padding: 0 48px;
+    }
+    .marquee-banner-frame {
+      background: var(--paper);
+      border: 6px solid var(--ink);
+      box-shadow:
+        inset 0 0 0 4px var(--paper-2),
+        inset 0 0 0 8px var(--ink),
+        0 32px 80px -24px rgba(0,0,0,0.55);
+      overflow: hidden;
+      position: relative;
+    }
+    /* marquee bulb light strip */
+    .marquee-banner-frame::before {
+      content: "";
+      position: absolute;
+      top: 8px; left: 8px; right: 8px;
+      height: 12px;
+      background-image: radial-gradient(circle at center, var(--red) 4px, transparent 4.5px);
+      background-size: 22px 12px;
+      background-repeat: repeat-x;
+      z-index: 2;
+    }
+    .marquee-banner-frame::after {
+      content: "";
+      position: absolute;
+      bottom: 8px; left: 8px; right: 8px;
+      height: 12px;
+      background-image: radial-gradient(circle at center, var(--red) 4px, transparent 4.5px);
+      background-size: 22px 12px;
+      background-repeat: repeat-x;
+      z-index: 2;
+    }
+    .marquee-banner-frame .inner {
+      padding: 28px 28px;
+      background: var(--paper-4);
+      position: relative;
+      z-index: 1;
+      margin: 18px;
+    }
+    .marquee-banner-frame .inner::before, .marquee-banner-frame .inner::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink);
+    }
+    .marquee-banner-frame .inner::before { left: -9px; }
+    .marquee-banner-frame .inner::after { right: -9px; }
+
+    @media (max-width: 720px) {
+      .marquee-banner { padding: 0 22px; }
+      .marquee-banner-frame .inner { padding: 22px 18px; margin: 14px; }
+      .marquee-banner-frame .inner::before, .marquee-banner-frame .inner::after { display: none; }
+    }
+
+    /* the "now showing" website mockup (faithful) */
+    .ns-frame {
+      background: var(--paper-4);
+    }
+    .ns-frame .chrome {
+      background: var(--paper-2);
+      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .ns-frame .chrome .dots { display: flex; gap: 4px; }
+    .ns-frame .chrome .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .ns-frame .chrome .dots span:first-child { background: var(--red); }
+    .ns-frame .chrome .url {
+      padding: 4px 10px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .ns-frame .chrome .url::before { content: "🔒  "; }
+    .ns-frame .chrome .lang {
+      display: inline-flex;
+      gap: 2px;
+      padding: 2px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+    }
+    .ns-frame .chrome .lang span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      color: var(--ink-4);
+    }
+    .ns-frame .chrome .lang .on { background: var(--red); color: var(--paper); }
+    .ns-nav {
+      padding: 14px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .ns-nav .brand { display: flex; align-items: center; gap: 10px; }
+    .ns-nav .brand img { width: 28px; height: 28px; object-fit: contain; }
+    .ns-nav .brand .wm {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      letter-spacing: 0.06em; color: var(--ink); line-height: 1;
+    }
+    .ns-nav .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.18em; color: var(--red);
+      margin-top: 3px;
+    }
+    .ns-nav .menu {
+      display: flex; justify-content: center; gap: 18px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .ns-nav .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+    .ns-nav .right { display: flex; align-items: center; gap: 8px; }
+    .ns-nav .right .lt {
+      display: inline-flex; gap: 2px; padding: 2px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .ns-nav .right .lt span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      color: var(--ink-3);
+    }
+    .ns-nav .right .lt .on { background: var(--ink); color: var(--paper); }
+    .ns-nav .right .book {
+      padding: 7px 12px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .ns-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 160px;
+      gap: 28px;
+      align-items: center;
+      padding: 28px 24px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .ns-hero .text { min-width: 0; }
+    .ns-hero .eb {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+    }
+    .ns-hero h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(20px, 2.6vw, 30px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .ns-hero h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .ns-hero p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 12px;
+      line-height: 1.55; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 12px;
+    }
+    .ns-hero p b { font-weight: 700; color: var(--ink); }
+    .ns-hero .ctas { display: flex; gap: 6px; }
+    .ns-hero .ctas a {
+      padding: 7px 11px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .ns-hero .ctas .p { background: var(--red); color: var(--paper); }
+    .ns-hero .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .ns-hero .photo {
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+      padding: 6px 6px 10px;
+      max-width: 160px;
+    }
+    .ns-hero .photo .ph {
+      width: 100%; aspect-ratio: 4/5;
+      overflow: hidden; background: var(--paper-3);
+    }
+    .ns-hero .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .ns-hero .photo .who {
+      padding-top: 6px;
+      border-top: 2px solid var(--red);
+      margin-top: 6px;
+    }
+    .ns-hero .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink);
+    }
+    .ns-hero .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 1px 0 0;
+    }
+    .ns-foot {
+      padding: 14px 22px;
+      background: var(--paper-2);
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px; align-items: center;
+    }
+    .ns-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .ns-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .ns-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .ns-nav .menu { display: none; }
+      .ns-hero { grid-template-columns: 1fr; gap: 16px; padding: 22px; }
+      .ns-foot { padding: 12px 22px; grid-template-columns: 1fr; gap: 6px; }
+    }
+
+    /* ============================================================
+       FESTIVAL LINEUP — the five service one-sheets
+    ============================================================ */
+    .festival {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .festival-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 56px;
+    }
+    .festival-head .seat {
+      width: 64px; height: 64px;
+      background: var(--red);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+    }
+    .festival-head .text { padding-bottom: 6px; }
+    .festival-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .festival-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .festival-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .festival-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .festival-head .meta b { color: var(--ink); font-weight: 800; }
+
+    .lineup {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+
+    /* the one-sheet — bold flat film poster, 4:5 ratio (matching the "real" film poster format roughly) */
+    .one-sheet {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      background: var(--paper-2);
+      overflow: hidden;
+      box-shadow:
+        0 32px 56px -32px rgba(0,0,0,0.4);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .one-sheet:hover { transform: translateY(-8px) rotate(0deg) !important; }
+    /* tilt the posters slightly for festival-wall feel */
+    .one-sheet.s1 { transform: rotate(-1.2deg); }
+    .one-sheet.s2 { transform: rotate(0.8deg); }
+    .one-sheet.s3 { transform: rotate(-0.5deg); }
+    .one-sheet.s4 { transform: rotate(1.1deg); }
+    .one-sheet.s5 { transform: rotate(-0.9deg); }
+
+    /* poster 01 — economic / express entry — bold red field with airplane silhouette */
+    .one-sheet.poster-01 {
+      background: var(--red);
+      color: var(--paper);
+    }
+    .one-sheet.poster-01::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: -10%;
+      width: 130%;
+      height: 32%;
+      background: var(--paper);
+      transform: skewY(-15deg);
+      transform-origin: top left;
+    }
+    .one-sheet.poster-01::after {
+      content: "";
+      position: absolute;
+      top: 28%;
+      right: 12%;
+      width: 0;
+      height: 0;
+      border-left: 80px solid var(--ink);
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      transform: rotate(-12deg);
+    }
+
+    /* poster 02 — family — paper field with concentric red arches (linked rings) */
+    .one-sheet.poster-02 {
+      background: var(--paper-4);
+      color: var(--ink);
+    }
+    .one-sheet.poster-02::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: 15%;
+      width: 35%;
+      aspect-ratio: 1;
+      border: 12px solid var(--red);
+      border-radius: 50%;
+    }
+    .one-sheet.poster-02::after {
+      content: "";
+      position: absolute;
+      top: 24%;
+      left: 38%;
+      width: 35%;
+      aspect-ratio: 1;
+      border: 12px solid var(--ink);
+      border-radius: 50%;
+    }
+
+    /* poster 03 — temporary — diagonal split between charcoal and paper, big italic word */
+    .one-sheet.poster-03 {
+      background: var(--paper-2);
+      color: var(--ink);
+    }
+    .one-sheet.poster-03::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, var(--ink) 0% 50%, transparent 50% 100%);
+    }
+    .one-sheet.poster-03::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 28%;
+      aspect-ratio: 1;
+      background: var(--red);
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    /* poster 04 — PR card — striped paper card on red */
+    .one-sheet.poster-04 {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .one-sheet.poster-04::before {
+      content: "";
+      position: absolute;
+      top: 24%;
+      left: 16%;
+      right: 16%;
+      bottom: 36%;
+      background: var(--paper-4);
+      box-shadow: 6px 6px 0 var(--red);
+    }
+    .one-sheet.poster-04::after {
+      content: "";
+      position: absolute;
+      top: 30%;
+      left: 24%;
+      right: 24%;
+      height: 8px;
+      background: var(--red);
+    }
+
+    /* poster 05 — citizenship — minimal paper field, single bold red M-leaf shape */
+    .one-sheet.poster-05 {
+      background: var(--paper-4);
+      color: var(--ink);
+    }
+    .one-sheet.poster-05::before {
+      content: "";
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 70px solid transparent;
+      border-right: 70px solid transparent;
+      border-bottom: 110px solid var(--red);
+    }
+    .one-sheet.poster-05::after {
+      content: "";
+      position: absolute;
+      top: 47%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 110px;
+      background: var(--ink);
+    }
+
+    /* poster overlay typography — common */
+    .one-sheet .laurels {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      z-index: 4;
+    }
+    .one-sheet .laurels .l, .one-sheet .laurels .r { color: inherit; opacity: 0.78; }
+    .one-sheet.poster-01 .laurels { color: var(--paper); }
+    .one-sheet.poster-04 .laurels { color: var(--paper); }
+
+    .one-sheet .title-block {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 5;
+    }
+    .one-sheet .ttl {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(20px, 2.4vw, 32px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: inherit;
+      margin-bottom: 6px;
+    }
+    .one-sheet .ttl em { font-style: italic; font-weight: 500; color: var(--red); }
+    .one-sheet.poster-01 .ttl em, .one-sheet.poster-04 .ttl em { color: var(--paper); }
+    .one-sheet .tag {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 1.3;
+      color: inherit;
+      opacity: 0.82;
+      max-width: 24ch;
+    }
+    .one-sheet .tag em { font-style: italic; font-weight: 700; color: var(--red); }
+    .one-sheet.poster-01 .tag em, .one-sheet.poster-04 .tag em { color: var(--paper); font-weight: 800; }
+
+    .one-sheet .credits {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 84px;
+      z-index: 5;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: inherit;
+      opacity: 0.7;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      text-align: left;
+    }
+    .one-sheet .rating {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      background: var(--paper-4);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: -0.02em;
+      z-index: 5;
+    }
+
+    /* film card under each one-sheet */
+    .film-card {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+    }
+    .film-card .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .film-card .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .film-card .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .film-card .director {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .film-card .director b { color: var(--ink); font-weight: 800; }
+    .film-card .doctrine {
+      margin-top: 10px;
+      padding: 4px 8px;
+      background: var(--paper-2);
+      border-left: 3px solid var(--red);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .film-card .doctrine b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 1080px) {
+      .lineup { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .festival { padding: 56px 22px; }
+      .lineup { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .festival-head { grid-template-columns: 1fr; gap: 12px; }
+      .festival-head .meta { text-align: left; max-width: none; }
+    }
+    @media (max-width: 480px) {
+      .lineup { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       BOX OFFICE — the CRS calculator
+    ============================================================ */
+    .boxoffice-section {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .boxoffice-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background:
+        repeating-linear-gradient(90deg, var(--red) 0 24px, var(--paper) 24px 28px, var(--ink) 28px 52px);
+    }
+    .bo-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: center;
+    }
+    .bo-text { min-width: 0; }
+    .bo-text .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .bo-text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--paper);
+      margin-bottom: 22px;
+    }
+    .bo-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .bo-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(247, 242, 230, 0.8);
+      margin-bottom: 1em;
+      max-width: 50ch;
+    }
+    .bo-text p strong { font-weight: 700; color: var(--paper); }
+    .bo-text p em { font-style: italic; color: var(--red); font-weight: 500; }
+    .bo-text .doctrine-tag {
+      margin-top: 22px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.04);
+      border-left: 4px solid var(--red);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(247, 242, 230, 0.78);
+      max-width: 380px;
+    }
+    .bo-text .doctrine-tag b { color: var(--red); font-weight: 800; }
+
+    /* the box-office display */
+    .box-office {
+      background: var(--paper-4);
+      color: var(--ink);
+      border: 6px solid var(--paper);
+      box-shadow:
+        inset 0 0 0 4px var(--ink),
+        0 32px 64px -32px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .box-office::before {
+      content: "BOX OFFICE";
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 18px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+    .bo-head {
+      padding: 18px 26px;
+      background: var(--paper-2);
+      border-bottom: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .bo-head .left {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .bo-head .left b { color: var(--red); }
+    .bo-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.18em;
+      color: var(--ink);
+    }
+    .bo-head .center small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.4em;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    .bo-head .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      text-align: right;
+    }
+    .bo-head .right::before { content: "● "; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+
+    .bo-body {
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+    }
+    .bo-form { display: flex; flex-direction: column; gap: 8px; }
+    .bo-form .head {
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 6px;
+    }
+    .bo-form .head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .bo-form .head h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .bo-form .row {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .bo-form .row.on { border-color: var(--red); background: var(--red-l); }
+    .bo-form .row .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--ink);
+    }
+    .bo-form .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 9px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+    .bo-form .row .v {
+      padding: 4px 6px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .bo-form .row.on .v { color: var(--red); border-color: var(--red); }
+
+    .bo-screen {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bo-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.18) 2px 3px);
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+    }
+    .bo-screen .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #ff5e63;
+      position: relative;
+      z-index: 2;
+    }
+    .bo-screen .ticket-no {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 80px;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: var(--paper);
+      position: relative;
+      z-index: 2;
+    }
+    .bo-screen .ticket-no small {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(247, 242, 230, 0.55);
+    }
+    .bo-screen dl {
+      border-top: 1px solid rgba(247, 242, 230, 0.18);
+      padding-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .bo-screen dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(247, 242, 230, 0.08);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: rgba(247, 242, 230, 0.7);
+    }
+    .bo-screen dl > div b { color: #ff5e63; font-weight: 800; }
+    .bo-screen .ticket {
+      margin-top: auto;
+      padding: 10px 14px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bo-foot {
+      padding: 14px 26px;
+      background: var(--paper-2);
+      border-top: 1.5px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 18px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .bo-foot b { color: var(--ink); font-weight: 800; }
+    .bo-foot em { font-style: italic; font-weight: 500; color: var(--red); }
+    .bo-foot .stub {
+      width: 32px;
+      height: 18px;
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+    }
+
+    @media (max-width: 880px) {
+      .boxoffice-section { padding: 56px 22px; }
+      .bo-grid { grid-template-columns: 1fr; gap: 36px; }
+      .bo-body { grid-template-columns: 1fr; padding: 22px; }
+      .bo-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 14px 22px; }
+    }
+
+    /* ============================================================
+       FESTIVAL POSTER WALL — real social posts (4:5)
+    ============================================================ */
+    .wall-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .wall-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 44px;
+    }
+    .wall-head .seat {
+      width: 64px; height: 64px;
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .wall-head .seat small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+    }
+    .wall-head .text { padding-bottom: 6px; }
+    .wall-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .wall-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .wall-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .wall-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .wall-head .meta b { color: var(--ink); font-weight: 800; }
+
+    .wall-deck {
+      max-width: 60ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 36px;
+    }
+    .wall-deck b { color: var(--ink); font-weight: 700; }
+    .wall-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    /* the actual poster wall — staggered grid with tape */
+    .wall {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 32px 22px;
+      padding: 24px;
+      background: var(--paper-2);
+      border: 1.5px solid var(--ink);
+      box-shadow:
+        inset 12px 12px 24px -16px rgba(0,0,0,0.18),
+        0 32px 80px -32px rgba(0,0,0,0.22);
+      position: relative;
+    }
+    /* corkboard texture */
+    .wall::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.35  0 0 0 0 0.20  0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+      opacity: 0.18;
+    }
+
+    .wall-poster {
+      position: relative;
+      background: var(--paper-4);
+      padding: 8px 8px 12px;
+      box-shadow: 0 16px 28px -16px rgba(0,0,0,0.32);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    /* tape strip on top */
+    .wall-poster::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 64px;
+      height: 18px;
+      background: rgba(232, 198, 106, 0.78);
+      border: 0.5px solid rgba(176, 140, 62, 0.5);
+      mix-blend-mode: multiply;
+    }
+    .wall-poster:nth-child(odd) { transform: rotate(-1.4deg); }
+    .wall-poster:nth-child(even) { transform: rotate(0.8deg); }
+    .wall-poster:nth-child(3n+1) { transform: rotate(-0.6deg); }
+    .wall-poster:nth-child(5n+1)::before { transform: translateX(-50%) rotate(2deg); width: 80px; }
+    .wall-poster:nth-child(5n+2)::before { transform: translateX(-50%) rotate(-4deg); width: 56px; }
+    .wall-poster:hover {
+      transform: rotate(0deg) translateY(-4px) scale(1.03);
+      box-shadow: 0 24px 40px -16px rgba(0,0,0,0.38);
+      z-index: 5;
+    }
+
+    .wall-poster .photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .wall-poster .photo > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .wall-poster:hover .photo > img { transform: scale(1.04); }
+    .wall-poster .photo .top {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .wall-poster .photo .top b { color: var(--red); }
+    .wall-poster .photo .pages {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 7px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .wall-poster .photo .pages::before { content: "▦"; font-size: 9px; }
+    .wall-poster .photo .pages.live { background: var(--paper); color: var(--red); }
+    .wall-poster .photo .pages.live::before { content: "▶"; }
+
+    .wall-poster .cap {
+      padding: 10px 4px 4px;
+    }
+    .wall-poster .cap .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .wall-poster .cap .ttl em { font-style: italic; font-weight: 500; color: var(--red); }
+    .wall-poster .cap .info {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .wall-poster .cap .info b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 1080px) {
+      .wall { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .wall-section { padding: 56px 22px; }
+      .wall { grid-template-columns: repeat(3, 1fr); padding: 20px; gap: 24px 16px; }
+    }
+    @media (max-width: 480px) {
+      .wall { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ============================================================
+       DIRECTOR'S CHAIR — Burcu
+    ============================================================ */
+    .director-section {
+      background: var(--paper-2);
+      padding: 80px 48px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .director-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 64px;
+      align-items: center;
+    }
+    .director-text { min-width: 0; }
+    .director-text .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .director-text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .director-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .director-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      max-width: 50ch;
+    }
+    .director-text p strong { font-weight: 700; color: var(--ink); }
+    .director-text p em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    /* director's chair — Burcu's portrait card */
+    .chair {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 24px 56px -24px rgba(0,0,0,0.28);
+      position: relative;
+    }
+    .chair::before {
+      content: "DIRECTOR";
+      position: absolute;
+      top: 18px;
+      left: -8px;
+      padding: 5px 16px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      transform: rotate(-3deg);
+      z-index: 5;
+    }
+    .chair .photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+      filter: contrast(1.04) saturate(0.95);
+    }
+    .chair .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .chair .body {
+      padding: 18px 20px 22px;
+      border-top: 6px solid var(--red);
+    }
+    .chair .body h4 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .chair .body .role {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .chair .body dl > div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .chair .body dl > div:first-child { border-top: 0; padding-top: 0; }
+    .chair .body dl > div b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .director-section { padding: 56px 22px; }
+      .director-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ============================================================
+       END CREDITS — scope listing as final film credits
+    ============================================================ */
+    .credits-section {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .credits-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background:
+        repeating-linear-gradient(90deg, var(--red) 0 24px, var(--paper) 24px 28px, var(--ink) 28px 52px);
+    }
+    .credits-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .credits-inner .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .credits-inner h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--paper);
+      margin-bottom: 36px;
+    }
+    .credits-inner h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .credits-roll {
+      max-width: 720px;
+      margin: 0 auto;
+      border-top: 1.5px solid rgba(247, 242, 230, 0.32);
+      border-bottom: 1.5px solid rgba(247, 242, 230, 0.32);
+    }
+    .credits-roll .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      padding: 14px 0;
+      border-top: 1px dashed rgba(247, 242, 230, 0.18);
+      align-items: baseline;
+    }
+    .credits-roll .row:first-child { border-top: 0; }
+    .credits-roll .role {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-roll .name {
+      text-align: left;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--paper);
+    }
+    .credits-roll .name em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .credits-end {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1.5px solid rgba(247, 242, 230, 0.32);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .credits-end::before, .credits-end::after { content: "—"; margin: 0 12px; color: rgba(247, 242, 230, 0.32); }
+    .credits-end b { color: var(--paper); font-weight: 800; }
+
+    .credits-cta {
+      margin-top: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 26px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .credits-cta:hover { background: var(--paper); color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .credits-section { padding: 56px 22px; }
+      .credits-roll .row { grid-template-columns: 1fr; gap: 4px; text-align: center; }
+      .credits-roll .role, .credits-roll .name { text-align: center; }
+    }
+
+    /* ============================================================
+       COLOPHON
+    ============================================================ */
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(247, 242, 230, 0.6);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(247, 242, 230, 0.18);
+    }
+    .colophon strong { color: var(--paper); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="marquee-strip">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Cinema One-Sheet</span>
+    <span class="right">Festival <b>·</b> Toronto · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       MARQUEE
+  ==================================================================== -->
+  <section class="marquee">
+    <div class="marquee-inner">
+      <header class="marquee-meta">
+        <span class="left">PROGRAMME <b>·</b> 019</span>
+        <span class="center">— A FrameFlow festival production —</span>
+        <span class="right">SEASON <b>I</b> · 2026</span>
+      </header>
+
+      <h1 class="marquee-title">Now <em>showing<span class="punct">.</span></em></h1>
+
+      <p class="marquee-deck">A <b>five-film festival</b> programmed for Northern Pathways Immigration Consulting. Five service one-sheets, one box-office, a poster wall in the lobby of <em>real exports from @kanadadayeniyasam</em>, and an end-credit roll signed by counsel.</p>
+
+      <dl class="showtimes">
+        <div><dt>Director</dt><dd>Burcu Akyol <em>RCIC-IRB</em></dd></div>
+        <div><dt>Studio</dt><dd>FrameFlow · Toronto</dd></div>
+        <div><dt>Films</dt><dd>05 · service one-sheets</dd></div>
+        <div><dt>Runtime</dt><dd>EN <em>·</em> TR · ongoing</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARQUEE BANNER (the website rendered as theatre marquee)
+  ==================================================================== -->
+  <section class="marquee-banner reveal">
+    <article class="marquee-banner-frame">
+      <div class="inner">
+        <article class="ns-frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+          </header>
+          <nav class="ns-nav">
+            <span class="brand">
+              <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+              <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+            </span>
+            <nav class="menu">
+              <span class="on">Home</span>
+              <span>Our Team</span>
+              <span>Fees</span>
+              <span>Events</span>
+              <span>Blog</span>
+            </nav>
+            <div class="right">
+              <span class="lt"><span class="on">EN</span><span>TR</span></span>
+              <span class="book">Book Consult</span>
+            </div>
+          </nav>
+          <div class="ns-hero">
+            <div class="text">
+              <p class="eb">— Northern Pathways · RCIC-IRB —</p>
+              <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+              <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility, strategy, and legal representation.</p>
+              <div class="ctas">
+                <a class="p">Book a Consultation</a>
+                <a class="s">Explore Services</a>
+              </div>
+            </div>
+            <aside class="photo">
+              <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+              <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+            </aside>
+          </div>
+          <footer class="ns-foot">
+            <span class="left">© 2026 NP · All Rights Reserved.</span>
+            <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+          </footer>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       FESTIVAL LINEUP — five service one-sheets
+  ==================================================================== -->
+  <section class="festival reveal">
+    <header class="festival-head">
+      <span class="seat">A1</span>
+      <div class="text">
+        <p class="lbl">— Reel I · The festival lineup —</p>
+        <h2>Five <em>films,</em> one season.</h2>
+      </div>
+      <p class="meta">5 one-sheets<br><b>Service issues</b></p>
+    </header>
+
+    <div class="lineup">
+      <!-- 01 -->
+      <div class="film">
+        <article class="one-sheet poster-01 s1">
+          <p class="laurels"><span class="l">Toronto · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. Akyol · 5 stories · 1 line</p>
+          <span class="rating">PG</span>
+          <div class="title-block">
+            <p class="ttl">EXPRESS<br><em>ENTRY.</em></p>
+            <p class="tag">A score · a programme · <em>a flight</em>.</p>
+          </div>
+        </article>
+        <div class="film-card">
+          <p class="num">№ 01 · Service issue</p>
+          <p class="name">Economic <em>Immigration</em></p>
+          <p class="director">Dir. <b>Burcu Akyol</b> · RCIC</p>
+          <p class="doctrine">→ <b>Doctrine 04</b> · Knowledge</p>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="film">
+        <article class="one-sheet poster-02 s2">
+          <p class="laurels"><span class="l">Toronto · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. Akyol · sponsorship</p>
+          <span class="rating">PG</span>
+          <div class="title-block">
+            <p class="ttl">FAMILY<br><em>CONNECT.</em></p>
+            <p class="tag">Two rings, one <em>line</em>.</p>
+          </div>
+        </article>
+        <div class="film-card">
+          <p class="num">№ 02 · Service issue</p>
+          <p class="name">Family <em>Sponsorship</em></p>
+          <p class="director">Dir. <b>Burcu Akyol</b> · RCIC</p>
+          <p class="doctrine">→ <b>Doctrine 02</b> · Personalised</p>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="film">
+        <article class="one-sheet poster-03 s3">
+          <p class="laurels"><span class="l">Toronto · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. Akyol · short stay</p>
+          <span class="rating">PG</span>
+          <div class="title-block">
+            <p class="ttl">TEMPORARY<br><em>RESIDENCE.</em></p>
+            <p class="tag">Visitor · <em>study</em> · work.</p>
+          </div>
+        </article>
+        <div class="film-card">
+          <p class="num">№ 03 · Service issue</p>
+          <p class="name">Temporary <em>Residence</em></p>
+          <p class="director">Dir. <b>Burcu Akyol</b> · RCIC</p>
+          <p class="doctrine">→ <b>Doctrine 03</b> · Transparency</p>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="film">
+        <article class="one-sheet poster-04 s4">
+          <p class="laurels"><span class="l">Toronto · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. Akyol · renewal</p>
+          <span class="rating">G</span>
+          <div class="title-block">
+            <p class="ttl">PR <em>CARD.</em></p>
+            <p class="tag">A travel doc, <em>renewed</em>.</p>
+          </div>
+        </article>
+        <div class="film-card">
+          <p class="num">№ 04 · Service issue</p>
+          <p class="name">PR Card &amp; <em>PRTD</em></p>
+          <p class="director">Dir. <b>Burcu Akyol</b> · RCIC</p>
+          <p class="doctrine">→ <b>Doctrine 03</b> · Transparency</p>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="film">
+        <article class="one-sheet poster-05 s5">
+          <p class="laurels"><span class="l">Toronto · 2026</span><span class="r">Official</span></p>
+          <p class="credits">Dir. Akyol · final act</p>
+          <span class="rating">PG</span>
+          <div class="title-block">
+            <p class="ttl">CITIZEN<em>SHIP.</em></p>
+            <p class="tag">The final <em>act</em> · the long arc.</p>
+          </div>
+        </article>
+        <div class="film-card">
+          <p class="num">№ 05 · Service issue</p>
+          <p class="name">Citizenship</p>
+          <p class="director">Dir. <b>Burcu Akyol</b> · RCIC</p>
+          <p class="doctrine">→ <b>Doctrine 01</b> · Ethical</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       BOX OFFICE — CRS calculator
+  ==================================================================== -->
+  <section class="boxoffice-section reveal">
+    <div class="bo-grid">
+      <div class="bo-text">
+        <p class="lbl">— Reel II · Box office —</p>
+        <h2>Buy a ticket at the <em>box office.</em></h2>
+        <p>The CRS calculator runs the front-of-house. <strong>15 fields, 6 categories,</strong> rules current to IRCC's 2026 grid &mdash; including the removal of arranged-employment points. Every transaction prints a <em>signed PDF stub</em> the door staff (counsel) can tear at admission.</p>
+        <p>Festival rule: <strong>no entry without a stub.</strong> If the calculator says you can board the flight, the box office prints the ticket and the captain signs it.</p>
+        <p class="doctrine-tag">→ <b>Doctrine 03</b> · Transparency &middot; in pricing</p>
+      </div>
+
+      <article class="box-office">
+        <header class="bo-head">
+          <span class="left">Window <b>02</b> / 06</span>
+          <span class="center">CRS · CORE / HUMAN CAPITAL<small>Ticket window · open</small></span>
+          <span class="right">Live</span>
+        </header>
+
+        <div class="bo-body">
+          <div class="bo-form">
+            <header class="head">
+              <p class="lbl">Declare your points</p>
+              <h4>What's your CRS?</h4>
+            </header>
+            <div class="row on">
+              <span class="k">Age <small>at point of application · 32 years</small></span>
+              <span class="v">110 / 110</span>
+            </div>
+            <div class="row on">
+              <span class="k">Education <small>Master's · ECA verified</small></span>
+              <span class="v">135 / 150</span>
+            </div>
+            <div class="row on">
+              <span class="k">CLB · English <small>CLB 9 · all four skills</small></span>
+              <span class="v">124 / 136</span>
+            </div>
+            <div class="row on">
+              <span class="k">French · NCLC <small>NCLC 7+ · bonus</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+            <div class="row">
+              <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+              <span class="v">35 / 80</span>
+            </div>
+            <div class="row">
+              <span class="k">Foreign work <small>3+ years · skilled, paid</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+          </div>
+
+          <aside class="bo-screen">
+            <p class="lbl">Ticket No.</p>
+            <p class="ticket-no">487<small>CRS / 1200</small></p>
+            <dl>
+              <div><span>A · Core</span><b>404</b></div>
+              <div><span>B · Spouse</span><b>—</b></div>
+              <div><span>C · Transfer</span><b>50</b></div>
+              <div><span>D · Additional</span><b>33</b></div>
+            </dl>
+            <span class="ticket">↓ Print ticket · PDF</span>
+          </aside>
+        </div>
+
+        <footer class="bo-foot">
+          <span>Stub <b>NP/CRS-487</b> · <em>signed by counsel</em></span>
+          <span><b>14:32 ET</b> · Toronto</span>
+          <span class="stub">★ TKT</span>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FESTIVAL POSTER WALL — real social posts (4:5)
+  ==================================================================== -->
+  <section class="wall-section reveal">
+    <header class="wall-head">
+      <span class="seat">B<small>FOYER</small></span>
+      <div class="text">
+        <p class="lbl">— Reel III · The poster wall —</p>
+        <h2>Posters in the <em>lobby.</em></h2>
+      </div>
+      <p class="meta">10 posts · 4:5 native<br><b>@kanadadayeniyasam</b></p>
+    </header>
+
+    <p class="wall-deck">
+      Posters from the firm's Turkish-language Instagram, pinned to
+      the <strong>festival foyer wall</strong>. Eight cover slides
+      (six are multi-slide carousels) plus two live-webinar
+      promotional sheets. Each tagged with carousel pagination ▦ or
+      live ▶. <em>Real exports, hand-pinned</em>.
+    </p>
+
+    <div class="wall">
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+          <span class="top">№ <b>01</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Express Entry · <em>kamuoyu görüşü.</em></p>
+          <p class="info">tr · IRCC · <b>23 Apr — 24 May</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa update">
+          <span class="top">№ <b>02</b></span>
+          <span class="pages">1 / 4</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Süper Vize · <em>gelir esnekliği.</em></p>
+          <p class="info">tr · super visa · <b>2026</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Doctor immigration">
+          <span class="top">№ <b>03</b></span>
+          <span class="pages">1 / 4</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Doktor açığı · <em>yeni adımlar.</em></p>
+          <p class="info">tr · healthcare · <b>RCIC note</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan 2026-2028">
+          <span class="top">№ <b>04</b></span>
+          <span class="pages">1 / 9</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Levels Plan · <em>2026 – 2028.</em></p>
+          <p class="info">tr · levels plan · <b>9-slide</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit visa officer">
+          <span class="top">№ <b>05</b></span>
+          <span class="pages">1 / 8</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Vize memuru · <em>neye bakar?</em></p>
+          <p class="info">tr · study · <b>NP × EduPathways</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+          <span class="top">№ <b>06</b></span>
+          <span class="pages">1 / 3</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Yeni Yaşam · <em>Ankara &amp; İstanbul.</em></p>
+          <p class="info">tr · seminar · <b>13 / 20 Ekim</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP">
+          <span class="top">№ <b>07</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Ontario · <em>OINP yeni programlar.</em></p>
+          <p class="info">tr · OINP · <b>Bill 30 · 2025</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+          <span class="top">№ <b>08</b></span>
+          <span class="pages">1 / 6</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">OINP · <em>18 Mart davet turu.</em></p>
+          <p class="info">tr · ontario · <b>2026</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+          <span class="top">№ <b>09</b></span>
+          <span class="pages live">Live</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Webinar · <em>PGWP rules.</em></p>
+          <p class="info">tr · 22 Aralık 25 · <b>Burcu Akyol</b></p>
+        </div>
+      </article>
+
+      <article class="wall-poster">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+          <span class="top">№ <b>10</b></span>
+          <span class="pages live">Live</span>
+        </div>
+        <div class="cap">
+          <p class="ttl">Webinar · <em>Levels Plan PR.</em></p>
+          <p class="info">tr · 11 Kasım 25 · <b>Burcu Akyol</b></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       DIRECTOR'S CHAIR — Burcu
+  ==================================================================== -->
+  <section class="director-section reveal">
+    <div class="director-grid">
+      <div class="director-text">
+        <p class="lbl">— Reel IV · The director's chair —</p>
+        <h2>Every reel <em>signed</em> by the director.</h2>
+        <p>The festival is programmed and signed by <strong>Burcu Akyol</strong> &mdash; <em>Regulated Canadian Immigration Consultant</em> (RCIC-IRB) in good standing with the College of Immigration and Citizenship Consultants. Adjunct professor at Queen&rsquo;s. CAPIC Board Member.</p>
+        <p>No film leaves the editing room without her signature. The end credits at the close of every reel carry her counsel-of-record name. <em>Doctrine 01</em> made operational.</p>
+      </div>
+
+      <aside class="chair">
+        <div class="photo">
+          <img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Director Burcu Akyol">
+        </div>
+        <div class="body">
+          <h4>Burcu Akyol</h4>
+          <p class="role">Director · RCIC-IRB</p>
+          <dl>
+            <div><span>Licence</span><b>RCIC-IRB</b></div>
+            <div><span>College</span><b>CICC</b></div>
+            <div><span>Board</span><b>CAPIC</b></div>
+            <div><span>Faculty</span><b>Queen&rsquo;s</b></div>
+            <div><span>Festival</span><b>Toronto · 2026</b></div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END CREDITS
+  ==================================================================== -->
+  <section class="credits-section reveal">
+    <div class="credits-inner">
+      <p class="lbl">— Reel V · End credits —</p>
+      <h2>Roll the <em>credits.</em></h2>
+
+      <div class="credits-roll">
+        <div class="row">
+          <span class="role">Directed by</span>
+          <span class="name">Burcu Akyol <em>RCIC-IRB</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Studio of record</span>
+          <span class="name">FrameFlow · <em>Toronto</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 01 · Ethical</span>
+          <span class="name">Counsel of record · <em>signed</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 02 · Personalised</span>
+          <span class="name">The home page · <em>by name</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 03 · Transparent</span>
+          <span class="name">Box office · <em>open</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 04 · Knowledge</span>
+          <span class="name">156+ draws · <em>indexed</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Doctrine 05 · Care</span>
+          <span class="name">Two languages · <em>two registers</em></span>
+        </div>
+        <div class="row">
+          <span class="role">Designed &amp; developed by</span>
+          <span class="name"><em>Frame Flow</em></span>
+        </div>
+      </div>
+
+      <p class="credits-end">A <b>FrameFlow Studio</b> production · 2026</p>
+
+      <a class="credits-cta">Book the next premiere →</a>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Cinema One-Sheet</span>
+    <span class="right">A <strong>FrameFlow</strong> production</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

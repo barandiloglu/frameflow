@@ -1,0 +1,2036 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Atlas (FrameFlow / Prototype 07)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 07 — "The Atlas"
+
+       The brand is "Northern Pathways" — so we render the engagement
+       as an actual cartogram. Hairline coordinate grid, topographic
+       contour rings, route lines with CRS-distance annotations, plot
+       points coordinate-labelled, maple-leaf logo as the compass
+       rose. Below the map: destinations expand into real mockups
+       (website, calculator, social). Swiss cartographic precision
+       applied to immigration consultancy. MONTSERRAT only. Locked
+       palette. The page asks for measured attention — like reading a
+       topographic map rather than a brochure.
+    ==================================================================== */
+
+    :root {
+      --paper:    #ffffff;
+      --paper-2:  #f9f9f9;
+      --paper-3:  #f1efe9;
+      --paper-4:  #ece6d8;
+      --rule:     #e7e5e0;
+      --rule-2:   #d4d2cd;
+      --rule-3:   #b8b4ac;
+      --ink:      #2c2b2b;
+      --ink-2:    #4a4946;
+      --ink-3:    #757370;
+      --ink-4:    #a8a6a1;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+
+      /* cartography colors — derived from the brand palette */
+      --map-bg:    #fbf9f3;       /* warm paper for the chart surface */
+      --map-grid:  rgba(44, 43, 43, 0.07);
+      --map-grid-h:rgba(44, 43, 43, 0.14);
+      --map-route: #b92025;
+      --map-route-d: #7d1416;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* Subtle paper grain — gives the cartograph the dignity of
+       having been printed rather than rendered. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.035;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL · cartographer's marginalia
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 700; }
+    .rail .center { text-align: center; letter-spacing: 0.4em; color: var(--paper); }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       PLATE — the cover card
+    ============================================================ */
+    .plate {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 56px 48px 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .plate-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 56px;
+      align-items: end;
+    }
+    .plate-titling {
+      min-width: 0;
+    }
+    .plate-eyebrow {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .plate-eyebrow::before, .plate-eyebrow::after {
+      content: "";
+      display: inline-block;
+      height: 1px;
+      background: var(--red);
+    }
+    .plate-eyebrow::before { width: 36px; }
+    .plate-eyebrow::after { width: 0; flex: 1; max-width: 180px; opacity: 0.4; }
+    .plate-title {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(48px, 7.6vw, 124px);
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 18px;
+      overflow-wrap: break-word;
+    }
+    .plate-title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .plate-subtitle {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.5;
+      letter-spacing: -0.005em;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+
+    /* The "publication block" — like the corner stamp on a real chart */
+    .plate-stamp {
+      align-self: end;
+      width: 280px;
+      max-width: 100%;
+      padding: 0;
+      border: 1.5px solid var(--ink);
+      position: relative;
+    }
+    .plate-stamp::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border: 1px solid var(--ink);
+      pointer-events: none;
+    }
+    .plate-stamp-head {
+      padding: 12px 18px 10px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .plate-stamp-head b { color: var(--red); }
+    .plate-stamp dl {
+      padding: 12px 18px 14px;
+    }
+    .plate-stamp dl > div {
+      padding: 7px 0;
+      border-top: 1px dashed var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .plate-stamp dl > div:first-child { border-top: 0; padding-top: 0; }
+    .plate-stamp dt {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .plate-stamp dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .plate-stamp .seal {
+      padding: 10px 14px 12px;
+      background: var(--paper-3);
+      border-top: 1.5px solid var(--ink);
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .plate-stamp .seal b { color: var(--red); }
+
+    @media (max-width: 980px) {
+      .plate { padding: 40px 22px 28px; }
+      .plate-row { grid-template-columns: 1fr; gap: 28px; }
+      .plate-stamp { width: 100%; }
+    }
+
+    /* ============================================================
+       MAP — the cartograph itself
+    ============================================================ */
+    .chart {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 72px;
+    }
+    .chart-wrap {
+      position: relative;
+      background: var(--map-bg);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 32px 80px -32px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .chart-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid var(--ink);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* The marginalia — corner labels on a real chart */
+    .chart-corner {
+      position: absolute;
+      z-index: 5;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 6px 10px;
+      background: var(--map-bg);
+    }
+    .chart-corner b { color: var(--red); }
+    .chart-corner.tl { top: 18px; left: 18px; }
+    .chart-corner.tr { top: 18px; right: 18px; text-align: right; }
+    .chart-corner.bl { bottom: 18px; left: 18px; }
+    .chart-corner.br { bottom: 18px; right: 18px; text-align: right; }
+
+    /* The map SVG fills the wrap */
+    .chart-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* The legend strip below the map */
+    .chart-legend {
+      max-width: 1480px;
+      margin: 22px auto 0;
+      padding: 0 48px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+    }
+    .legend-symbols {
+      display: flex;
+      gap: 26px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .legend-symbols .ls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-symbols .ls b { color: var(--ink); font-weight: 700; }
+    .legend-symbols .sym {
+      width: 18px; height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .legend-symbols .sym .dot {
+      width: 8px; height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+    }
+    .legend-symbols .sym .ring {
+      width: 14px; height: 14px;
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+    }
+    .legend-symbols .sym .x {
+      width: 14px; height: 14px;
+      position: relative;
+    }
+    .legend-symbols .sym .x::before, .legend-symbols .sym .x::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 0;
+      width: 100%; height: 1.5px;
+      background: var(--ink);
+      transform: rotate(45deg);
+    }
+    .legend-symbols .sym .x::after { transform: rotate(-45deg); }
+    .legend-symbols .sym .route {
+      width: 18px; height: 2px;
+      background: var(--red);
+    }
+
+    .legend-scale {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .legend-scale b { color: var(--ink); font-weight: 700; }
+    .scale-bar {
+      width: 120px;
+      height: 8px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border: 1px solid var(--ink);
+    }
+    .scale-bar span:nth-child(odd) { background: var(--ink); }
+    .scale-bar span:nth-child(even) { background: var(--paper); }
+
+    @media (max-width: 880px) {
+      .chart { padding: 0 22px 48px; }
+      .chart-legend { padding: 0 22px; grid-template-columns: 1fr; gap: 14px; align-items: start; }
+    }
+
+    /* ============================================================
+       INDEX OF DESTINATIONS — a strip below the chart
+       Each waypoint has a tiny card pointing to a section below
+    ============================================================ */
+    .index-strip {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 56px 48px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .index-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 28px;
+    }
+    .index-head .label {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .index-head h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(22px, 2.6vw, 32px);
+      letter-spacing: -0.015em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+    .index-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .index-head .meta {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .index-head .meta b { color: var(--ink); }
+
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border: 1.5px solid var(--ink);
+    }
+    .index-cell {
+      padding: 22px 22px 24px;
+      border-left: 1px solid var(--ink);
+      position: relative;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .index-cell:first-child { border-left: 0; }
+    .index-cell:hover { background: var(--ink); color: var(--paper); }
+    .index-cell:hover .icoord, .index-cell:hover .ititle, .index-cell:hover .iname { color: var(--paper); }
+    .index-cell:hover .icoord b, .index-cell:hover .ititle em { color: var(--red); }
+    .index-cell:hover .iarr { color: var(--red); }
+    .index-cell .icoord {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 14px;
+    }
+    .index-cell .icoord b { color: var(--red); font-weight: 800; }
+    .index-cell .iname {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 28px;
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .index-cell .iname em { font-style: italic; font-weight: 500; color: var(--red); }
+    .index-cell .ititle {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: -0.005em;
+      color: var(--ink-2);
+      line-height: 1.45;
+      max-width: 22ch;
+      margin-bottom: 14px;
+    }
+    .index-cell .iarr {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .index-cell .iarr::after { content: " ↘"; }
+    .index-cell:hover .iarr { transform: translate(2px, 2px); }
+    @media (max-width: 980px) {
+      .index-grid { grid-template-columns: 1fr 1fr; }
+      .index-cell { border-left: 0; border-top: 1px solid var(--ink); }
+      .index-cell:nth-child(-n+2) { border-top: 0; }
+      .index-cell:nth-child(odd) { border-right: 1px solid var(--ink); }
+    }
+    @media (max-width: 540px) {
+      .index-strip { padding: 36px 22px; }
+      .index-grid { grid-template-columns: 1fr; }
+      .index-cell { border-right: 0 !important; }
+    }
+
+    /* ============================================================
+       WAYPOINT — section template for each destination expansion
+    ============================================================ */
+    .waypoint {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .waypoint.alt { background: var(--paper-2); }
+    .waypoint.dark { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+
+    .way-head {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 56px;
+    }
+    .waypoint.dark .way-head { border-bottom-color: var(--paper); }
+    .way-head .way-mark {
+      width: 48px;
+      height: 48px;
+      border: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+    }
+    .waypoint.dark .way-head .way-mark { border-color: var(--paper); color: var(--paper); }
+    .way-head .way-coord {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 4px;
+    }
+    .way-head .way-coord b { color: var(--ink); font-weight: 800; }
+    .waypoint.dark .way-head .way-coord b { color: var(--paper); }
+    .way-head .way-title { padding-bottom: 4px; }
+    .way-head .way-title .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .way-head .way-title h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .waypoint.dark .way-head .way-title h2 { color: var(--paper); }
+    .way-head .way-title h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .way-head .way-meta {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+      padding-bottom: 4px;
+    }
+    .way-head .way-meta b { color: var(--ink); font-weight: 700; }
+    .waypoint.dark .way-head .way-meta { color: rgba(255,255,255,0.6); }
+    .waypoint.dark .way-head .way-meta b { color: var(--paper); }
+
+    @media (max-width: 880px) {
+      .waypoint { padding: 56px 22px; }
+      .way-head { grid-template-columns: auto 1fr; gap: 16px; }
+      .way-head .way-coord { grid-column: 1 / -1; padding-top: 8px; }
+      .way-head .way-meta { grid-column: 1 / -1; text-align: left; padding-top: 8px; }
+    }
+
+    .way-intro {
+      max-width: 64ch;
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 36px;
+    }
+    .waypoint.dark .way-intro { color: rgba(255,255,255,0.78); }
+    .way-intro strong { font-weight: 700; color: var(--ink); }
+    .waypoint.dark .way-intro strong { color: var(--paper); }
+    .way-intro em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    /* ============================================================
+       BROWSER FRAME (used inside waypoints)
+    ============================================================ */
+    .frame {
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 32px 80px -32px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .waypoint.dark .frame { box-shadow: 0 32px 80px -32px rgba(0,0,0,0.6); }
+    .frame .chrome {
+      background: var(--paper-2);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .lang span {
+      padding: 3px 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .lang span.on { background: var(--red); color: var(--paper); }
+
+    /* ============================================================
+       WAYPOINT 01 · WEBSITE — faithful inline mock
+    ============================================================ */
+    .site-walk { background: var(--paper); }
+    .site-walk .nav-row {
+      padding: 16px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 22px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-walk .nav-row .brand { display: flex; align-items: center; gap: 10px; }
+    .site-walk .nav-row .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .site-walk .nav-row .brand .wm {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .site-walk .nav-row .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-top: 3px;
+    }
+    .site-walk .nav-row .menu {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-walk .nav-row .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 4px; }
+    .site-walk .nav-row .right { display: flex; align-items: center; gap: 10px; }
+    .site-walk .nav-row .lt {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .site-walk .nav-row .lt span {
+      padding: 4px 8px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      color: var(--ink-4);
+    }
+    .site-walk .nav-row .lt .on { background: var(--ink); color: var(--paper); }
+    .site-walk .nav-row .book {
+      padding: 8px 14px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .site-walk .hero-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 240px;
+      gap: 32px;
+      align-items: center;
+      padding: 36px 36px 40px;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-walk .hero-row .text { min-width: 0; }
+    .site-walk .hero-row .eyebrow {
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .site-walk .hero-row h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(24px, 3.4vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .site-walk .hero-row h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-walk .hero-row p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 13px;
+      line-height: 1.65; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 18px;
+    }
+    .site-walk .hero-row p b { font-weight: 700; color: var(--ink); }
+    .site-walk .hero-row .ctas { display: flex; gap: 8px; margin-bottom: 14px; }
+    .site-walk .hero-row .ctas a {
+      padding: 8px 14px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .site-walk .hero-row .ctas .p { background: var(--red); color: var(--paper); }
+    .site-walk .hero-row .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-walk .hero-row .creds {
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-walk .hero-row .creds b { color: var(--red); font-weight: 700; }
+    .site-walk .hero-row .photo {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 10px 10px 14px;
+      max-width: 240px; margin: 0 auto;
+    }
+    .site-walk .hero-row .photo .ph {
+      width: 100%; aspect-ratio: 4/5;
+      overflow: hidden; background: var(--paper-3);
+    }
+    .site-walk .hero-row .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-walk .hero-row .photo .who {
+      padding-top: 8px;
+      border-top: 2px solid var(--red);
+      margin-top: 8px;
+    }
+    .site-walk .hero-row .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 12px;
+      color: var(--ink);
+    }
+    .site-walk .hero-row .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 8px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 2px 0 0;
+      line-height: 1.4;
+    }
+
+    .site-walk .svc-row {
+      padding: 28px 36px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-walk .svc-row .head { text-align: center; margin-bottom: 18px; }
+    .site-walk .svc-row .head .lbl {
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 6px;
+    }
+    .site-walk .svc-row .head h3 {
+      font-family: var(--type);
+      font-weight: 700; font-size: 20px;
+      letter-spacing: -0.015em; color: var(--ink);
+    }
+    .site-walk .svc-row .head h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-walk .svc-row .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .site-walk .svc-row .cell {
+      padding: 14px 10px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      display: flex; flex-direction: column; gap: 7px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .site-walk .svc-row .cell:hover {
+      transform: translateY(-3px);
+      border-color: var(--red);
+    }
+    .site-walk .svc-row .cell .num {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.24em; color: var(--red);
+    }
+    .site-walk .svc-row .cell img { width: 32px; height: 32px; object-fit: contain; }
+    .site-walk .svc-row .cell h5 {
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      letter-spacing: -0.005em; color: var(--ink);
+      line-height: 1.15;
+    }
+    .site-walk .svc-row .cell p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 9px;
+      line-height: 1.45; color: var(--ink-3);
+    }
+
+    .site-walk .ff-foot {
+      background: var(--paper-2);
+      padding: 22px 36px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px; align-items: center;
+    }
+    .site-walk .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-walk .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-walk .ff-foot .credit b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 720px) {
+      .site-walk .hero-row { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+      .site-walk .nav-row .menu { display: none; }
+      .site-walk .svc-row { padding: 22px; }
+      .site-walk .svc-row .grid { grid-template-columns: 1fr 1fr; }
+      .site-walk .ff-foot { padding: 18px 22px; grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    /* ============================================================
+       WAYPOINT 02 · CALCULATOR — inline mock
+    ============================================================ */
+    .calc-walk {
+      padding: 32px 36px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+    }
+    .calc-walk .head {
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 8px;
+    }
+    .calc-walk .head .lbl {
+      font-family: var(--type);
+      font-weight: 600; font-size: 10px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 6px;
+    }
+    .calc-walk .head h4 {
+      font-family: var(--type);
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .calc-walk .head p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 12px;
+      color: var(--ink-3); margin-top: 4px; line-height: 1.55;
+    }
+    .calc-walk .form { display: flex; flex-direction: column; gap: 8px; }
+    .calc-walk .row {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      gap: 12px; align-items: center;
+      padding: 10px 12px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+    }
+    .calc-walk .row.on { border-color: var(--red); }
+    .calc-walk .row .k {
+      font-family: var(--type);
+      font-weight: 600; font-size: 12px;
+      color: var(--ink);
+    }
+    .calc-walk .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500; font-size: 9px;
+      color: var(--ink-3); margin-top: 2px;
+    }
+    .calc-walk .row .v {
+      padding: 5px 8px;
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      color: var(--ink); text-align: center;
+    }
+    .calc-walk .row.on .v { color: var(--red); border-color: var(--red); }
+    .calc-walk .score {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 22px 20px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .calc-walk .score .lbl {
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: #ff5e63;
+    }
+    .calc-walk .score .total {
+      font-family: var(--type);
+      font-weight: 800; font-size: 72px;
+      line-height: 0.85; letter-spacing: -0.04em;
+    }
+    .calc-walk .score .total small {
+      display: block; margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .calc-walk .score dl {
+      border-top: 1px solid rgba(255,255,255,0.16);
+      padding-top: 10px;
+    }
+    .calc-walk .score dl > div {
+      display: flex; justify-content: space-between;
+      gap: 8px; padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      color: rgba(255,255,255,0.7);
+    }
+    .calc-walk .score dl > div b { color: var(--paper); font-weight: 700; }
+    .calc-walk .score .pdf {
+      margin-top: auto;
+      padding: 9px 12px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      text-align: center;
+    }
+    @media (max-width: 720px) { .calc-walk { grid-template-columns: 1fr; padding: 22px; } }
+
+    /* ============================================================
+       WAYPOINT 03 · DRAWS feed
+    ============================================================ */
+    .draws-walk {
+      padding: 28px 36px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .draws-walk .table-wrap .head {
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .draws-walk .table-wrap .head h4 {
+      font-family: var(--type);
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .draws-walk .table-wrap .head .live {
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--red);
+    }
+    .draws-walk .table-wrap .head .live::before {
+      content: "● ";
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.35; }
+    }
+    .draws-walk table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .draws-walk th {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .draws-walk td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500; font-size: 13px;
+      color: var(--ink);
+    }
+    .draws-walk .pill {
+      padding: 3px 8px;
+      background: var(--red-l);
+      color: var(--red-d);
+      font-family: var(--type);
+      font-weight: 600; font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .draws-walk .crs {
+      font-family: var(--type);
+      font-weight: 800; font-size: 16px;
+      color: var(--ink);
+    }
+    .draws-walk .num {
+      font-family: var(--type);
+      font-weight: 700; font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .draws-walk .side {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 22px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .draws-walk .side .lbl {
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: #ff5e63;
+    }
+    .draws-walk .side .big {
+      font-family: var(--type);
+      font-weight: 800; font-size: 64px;
+      line-height: 0.85; letter-spacing: -0.04em;
+    }
+    .draws-walk .side .big small {
+      display: block; margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .draws-walk .side p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 12px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.78);
+    }
+    @media (max-width: 880px) {
+      .draws-walk { grid-template-columns: 1fr; padding: 22px; }
+    }
+
+    /* ============================================================
+       WAYPOINT 04 · INSTAGRAM feed (dark)
+    ============================================================ */
+    .feed {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .feed .post {
+      aspect-ratio: 1;
+      padding: 18px;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,0.16);
+      display: flex; flex-direction: column;
+      justify-content: space-between; gap: 10px;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .feed .post:hover { transform: translateY(-3px); }
+    .feed .post.red    { background: var(--red); }
+    .feed .post.dark   { background: var(--ink); border-color: rgba(255,255,255,0.32); }
+    .feed .post.cream  { background: var(--paper-3); border-color: var(--rule); }
+    .feed .post.white  { background: var(--paper); border-color: var(--rule); }
+    .feed .post .top {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red);
+    }
+    .feed .post.red .top { color: rgba(255,255,255,0.85); }
+    .feed .post.dark .top { color: rgba(255,255,255,0.7); }
+    .feed .post.white .top, .feed .post.cream .top { color: var(--red); }
+    .feed .post .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(15px, 1.4vw, 20px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .feed .post .body em { font-style: italic; font-weight: 500; color: var(--red); }
+    .feed .post .body small {
+      display: block; margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: -0.005em; line-height: 1.45;
+      color: var(--ink-2);
+    }
+    .feed .post.red .body { color: var(--paper); }
+    .feed .post.red .body em { color: var(--paper); }
+    .feed .post.dark .body { color: var(--paper); }
+    .feed .post.dark .body em { color: var(--red); }
+    .feed .post.red .body small, .feed .post.dark .body small { color: rgba(255,255,255,0.78); }
+    .feed .post .foot {
+      display: flex; justify-content: space-between;
+      gap: 8px; align-items: baseline;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .feed .post.red .foot, .feed .post.dark .foot { color: rgba(255,255,255,0.55); }
+    .feed .post .foot b { color: var(--red); }
+    .feed .post.red .foot b { color: var(--paper); }
+    @media (max-width: 880px) { .feed { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 540px) { .feed { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 100px 32px 80px;
+      text-align: center;
+    }
+    .end .lbl {
+      font-family: var(--type);
+      font-weight: 600; font-size: 11px;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .end h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .end p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 16px;
+      color: var(--ink-2); max-width: 50ch;
+      margin: 0 auto 32px; line-height: 1.7;
+    }
+    .end .cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 24px;
+      background: var(--ink); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .end .cta:hover { background: var(--red); }
+
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px; align-items: center;
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 700; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ============================================================
+       MAP SVG STYLES — applied to inline SVG below
+    ============================================================ */
+    .chart-svg .grid line {
+      stroke: var(--map-grid);
+      stroke-width: 0.5;
+    }
+    .chart-svg .grid line.major {
+      stroke: var(--map-grid-h);
+      stroke-width: 0.75;
+    }
+    .chart-svg .axis-label {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      fill: var(--ink-3);
+    }
+    .chart-svg .contour {
+      fill: none;
+      stroke: rgba(185, 32, 37, 0.13);
+      stroke-width: 0.8;
+    }
+    .chart-svg .contour.heavy {
+      stroke: rgba(185, 32, 37, 0.25);
+      stroke-width: 1;
+    }
+    .chart-svg .route {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1.5;
+      stroke-dasharray: 6 4;
+    }
+    .chart-svg .route-shadow {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 4;
+      stroke-opacity: 0.06;
+      stroke-linecap: round;
+    }
+    .chart-svg .plot-ring {
+      fill: var(--paper);
+      stroke: var(--ink);
+      stroke-width: 1.5;
+    }
+    .chart-svg .plot-dot {
+      fill: var(--red);
+      stroke: var(--ink);
+      stroke-width: 1;
+    }
+    .chart-svg .plot-cross line { stroke: var(--ink); stroke-width: 1; }
+    .chart-svg .plot-label {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+      fill: var(--ink);
+    }
+    .chart-svg .plot-label .em {
+      font-style: italic;
+      font-weight: 500;
+      fill: var(--red);
+    }
+    .chart-svg .plot-coord {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      fill: var(--red);
+    }
+    .chart-svg .plot-tag {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      fill: var(--ink-2);
+    }
+    .chart-svg .route-dist {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      fill: var(--red);
+    }
+    .chart-svg .route-bg {
+      fill: var(--map-bg);
+    }
+    .chart-svg .compass-ring {
+      fill: var(--paper);
+      stroke: var(--ink);
+      stroke-width: 1.25;
+    }
+    .chart-svg .compass-tick { stroke: var(--ink); stroke-width: 1; }
+    .chart-svg .compass-letter {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      fill: var(--ink);
+    }
+    .chart-svg .compass-letter.n { fill: var(--red); }
+
+    /* draw-in animations on first paint */
+    @keyframes route-draw {
+      from { stroke-dashoffset: 600; }
+      to   { stroke-dashoffset: 0; }
+    }
+    .chart-svg .route { stroke-dashoffset: 0; animation: route-draw 1.6s ease-out 0.4s both; }
+    @keyframes plot-pop {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+    .chart-svg .plot-group {
+      transform-origin: center;
+      animation: plot-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .chart-svg .plot-group:nth-child(1) { animation-delay: 0.6s; }
+    .chart-svg .plot-group:nth-child(2) { animation-delay: 0.85s; }
+    .chart-svg .plot-group:nth-child(3) { animation-delay: 1.05s; }
+    .chart-svg .plot-group:nth-child(4) { animation-delay: 1.25s; }
+    .chart-svg .plot-group:nth-child(5) { animation-delay: 1.45s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .chart-svg .route, .chart-svg .plot-group { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Atlas</span>
+    <span class="right">Sheet <b>I</b> · 1:248,000 · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       PLATE — title block of the chart
+  ==================================================================== -->
+  <section class="plate">
+    <div class="plate-row">
+      <div class="plate-titling">
+        <p class="plate-eyebrow">Sheet I · The Atlas of Northern Pathways</p>
+        <h1 class="plate-title">A pathway, <em>plotted.</em></h1>
+        <p class="plate-subtitle">
+          Surveyed for Northern Pathways Immigration Consulting · the
+          firm at the centre of the chart and the deliverables radiating
+          out like waypoints. Hairlines are the brief; route lines are
+          the work; the destination is permanent residency. Read it
+          like a map, not a brochure.
+        </p>
+      </div>
+      <aside class="plate-stamp">
+        <p class="plate-stamp-head">Sheet <b>I</b> · MMXXVI</p>
+        <dl>
+          <div><dt>Surveyor</dt><dd>FrameFlow</dd></div>
+          <div><dt>Subject</dt><dd>Northern Pathways</dd></div>
+          <div><dt>Counsel</dt><dd>Burcu Akyol, RCIC</dd></div>
+          <div><dt>Scale</dt><dd>1 : 248,000</dd></div>
+          <div><dt>Status</dt><dd style="color: var(--red);">● Live</dd></div>
+        </dl>
+        <p class="seal">Filed <b>·</b> Surveyed <b>·</b> Live</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MAP — the actual cartograph
+  ==================================================================== -->
+  <section class="chart reveal">
+    <article class="chart-wrap">
+      <span class="chart-corner tl"><b>SHEET I</b> · Surveyed Apr 2026</span>
+      <span class="chart-corner tr"><b>43°N</b> 79°W · Toronto</span>
+      <span class="chart-corner bl">FrameFlow · <b>Studio of Record</b></span>
+      <span class="chart-corner br">© 2026 NP / FF · <b>1 : 248,000</b></span>
+
+      <svg class="chart-svg" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+        <!-- Hairline coordinate grid -->
+        <g class="grid" aria-hidden="true">
+          <!-- vertical -->
+          <line x1="0"   y1="0" x2="0"   y2="900"/>
+          <line x1="100" y1="0" x2="100" y2="900"/>
+          <line x1="200" y1="0" x2="200" y2="900" class="major"/>
+          <line x1="300" y1="0" x2="300" y2="900"/>
+          <line x1="400" y1="0" x2="400" y2="900"/>
+          <line x1="500" y1="0" x2="500" y2="900"/>
+          <line x1="600" y1="0" x2="600" y2="900" class="major"/>
+          <line x1="700" y1="0" x2="700" y2="900"/>
+          <line x1="800" y1="0" x2="800" y2="900"/>
+          <line x1="900" y1="0" x2="900" y2="900"/>
+          <line x1="1000" y1="0" x2="1000" y2="900" class="major"/>
+          <line x1="1100" y1="0" x2="1100" y2="900"/>
+          <line x1="1200" y1="0" x2="1200" y2="900"/>
+          <line x1="1300" y1="0" x2="1300" y2="900"/>
+          <line x1="1400" y1="0" x2="1400" y2="900" class="major"/>
+          <line x1="1500" y1="0" x2="1500" y2="900"/>
+          <!-- horizontal -->
+          <line x1="0" y1="0"   x2="1600" y2="0"/>
+          <line x1="0" y1="100" x2="1600" y2="100"/>
+          <line x1="0" y1="200" x2="1600" y2="200" class="major"/>
+          <line x1="0" y1="300" x2="1600" y2="300"/>
+          <line x1="0" y1="400" x2="1600" y2="400" class="major"/>
+          <line x1="0" y1="500" x2="1600" y2="500"/>
+          <line x1="0" y1="600" x2="1600" y2="600" class="major"/>
+          <line x1="0" y1="700" x2="1600" y2="700"/>
+          <line x1="0" y1="800" x2="1600" y2="800" class="major"/>
+        </g>
+
+        <!-- axis labels -->
+        <g aria-hidden="true">
+          <text class="axis-label" x="200"  y="36">A</text>
+          <text class="axis-label" x="600"  y="36">B</text>
+          <text class="axis-label" x="1000" y="36">C</text>
+          <text class="axis-label" x="1400" y="36">D</text>
+          <text class="axis-label" x="20" y="200">I</text>
+          <text class="axis-label" x="20" y="400">II</text>
+          <text class="axis-label" x="20" y="600">III</text>
+          <text class="axis-label" x="20" y="800">IV</text>
+        </g>
+
+        <!-- Topographic contour rings centred on the firm at ~ (820, 460) -->
+        <g aria-hidden="true">
+          <circle class="contour"       cx="820" cy="460" r="60"/>
+          <circle class="contour"       cx="820" cy="460" r="120"/>
+          <circle class="contour heavy" cx="820" cy="460" r="200"/>
+          <circle class="contour"       cx="820" cy="460" r="280"/>
+          <circle class="contour"       cx="820" cy="460" r="360"/>
+          <circle class="contour heavy" cx="820" cy="460" r="440"/>
+        </g>
+
+        <!-- Routes (drawn first so they sit under the plot points) -->
+        <!-- Origin → Website -->
+        <g>
+          <path class="route-shadow" d="M 280 720 Q 480 600, 580 460"/>
+          <path class="route" d="M 280 720 Q 480 600, 580 460"/>
+        </g>
+        <!-- Website → Calculator -->
+        <g>
+          <path class="route-shadow" d="M 580 460 Q 700 360, 820 460"/>
+          <path class="route" d="M 580 460 Q 700 360, 820 460"/>
+        </g>
+        <!-- Calculator → Draws -->
+        <g>
+          <path class="route-shadow" d="M 820 460 Q 1000 380, 1180 280"/>
+          <path class="route" d="M 820 460 Q 1000 380, 1180 280"/>
+        </g>
+        <!-- Calculator → Social -->
+        <g>
+          <path class="route-shadow" d="M 820 460 Q 980 580, 1180 720"/>
+          <path class="route" d="M 820 460 Q 980 580, 1180 720"/>
+        </g>
+        <!-- Calculator → Destination -->
+        <g>
+          <path class="route-shadow" d="M 820 460 Q 1100 460, 1380 460"/>
+          <path class="route" d="M 820 460 Q 1100 460, 1380 460"/>
+        </g>
+
+        <!-- Route distance annotations (CRS deltas) -->
+        <g>
+          <rect class="route-bg" x="408" y="600" width="86" height="22" rx="0"/>
+          <text class="route-dist" x="416" y="615">+12 CRS</text>
+          <text class="plot-tag"   x="416" y="617" dy="14">Δ via FSWP</text>
+
+          <rect class="route-bg" x="660" y="384" width="80" height="22"/>
+          <text class="route-dist" x="668" y="399">+50 CRS</text>
+          <text class="plot-tag"   x="668" y="401" dy="14">Fr · NCLC 7+</text>
+
+          <rect class="route-bg" x="1000" y="332" width="84" height="22"/>
+          <text class="route-dist" x="1008" y="347">+0 CRS</text>
+          <text class="plot-tag"   x="1008" y="349" dy="14">live · weekly</text>
+
+          <rect class="route-bg" x="1000" y="586" width="84" height="22"/>
+          <text class="route-dist" x="1008" y="601">+248 IG</text>
+          <text class="plot-tag"   x="1008" y="603" dy="14">posts · TR</text>
+
+          <rect class="route-bg" x="1100" y="448" width="80" height="22"/>
+          <text class="route-dist" x="1108" y="463">CRS &gt; 504</text>
+          <text class="plot-tag"   x="1108" y="465" dy="14">ITA · PR</text>
+        </g>
+
+        <!-- Plot points -->
+        <!-- 00 · Origin (the brief) -->
+        <g class="plot-group">
+          <circle class="plot-ring" cx="280" cy="720" r="22"/>
+          <g class="plot-cross">
+            <line x1="262" y1="720" x2="298" y2="720"/>
+            <line x1="280" y1="702" x2="280" y2="738"/>
+          </g>
+          <circle class="plot-dot" cx="280" cy="720" r="5"/>
+          <text class="plot-coord" x="280" y="760" text-anchor="middle">A · IV  ·  43.6532°N</text>
+          <text class="plot-label" x="280" y="784" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Brief</tspan>
+          </text>
+          <text class="plot-tag" x="280" y="804" text-anchor="middle">Origin · Apr 2025</text>
+        </g>
+
+        <!-- 01 · Website -->
+        <g class="plot-group">
+          <circle class="plot-ring" cx="580" cy="460" r="28"/>
+          <g class="plot-cross">
+            <line x1="558" y1="460" x2="602" y2="460"/>
+            <line x1="580" y1="438" x2="580" y2="482"/>
+          </g>
+          <circle class="plot-dot" cx="580" cy="460" r="6"/>
+          <text class="plot-coord" x="580" y="416" text-anchor="middle">B · II  ·  Waypoint 01</text>
+          <text class="plot-label" x="580" y="396" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Website</tspan>
+          </text>
+          <text class="plot-tag" x="580" y="498" text-anchor="middle">12 routes · EN+TR · live</text>
+        </g>
+
+        <!-- 02 · Calculator (FIRM = centre, biggest plot) -->
+        <g class="plot-group">
+          <circle class="plot-ring" cx="820" cy="460" r="36"/>
+          <g class="plot-cross">
+            <line x1="790" y1="460" x2="850" y2="460"/>
+            <line x1="820" y1="430" x2="820" y2="490"/>
+          </g>
+          <circle class="plot-dot" cx="820" cy="460" r="8"/>
+          <text class="plot-coord" x="820" y="412" text-anchor="middle">C · II  ·  Centre · Waypoint 02</text>
+          <text class="plot-label" x="820" y="392" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Calculator</tspan>
+          </text>
+          <text class="plot-tag" x="820" y="510" text-anchor="middle">CRS 487 / 1200 · PDF · Bilingual</text>
+        </g>
+
+        <!-- 03 · Draws -->
+        <g class="plot-group">
+          <circle class="plot-ring" cx="1180" cy="280" r="24"/>
+          <g class="plot-cross">
+            <line x1="1162" y1="280" x2="1198" y2="280"/>
+            <line x1="1180" y1="262" x2="1180" y2="298"/>
+          </g>
+          <circle class="plot-dot" cx="1180" cy="280" r="5"/>
+          <text class="plot-coord" x="1180" y="240" text-anchor="middle">D · I  ·  Waypoint 03</text>
+          <text class="plot-label" x="1180" y="220" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Draws</tspan>
+          </text>
+          <text class="plot-tag" x="1180" y="316" text-anchor="middle">156+ indexed · since 2015</text>
+        </g>
+
+        <!-- 04 · Social -->
+        <g class="plot-group">
+          <circle class="plot-ring" cx="1180" cy="720" r="24"/>
+          <g class="plot-cross">
+            <line x1="1162" y1="720" x2="1198" y2="720"/>
+            <line x1="1180" y1="702" x2="1180" y2="738"/>
+          </g>
+          <circle class="plot-dot" cx="1180" cy="720" r="5"/>
+          <text class="plot-coord" x="1180" y="680" text-anchor="middle">D · IV  ·  Waypoint 04</text>
+          <text class="plot-label" x="1180" y="660" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Feed</tspan>
+          </text>
+          <text class="plot-tag" x="1180" y="756" text-anchor="middle">@kanadadayeniyasam · TR</text>
+        </g>
+
+        <!-- 05 · Destination (PR Status) -->
+        <g class="plot-group">
+          <rect x="1356" y="436" width="48" height="48" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/>
+          <rect x="1364" y="444" width="32" height="32" fill="var(--red)"/>
+          <text class="plot-label" x="1380" y="416" text-anchor="middle">
+            <tspan>The </tspan><tspan class="em">Destination</tspan>
+          </text>
+          <text class="plot-coord" x="1380" y="396" text-anchor="middle">D · II  ·  Final · PR</text>
+          <text class="plot-tag" x="1380" y="500" text-anchor="middle">Permanent Residency</text>
+        </g>
+
+        <!-- Compass rose (top right, ~140,140) -->
+        <g aria-hidden="true">
+          <circle class="compass-ring" cx="1460" cy="120" r="50"/>
+          <line class="compass-tick" x1="1460" y1="78" x2="1460" y2="92"/>
+          <line class="compass-tick" x1="1460" y1="148" x2="1460" y2="162"/>
+          <line class="compass-tick" x1="1418" y1="120" x2="1432" y2="120"/>
+          <line class="compass-tick" x1="1488" y1="120" x2="1502" y2="120"/>
+          <text class="compass-letter n" x="1460" y="74" text-anchor="middle">N</text>
+          <text class="compass-letter"   x="1460" y="172" text-anchor="middle">S</text>
+          <text class="compass-letter"   x="1410" y="124" text-anchor="middle">W</text>
+          <text class="compass-letter"   x="1510" y="124" text-anchor="middle">E</text>
+          <!-- maple-leaf-as-pointer (stylised diamond + petals echoing the logo) -->
+          <g transform="translate(1460 120)">
+            <polygon points="0,-30 6,-12 18,-6 6,2 12,18 0,12 -12,18 -6,2 -18,-6 -6,-12" fill="var(--red)" stroke="var(--ink)" stroke-width="1"/>
+            <circle r="3" fill="var(--ink)"/>
+          </g>
+        </g>
+
+        <!-- Compass label below -->
+        <text x="1460" y="190" text-anchor="middle" class="axis-label" style="fill: var(--red); letter-spacing: 0.32em;">TRUE NORTH</text>
+      </svg>
+    </article>
+
+    <div class="chart-legend">
+      <div class="legend-symbols">
+        <span class="ls"><span class="sym"><span class="dot"></span></span><b>Plot point</b> · waypoint</span>
+        <span class="ls"><span class="sym"><span class="ring"></span></span><b>Origin</b> · brief</span>
+        <span class="ls"><span class="sym"><span class="route"></span></span><b>Route</b> · CRS delta</span>
+        <span class="ls"><span class="sym"><span class="x"></span></span><b>Crosshair</b> · coordinate</span>
+      </div>
+      <div class="legend-scale">
+        <span><b>Scale</b></span>
+        <div class="scale-bar"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <span><b>+50 CRS</b> per division</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       INDEX OF DESTINATIONS
+  ==================================================================== -->
+  <section class="index-strip reveal">
+    <header class="index-head">
+      <span class="label">Sheet Index · 5 destinations</span>
+      <h2>The work, <em>plotted.</em></h2>
+      <span class="meta">Read in order · <b>↘</b></span>
+    </header>
+
+    <div class="index-grid">
+      <a class="index-cell" href="#way-website">
+        <p class="icoord">B · II <b>·</b> Waypoint 01</p>
+        <p class="iname">The <em>Website</em></p>
+        <p class="ititle">northernpathways.ca · 12 routes · EN+TR · live since 2026.</p>
+        <p class="iarr">Plate 01</p>
+      </a>
+      <a class="index-cell" href="#way-calc">
+        <p class="icoord">C · II <b>·</b> Waypoint 02 · Centre</p>
+        <p class="iname">The <em>Calculator</em></p>
+        <p class="ititle">CRS estimator · 15 fields · 6 categories · PDF.</p>
+        <p class="iarr">Plate 02</p>
+      </a>
+      <a class="index-cell" href="#way-draws">
+        <p class="icoord">D · I <b>·</b> Waypoint 03</p>
+        <p class="iname">The <em>Draws</em></p>
+        <p class="ititle">Live IRCC tracker · 156+ indexed · since 2015.</p>
+        <p class="iarr">Plate 03</p>
+      </a>
+      <a class="index-cell" href="#way-social">
+        <p class="icoord">D · IV <b>·</b> Waypoint 04</p>
+        <p class="iname">The <em>Feed</em></p>
+        <p class="ititle">@kanadadayeniyasam · TR · 248 posts · 14.2k.</p>
+        <p class="iarr">Plate 04</p>
+      </a>
+      <a class="index-cell" href="#way-end">
+        <p class="icoord">D · II <b>·</b> Final · PR</p>
+        <p class="iname">The <em>Destination</em></p>
+        <p class="ititle">Permanent Residency · counsel of record signs.</p>
+        <p class="iarr">Closer</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       WAYPOINT 01 · WEBSITE
+  ==================================================================== -->
+  <section id="way-website" class="waypoint reveal">
+    <header class="way-head">
+      <span class="way-mark">B II</span>
+      <p class="way-coord">Waypoint <b>01</b></p>
+      <div class="way-title">
+        <p class="lbl">Plate 01 · Website Design</p>
+        <h2>northernpathways.ca &mdash; <em>multilingual.</em></h2>
+      </div>
+      <p class="way-meta">12 routes · EN+TR<br><b>Live · since 2026</b></p>
+    </header>
+
+    <p class="way-intro">
+      The first waypoint &mdash; the marketing site at
+      <strong>northernpathways.ca</strong>. Served at <code style="font-family: var(--type); font-weight: 600; font-size: 14px; padding: 1px 5px; background: var(--paper-3);">/en</code>
+      and <code style="font-family: var(--type); font-weight: 600; font-size: 14px; padding: 1px 5px; background: var(--paper-3);">/tr</code>
+      with first-class language detection. The home view leads with
+      Burcu&rsquo;s name and credentials, then routes visitors to one of
+      five service pages, three process steps, or the calculator at
+      the centre of the chart. <em>Every page links to a consultation,
+      a calculator, or both.</em>
+    </p>
+
+    <article class="frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en</span>
+        <span class="lang"><span class="on">EN</span><span>TR</span></span>
+      </header>
+      <div class="site-walk">
+        <nav class="nav-row">
+          <span class="brand">
+            <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+            <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+          </span>
+          <nav class="menu">
+            <span class="on">Home</span>
+            <span>Our Team</span>
+            <span>Fees</span>
+            <span>Events</span>
+            <span>Blog</span>
+          </nav>
+          <div class="right">
+            <span class="lt"><span class="on">EN</span><span>TR</span></span>
+            <span class="book">Book a Consultation</span>
+          </div>
+        </nav>
+
+        <div class="hero-row">
+          <div class="text">
+            <p class="eyebrow">Northern Pathways · RCIC-IRB</p>
+            <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+            <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility assessments, strategic guidance, and legal representation for permanent residency, study permits, and family sponsorship.</p>
+            <div class="ctas">
+              <a class="p">Book a Consultation</a>
+              <a class="s">Explore Services</a>
+            </div>
+            <div class="creds">
+              <span><b>RCIC-IRB</b> · College of ICC</span>
+              <span><b>CAPIC</b> · Board Member</span>
+              <span>Queen&rsquo;s · Adjunct</span>
+            </div>
+          </div>
+          <aside class="photo">
+            <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+            <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB · Principal</p></div>
+          </aside>
+        </div>
+
+        <section class="svc-row">
+          <header class="head">
+            <p class="lbl">— Our Services —</p>
+            <h3>Five <em>pathways,</em> one practice.</h3>
+          </header>
+          <div class="grid">
+            <article class="cell">
+              <span class="num">01</span>
+              <img src="../../../public/portfolio/northern-pathways/services/cec.png" alt="">
+              <h5>Economic Immigration</h5>
+              <p>Express Entry · FSWP · CEC · PNP.</p>
+            </article>
+            <article class="cell">
+              <span class="num">02</span>
+              <img src="../../../public/portfolio/northern-pathways/services/spousal-sponsorship.png" alt="">
+              <h5>Family Sponsorship</h5>
+              <p>Spousal · common-law · parents.</p>
+            </article>
+            <article class="cell">
+              <span class="num">03</span>
+              <img src="../../../public/portfolio/northern-pathways/services/study-permit.png" alt="">
+              <h5>Temporary Residence</h5>
+              <p>Visitor · study · work permits.</p>
+            </article>
+            <article class="cell">
+              <span class="num">04</span>
+              <img src="../../../public/portfolio/northern-pathways/services/pr-card.png" alt="">
+              <h5>PR Card &amp; PRTD</h5>
+              <p>Renewals · travel documents.</p>
+            </article>
+            <article class="cell">
+              <span class="num">05</span>
+              <img src="../../../public/portfolio/northern-pathways/services/citizenship.png" alt="">
+              <h5>Citizenship</h5>
+              <p>Applications · residency calc.</p>
+            </article>
+          </div>
+        </section>
+
+        <footer class="ff-foot">
+          <span class="left">© 2026 Northern Pathways Immigration Consulting · All Rights Reserved.</span>
+          <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+        </footer>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       WAYPOINT 02 · CALCULATOR
+  ==================================================================== -->
+  <section id="way-calc" class="waypoint alt reveal">
+    <header class="way-head">
+      <span class="way-mark">C II</span>
+      <p class="way-coord">Waypoint <b>02</b> · Centre</p>
+      <div class="way-title">
+        <p class="lbl">Plate 02 · Web Application</p>
+        <h2>The <em>CRS calculator</em> &mdash; the centre of the chart.</h2>
+      </div>
+      <p class="way-meta">15 fields · 6 categories<br><b>+50 CRS bonus path</b></p>
+    </header>
+
+    <p class="way-intro">
+      The waypoint at the centre of the chart. From here every route
+      branches: north to the live draws feed, south to the social
+      programme, east to the destination. The calculator follows
+      IRCC&rsquo;s 2025 grid, including <em>removed arranged-employment
+      points</em> and the return of category-based draws. Each
+      session ends on a one-click PDF the principal can sign.
+    </p>
+
+    <article class="frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en/crs-calculator</span>
+        <span class="lang"><span class="on">EN</span><span>TR</span></span>
+      </header>
+      <div class="calc-walk">
+        <div>
+          <header class="head">
+            <p class="lbl">CRS Score Calculator · Step 02 of 06</p>
+            <h4>Core / Human Capital</h4>
+            <p>Calculate your Comprehensive Ranking System score for Express Entry. Complete the sections below to see your estimated CRS score.</p>
+          </header>
+          <div class="form">
+            <div class="row on">
+              <span class="k">Age <small>at point of application · 32 years</small></span>
+              <span class="v">110 / 110</span>
+            </div>
+            <div class="row on">
+              <span class="k">Education <small>Master&rsquo;s degree · ECA verified</small></span>
+              <span class="v">135 / 150</span>
+            </div>
+            <div class="row on">
+              <span class="k">CLB · English <small>CLB 9 · all four skills</small></span>
+              <span class="v">124 / 136</span>
+            </div>
+            <div class="row on">
+              <span class="k">French · NCLC <small>NCLC 7+ · +50 bonus path</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+            <div class="row">
+              <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+              <span class="v">35 / 80</span>
+            </div>
+          </div>
+        </div>
+        <aside class="score">
+          <p class="lbl">Estimated CRS · Live</p>
+          <p class="total">487<small>CRS / 1200</small></p>
+          <dl>
+            <div><span>A · Core</span><b>404</b></div>
+            <div><span>B · Spouse</span><b>—</b></div>
+            <div><span>C · Transfer</span><b>50</b></div>
+            <div><span>D · Additional</span><b>33</b></div>
+          </dl>
+          <span class="pdf">↓ Download PDF report</span>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       WAYPOINT 03 · DRAWS
+  ==================================================================== -->
+  <section id="way-draws" class="waypoint reveal">
+    <header class="way-head">
+      <span class="way-mark">D I</span>
+      <p class="way-coord">Waypoint <b>03</b></p>
+      <div class="way-title">
+        <p class="lbl">Plate 03 · Latest Draws Feed</p>
+        <h2>The <em>draws feed</em> &mdash; due north.</h2>
+      </div>
+      <p class="way-meta">156+ indexed · since 2015<br><b>Updated weekly</b></p>
+    </header>
+
+    <p class="way-intro">
+      Up the route from the calculator, true north on the chart.
+      A live tracker indexing every IRCC Express Entry &amp; PNP
+      draw since 2015, filterable by programme and category, mirrored
+      to Instagram on draw day. <em>The only page on the firm&rsquo;s
+      domain that updates without a campaign behind it.</em>
+    </p>
+
+    <article class="frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en/events</span>
+        <span class="lang"><span class="on">EN</span><span>TR</span></span>
+      </header>
+      <div class="draws-walk">
+        <div class="table-wrap">
+          <header class="head">
+            <h4>Latest Express Entry Draws</h4>
+            <span class="live">Live · 02 Apr 2026</span>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Date</th><th>Programme</th><th>Category</th><th>ITAs</th><th>CRS min.</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">347</td><td>02 Apr</td><td>EE</td><td><span class="pill">Healthcare</span></td><td class="num">3,000</td><td class="crs">504</td></tr>
+              <tr><td class="num">346</td><td>27 Mar</td><td>EE</td><td><span class="pill">French</span></td><td class="num">7,500</td><td class="crs">379</td></tr>
+              <tr><td class="num">345</td><td>20 Mar</td><td>EE</td><td><span class="pill">PNP</span></td><td class="num">1,275</td><td class="crs">736</td></tr>
+              <tr><td class="num">344</td><td>13 Mar</td><td>EE</td><td><span class="pill">CEC</span></td><td class="num">5,500</td><td class="crs">521</td></tr>
+              <tr><td class="num">343</td><td>06 Mar</td><td>EE</td><td><span class="pill">Trades</span></td><td class="num">975</td><td class="crs">421</td></tr>
+              <tr><td class="num">342</td><td>27 Feb</td><td>EE</td><td><span class="pill">Healthcare</span></td><td class="num">4,000</td><td class="crs">490</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="side">
+          <p class="lbl">Latest · 02 Apr</p>
+          <p class="big">504<small>CRS · Healthcare · 3,000 ITAs</small></p>
+          <p>Lowest healthcare cutoff since the category-based draws began in summer 2023. Mirrored to <b style="color: #ff5e63;">@kanadadayeniyasam</b> the same hour.</p>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       WAYPOINT 04 · SOCIAL  (dark)
+  ==================================================================== -->
+  <section id="way-social" class="waypoint dark reveal">
+    <header class="way-head">
+      <span class="way-mark">D IV</span>
+      <p class="way-coord">Waypoint <b>04</b></p>
+      <div class="way-title">
+        <p class="lbl" style="color: #ff5e63;">Plate 04 · Social Programme</p>
+        <h2>@kanadadayeniyasam &mdash; <em>due south.</em></h2>
+      </div>
+      <p class="way-meta">248 posts · 14.2k followers<br><b>Turkish · ongoing</b></p>
+    </header>
+
+    <p class="way-intro">
+      South of the calculator, where the route runs out toward the
+      diaspora. Most of Northern Pathways&rsquo; prospective clients
+      arrive through Turkish-language search and word-of-mouth. We
+      run <strong>@kanadadayeniyasam</strong> (&ldquo;new life in
+      Canada&rdquo;) as the firm&rsquo;s public-facing channel
+      &mdash; <em>draw-day summaries, Reels with Burcu, plain-
+      language explainers.</em>
+    </p>
+
+    <div class="feed">
+      <article class="post red">
+        <p class="top">347 · 02 Apr</p>
+        <p class="body">CRS <em>504</em><small>Healthcare draw · 3,000 ITAs · the lowest healthcare cutoff since 2023.</small></p>
+        <p class="foot"><b>likes</b> 412</p>
+      </article>
+      <article class="post white">
+        <p class="top">FAQ · primer</p>
+        <p class="body">FSWP <em>67/100</em><small>The Six Selection Factors, in plain English.</small></p>
+        <p class="foot"><b>saves</b> 286</p>
+      </article>
+      <article class="post dark">
+        <p class="top">Reel · :42 · TR</p>
+        <p class="body"><em>NCLC 7+</em><small>Fransızca puanı bonusu, üç dakikada.</small></p>
+        <p class="foot"><b>views</b> 8.2k</p>
+      </article>
+      <article class="post cream">
+        <p class="top">Carousel · 8</p>
+        <p class="body">PNP <em>nedir?</em><small>Provincial Nominee Programme · her eyalet için bir slayt.</small></p>
+        <p class="foot"><b>saves</b> 619</p>
+      </article>
+      <article class="post white">
+        <p class="top">Quote · brand</p>
+        <p class="body">Treat clients as <em>individuals,</em> not case numbers.<small>From the brand voice.</small></p>
+        <p class="foot"><b>shares</b> 92</p>
+      </article>
+      <article class="post red">
+        <p class="top">Tool · CRS</p>
+        <p class="body">CRS <em>Calculator</em><small>Ücretsiz · Türkçe · linktr.ee/np</small></p>
+        <p class="foot"><b>clicks</b> 1.4k</p>
+      </article>
+      <article class="post dark">
+        <p class="top">Reel · :28 · TR</p>
+        <p class="body">Burcu&rsquo;dan <em>10 dk</em> CRS<small>Konsültasyon takeover &mdash; sıkça sorulan beş soru.</small></p>
+        <p class="foot"><b>views</b> 12.4k</p>
+      </article>
+      <article class="post cream">
+        <p class="top">Story · highlight</p>
+        <p class="body"><em>RCIC.</em><small>Düzenlenmiş Kanada Göçmenlik Danışmanı &mdash; ne demek?</small></p>
+        <p class="foot"><b>opens</b> 3.1k</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section id="way-end" class="end">
+    <p class="lbl">— Sheet I · End of plate —</p>
+    <h3>Set the next <em>cartograph.</em></h3>
+    <p>If your firm holds a record worth surveying, we&rsquo;d be glad to plot year one of it.</p>
+    <a class="cta">Begin a project →</a>
+  </section>
+
+  <footer class="colophon">
+    <span>Surveyed by · <strong>FrameFlow</strong> · Toronto · 2026</span>
+    <span class="center">Sheet <b>I</b> · The Atlas</span>
+    <span class="right">All Reels →</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

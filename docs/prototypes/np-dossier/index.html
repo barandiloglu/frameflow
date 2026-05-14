@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Dossier (FrameFlow / Prototype 01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 01 — "The Dossier" (legal/regulatory-filing format)
+
+       Reads like a court brief or law-firm portfolio: institutional
+       white surface, hairline rules, exhibit numbering, italic-serif
+       running heads, monospace marginalia, very precise typography.
+       Matches the locked brand voice — Professional · Authoritative ·
+       Clear · Empathetic · institutional professionalism · transparent
+       clarity · minimalist modernity · authoritative trust.
+    ==================================================================== */
+
+    :root {
+      --paper:    #ffffff;
+      --paper-2:  #fafafa;
+      --paper-3:  #f5f5f3;
+      --rule:     #e7e5e0;
+      --rule-2:   #d4d2cd;
+      --ink:      #1a1a1a;
+      --ink-2:    #2c2b2b;
+      --ink-3:    #4a4946;
+      --ink-4:    #8c8a85;
+      --ink-5:    #b8b6b1;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --display:  "Montserrat", system-ui, sans-serif;
+      --serif:    "Cormorant Garamond", Georgia, serif;
+      --mono:     "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* Subtle paper grain — keep it minimal so it doesn't undermine
+       the institutional restraint. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      opacity: 0.025;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL — top bar
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .rail b { color: var(--red); font-weight: 600; }
+    .rail .center {
+      text-align: center;
+      letter-spacing: 0.4em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .rail .right { text-align: right; color: var(--ink-3); }
+    .rail .right :global(a):hover { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       COVER PAGE
+    ============================================================ */
+    .cover {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px 100px;
+      position: relative;
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 48px;
+      right: 48px;
+      height: 1px;
+      background: var(--rule-2);
+    }
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .cover-stamp {
+      width: 220px;
+      padding: 18px 20px;
+      border: 2px solid var(--ink);
+      position: relative;
+    }
+    .cover-stamp::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border: 1px solid var(--ink);
+      pointer-events: none;
+    }
+    .cover-stamp dl > div {
+      padding: 8px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .cover-stamp dl > div:first-child { border-top: 0; }
+    .cover-stamp dt {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+    .cover-stamp dd {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .cover-stamp .stamp-head {
+      padding: 10px 0 14px;
+      margin-bottom: 8px;
+      border-bottom: 1.5px solid var(--ink);
+      text-align: center;
+    }
+    .cover-stamp .stamp-head .top {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .cover-stamp .stamp-head .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 24px;
+      letter-spacing: 0.14em;
+      color: var(--ink);
+      margin-top: 2px;
+    }
+
+    .cover-text { padding-top: 0; }
+    .cover-eyebrow {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 36px;
+      height: 1px;
+      background: var(--red);
+    }
+    .cover-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(48px, 7vw, 104px);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 36px;
+    }
+    .cover-title b { font-style: normal; font-weight: 500; color: var(--ink); }
+    .cover-deck {
+      max-width: 60ch;
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--ink-3);
+      margin-bottom: 36px;
+    }
+    .cover-deck b { font-weight: 600; color: var(--ink); }
+
+    .cover-subjects {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      max-width: 760px;
+    }
+    .cover-subjects > div {
+      padding: 16px 18px;
+      border-left: 1px solid var(--rule);
+    }
+    .cover-subjects > div:first-child { border-left: 0; padding-left: 0; }
+    .cover-subjects dt {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .cover-subjects dd {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+
+    .cover-foot {
+      margin-top: 36px;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .cover-foot b { color: var(--ink); }
+
+    @media (max-width: 880px) {
+      .cover { padding: 48px 22px 60px; }
+      .cover-grid { grid-template-columns: 1fr; gap: 36px; }
+      .cover-subjects { grid-template-columns: 1fr; }
+      .cover-subjects > div { border-left: 0; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 14px; }
+      .cover-subjects > div:first-child { border-top: 0; padding-top: 0; }
+    }
+
+    /* ============================================================
+       SECTION HEADERS — Roman numerals, ¶ markers, court-formal
+    ============================================================ */
+    .section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 100px 48px 80px;
+    }
+    .sect-head {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 56px;
+    }
+    .sect-head .roman {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 64px;
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      color: var(--red);
+    }
+    .sect-head .text { padding-bottom: 6px; }
+    .sect-head .label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .sect-head h2 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 4.4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .sect-head h2 b { font-style: normal; font-weight: 500; }
+    .sect-head .meta {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .sect-head .meta b { color: var(--ink); }
+
+    @media (max-width: 880px) {
+      .section { padding: 60px 22px; }
+      .sect-head { grid-template-columns: 1fr; gap: 12px; }
+      .sect-head .meta { text-align: left; }
+    }
+
+    /* ============================================================
+       § I — THE MATTER  (the brief / what we were retained for)
+    ============================================================ */
+    .matter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+    }
+    .matter-grid .body p {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1.1em;
+      max-width: 56ch;
+    }
+    .matter-grid .body p strong { font-weight: 600; color: var(--ink); }
+    .matter-grid .body p em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red-d);
+    }
+    .matter-grid .body .lede {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 1.4;
+      color: var(--ink);
+      max-width: 30ch;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 28px;
+    }
+
+    .counsel {
+      background: var(--paper-3);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+    }
+    .counsel-head {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .counsel-people {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 14px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .counsel-people:first-of-type { border-top: 0; padding-top: 0; }
+    .counsel-people .ph {
+      width: 80px;
+      height: 80px;
+      overflow: hidden;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+    }
+    .counsel-people .ph img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.85) contrast(1.05); }
+    .counsel-people .who h4 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .counsel-people .who .role {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .counsel-people .who p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-3);
+    }
+    .counsel-credentials {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .counsel-credentials .seal {
+      padding: 8px 12px;
+      border: 1px solid var(--rule-2);
+      background: var(--paper);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .counsel-credentials .seal b { color: var(--red); }
+
+    @media (max-width: 880px) {
+      .matter-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ============================================================
+       § II — EXHIBITS  (the work delivered)
+    ============================================================ */
+    .exhibit {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .exhibit:first-child { padding-top: 0; }
+    .exhibit:last-child { border-bottom: 0; padding-bottom: 0; }
+    .ex-head {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 32px;
+      align-items: baseline;
+      margin-bottom: 32px;
+    }
+    .ex-num {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 88px;
+      line-height: 0.85;
+      color: var(--red);
+      letter-spacing: -0.025em;
+    }
+    .ex-num span {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-top: 8px;
+    }
+    .ex-text .label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .ex-text h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(28px, 3.6vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .ex-text h3 em { font-style: italic; color: var(--red-d); font-weight: 500; }
+    .ex-text .url {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--ink-3);
+    }
+    .ex-tags {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .ex-tags b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-top: 4px;
+    }
+
+    .ex-body {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .ex-body .copy p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+    }
+    .ex-body .copy p strong { font-weight: 600; color: var(--ink); }
+    .ex-body .copy p em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red-d);
+    }
+    .ex-body .copy ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 18px;
+      border-top: 1px solid var(--rule);
+    }
+    .ex-body .copy ul li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 14px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .ex-body .copy ul li::before {
+      content: counter(reqs, decimal-leading-zero);
+      counter-increment: reqs;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--red);
+    }
+    .ex-body .copy ul { counter-reset: reqs; }
+
+    @media (max-width: 880px) {
+      .ex-head { grid-template-columns: 1fr; gap: 12px; }
+      .ex-tags { text-align: left; }
+      .ex-body { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* Browser-chrome mockup (used inside Exhibit III) */
+    .frame {
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 24px 60px -24px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    .frame .chrome {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      padding: 10px 14px;
+      align-items: center;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .frame .chrome .lang b { color: var(--ink); }
+
+    /* Calculator mockup body */
+    .calc {
+      padding: 28px 32px 32px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+    }
+    .calc .form { display: flex; flex-direction: column; gap: 14px; }
+    .calc .ftitle {
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .calc .ftitle .lbl {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .calc .ftitle h4 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .calc .field {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+    }
+    .calc .field .key {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .calc .field .key small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--ink-4);
+      margin-top: 2px;
+    }
+    .calc .field .val {
+      padding: 6px 10px;
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .calc .field.active { border-color: var(--red); }
+    .calc .field.active .val { border-color: var(--red); color: var(--red); }
+
+    .calc .score {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .calc .score .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-l);
+      opacity: 0.8;
+    }
+    .calc .score .total {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 80px;
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+    .calc .score .total small {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-l);
+      display: block;
+      margin-top: 6px;
+    }
+    .calc .score dl {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding-top: 14px;
+    }
+    .calc .score dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+    }
+    .calc .score dl > div b { color: var(--paper); font-weight: 600; }
+    .calc .score .pdf {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Latest Draws table mockup */
+    .draws {
+      padding: 28px 32px 32px;
+      background: var(--paper);
+    }
+    .draws-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 18px;
+    }
+    .draws-head h4 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .draws-head .feed {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .draws-head .feed::before { content: "● "; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.35; }
+    }
+    .draws-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .draws-table thead th {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .draws-table tbody td {
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .draws-table tbody tr:hover { background: var(--paper-3); }
+    .draws-table .pill {
+      padding: 3px 8px;
+      background: var(--red-l);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--red-d);
+      display: inline-block;
+    }
+    .draws-table .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    @media (max-width: 880px) {
+      .calc { grid-template-columns: 1fr; padding: 22px; }
+      .draws { padding: 22px; }
+      .draws-table thead { display: none; }
+      .draws-table tbody td { display: block; padding: 6px 0; border-bottom: 0; }
+      .draws-table tbody tr { padding: 12px 0; border-bottom: 1px solid var(--rule); display: block; }
+    }
+
+    /* ============================================================
+       § III — SCOPE  (services delivered table)
+    ============================================================ */
+    .scope-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .scope-table thead th {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--ink);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .scope-table tbody td {
+      padding: 22px 14px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-2);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .scope-table tbody tr:last-child td { border-bottom: 0; }
+    .scope-table .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      width: 60px;
+    }
+    .scope-table .name {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      width: 220px;
+    }
+    .scope-table .desc { max-width: 56ch; }
+    .scope-table .out {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+      white-space: nowrap;
+      width: 200px;
+    }
+    .scope-table .out b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    @media (max-width: 880px) {
+      .scope-table thead { display: none; }
+      .scope-table, .scope-table tbody, .scope-table tr, .scope-table td { display: block; }
+      .scope-table tr { padding: 18px 0; border-bottom: 1px solid var(--rule); }
+      .scope-table td { padding: 4px 0; border-bottom: 0; }
+      .scope-table .num, .scope-table .name, .scope-table .out { width: auto; text-align: left; }
+    }
+
+    /* ============================================================
+       § IV — MARKS  (palette + type)
+    ============================================================ */
+    .marks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+    }
+    .marks-grid h3 {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .chip {
+      aspect-ratio: 4 / 3;
+      padding: 16px;
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .chip.red   { background: var(--red); color: var(--paper); }
+    .chip.white { background: var(--paper); }
+    .chip.ivory { background: var(--paper-3); }
+    .chip.ink   { background: var(--ink-2); color: var(--paper); }
+    .chip .role {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .chip .name {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+    }
+    .chip .hex {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    .typestack { display: flex; flex-direction: column; }
+    .typerow {
+      padding: 16px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .typerow:first-child { border-top: 0; padding-top: 0; }
+    .typerow .tlbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 6px;
+    }
+    .typerow .tspec.h {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .typerow .tspec.b {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .typerow .tspec.l {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    @media (max-width: 880px) {
+      .marks-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ============================================================
+       § V — PROOF  (testimonial + credentials)
+    ============================================================ */
+    .proof {
+      padding: 80px 0 0;
+      border-top: 1px solid var(--rule);
+    }
+    .pull {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 3.4vw, 42px);
+      line-height: 1.35;
+      color: var(--ink);
+      max-width: 32ch;
+      margin: 0 auto 28px;
+      text-align: center;
+      padding: 0 32px;
+      position: relative;
+    }
+    .pull::before {
+      content: "“";
+      display: block;
+      font-family: var(--serif);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 80px;
+      color: var(--red);
+      line-height: 0.5;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .pull em { color: var(--red-d); font-style: italic; }
+    .pull-by {
+      text-align: center;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 60px;
+    }
+    .pull-by b { color: var(--ink); }
+
+    .seal-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 40px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      align-items: center;
+    }
+    .seal-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding: 0 14px;
+      border-left: 1px solid var(--rule);
+    }
+    .seal-cell:first-child { border-left: 0; }
+    .seal-cell img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      filter: grayscale(0.2);
+    }
+    .seal-cell .seal-label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .seal-cell .seal-name {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    @media (max-width: 720px) {
+      .seal-row { grid-template-columns: 1fr 1fr; gap: 18px; }
+      .seal-cell { border-left: 0; padding: 12px 0; border-top: 1px solid var(--rule); }
+      .seal-cell:nth-child(-n+2) { border-top: 0; }
+    }
+
+    /* ============================================================
+       END / SIGNATURE
+    ============================================================ */
+    .end {
+      padding: 120px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .end h3 b { font-style: normal; font-weight: 500; }
+    .end p {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: 17px;
+      color: var(--ink-3);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cta:hover { background: var(--red); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(4px); }
+
+    .signature {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 48px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: end;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .signature b { color: var(--ink); }
+    .signature .x {
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      border-top: 1px solid var(--ink);
+      padding-top: 8px;
+      min-width: 220px;
+    }
+    .signature .right { text-align: right; }
+    @media (max-width: 720px) {
+      .signature { grid-template-columns: 1fr; gap: 12px; text-align: center; padding: 24px 22px; }
+      .signature .right, .signature .x { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Dossier</span>
+    <span class="right">Filed · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       COVER
+  ==================================================================== -->
+  <section class="cover">
+    <div class="cover-grid">
+      <aside class="cover-stamp" aria-hidden="false">
+        <div class="stamp-head">
+          <p class="top">Reel · MMXXVI</p>
+          <p class="num">№ 019</p>
+        </div>
+        <dl>
+          <div><dt>Matter</dt><dd>Web · Tools · Social</dd></div>
+          <div><dt>Counsel</dt><dd>Burcu Akyol, RCIC</dd></div>
+          <div><dt>Studio</dt><dd>FrameFlow · Toronto</dd></div>
+          <div><dt>Status</dt><dd style="color: var(--red);">● Live · Ongoing</dd></div>
+          <div><dt>Filed</dt><dd>Apr 2026</dd></div>
+        </dl>
+      </aside>
+
+      <div class="cover-text">
+        <p class="cover-eyebrow">Case File · Reel 019 · Northern Pathways Immigration</p>
+        <h1 class="cover-title">
+          <em>Guiding</em> a Canadian immigration journey<br>
+          with <b>competence</b>, <b>care</b>, and <em>clarity.</em>
+        </h1>
+        <p class="cover-deck">
+          A multilingual website, a pair of regulatory-grade calculators, a
+          live <b>Express Entry draws</b> tracker, and a Turkish-language
+          social handle reaching the diaspora. <b>Northern Pathways
+          Immigration Consulting</b> retained FrameFlow to make the firm
+          findable, the math defensible, and the journey legible from the
+          first click.
+        </p>
+        <dl class="cover-subjects">
+          <div><dt>Exhibit I</dt><dd>The website · EN/TR</dd></div>
+          <div><dt>Exhibit II</dt><dd>The calculators · CRS / FSWP</dd></div>
+          <div><dt>Exhibit III</dt><dd>Latest Draws · live feed</dd></div>
+        </dl>
+        <p class="cover-foot">
+          <span><b>Filed by</b> · FrameFlow Studio · Toronto</span>
+          <span><b>For the matter of</b> · Northern Pathways Immigration Consulting</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       § I — THE MATTER
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="roman">I.</span>
+      <div class="text">
+        <p class="label">Section I · The Matter</p>
+        <h2><em>The brief,</em> in <b>two paragraphs.</b></h2>
+      </div>
+      <p class="meta"><span>Engaged</span><br><b>Spring 2025</b></p>
+    </header>
+
+    <div class="matter-grid">
+      <div class="body">
+        <p class="lede">
+          A regulated immigration consultancy needed to be findable,
+          bookable, and trustworthy in two languages.
+        </p>
+        <p>
+          Northern Pathways is led by a <strong>Regulated Canadian
+          Immigration Consultant</strong> (RCIC) and adjunct professor.
+          Most of the firm&rsquo;s prospective clients arrive through
+          Turkish-language search and word-of-mouth in the diaspora.
+          The firm wanted to keep that warmth — but speak with the
+          authority a regulatory body requires.
+        </p>
+        <p>
+          We were retained for <em>three things</em>: the website at
+          <strong>northernpathways.ca</strong>, the in-house tools (a
+          CRS calculator, an FSWP eligibility checker, a live Express
+          Entry draws tracker), and ongoing social on
+          <strong>@kanadadayeniyasam</strong>. All three speak the same
+          quiet, measured voice the firm files briefs in.
+        </p>
+      </div>
+
+      <aside class="counsel">
+        <p class="counsel-head">— Counsel of record —</p>
+
+        <div class="counsel-people">
+          <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC"></div>
+          <div class="who">
+            <h4>Burcu Akyol</h4>
+            <p class="role">Principal · RCIC-IRB</p>
+            <p>Regulated Canadian Immigration Consultant in good standing with the College of Immigration and Citizenship Consultants. Adjunct professor at Queen&rsquo;s University. CAPIC Board Member.</p>
+          </div>
+        </div>
+
+        <div class="counsel-people">
+          <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/tugsel-akyol.jpg" alt="Tugsel Akyol"></div>
+          <div class="who">
+            <h4>Tugsel Akyol</h4>
+            <p class="role">Operations</p>
+            <p>Day-to-day client operations and case management.</p>
+          </div>
+        </div>
+
+        <div class="counsel-credentials">
+          <span class="seal"><b>RCIC-IRB</b> · College of ICC</span>
+          <span class="seal"><b>CAPIC</b> · Board Member</span>
+          <span class="seal">Queen&rsquo;s University · Adjunct</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       § II — EXHIBITS (the work)
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="roman">II.</span>
+      <div class="text">
+        <p class="label">Section II · Exhibits</p>
+        <h2><em>The work,</em> filed as <b>three exhibits.</b></h2>
+      </div>
+      <p class="meta"><span>Tendered</span><br><b>03 of 03</b></p>
+    </header>
+
+    <!-- EXHIBIT I — Website -->
+    <article class="exhibit">
+      <div class="ex-head">
+        <p class="ex-num">I<span>Exhibit One</span></p>
+        <div class="ex-text">
+          <p class="label">Website Design · Multilingual EN / TR</p>
+          <h3>
+            A website that <em>opens in</em> two languages and<br>
+            asks for the right thing first.
+          </h3>
+          <p class="url">northernpathways.ca/en  ·  northernpathways.ca/tr</p>
+        </div>
+        <p class="ex-tags">
+          12 routes<br>
+          <b>EN + TR</b>
+        </p>
+      </div>
+
+      <div class="ex-body">
+        <div class="copy">
+          <p>
+            A multilingual marketing site at <strong>northernpathways.ca</strong>,
+            served at <code style="font-family: var(--mono); font-size: 12px; padding: 1px 4px; background: var(--paper-3);">/en</code>
+            and <code style="font-family: var(--mono); font-size: 12px; padding: 1px 4px; background: var(--paper-3);">/tr</code>
+            with first-class language detection. The home view holds the
+            tagline in italic serif; the rest of the document is set in
+            <em>Montserrat</em>, the firm&rsquo;s locked typeface.
+          </p>
+          <p>
+            The architecture earns its keep: each service has a deep
+            page (Economic Immigration, Family Sponsorship, Temporary
+            Residence, PR Card Renewal, Citizenship), each connected to
+            its calculator or onboarding form by a single CTA.
+          </p>
+          <ul>
+            <li>i18n with Turkish-first translation review</li>
+            <li>SEO sitemap for both locales · 12 indexed pages each</li>
+            <li>Built-in onboarding form &amp; one-time payment flow</li>
+            <li>Credentials surfaced — RCIC seal, CAPIC, Queen&rsquo;s</li>
+          </ul>
+        </div>
+
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lang"><b>EN</b> / TR</span>
+          </header>
+          <div style="padding: 32px 36px 36px; background: var(--paper);">
+            <p style="font-family: var(--mono); font-weight: 500; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--red); margin-bottom: 12px;">— Northern Pathways · Immigration Consulting —</p>
+            <h2 style="font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(28px, 3.6vw, 42px); line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 14px;">
+              Guiding your Canadian<br>
+              immigration journey<br>
+              with <b style="font-style: normal; font-weight: 500;">clarity.</b>
+            </h2>
+            <p style="font-family: var(--display); font-weight: 400; font-size: 14px; line-height: 1.65; color: var(--ink-3); max-width: 56ch; margin-bottom: 22px;">
+              Eligibility assessments, strategic guidance, and legal
+              representation for permanent residency, study permits,
+              and family sponsorship — led by a Regulated Canadian
+              Immigration Consultant.
+            </p>
+            <div style="display: flex; gap: 10px; margin-bottom: 28px;">
+              <a style="padding: 10px 18px; background: var(--red); color: var(--paper); font-family: var(--mono); font-weight: 600; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;">Book a consult →</a>
+              <a style="padding: 10px 18px; border: 1px solid var(--ink); color: var(--ink); font-family: var(--mono); font-weight: 600; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;">CRS Calculator</a>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);">
+              <div style="padding: 12px 14px; border-left: 0;">
+                <p style="font-family: var(--mono); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); font-weight: 500; margin-bottom: 4px;">Tools</p>
+                <p style="font-family: var(--display); font-weight: 600; font-size: 13px; color: var(--ink);">CRS · FSWP · Draws</p>
+              </div>
+              <div style="padding: 12px 14px; border-left: 1px solid var(--rule);">
+                <p style="font-family: var(--mono); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); font-weight: 500; margin-bottom: 4px;">Languages</p>
+                <p style="font-family: var(--display); font-weight: 600; font-size: 13px; color: var(--ink);">EN / TR</p>
+              </div>
+              <div style="padding: 12px 14px; border-left: 1px solid var(--rule);">
+                <p style="font-family: var(--mono); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); font-weight: 500; margin-bottom: 4px;">Counsel</p>
+                <p style="font-family: var(--display); font-weight: 600; font-size: 13px; color: var(--ink);">RCIC-IRB</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </article>
+
+    <!-- EXHIBIT II — Calculators -->
+    <article class="exhibit">
+      <div class="ex-head">
+        <p class="ex-num">II<span>Exhibit Two</span></p>
+        <div class="ex-text">
+          <p class="label">Web Application · Calculators &amp; Tools</p>
+          <h3>
+            A pair of <em>regulatory-grade</em> calculators<br>
+            that produce a defensible PDF.
+          </h3>
+          <p class="url">northernpathways.ca/en/crs-calculator  ·  /en/fswp-calculator</p>
+        </div>
+        <p class="ex-tags">
+          2 calculators<br>
+          <b>+ PDF export</b>
+        </p>
+      </div>
+
+      <div class="ex-body">
+        <div class="copy">
+          <p>
+            Two calculators — the <strong>Comprehensive Ranking
+            System</strong> (Express Entry pool) and the
+            <strong>Six Selection Factors</strong> (FSWP eligibility
+            cutoff). Both honour IRCC&rsquo;s 2025 rules, including
+            the recent removal of arranged-employment points and the
+            return of category-based draws. Each finishes with a
+            <em>generated PDF</em> the client can take to a consult.
+          </p>
+          <p>
+            We built them in-app, in both languages, with proper
+            tooltips on every line. The total is a real CRS or FSWP
+            number, not an estimate-of-an-estimate.
+          </p>
+          <ul>
+            <li>CRS rules current to 2025 (no AE points)</li>
+            <li>FSWP cutoff 67/100 verified live</li>
+            <li>Bilingual labels &amp; tooltips · EN/TR</li>
+            <li>One-click PDF export · jsPDF + html2canvas</li>
+          </ul>
+        </div>
+
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">/en/crs-calculator</span>
+            <span class="lang"><b>EN</b> / TR</span>
+          </header>
+          <div class="calc">
+            <div class="form">
+              <div class="ftitle">
+                <p class="lbl">CRS · Step 02 of 06</p>
+                <h4>Core / Human Capital</h4>
+              </div>
+              <div class="field active">
+                <span class="key">Age<small>at point of application</small></span>
+                <span class="val">110 / 110</span>
+              </div>
+              <div class="field active">
+                <span class="key">Education<small>Master&rsquo;s degree</small></span>
+                <span class="val">135 / 150</span>
+              </div>
+              <div class="field active">
+                <span class="key">CLB / NCLC<small>English · CLB 9</small></span>
+                <span class="val">124 / 136</span>
+              </div>
+              <div class="field">
+                <span class="key">Canadian work<small>1 year</small></span>
+                <span class="val">35 / 80</span>
+              </div>
+            </div>
+
+            <div class="score">
+              <p class="lbl">Comprehensive Ranking</p>
+              <p class="total">487<small>CRS / 1200</small></p>
+              <dl>
+                <div><span>A · Core</span><b>404</b></div>
+                <div><span>B · Spouse</span><b>—</b></div>
+                <div><span>C · Skill transfer</span><b>50</b></div>
+                <div><span>D · Additional</span><b>33</b></div>
+              </dl>
+              <span class="pdf">Download PDF report ↓</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </article>
+
+    <!-- EXHIBIT III — Latest Draws + Social -->
+    <article class="exhibit">
+      <div class="ex-head">
+        <p class="ex-num">III<span>Exhibit Three</span></p>
+        <div class="ex-text">
+          <p class="label">Live Feed · Latest Express Entry Draws</p>
+          <h3>
+            A live tracker of <em>every IRCC draw,</em><br>
+            and a Turkish-language feed for the diaspora.
+          </h3>
+          <p class="url">/en/events  ·  instagram.com/kanadadayeniyasam</p>
+        </div>
+        <p class="ex-tags">
+          156+ draws indexed<br>
+          <b>· Updated weekly</b>
+        </p>
+      </div>
+
+      <div class="ex-body">
+        <div class="copy">
+          <p>
+            Every IRCC draw, indexed from 2015 to today, with the
+            invitation count, CRS minimum, programme, and category
+            tagged. The feed is what calls clients back to the site —
+            it&rsquo;s the only page on the firm&rsquo;s domain
+            that updates without a campaign behind it.
+          </p>
+          <p>
+            On <em>@kanadadayeniyasam</em> (&ldquo;Yeni yaşam&rdquo;
+            — &ldquo;new life&rdquo;), the same draws are summarised
+            in Turkish on draw day, with the firm&rsquo;s commentary
+            on what each programme means in plain language.
+          </p>
+          <ul>
+            <li>156+ draws · Express Entry &amp; PNP</li>
+            <li>Filter by programme &amp; category</li>
+            <li>Subscribe for new-draw email alerts</li>
+            <li>Mirrored on Instagram on draw day</li>
+          </ul>
+        </div>
+
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">/en/events</span>
+            <span class="lang">EN / <b>TR</b></span>
+          </header>
+          <div class="draws">
+            <header class="draws-head">
+              <h4>Latest Express Entry Draws</h4>
+              <span class="feed">Live · Updated 02 Apr 2026</span>
+            </header>
+            <table class="draws-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Programme</th>
+                  <th>Category</th>
+                  <th>Invitations</th>
+                  <th>CRS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="num">347</td>
+                  <td>02 Apr 2026</td>
+                  <td>Express Entry</td>
+                  <td><span class="pill">Healthcare</span></td>
+                  <td class="num">3,000</td>
+                  <td class="num">504</td>
+                </tr>
+                <tr>
+                  <td class="num">346</td>
+                  <td>27 Mar 2026</td>
+                  <td>Express Entry</td>
+                  <td><span class="pill">French</span></td>
+                  <td class="num">7,500</td>
+                  <td class="num">379</td>
+                </tr>
+                <tr>
+                  <td class="num">345</td>
+                  <td>20 Mar 2026</td>
+                  <td>Express Entry</td>
+                  <td><span class="pill">PNP</span></td>
+                  <td class="num">1,275</td>
+                  <td class="num">736</td>
+                </tr>
+                <tr>
+                  <td class="num">344</td>
+                  <td>13 Mar 2026</td>
+                  <td>Express Entry</td>
+                  <td><span class="pill">CEC</span></td>
+                  <td class="num">5,500</td>
+                  <td class="num">521</td>
+                </tr>
+                <tr>
+                  <td class="num">343</td>
+                  <td>06 Mar 2026</td>
+                  <td>Express Entry</td>
+                  <td><span class="pill">Trades</span></td>
+                  <td class="num">975</td>
+                  <td class="num">421</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       § III — SCOPE
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="roman">III.</span>
+      <div class="text">
+        <p class="label">Section III · Scope</p>
+        <h2><em>What we made</em>, <b>line by line.</b></h2>
+      </div>
+      <p class="meta"><span>Services rendered</span><br><b>05 of 05</b></p>
+    </header>
+
+    <table class="scope-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Service</th>
+          <th>Description</th>
+          <th>Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">01</td>
+          <td class="name">Website Design</td>
+          <td class="desc">Multilingual marketing site (EN/TR) at northernpathways.ca with deep service pages, language detection, and a single-CTA architecture pointing every page at a calculator or onboarding form.</td>
+          <td class="out"><b>12 routes · EN+TR</b>built &amp; live</td>
+        </tr>
+        <tr>
+          <td class="num">02</td>
+          <td class="name">Web Application</td>
+          <td class="desc">Two regulatory-grade calculators (CRS &amp; Six Selection Factors) with bilingual tooltips, in-app PDF export, and rules current to 2025. Onboarding form, one-time payment, processing-fees tables.</td>
+          <td class="out"><b>2 tools · 1 PDF</b>jsPDF + html2canvas</td>
+        </tr>
+        <tr>
+          <td class="num">03</td>
+          <td class="name">Latest Draws Feed</td>
+          <td class="desc">A live tracker indexing every IRCC Express Entry &amp; PNP draw with invitation count, CRS minimum, programme, and category — filterable, subscribable, and mirrored on Instagram.</td>
+          <td class="out"><b>156+ draws</b>updated weekly</td>
+        </tr>
+        <tr>
+          <td class="num">04</td>
+          <td class="name">SEO</td>
+          <td class="desc">Technical SEO audit, two-locale sitemaps, schema markup, and content briefs — both languages indexed to first-page for the firm&rsquo;s key Turkish-language queries.</td>
+          <td class="out"><b>EN + TR sitemaps</b>shipped &amp; ranking</td>
+        </tr>
+        <tr>
+          <td class="num">05</td>
+          <td class="name">Social Media</td>
+          <td class="desc">Ongoing management of <em>@kanadadayeniyasam</em> — Turkish-language Instagram for Canada-bound clients. Draw-day summaries, Reels, and consult-day takeovers.</td>
+          <td class="out"><b>@kanadadayeniyasam</b>Instagram · ongoing</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- =================================================================
+       § IV — MARKS (palette + type)
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="roman">IV.</span>
+      <div class="text">
+        <p class="label">Section IV · Marks</p>
+        <h2><em>The palette,</em> the <b>typeset.</b></h2>
+      </div>
+      <p class="meta"><span>From the brand sheet</span><br><b>04 colours · 3 voices</b></p>
+    </header>
+
+    <div class="marks-grid">
+      <div>
+        <h3>Palette · the locked four</h3>
+        <div class="palette">
+          <div class="chip red">
+            <span class="role">Primary · 12%</span>
+            <div><p class="name">Maple Red</p><p class="hex">#B92025</p></div>
+          </div>
+          <div class="chip white">
+            <span class="role">Surface · 60%</span>
+            <div><p class="name">White</p><p class="hex">#FFFFFF</p></div>
+          </div>
+          <div class="chip ivory">
+            <span class="role">Tonal · 18%</span>
+            <div><p class="name">Off-white</p><p class="hex">#F9F9F9</p></div>
+          </div>
+          <div class="chip ink">
+            <span class="role">Ink · 10%</span>
+            <div><p class="name">Charcoal</p><p class="hex">#2C2B2B</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Voice · serif + sans + mono</h3>
+        <div class="typestack">
+          <div class="typerow">
+            <p class="tlbl">Display · Cormorant Garamond italic 500</p>
+            <p class="tspec h">Guiding your journey with clarity.</p>
+          </div>
+          <div class="typerow">
+            <p class="tlbl">Body · Montserrat 400</p>
+            <p class="tspec b">Eligibility assessments, strategic guidance, and legal representation for permanent residency, study permits, and family sponsorship.</p>
+          </div>
+          <div class="typerow">
+            <p class="tlbl">Marginalia · JetBrains Mono 500</p>
+            <p class="tspec l">RCIC-IRB · CICC · Toronto · MMXXVI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       § V — PROOF
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="roman">V.</span>
+      <div class="text">
+        <p class="label">Section V · Proof</p>
+        <h2><em>What stands for</em> the <b>work.</b></h2>
+      </div>
+      <p class="meta"><span>Credentials &amp; voice</span><br><b>4 seals</b></p>
+    </header>
+
+    <div class="proof">
+      <p class="pull">
+        Treating clients as <em>individuals,</em> not case numbers — with
+        transparency about fees, realistic expectations, and the kind of
+        ethical guidance a regulated body requires.
+      </p>
+      <p class="pull-by">— <b>Brand voice</b> · Northern Pathways · 2026</p>
+
+      <div class="seal-row">
+        <div class="seal-cell">
+          <img src="../../../public/portfolio/northern-pathways/credentials/rcic.png" alt="RCIC seal">
+          <p class="seal-label">College of ICC</p>
+          <p class="seal-name">RCIC-IRB</p>
+        </div>
+        <div class="seal-cell">
+          <img src="../../../public/portfolio/northern-pathways/credentials/capic.png" alt="CAPIC logo">
+          <p class="seal-label">Board Member</p>
+          <p class="seal-name">CAPIC</p>
+        </div>
+        <div class="seal-cell">
+          <span style="font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 32px; color: var(--red);">Q</span>
+          <p class="seal-label">Adjunct Professor</p>
+          <p class="seal-name">Queen&rsquo;s University</p>
+        </div>
+        <div class="seal-cell">
+          <span style="font-family: var(--mono); font-weight: 600; font-size: 22px; color: var(--red);">@</span>
+          <p class="seal-label">Diaspora reach</p>
+          <p class="seal-name">@kanadadayeniyasam</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end">
+    <p class="lbl">— Filed in good faith —</p>
+    <h3>
+      Set the next <b>matter</b><br>
+      with <em>FrameFlow.</em>
+    </h3>
+    <p>
+      We bring a season&rsquo;s worth of restraint, precision, and craft
+      to regulated professional services. If your firm holds a record
+      worth keeping, we&rsquo;d be glad to file it.
+    </p>
+    <a class="cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="signature">
+    <span>Filed by · <b>FrameFlow</b> · Toronto · MMXXVI</span>
+    <span class="x">FrameFlow ✕ Northern Pathways</span>
+    <span class="right">Reel 019 · <b>The Dossier</b></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2009 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adrian's Wasaga Beach — The Workbook (FrameFlow / Prototype 05)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · ADRIAN'S WASAGA BEACH
+       Prototype 05 — "The Workbook" (process-led portfolio)
+
+       Reads like a studio process journal — handwritten margin notes,
+       index tabs along the right edge, page numbers, scrappy
+       annotations on the brand sheet, contact-sheet → selects →
+       finals workflow for photography, template-system breakdown
+       for social, and a sitemap diagram + page screenshots for the
+       website. The work shown alongside the working notes.
+    ==================================================================== */
+
+    :root {
+      --sand:       #ecd798;
+      --sand-d:     #d8c280;
+      --sand-l:     #f5e6b8;
+      --paper:      #fdf9ec;
+      --paper-2:    #f7eed8;
+      --seafoam:    #98e5d8;
+      --orange:     #f9a21b;
+      --orange-d:   #d8830a;
+      --gray:       #353747;
+      --gray-2:     #4a4d5e;
+      --gray-3:     #7a7e90;
+      --rule:       rgba(53, 55, 71, 0.18);
+      --hand:       #c12c2c;
+
+      --display:   "Montserrat", system-ui, sans-serif;
+      --body:      "Quicksand", system-ui, sans-serif;
+      --hand-font: "Caveat", cursive;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--sand); color: var(--gray); overflow-x: hidden; }
+    body {
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.35;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0 0.2  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .ff-rail {
+      position: relative;
+      z-index: 5;
+      padding: 12px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ff-rail b { color: var(--orange); }
+    .ff-rail .center { letter-spacing: 0.5em; color: var(--seafoam); }
+
+    /* ============================================================
+       INDEX TABS — right edge of every page
+    ============================================================ */
+    .tabs {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      z-index: 40;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .tabs a {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 14px 8px;
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      border-right: 0;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray);
+      box-shadow: -4px 4px 0 var(--gray);
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .tabs a:hover { background: var(--orange); color: var(--gray); transform: translateX(-4px); }
+    .tabs a.t-photo:hover { background: var(--seafoam); }
+    @media (max-width: 980px) { .tabs { display: none; } }
+
+    /* ============================================================
+       PAGE BASE — every "page" of the workbook
+    ============================================================ */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      position: relative;
+    }
+    .page-num {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+    .page-num b { color: var(--gray); }
+    .page-divider {
+      width: 100%;
+      height: 2px;
+      background-image: repeating-linear-gradient(to right, var(--gray) 0 8px, transparent 8px 16px);
+      margin: 0;
+    }
+
+    /* margin scribble — handwritten note */
+    .scribble {
+      font-family: var(--hand-font);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--hand);
+      line-height: 1.1;
+      transform: rotate(-1.5deg);
+      display: inline-block;
+    }
+    .scribble small {
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: var(--gray-2);
+      margin-top: 4px;
+      transform: rotate(0deg);
+      font-style: normal;
+    }
+
+    /* ============================================================
+       COVER
+    ============================================================ */
+    .cover {
+      padding: 100px 48px 60px;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .cover-block {
+      background: var(--paper);
+      border: 3px solid var(--gray);
+      box-shadow: 12px 12px 0 var(--orange);
+      padding: 56px 56px 48px;
+      max-width: 880px;
+      position: relative;
+    }
+    .cover-block::before {
+      content: "";
+      position: absolute;
+      top: 24px; bottom: 24px; left: 36px;
+      width: 3px;
+      background: repeating-linear-gradient(to bottom, var(--orange) 0 14px, transparent 14px 22px);
+    }
+    .cover-stamp {
+      position: absolute;
+      top: -14px;
+      right: 32px;
+      padding: 8px 18px;
+      background: var(--gray);
+      color: var(--orange);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+    }
+    .cover-block .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 24px;
+    }
+    .cover-block h1 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(48px, 7vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 20px;
+    }
+    .cover-block h1 em { font-style: italic; color: var(--orange-d); }
+    .cover-block .deck {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--gray-2);
+      max-width: 50ch;
+      margin-bottom: 24px;
+    }
+    .cover-block .meta-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 2px solid var(--gray);
+      border-bottom: 2px solid var(--gray);
+    }
+    .cover-block .meta-row > div {
+      padding: 14px 14px;
+      border-left: 1px solid var(--rule);
+    }
+    .cover-block .meta-row > div:first-child { border-left: 0; padding-left: 0; }
+    .cover-block .meta-row dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 4px;
+    }
+    .cover-block .meta-row dd {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--gray);
+    }
+    .cover-scribble {
+      position: absolute;
+      bottom: -32px;
+      right: 80px;
+      transform: rotate(-3deg);
+    }
+
+    /* ============================================================
+       PAGE 02 — THE BRIEF (handwritten note)
+    ============================================================ */
+    .brief-page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .brief-page h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 56px);
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .brief-page h2 em { font-style: italic; color: var(--orange-d); }
+    .brief-page .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 16px;
+    }
+    .brief-note {
+      margin-top: 36px;
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 8px 8px 0 var(--orange);
+      padding: 32px 36px 36px;
+      position: relative;
+      transform: rotate(-0.6deg);
+      max-width: 640px;
+    }
+    .brief-note::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 24px;
+      background: rgba(152, 229, 216, 0.78);
+    }
+    .brief-note .from {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--rule);
+      margin-bottom: 16px;
+    }
+    .brief-note p {
+      font-family: var(--hand-font);
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .brief-note p strong { color: var(--hand); font-weight: 700; }
+    .brief-note .sig {
+      margin-top: 18px;
+      font-family: var(--hand-font);
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--hand);
+      transform: rotate(-1deg);
+      display: inline-block;
+    }
+    .brief-note .sig small {
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-top: 6px;
+      transform: rotate(0deg);
+    }
+    .brief-page .response {
+      margin-top: 56px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: 0;
+    }
+    .brief-page .response .from {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 14px;
+    }
+    .brief-page .response h3 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .brief-page .response h3 em { font-style: italic; color: var(--orange-d); }
+    .brief-page .response p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--gray-2);
+      margin-bottom: 0.9em;
+    }
+    .brief-page .response p strong { color: var(--gray); font-weight: 700; }
+
+    /* ============================================================
+       PAGE 03 — THE BRAND KIT (annotated)
+    ============================================================ */
+    .brandkit {
+      background: var(--paper);
+      border-top: 3px solid var(--gray);
+      border-bottom: 3px solid var(--gray);
+    }
+    .brandkit .page { padding: 80px 48px; }
+    .brandkit-head { margin-bottom: 36px; }
+    .brandkit-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 14px;
+    }
+    .brandkit-head h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 56px);
+      letter-spacing: -0.02em;
+      color: var(--gray);
+    }
+    .brandkit-head h2 em { font-style: italic; color: var(--orange-d); }
+    .brandkit-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    @media (max-width: 880px) { .brandkit-grid { grid-template-columns: 1fr; gap: 36px; } }
+
+    .palette-strip {
+      display: flex;
+      flex-direction: column;
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      position: relative;
+    }
+    .palette-strip > div {
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 2px solid var(--gray);
+    }
+    .palette-strip > div:last-child { border-bottom: 0; }
+    .palette-strip .sand { background: var(--sand); }
+    .palette-strip .seafoam { background: var(--seafoam); }
+    .palette-strip .orange { background: var(--orange); }
+    .palette-strip .gray { background: var(--gray); color: var(--paper); }
+    .palette-strip .name {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--gray);
+    }
+    .palette-strip .gray .name { color: var(--paper); }
+    .palette-strip .hex {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+    }
+    .palette-strip .gray .hex { color: var(--paper); }
+    .palette-strip .role {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray);
+      opacity: 0.7;
+    }
+    .palette-strip .gray .role { color: var(--paper); opacity: 0.7; }
+    .palette-strip .annotation {
+      position: absolute;
+      font-family: var(--hand-font);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--hand);
+      transform: rotate(-2deg);
+      pointer-events: none;
+    }
+    .palette-strip .annotation::before {
+      content: "← ";
+      color: var(--hand);
+    }
+    .palette-strip .a1 { right: -180px; top: 16px; }
+    .palette-strip .a2 { right: -200px; top: 80px; }
+    .palette-strip .a3 { right: -190px; top: 144px; }
+    .palette-strip .a4 { right: -170px; top: 208px; }
+    @media (max-width: 1180px) { .palette-strip .annotation { display: none; } }
+
+    .type-block {
+      padding: 24px 28px;
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+    }
+    .type-block .row {
+      padding: 16px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .type-block .row:first-child { border-top: 0; padding-top: 0; }
+    .type-block .row .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 6px;
+    }
+    .type-block .row .specimen.h {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      letter-spacing: -0.015em;
+      color: var(--gray);
+      line-height: 1;
+    }
+    .type-block .row .specimen.b {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--gray);
+    }
+    .type-block .row .specimen.l {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .type-block .row .annotation {
+      font-family: var(--hand-font);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--hand);
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       PAGE 04 — PHOTOGRAPHY (contact sheet → selects → final)
+    ============================================================ */
+    .deliverable-tab {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px 0;
+    }
+    .deliverable-tab h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 80px);
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      line-height: 0.95;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 3px solid var(--gray);
+    }
+    .deliverable-tab h2 .num {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 64px;
+      color: var(--orange-d);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+    }
+    .deliverable-tab h2 em { font-style: italic; color: var(--orange-d); font-weight: 800; }
+    .deliverable-tab .meta {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-top: 18px;
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .deliverable-tab .meta b { color: var(--orange-d); }
+
+    .photo-flow {
+      max-width: 1280px;
+      margin: 48px auto 0;
+      padding: 0 48px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      position: relative;
+    }
+    .photo-flow::before {
+      content: "→ → →";
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--hand-font);
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--orange-d);
+      letter-spacing: 0.5em;
+    }
+    .flow-step {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      padding: 22px;
+      position: relative;
+    }
+    .flow-step .num {
+      position: absolute;
+      top: -14px;
+      left: 18px;
+      padding: 4px 12px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .flow-step h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gray);
+      margin: 6px 0 12px;
+    }
+    .flow-step h4 em { font-style: italic; color: var(--orange-d); }
+    .flow-step .stat {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-bottom: 14px;
+    }
+    .flow-step .stat b {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--gray);
+    }
+    .flow-step .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .flow-step .grid figure {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--sand-d);
+      position: relative;
+    }
+    .flow-step .grid img { width: 100%; height: 100%; object-fit: cover; }
+    .flow-step .grid figure.x::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      background-image:
+        linear-gradient(to bottom right, transparent 47%, var(--hand) 48% 52%, transparent 53%),
+        linear-gradient(to bottom left, transparent 47%, var(--hand) 48% 52%, transparent 53%);
+      opacity: 0.7;
+    }
+    .flow-step .grid figure.kept::after {
+      content: "✓";
+      position: absolute;
+      top: 2px; right: 4px;
+      font-family: var(--hand-font);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--hand);
+    }
+    .flow-step.final .ph {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--sand-d);
+      margin-bottom: 10px;
+    }
+    .flow-step.final .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .flow-step .annotation {
+      font-family: var(--hand-font);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--hand);
+      line-height: 1.2;
+      margin-top: 6px;
+      transform: rotate(-1deg);
+      display: inline-block;
+    }
+    @media (max-width: 980px) {
+      .photo-flow { grid-template-columns: 1fr; gap: 36px; }
+      .photo-flow::before { display: none; }
+    }
+
+    .photo-finals {
+      max-width: 1280px;
+      margin: 0 auto 80px;
+      padding: 0 48px;
+    }
+    .photo-finals .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 16px;
+    }
+    .photo-finals h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .photo-finals h3 em { font-style: italic; color: var(--orange-d); }
+    .photo-finals-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+    }
+    .photo-finals-grid figure {
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--sand-d);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .photo-finals-grid figure:hover { transform: translateY(-3px); }
+    .photo-finals-grid img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-finals-grid .num {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      padding: 2px 6px;
+      background: rgba(53, 55, 71, 0.78);
+      color: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+    }
+    @media (max-width: 980px) { .photo-finals-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 600px) { .photo-finals-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    /* ============================================================
+       PAGE 05 — SOCIAL CAMPAIGN (templates → posts)
+    ============================================================ */
+    .social-page {
+      background: var(--seafoam);
+      border-top: 3px solid var(--gray);
+      border-bottom: 3px solid var(--gray);
+    }
+
+    .social-flow {
+      max-width: 1280px;
+      margin: 48px auto 0;
+      padding: 0 48px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .templates-card {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      padding: 24px;
+    }
+    .templates-card h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .templates-card h4 small {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--orange-d);
+    }
+    .templates-card .templates {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .tpl {
+      aspect-ratio: 1 / 1;
+      background: var(--sand-l);
+      border: 2px solid var(--gray);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .tpl .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      color: var(--orange-d);
+    }
+    .tpl .name {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--gray);
+      line-height: 1.05;
+    }
+    .tpl.t-postcard::before {
+      content: ""; position: absolute; inset: 4px;
+      border: 1px solid var(--gray);
+    }
+    .tpl.t-polaroid { background: var(--paper); }
+    .tpl.t-polaroid::after {
+      content: ""; position: absolute;
+      top: 6px; left: 6px;
+      width: calc(100% - 12px); height: 55%;
+      background: var(--gray);
+      opacity: 0.18;
+    }
+    .tpl.t-quote { background: var(--orange); }
+    .tpl.t-quote::before {
+      content: "“";
+      position: absolute;
+      top: -2px; right: 8px;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 42px;
+      color: var(--gray);
+      line-height: 0.5;
+    }
+    .tpl.t-headline { background: var(--gray); }
+    .tpl.t-headline .num { color: var(--orange); }
+    .tpl.t-headline .name { color: var(--paper); }
+    .tpl.t-aerial::before {
+      content: ""; position: absolute; inset: 6px;
+      background-image:
+        linear-gradient(to right, var(--gray) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, var(--gray) 0 1px, transparent 1px 100%);
+      background-size: 14px 14px;
+      opacity: 0.12;
+    }
+    .tpl.t-mask { background: var(--gray); overflow: hidden; }
+    .tpl.t-mask .name { color: var(--orange); }
+    .tpl.t-mask::after {
+      content: "STAY";
+      position: absolute;
+      bottom: 4px; right: 6px;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 24px;
+      color: rgba(249, 162, 27, 0.4);
+      letter-spacing: -0.04em;
+    }
+
+    .schedule-card {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      padding: 24px;
+    }
+    .schedule-card h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .schedule {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .schedule .day {
+      aspect-ratio: 1 / 1;
+      background: var(--sand-l);
+      border: 1px solid var(--gray);
+      padding: 6px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      color: var(--gray);
+      letter-spacing: 0.04em;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .schedule .day.post { background: var(--orange); }
+    .schedule .day .d {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .schedule .day.post .d { color: var(--gray); }
+    .schedule .day .t {
+      font-family: var(--hand-font);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--gray);
+      line-height: 1.05;
+    }
+    .schedule-card .legend {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      display: flex;
+      gap: 16px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .schedule-card .legend span::before {
+      content: "■ ";
+      color: var(--orange);
+      letter-spacing: 0;
+    }
+    .schedule-card .legend .none::before { color: var(--sand); }
+    @media (max-width: 880px) {
+      .social-flow { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    .social-output {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .social-output .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .social-output h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .social-output h3 em { font-style: italic; color: var(--orange-d); }
+    .social-output-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .social-output-grid figure {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--gray);
+      transition: transform 0.4s;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--gray);
+    }
+    .social-output-grid figure:hover { transform: translateY(-3px); }
+    .social-output-grid img { width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 980px) { .social-output-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 540px) { .social-output-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ============================================================
+       PAGE 06 — WEBSITE BUILD (sitemap + browser frames)
+    ============================================================ */
+    .website-page .page { padding: 80px 48px; }
+
+    .web-flow {
+      max-width: 1280px;
+      margin: 48px auto 0;
+      padding: 0 48px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 32px;
+    }
+    .sitemap-card {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--orange);
+      padding: 28px;
+      position: relative;
+    }
+    .sitemap-card h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .sitemap-card h4 small {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--orange-d);
+    }
+    .sitemap-tree {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--gray);
+      line-height: 2.2;
+    }
+    .sitemap-tree .node {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--sand-l);
+      border: 1px solid var(--gray);
+      margin-right: 4px;
+    }
+    .sitemap-tree .node.root { background: var(--orange); }
+    .sitemap-tree .node.live::after {
+      content: " ●";
+      color: var(--gray);
+    }
+    .sitemap-tree ul { list-style: none; padding-left: 22px; line-height: 2.4; }
+    .sitemap-tree ul li::before { content: "└ "; color: var(--orange-d); }
+
+    .browser-frame {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.06),
+        12px 14px 0 var(--gray);
+      overflow: hidden;
+    }
+    .browser-chrome {
+      background: var(--sand-d);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-bottom: 2px solid var(--gray);
+    }
+    .browser-chrome .dots { display: flex; gap: 5px; }
+    .browser-chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gray);
+      opacity: 0.4;
+    }
+    .browser-chrome .dots span:first-child { background: var(--orange); opacity: 1; }
+    .browser-chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--gray);
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--gray);
+    }
+    .browser-chrome .url::before {
+      content: "🔒 ";
+      font-size: 10px;
+      opacity: 0.6;
+    }
+    .browser-chrome .live {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .browser-chrome .live::before { content: "● "; }
+
+    .site-mockup {
+      padding: 0;
+    }
+    .site-mockup .nav {
+      padding: 14px 22px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .site-mockup .nav .logo {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .site-mockup .nav .logo small {
+      display: block;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--gray-3);
+      margin-top: 2px;
+    }
+    .site-mockup .nav .menu {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .site-mockup .nav .book {
+      padding: 6px 12px;
+      background: var(--orange);
+      color: var(--gray);
+      font-weight: 800;
+      letter-spacing: 0.22em;
+    }
+    .site-hero-mock {
+      position: relative;
+      aspect-ratio: 16 / 8;
+      overflow: hidden;
+      background: var(--gray);
+    }
+    .site-hero-mock img { width: 100%; height: 100%; object-fit: cover; }
+    .site-hero-mock::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(53,55,71,0.85));
+    }
+    .site-hero-mock .text {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      right: 22px;
+      z-index: 2;
+      color: var(--paper);
+    }
+    .site-hero-mock .text h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .site-hero-mock .text p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 12px;
+      max-width: 56ch;
+      color: rgba(253, 249, 236, 0.9);
+      margin-bottom: 12px;
+    }
+    .site-hero-mock .text .book {
+      display: inline-block;
+      padding: 7px 16px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 880px) {
+      .web-flow { grid-template-columns: 1fr; gap: 28px; }
+      .site-mockup .nav .menu { display: none; }
+    }
+
+    .web-pages {
+      max-width: 1280px;
+      margin: 0 auto 60px;
+      padding: 0 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .mini-frame {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 4px 4px 0 var(--gray);
+      overflow: hidden;
+      transition: transform 0.4s;
+    }
+    .mini-frame:hover { transform: translateY(-4px); }
+    .mini-chrome {
+      background: var(--sand-d);
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--gray);
+    }
+    .mini-chrome .dots { display: flex; gap: 3px; }
+    .mini-chrome .dots span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--gray);
+      opacity: 0.4;
+    }
+    .mini-chrome .dots span:first-child { background: var(--orange); opacity: 1; }
+    .mini-chrome .url {
+      flex: 1;
+      padding: 2px 6px;
+      background: var(--paper);
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 8px;
+      color: var(--gray);
+      letter-spacing: 0;
+      border: 1px solid var(--gray);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mini-content {
+      aspect-ratio: 4 / 3;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+    }
+    .mini-content .ph {
+      flex: 1;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .mini-content .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-content .body {
+      padding: 8px 10px 10px;
+    }
+    .mini-content .name {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 11px;
+      color: var(--gray);
+      line-height: 1.1;
+    }
+    .mini-content .meta {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 9px;
+      color: var(--gray-2);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+    @media (max-width: 980px) { .web-pages { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .web-pages { grid-template-columns: 1fr; } }
+
+    /* live cta */
+    .live-cta {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 36px;
+      background: var(--orange);
+      border: 2px solid var(--gray);
+      box-shadow: 8px 8px 0 var(--gray);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .live-cta .text {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 32px);
+      letter-spacing: -0.015em;
+      color: var(--gray);
+      line-height: 1.1;
+    }
+    .live-cta .text small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 13px;
+      color: rgba(53, 55, 71, 0.78);
+      margin-top: 4px;
+    }
+    .live-cta .visit {
+      padding: 14px 22px;
+      background: var(--gray);
+      color: var(--orange);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 720px) {
+      .live-cta { grid-template-columns: 1fr; padding: 22px; }
+    }
+
+    /* ============================================================
+       PAGE 07 — RESULTS (reviews + designed-by-FrameFlow)
+    ============================================================ */
+    .results {
+      background: var(--gray);
+      color: var(--sand-l);
+      border-top: 3px solid var(--gray);
+      border-bottom: 3px solid var(--gray);
+      padding: 80px 48px;
+      position: relative;
+    }
+    .results::before, .results::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle, var(--sand) 5px, transparent 5.5px);
+      background-size: 22px 14px;
+      background-position: center;
+      background-repeat: repeat-x;
+    }
+    .results::before { top: -1px; }
+    .results::after  { bottom: -1px; }
+
+    .results-inner { max-width: 1280px; margin: 0 auto; }
+    .results h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.02em;
+      color: var(--paper);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .results h2 em { font-style: italic; color: var(--orange); }
+    .results .label {
+      text-align: center;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 18px;
+    }
+    .results .stars {
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      margin-bottom: 56px;
+    }
+    .results .stars b {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      color: var(--paper);
+      margin-left: 12px;
+      vertical-align: 4px;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    .review-card {
+      background: var(--paper);
+      color: var(--gray);
+      padding: 24px 26px;
+      box-shadow: 4px 6px 14px -4px rgba(0, 0, 0, 0.5);
+      transform: rotate(-0.7deg);
+    }
+    .review-card:nth-child(even) { transform: rotate(0.8deg); }
+    .review-card .stars {
+      color: var(--orange);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .review-card .stars b {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+      margin-left: 10px;
+      vertical-align: 2px;
+    }
+    .review-card .quote {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .review-card .by {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .review-card .by b { color: var(--gray); }
+    @media (max-width: 720px) { .reviews-grid { grid-template-columns: 1fr; } }
+
+    .ff-credit {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 28px 32px;
+      border: 2px dashed var(--orange);
+      text-align: center;
+    }
+    .ff-credit .label {
+      text-align: center;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+    .ff-credit p {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.4;
+      color: var(--paper);
+    }
+    .ff-credit p b { font-weight: 900; color: var(--orange); }
+    .ff-credit .small {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 12px;
+      color: rgba(245, 230, 184, 0.7);
+      margin-top: 8px;
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      padding: 100px 32px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 20px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 22px;
+    }
+    .end h3 em { font-style: italic; color: var(--orange-d); }
+    .end p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      color: var(--gray-2);
+      max-width: 50ch;
+      margin: 0 auto 28px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 28px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 3px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cta:hover { transform: translateY(-3px); box-shadow: 9px 9px 0 var(--gray); }
+
+    .foot {
+      padding: 22px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .foot .ce { text-align: center; color: var(--orange); letter-spacing: 0.5em; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--seafoam); }
+    .foot b { color: var(--orange); }
+    @media (max-width: 720px) {
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="ff-rail">
+    <span>FrameFlow · Reel <b>008</b></span>
+    <span class="center">ADRIAN'S · WORKBOOK</span>
+    <span style="text-align: right">Project File · 2026</span>
+  </header>
+
+  <!-- index tabs -->
+  <nav class="tabs" aria-label="Workbook tabs">
+    <a href="#brief" class="t-brief">01 · Brief</a>
+    <a href="#brand" class="t-brand">02 · Brand</a>
+    <a href="#photo" class="t-photo">03 · Photo</a>
+    <a href="#social" class="t-social">04 · Social</a>
+    <a href="#web" class="t-web">05 · Web</a>
+    <a href="#proof" class="t-proof">06 · Proof</a>
+  </nav>
+
+  <!-- =================================================================
+       COVER
+  ==================================================================== -->
+  <section class="cover">
+    <div class="cover-block">
+      <span class="cover-stamp">Project File · 2026</span>
+      <p class="label">Reel 008 · Adrian's Wasaga Beach</p>
+      <h1>The <em>Workbook.</em></h1>
+      <p class="deck">A studio process journal — what we worked from, what we shipped, and how it landed. Photography, social, and a website that's been live since spring.</p>
+      <dl class="meta-row">
+        <div><dt>Brief in</dt><dd>Mar 2026</dd></div>
+        <div><dt>Site live</dt><dd>Apr 2026</dd></div>
+        <div><dt>Posts</dt><dd>35 · Q2–Q3</dd></div>
+        <div><dt>Plates</dt><dd>16 of 110</dd></div>
+      </dl>
+    </div>
+    <div class="cover-scribble scribble">
+      everything we did, page by page →
+      <small>tabs on the right →</small>
+    </div>
+  </section>
+
+  <div class="page-divider"></div>
+
+  <!-- =================================================================
+       PAGE 01 — THE BRIEF
+  ==================================================================== -->
+  <section id="brief" class="brief-page reveal">
+    <span class="page-num">Page <b>01</b> · The brief</span>
+    <p class="label">— from the client —</p>
+    <h2>The brief was <em>two sentences.</em></h2>
+
+    <article class="brief-note">
+      <p class="from">Note from the hostess · 11 Mar 2026</p>
+      <p>We need our two locations to feel like <strong>one welcome.</strong> Pretty pictures. Posts that book guests. A site that opens on a phone and doesn't make my mum confused.</p>
+      <p>If you can do all three, we'd love to work with you.</p>
+      <span class="sig">— Dilber<small>Hostess · Adrian's Wasaga Beach</small></span>
+    </article>
+
+    <div class="response">
+      <p class="from">→ The reply, in three lines</p>
+      <h3>Photography. Social. <em>Website.</em></h3>
+      <p>One shoot in spring, one in summer. <strong>35 social posts</strong> across the season, all from a single template system the hostess can approve in 30 seconds. A booking-first website at <strong>adrianswasagabeach.ca</strong>, live by the long weekend.</p>
+      <p>The pages that follow show how each one came together.</p>
+    </div>
+  </section>
+
+  <div class="page-divider"></div>
+
+  <!-- =================================================================
+       PAGE 02 — THE BRAND KIT (annotated)
+  ==================================================================== -->
+  <section id="brand" class="brandkit reveal">
+    <div class="page">
+      <span class="page-num">Page <b>02</b> · Brand kit</span>
+      <header class="brandkit-head">
+        <p class="label">— The locked palette + type —</p>
+        <h2>The kit we worked <em>from.</em></h2>
+      </header>
+
+      <div class="brandkit-grid">
+        <div class="palette-strip">
+          <div class="sand"><span class="role">Surface</span><span class="hex">#ECD798</span><span class="name">Sand</span></div>
+          <div class="seafoam"><span class="role">Tonal</span><span class="hex">#98E5D8</span><span class="name">Seafoam</span></div>
+          <div class="orange"><span class="role">Accent</span><span class="hex">#F9A21B</span><span class="name">Live Orange</span></div>
+          <div class="gray"><span class="role">Ink</span><span class="hex">#353747</span><span class="name">Dark Gray</span></div>
+          <span class="annotation a1 scribble">page surface</span>
+          <span class="annotation a2 scribble">tonal sections</span>
+          <span class="annotation a3 scribble">CTAs only!</span>
+          <span class="annotation a4 scribble">all body text</span>
+        </div>
+
+        <div class="type-block">
+          <div class="row">
+            <p class="label">Header · Montserrat Black 900</p>
+            <p class="specimen h">Steps from the sand.</p>
+            <p class="annotation">use sparingly, big &amp; loud</p>
+          </div>
+          <div class="row">
+            <p class="label">Body · Quicksand 500</p>
+            <p class="specimen b">Boutique cabin stays just off the beach in Wasaga Beach, Ontario.</p>
+            <p class="annotation">comfortable + warm — never bold</p>
+          </div>
+          <div class="row">
+            <p class="label">Label · Montserrat Bold tracked</p>
+            <p class="specimen l">Wasaga Beach · Ontario · MMXXVI</p>
+            <p class="annotation">eyebrows, badges, stamps</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PAGE 03 — PHOTOGRAPHY
+  ==================================================================== -->
+  <section id="photo">
+    <div class="deliverable-tab reveal">
+      <span class="page-num" style="position: static; display: block; margin-bottom: 14px;">Page <b>03</b> · Photography</span>
+      <h2>
+        <span class="num">01</span>
+        <span>Photography — <em>contact sheet to print.</em></span>
+      </h2>
+      <p class="meta">
+        <span><b>2</b> shoots · spring + summer</span>
+        <span><b>110</b> frames made</span>
+        <span><b>16</b> selects kept</span>
+        <span><b>5</b> categories — sunset · day · aerial · interior · beach</span>
+      </p>
+    </div>
+
+    <section class="photo-flow reveal">
+      <article class="flow-step">
+        <span class="num">Step 01</span>
+        <h4>The <em>contact sheet</em></h4>
+        <p class="stat"><b>110</b> frames brought back from two shoots</p>
+        <div class="grid">
+          <figure class="x"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""></figure>
+          <figure class="kept"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></figure>
+          <figure class="x"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/12-bedroom-white-modern.jpg" alt=""></figure>
+          <figure class="x"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/14-kitchen-close.jpg" alt=""></figure>
+          <figure class="kept"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt=""></figure>
+          <figure class="x"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/05-courtyard-day-firepit.jpg" alt=""></figure>
+          <figure class="kept"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""></figure>
+          <figure class="x"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/16-living-kitchen-combo.jpg" alt=""></figure>
+        </div>
+        <p class="annotation">red X = cut · ✓ = kept</p>
+      </article>
+
+      <article class="flow-step">
+        <span class="num">Step 02</span>
+        <h4>The <em>selects</em></h4>
+        <p class="stat"><b>16</b> selects across 5 categories</p>
+        <div class="grid">
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/08-aerial-top-down.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt=""></figure>
+          <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""></figure>
+        </div>
+        <p class="annotation">categorised · captioned · graded</p>
+      </article>
+
+      <article class="flow-step final">
+        <span class="num">Step 03</span>
+        <h4>The <em>print</em></h4>
+        <p class="stat">Hero plate 01 · <b>F4.0 · 1/200</b></p>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></div>
+        <p class="annotation">used on the website hero, social post 12, &amp; the postcard set</p>
+      </article>
+    </section>
+
+    <div class="photo-finals">
+      <p class="label">All 16 finals · pinned</p>
+      <h3>The <em>full set,</em> in order shipped.</h3>
+      <div class="photo-finals-grid">
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""><span class="num">01</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt=""><span class="num">02</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/03-courtyard-wide-sunset.jpg" alt=""><span class="num">03</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""><span class="num">04</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/05-courtyard-day-firepit.jpg" alt=""><span class="num">05</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""><span class="num">06</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""><span class="num">07</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/08-aerial-top-down.jpg" alt=""><span class="num">08</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/09-aerial-property-context.jpg" alt=""><span class="num">09</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/10-beach-wasaga-aerial.jpg" alt=""><span class="num">10</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt=""><span class="num">11</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/12-bedroom-white-modern.jpg" alt=""><span class="num">12</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/13-kitchen-with-bedroom.jpg" alt=""><span class="num">13</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/14-kitchen-close.jpg" alt=""><span class="num">14</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""><span class="num">15</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/16-living-kitchen-combo.jpg" alt=""><span class="num">16</span></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PAGE 04 — SOCIAL CAMPAIGN
+  ==================================================================== -->
+  <section id="social" class="social-page">
+    <div class="deliverable-tab reveal">
+      <span class="page-num" style="position: static; display: block; margin-bottom: 14px;">Page <b>04</b> · Social media</span>
+      <h2>
+        <span class="num">02</span>
+        <span>Social — <em>system before posts.</em></span>
+      </h2>
+      <p class="meta">
+        <span><b>6</b> templates</span>
+        <span><b>35</b> posts shipped</span>
+        <span><b>Q2–Q3</b> 2026</span>
+        <span><b>≤30s</b> approval per post</span>
+      </p>
+    </div>
+
+    <section class="social-flow reveal">
+      <article class="templates-card">
+        <h4>The system <small>6 templates · 1 brand</small></h4>
+        <div class="templates">
+          <div class="tpl t-postcard"><span class="num">T.01</span><span class="name">Postcard</span></div>
+          <div class="tpl t-polaroid"><span class="num">T.02</span><span class="name">Polaroid</span></div>
+          <div class="tpl t-quote"><span class="num">T.03</span><span class="name">Quote</span></div>
+          <div class="tpl t-headline"><span class="num">T.04</span><span class="name">Headline</span></div>
+          <div class="tpl t-aerial"><span class="num">T.05</span><span class="name">Aerial</span></div>
+          <div class="tpl t-mask"><span class="num">T.06</span><span class="name">Mask</span></div>
+        </div>
+      </article>
+
+      <article class="schedule-card">
+        <h4>The schedule <span style="font-family: var(--display); font-weight: 700; font-size: 9px; letter-spacing: 0.28em; color: var(--orange-d);">JULY · WK 02</span></h4>
+        <div class="schedule">
+          <div class="day"><span class="d">M</span></div>
+          <div class="day post"><span class="d">T 09</span><span class="t">T.04 · Now booking</span></div>
+          <div class="day"><span class="d">W</span></div>
+          <div class="day post"><span class="d">T 11</span><span class="t">T.05 · Aerial</span></div>
+          <div class="day"><span class="d">F</span></div>
+          <div class="day post"><span class="d">S 13</span><span class="t">T.01 · Postcard</span></div>
+          <div class="day"><span class="d">S</span></div>
+          <div class="day"><span class="d">M</span></div>
+          <div class="day post"><span class="d">T 16</span><span class="t">T.03 · Quote</span></div>
+          <div class="day"><span class="d">W</span></div>
+          <div class="day post"><span class="d">T 18</span><span class="t">T.02 · Polaroid</span></div>
+          <div class="day"><span class="d">F</span></div>
+          <div class="day"><span class="d">S</span></div>
+          <div class="day"><span class="d">S</span></div>
+        </div>
+        <div class="legend">
+          <span>Post day</span>
+          <span class="none">No post</span>
+        </div>
+      </article>
+    </section>
+
+    <div class="social-output reveal">
+      <p class="label">Output · 12 posts shown of 35</p>
+      <h3>The <em>feed,</em> as planned + shipped.</h3>
+      <div class="social-output-grid">
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/01-now-booking.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/04-color-headline.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/09-aerial-courtyard.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/11-sunset-doors.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/12-firepit-quote.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/14-daytime-patio.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/17-card-kitchen.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/20-polaroid-three.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/23-postcard-doors.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/25-postcard-aerial.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/27-mask-stay.png" alt=""></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/33-quote-yara.png" alt=""></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PAGE 05 — WEBSITE BUILD
+  ==================================================================== -->
+  <section id="web" class="website-page">
+    <div class="deliverable-tab reveal">
+      <span class="page-num" style="position: static; display: block; margin-bottom: 14px;">Page <b>05</b> · Website</span>
+      <h2>
+        <span class="num">03</span>
+        <span>Website — <em>booking before pretty.</em></span>
+      </h2>
+      <p class="meta">
+        <span><b>12</b> pages live</span>
+        <span><b>2</b> locations · 6 property types</span>
+        <span><b>Apr 2026</b> live</span>
+        <span><b>adrianswasagabeach.ca</b></span>
+      </p>
+    </div>
+
+    <section class="web-flow reveal">
+      <article class="sitemap-card">
+        <h4>Sitemap <small>12 pages · all live</small></h4>
+        <div class="sitemap-tree">
+          <span class="node root live">/</span> Home
+          <ul>
+            <li><span class="node live">/about</span> About</li>
+            <li><span class="node live">/wasaga-beach</span> Beach guide</li>
+            <li><span class="node live">/gallery</span> Gallery</li>
+            <li><span class="node live">/blog</span> Blog</li>
+            <li><span class="node live">/contact</span> Contact</li>
+            <li>Suites · Beach Area 1
+              <ul>
+                <li><span class="node live">/one-bedroom</span></li>
+                <li><span class="node live">/two-bedroom</span></li>
+              </ul>
+            </li>
+            <li>Resort · Beach Area 3
+              <ul>
+                <li><span class="node live">/beach-house</span></li>
+                <li><span class="node live">/beach-aparts</span></li>
+                <li><span class="node live">/large-cottages</span></li>
+                <li><span class="node live">/standard-cottages</span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="browser-frame">
+        <div class="browser-chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">adrianswasagabeach.ca</span>
+          <span class="live">Live · ssl</span>
+        </div>
+        <div class="site-mockup">
+          <nav class="nav">
+            <span class="logo">ADRIAN'S<small>WASAGA BEACH</small></span>
+            <span class="menu">
+              <span>Home</span><span>About</span><span>Suites ▾</span><span>Resort ▾</span><span>Wasaga</span><span>Gallery</span><span>Contact</span>
+            </span>
+            <span class="book">Book Your Stay</span>
+          </nav>
+          <div class="site-hero-mock">
+            <img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt="">
+            <div class="text">
+              <h2>Two Locations<br>One Heartfelt Welcome.</h2>
+              <p>Looking for the perfect beach location for a great family getaway? Whether at our Resort at Beach Area 3 or the Suites at Beach Area 1.</p>
+              <span class="book">Book Your Stay →</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="web-pages reveal">
+      <div class="mini-frame">
+        <div class="mini-chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/beach-house</span></div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""></div>
+          <div class="body"><p class="name">Beach House</p><p class="meta">Sleeps 10–12 · 4 BR · 75″ TV</p></div>
+        </div>
+      </div>
+      <div class="mini-frame">
+        <div class="mini-chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/standard-cottages</span></div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""></div>
+          <div class="body"><p class="name">Standard Cottages</p><p class="meta">#1–#5 · 2 doubles · sleeps 5</p></div>
+        </div>
+      </div>
+      <div class="mini-frame">
+        <div class="mini-chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/one-bedroom</span></div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt=""></div>
+          <div class="body"><p class="name">One Bedroom Suite</p><p class="meta">Queen + sofa · sleeps 3 adults</p></div>
+        </div>
+      </div>
+      <div class="mini-frame">
+        <div class="mini-chrome"><span class="dots"><span></span><span></span><span></span></span><span class="url">/gallery</span></div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""></div>
+          <div class="body"><p class="name">Gallery</p><p class="meta">All 16 plates · campaign archive</p></div>
+        </div>
+      </div>
+    </div>
+
+    <a class="live-cta" href="https://www.adrianswasagabeach.ca/" target="_blank" rel="noopener noreferrer">
+      <span class="text">
+        Visit the live site →
+        <small>adrianswasagabeach.ca · designed &amp; built by FrameFlow · footer credit on every page</small>
+      </span>
+      <span class="visit">Open ↗</span>
+    </a>
+  </section>
+
+  <!-- =================================================================
+       PAGE 06 — RESULTS
+  ==================================================================== -->
+  <section id="proof" class="results reveal">
+    <div class="results-inner">
+      <p class="label">— Page 06 · Twelve months later —</p>
+      <h2>What came <em>back.</em></h2>
+      <p class="stars">★ ★ ★ ★ ★ <b>4.9 / 5 · Google · 100+ reviews</b></p>
+
+      <div class="reviews-grid">
+        <article class="review-card">
+          <p class="stars">★ ★ ★ ★ ★ <b>5/5 · Jan 2026</b></p>
+          <p class="quote">The renovations have made this place the nicest and cleanest around. Modern furnishings and decor and top of the line appliances for a decent rate. Definitely the only place I'd stay in Wasaga.</p>
+          <p class="by"><b>Pam B.</b><span>Verified · Google</span></p>
+        </article>
+        <article class="review-card">
+          <p class="stars">★ ★ ★ ★ ★ <b>5/5 · Sept 2025</b></p>
+          <p class="quote">A perfect spot for our annual ladies getaway. Lovely grounds with hot tub and close to the beach. Hostess friendly and helpful.</p>
+          <p class="by"><b>Anne D.</b><span>Verified · Google</span></p>
+        </article>
+        <article class="review-card">
+          <p class="stars">★ ★ ★ ★ ★ <b>5/5 · Aug 2025</b></p>
+          <p class="quote">Adrian's is setting the bar on what beachfront luxury should be. Felt like a home away from home.</p>
+          <p class="by"><b>Rougebella</b><span>Verified · Google</span></p>
+        </article>
+        <article class="review-card">
+          <p class="stars">★ ★ ★ ★ ★ <b>5/5 · May 2025</b></p>
+          <p class="quote">A great place for a family vacation. Clean, modern and in a great location. Owners are friendly and helpful.</p>
+          <p class="by"><b>L. R.</b><span>Verified · Google</span></p>
+        </article>
+      </div>
+
+      <div class="ff-credit">
+        <p class="label">Footer credit · live on every page</p>
+        <p>© 2025 Adrian's Wasaga Beach · <b>Designed by FrameFlow</b></p>
+        <p class="small">Visible at the bottom of adrianswasagabeach.ca</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end">
+    <p class="label">Want a workbook of your own?</p>
+    <h3>One brief, three <em>deliverables.</em></h3>
+    <p>Photography, social, website — same kit, same calendar, one year of work documented page by page.</p>
+    <a class="cta" href="#">Begin a project <span style="margin-left: 4px;">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 008 · ADRIAN'S</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

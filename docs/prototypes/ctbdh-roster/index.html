@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CTBDH — The Roster (FrameFlow / Prototype 02)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · REEL · CTBDH
+       Prototype 02 — "The Roster" (member directory)
+
+       White-led with CTBDH red as accent. Each of the ten member
+       businesses is a card with logo, sector, sized 16:9 video poster,
+       and a brief story note. Reads like a club roster / chamber of
+       commerce member directory — the most utilitarian of the three.
+    ==================================================================== */
+
+    :root {
+      --white:    #ffffff;
+      --paper:    #f7f5f1;
+      --paper-2:  #efebe2;
+      --line:     #e1ddd3;
+      --line-2:   #c8c2b4;
+      --ink:      #0a0a0a;
+      --ink-2:    #4a4843;
+      --ink-3:    #8c887f;
+      --red:      #b91d1d;
+      --red-hi:   #d92929;
+      --red-d:    #7a0e0e;
+
+      --type:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--white); color: var(--ink); overflow-x: hidden; }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .rail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      gap: 16px;
+      font-weight: 500;
+    }
+    .rail .back { color: var(--ink); white-space: nowrap; }
+    .rail .back:hover { color: var(--red); }
+    .rail .frame {
+      background: var(--ink);
+      color: var(--white);
+      padding: 5px 12px;
+      letter-spacing: 0.24em;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .rail .meta { white-space: nowrap; color: var(--red); letter-spacing: 0.32em; }
+    @media (max-width: 640px) {
+      .rail { padding: 12px 16px; gap: 12px; font-size: 9px; }
+      .rail .meta { display: none; }
+    }
+
+    /* ============================================================
+       HERO — directory header
+    ============================================================ */
+    .hero {
+      padding: 100px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 80px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-left .eye {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 28px;
+    }
+    .hero-left .eye .dot { color: var(--ink-3); margin: 0 12px; }
+    .hero-left h1 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+    }
+    .hero-left h1 b { color: var(--red); font-weight: 300; }
+    .hero-left .sub {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(20px, 2.4vw, 28px);
+      line-height: 1.35;
+      color: var(--ink-2);
+      max-width: 36ch;
+      margin-top: 32px;
+    }
+    .hero-left .sub em { color: var(--red); font-style: normal; font-weight: 400; }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      padding-bottom: 14px;
+    }
+    .hero-mark {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      filter: invert(1) sepia(1) hue-rotate(330deg) saturate(8) brightness(0.6);
+      /* hack: keep the red mark roughly on-brand on white */
+    }
+    /* better: just place the master logo on a black tile */
+    .hero-mark-tile {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 1 / 1;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+    .hero-mark-tile img {
+      width: 70%;
+      height: auto;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      max-width: 360px;
+      border-top: 1px solid var(--line);
+    }
+    .hero-stats > div {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-stats > div:nth-child(odd) { padding-right: 16px; }
+    .hero-stats > div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+    .hero-stats dt {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .hero-stats dd {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       INTRO BAND — sits below hero
+    ============================================================ */
+    .intro {
+      padding: 80px 32px;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+    }
+    .intro .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .intro .body p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 52ch;
+      margin-bottom: 1em;
+    }
+    .intro .body p strong { color: var(--ink); font-weight: 500; }
+    .intro .body p:first-child {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(22px, 2.4vw, 28px);
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      max-width: 36ch;
+    }
+
+    /* ============================================================
+       SECTOR FILTER STRIP — visual chip row (doesn't actually filter,
+       it's a static directory cue)
+    ============================================================ */
+    .filter {
+      padding: 36px 32px 28px;
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .filter .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .filter .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filter .chip {
+      padding: 7px 14px;
+      border: 1px solid var(--line-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .filter .chip.on,
+    .filter .chip:hover {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+    .filter .filter-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .filter .filter-count b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       ROSTER — member cards grid
+    ============================================================ */
+    .roster {
+      padding: 56px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 24px;
+    }
+    .member {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      transition: border-color 0.3s, transform 0.4s, box-shadow 0.4s;
+      background: var(--white);
+    }
+    .member:hover {
+      border-color: var(--red);
+      transform: translateY(-3px);
+      box-shadow: 6px 8px 22px -6px rgba(10, 10, 10, 0.16);
+    }
+    .member-poster {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .member-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 35%, rgba(185, 29, 29, 0.16), transparent 60%);
+    }
+    .member-poster .logo-frame {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+    .member-poster .logo-frame img {
+      max-width: 60%;
+      max-height: 60%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.95;
+      transition: transform 0.5s, opacity 0.4s;
+    }
+    .member-poster .logo-frame.keep img { filter: none; }
+    .member:hover .member-poster .logo-frame img {
+      transform: scale(1.06);
+      opacity: 1;
+    }
+    .member-poster .corner {
+      position: absolute;
+      top: 0; left: 0;
+      padding: 8px 12px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 500;
+      z-index: 3;
+    }
+    .member-poster .runtime {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      padding: 4px 8px;
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(4px);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      font-weight: 500;
+      z-index: 3;
+    }
+    .member-poster .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      transition: transform 0.4s, background 0.3s;
+      z-index: 3;
+    }
+    .member:hover .member-poster .play {
+      transform: translate(-50%, -50%) scale(1.08);
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .member-body {
+      padding: 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .member-body .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .member-body .num {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .member-body .est {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .member-body h4 {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+    .member-body .sector {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .member-body .syn {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 40ch;
+    }
+    .member-body .foot {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .member-body .foot a {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 500;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--ink);
+    }
+    .member-body .foot a:hover { color: var(--red); border-color: var(--red); }
+    .member-body .foot .loc {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       LOCATIONS — small map-feel block
+    ============================================================ */
+    .locations {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .locations .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .locations h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(32px, 4vw, 56px);
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .locations h3 b { color: var(--red); font-weight: 300; }
+    .locations p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 44ch;
+    }
+    .pin-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+    .pin {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 18px;
+      align-items: baseline;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .pin .marker {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--red);
+      line-height: 1;
+    }
+    .pin .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 17px;
+      color: var(--ink);
+    }
+    .pin .name small {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .pin .stat {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      text-align: right;
+    }
+    .pin .stat b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    /* ============================================================
+       MARKS — palette + type
+    ============================================================ */
+    .marks {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-bottom: 1px solid var(--line);
+    }
+    .marks h3 {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.black { background: var(--ink); color: var(--white); }
+    .pchip.red { background: var(--red); color: var(--white); }
+    .pchip.bone { background: var(--paper); color: var(--ink); }
+    .pchip.white { background: var(--white); color: var(--ink); border-color: var(--line-2); }
+    .pchip .role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .pchip .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 18px;
+    }
+    .pchip .hex {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      opacity: 0.85;
+    }
+    .type-stack { display: flex; flex-direction: column; }
+    .trow {
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow:last-child { border-bottom: 1px solid var(--line); }
+    .trow .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .trow .specimen.h {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 36px;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .trow .specimen.m {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--ink);
+    }
+    .trow .specimen.b {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .trow .specimen.l {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .trow .specimen.r {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--red);
+    }
+
+    /* ============================================================
+       SCOPE
+    ============================================================ */
+    .scope {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--line);
+    }
+    .scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .scope-head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .scope-head h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .scope-head h3 b { color: var(--red); font-weight: 300; }
+    .scope-head .total {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .scope-row .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+      font-weight: 500;
+    }
+    .scope-row .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .scope-row .desc {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .scope-row .out {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      font-weight: 500;
+    }
+    .scope-row .out b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      padding: 140px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .end h3 b { color: var(--red); font-weight: 300; }
+    .end p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 26px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 1px solid var(--red);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cta:hover { background: var(--ink); border-color: var(--ink); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .foot .ce { text-align: center; color: var(--red); letter-spacing: 0.5em; font-weight: 500; }
+    .foot .ri { text-align: right; }
+    .foot a { color: inherit; }
+    .foot a:hover { color: var(--red); }
+    .foot b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1080px) {
+      .roster { grid-template-columns: repeat(2, 1fr); gap: 24px 18px; }
+      .hero { grid-template-columns: 1fr; gap: 36px; padding: 60px 22px; }
+      .hero-right { flex-direction: row; justify-content: space-between; align-items: end; padding-bottom: 0; }
+    }
+    @media (max-width: 720px) {
+      .hero-right { flex-direction: column; gap: 24px; align-items: stretch; }
+      .hero-mark-tile { max-width: 200px; align-self: center; }
+      .intro { grid-template-columns: 1fr; gap: 32px; padding: 60px 22px; }
+      .filter { grid-template-columns: 1fr; gap: 18px; padding: 28px 22px 18px; text-align: center; }
+      .filter .filter-count { text-align: center; }
+      .roster { grid-template-columns: 1fr; padding: 36px 22px 60px; gap: 18px; }
+      .locations { grid-template-columns: 1fr; gap: 36px; padding: 60px 22px; }
+      .marks { grid-template-columns: 1fr; gap: 48px; padding: 60px 22px; }
+      .palette { grid-template-columns: 1fr 1fr; }
+      .scope { padding: 60px 22px; }
+      .scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .scope-head .label { grid-column: 1 / -1; }
+      .scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .scope-row .out { text-align: left; }
+      .end { padding: 80px 22px 60px; }
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .member-poster .logo-frame img { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <a href="../" class="back">← Portfolio</a>
+    <span class="frame">★ #C-XX ★</span>
+    <span class="meta">CTBDH · Toronto · 2025</span>
+  </header>
+
+  <!-- =================================================================
+       HERO
+  ==================================================================== -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="eye">FrameFlow · Reel · CTBDH<span class="dot">·</span>Spring 2025</p>
+      <h1>Ten members,<br>one <b>roster.</b></h1>
+      <p class="sub">A directory of the businesses we filmed for the <em>Canada Türkiye Business Development Hub</em> — sector by sector, sized for trade.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-mark-tile"><img src="../../../public/portfolio/ctbdh/logo/ctbdh-mark.png" alt="CTBDH"></div>
+      <dl class="hero-stats">
+        <div><dt>Members</dt><dd>10</dd></div>
+        <div><dt>Sectors</dt><dd>06</dd></div>
+        <div><dt>Films</dt><dd>10</dd></div>
+        <div><dt>Locations</dt><dd>2</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro reveal">
+    <span class="label">A note</span>
+    <div class="body">
+      <p>Canada Türkiye Business Development Hub is a network — Turkish-Canadian founders who lend each other capital, contacts and confidence across the GTA.</p>
+      <p>FrameFlow filmed <strong>ten of them</strong>. The roster below is sized for the trade: each business is a card, with a 16:9 commercial story embedded and the practical things — sector, location, runtime — beside it.</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FILTER (visual only)
+  ==================================================================== -->
+  <div class="filter">
+    <span class="label">Filter by sector</span>
+    <div class="chips">
+      <span class="chip on">All · 10</span>
+      <span class="chip">Professional Services · 03</span>
+      <span class="chip">Food &amp; Drink · 02</span>
+      <span class="chip">Home &amp; Surfaces · 02</span>
+      <span class="chip">Consulting · 02</span>
+      <span class="chip">Lifestyle · 01</span>
+    </div>
+    <span class="filter-count"><b>10</b> showing</span>
+  </div>
+
+  <!-- =================================================================
+       ROSTER — 10 member cards
+  ==================================================================== -->
+  <section class="roster">
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 01</span>
+        <div class="logo-frame"><img src="../../../public/portfolio/ctbdh/members/asd-laminat.png" alt="ASD Laminat"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:34</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.01</span><span class="est">Est. 2014</span></div>
+        <h4>ASD Laminat</h4>
+        <p class="sector">Surfaces · Manufacturing</p>
+        <p class="syn">A laminate workshop with a workshop's discipline — colour samples still chosen by hand.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Concord, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 02</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/atlas-food-beverage.png" alt="Atlas Food &amp; Beverage"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:48</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.02</span><span class="est">Est. 2018</span></div>
+        <h4>Atlas Food &amp; Beverage</h4>
+        <p class="sector">Food &amp; Drink · Distribution</p>
+        <p class="syn">Distribution that opens a kitchen door — Anatolian flavours onto Canadian shelves.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">GTA</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 03</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/aydin-cpa.png" alt="Aydin CPA"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:12</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.03</span><span class="est">Est. 2010</span></div>
+        <h4>Aydin CPA</h4>
+        <p class="sector">Accounting · Professional Services</p>
+        <p class="syn">A CPA practice that takes founders from first invoice to first audit. Bilingual front desk.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">North York, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 04</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/bookkeeping-bizz.png" alt="Bookkeeping Bizz"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:18</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.04</span><span class="est">Est. 2021</span></div>
+        <h4>Bookkeeping Bizz</h4>
+        <p class="sector">Bookkeeping · Small Business</p>
+        <p class="syn">Cloud-first books for founders who didn't open a business to do their own books.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Toronto, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 05</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/grp-rugs.png" alt="GRP Rugs"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:42</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.05</span><span class="est">Est. 2015</span></div>
+        <h4>GRP Rugs</h4>
+        <p class="sector">Home &amp; Surfaces · Retail</p>
+        <p class="syn">A rug warehouse the size of a city block — Gaziantep before lunch, Toronto after.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Concord, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 06</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/jc-professional.png" alt="JC Professional"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:24</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.06</span><span class="est">Est. 2008</span></div>
+        <h4>JC Professional Co.</h4>
+        <p class="sector">Tax &amp; Advisory · Professional Services</p>
+        <p class="syn">A multi-disciplinary practice for founders who are also husbands, wives, and immigrants.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Toronto, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 07</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/neo-project-consulting.png" alt="NEO Project Consulting"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:36</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.07</span><span class="est">Est. 2017</span></div>
+        <h4>NEO Project Consulting</h4>
+        <p class="sector">Consulting · Construction</p>
+        <p class="syn">Project management for new builds and reno gut-jobs across Mississauga and Markham.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Mississauga, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 08</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/northern-pathways.png" alt="Northern Pathways"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:54</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.08</span><span class="est">Est. 2019</span></div>
+        <h4>Northern Pathways Immigration</h4>
+        <p class="sector">Immigration · Consulting</p>
+        <p class="syn">A regulated immigration practice run by people who arrived themselves.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Toronto, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 09</span>
+        <div class="logo-frame"><img src="../../../public/portfolio/ctbdh/members/sapphirus.png" alt="Sapphirus"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:08</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.09</span><span class="est">Est. 2020</span></div>
+        <h4>Sapphirus</h4>
+        <p class="sector">Lifestyle · Brand</p>
+        <p class="syn">A small brand with a sharp mark, built between Istanbul and Toronto.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Toronto, ON</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="member reveal">
+      <div class="member-poster">
+        <span class="corner">FF · 10</span>
+        <div class="logo-frame keep"><img src="../../../public/portfolio/ctbdh/members/urla-fine-foods.png" alt="Urla Fine Foods"></div>
+        <span class="play" aria-hidden>▶</span>
+        <span class="runtime">2:46</span>
+      </div>
+      <div class="member-body">
+        <div class="row"><span class="num">M.10</span><span class="est">Est. 2016</span></div>
+        <h4>Urla Fine Foods</h4>
+        <p class="sector">Food &amp; Drink · Specialty</p>
+        <p class="syn">An Aegean larder in the GTA — olive oil, pepper paste, a founder who still calls the village.</p>
+        <div class="foot">
+          <a href="#">Watch story →</a>
+          <span class="loc">Etobicoke, ON</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       LOCATIONS
+  ==================================================================== -->
+  <section class="locations reveal">
+    <div>
+      <p class="label">Locations</p>
+      <h3>One <b>network,</b> two head offices.</h3>
+      <p>The CTBDH operates across the Greater Toronto Area, with member businesses in Toronto, Concord, Mississauga, Markham, Etobicoke and beyond.</p>
+    </div>
+    <div>
+      <div class="pin-list">
+        <div class="pin">
+          <span class="marker">●</span>
+          <span class="name">CTBDH · Concord<small>3280 Steeles Ave W, Unit 13–14</small></span>
+          <span class="stat"><b>HQ</b>L4K 2Y2</span>
+        </div>
+        <div class="pin">
+          <span class="marker">●</span>
+          <span class="name">CTBDH · Toronto<small>10 Lower Spadina Avenue</small></span>
+          <span class="stat"><b>Branch</b>M5V 2Z2</span>
+        </div>
+        <div class="pin">
+          <span class="marker">○</span>
+          <span class="name">Member shoots<small>Across the GTA — Mississauga, Markham, Etobicoke, North York</small></span>
+          <span class="stat"><b>10</b>locations</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · two flags, one colour</h3>
+      <div class="palette">
+        <div class="pchip white">
+          <span class="role">Surface · 60%</span>
+          <div>
+            <p class="name">Bone</p>
+            <p class="hex">#FFFFFF</p>
+          </div>
+        </div>
+        <div class="pchip red">
+          <span class="role">Primary · 25%</span>
+          <div>
+            <p class="name">CTBDH Red</p>
+            <p class="hex">#B91D1D</p>
+          </div>
+        </div>
+        <div class="pchip black">
+          <span class="role">Ink · 12%</span>
+          <div>
+            <p class="name">Stage Black</p>
+            <p class="hex">#0A0A0A</p>
+          </div>
+        </div>
+        <div class="pchip bone">
+          <span class="role">Tonal · 3%</span>
+          <div>
+            <p class="name">Paper</p>
+            <p class="hex">#F7F5F1</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · Inter + JetBrains Mono</h3>
+      <div class="type-stack">
+        <div class="trow">
+          <p class="label">Display · 200</p>
+          <p class="specimen h">Aa Bb · 0123</p>
+        </div>
+        <div class="trow">
+          <p class="label">Subhead · 500</p>
+          <p class="specimen m">Ten members, one roster.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Body · 400</p>
+          <p class="specimen b">A network of Turkish-Canadian small and medium enterprises.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Mono Label</p>
+          <p class="specimen l">Toronto · Concord · MMXXV</p>
+        </div>
+        <div class="trow">
+          <p class="label">Accent · CTBDH Red</p>
+          <p class="specimen r">Türkiye × Canada</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <div class="scope-head">
+      <span class="label">Scope</span>
+      <h3>What we made for <b>CTBDH.</b></h3>
+      <span class="total">02 services</span>
+    </div>
+    <div class="scope-row">
+      <span class="num">01.</span>
+      <span class="name">Logo &amp; Identity</span>
+      <p class="desc">A red-on-black mark for the network — the lower-case ct ligature where C and T share a single curve, plus a bilingual wordmark and a brand kit for member businesses to flag their CTBDH affiliation.</p>
+      <p class="out"><b>1</b>identity system</p>
+    </div>
+    <div class="scope-row">
+      <span class="num">02.</span>
+      <span class="name">Videography</span>
+      <p class="desc">Ten commercial business-story films — one for each member. Filmed on location at workshops, warehouses, offices and shops across the GTA. 16:9 master delivered with 1:1 and 9:16 cut-downs for social.</p>
+      <p class="out"><b>10</b>films · 16:9</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <p class="label">Add to the roster</p>
+    <h3>Bring your <b>story</b> next.</h3>
+    <p>Run a business with a story worth filming? Or build a network that needs an identity, a film series, or both? We'd like to hear from you.</p>
+    <a class="cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2025</span>
+    <span class="ce">Reel · CTBDH</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

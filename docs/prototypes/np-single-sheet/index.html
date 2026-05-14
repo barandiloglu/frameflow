@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Single Sheet (FrameFlow / Prototype 18)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       PROTOTYPE 18 — "The Single Sheet"
+
+       One asymmetric, layered composition. NOT a sequence of sections;
+       NOT a long scroll. The viewer takes it in like a Pentagram poster
+       — at a glance — with progressive density on closer reading.
+       Designed at 1440×~2000 desktop canvas; degrades gracefully on
+       smaller screens.
+
+       Everything that the previous 17 prototypes spread across many
+       sections lives here on a single canvas: portrait, three real
+       posts at varied sizes, a tiny website thumb, the calculator
+       score as a single 487, the brand values inset as micro-text,
+       the FrameFlow byline. One sheet.
+    ==================================================================== */
+
+    :root {
+      --paper:   #f4eedd;     /* warm sheet — like an art print */
+      --paper-2: #e9e1c9;
+      --paper-3: #d8cfb1;
+      --paper-w: #fcf9ee;
+      --rule:    #b8ad8e;
+      --rule-2:  #847a5a;
+      --ink:     #1a1814;
+      --ink-2:   #36322a;
+      --ink-3:   #6e695a;
+      --red:     #b92025;
+      --red-d:   #7d1416;
+
+      --type:    "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* a thick coloured frame around the entire viewport — the "sheet"
+       is a print, framed */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 95;
+      box-shadow: inset 0 0 0 22px var(--paper-3);
+    }
+    /* paper grain */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.06;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.20  0 0 0 0 0.16  0 0 0 0 0.10  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       THE SHEET — one composition on a 12-column grid
+       Designed at ~1440×2000 desktop canvas
+    ============================================================ */
+    .sheet {
+      position: relative;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 64px 56px 72px;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto auto auto;
+      gap: 0;
+      column-gap: 24px;
+    }
+
+    /* corner registration marks */
+    .sheet::before, .sheet::after {
+      content: "";
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, var(--ink) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px 100%);
+      background-size: 100% 50%, 50% 100%;
+      background-repeat: no-repeat;
+    }
+    .sheet::before { top: 32px; left: 32px; }
+    .sheet::after { bottom: 32px; right: 32px; transform: rotate(180deg); }
+
+    /* ---------- Marginal labels ---------- */
+    .label-tl, .label-tr, .label-bl, .label-br {
+      position: absolute;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      z-index: 5;
+    }
+    .label-tl { top: 38px; left: 76px; }
+    .label-tr { top: 38px; right: 76px; text-align: right; }
+    .label-bl { bottom: 38px; left: 76px; }
+    .label-br { bottom: 38px; right: 76px; text-align: right; }
+    .label-tl b, .label-tr b, .label-bl b, .label-br b { color: var(--red); font-weight: 800; }
+
+    /* ============================================================
+       TOP BAND — huge headline + portrait
+    ============================================================ */
+    .topband {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto;
+      align-items: stretch;
+      padding: 24px 0 32px;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      min-height: 60vh;
+    }
+
+    /* the gigantic typographic statement on the left, spanning 8 columns */
+    .statement {
+      grid-column: 1 / span 8;
+      grid-row: 1;
+      align-self: end;
+      padding: 100px 0 0;
+      position: relative;
+      z-index: 2;
+    }
+    .statement .kicker {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .statement .kicker::before {
+      content: "";
+      flex: 0 0 56px;
+      height: 1.5px;
+      background: var(--red);
+    }
+    .statement h1 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(72px, 11vw, 184px);
+      line-height: 0.82;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .statement h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .statement h1 .punct { color: var(--red); }
+    .statement .deck {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 48ch;
+    }
+    .statement .deck b { color: var(--ink); font-weight: 700; }
+    .statement .deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    /* portrait — partially overlaps the headline */
+    .portrait {
+      grid-column: 8 / -1;
+      grid-row: 1;
+      align-self: stretch;
+      position: relative;
+      z-index: 1;
+      transform: translateY(0);
+    }
+    .portrait .ph {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .portrait .ph > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      filter: contrast(1.06) saturate(0.95);
+    }
+    .portrait .ph::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(26,24,20,0.6));
+      pointer-events: none;
+    }
+    .portrait .nameplate {
+      position: absolute;
+      bottom: 18px; left: 18px; right: 18px;
+      z-index: 2;
+      color: var(--paper-w);
+    }
+    .portrait .nameplate .role {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(252, 249, 238, 0.78);
+      margin-bottom: 6px;
+    }
+    .portrait .nameplate .role b { color: #ff8b8e; font-weight: 800; }
+    .portrait .nameplate h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(20px, 2vw, 32px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--paper-w);
+    }
+    .portrait .nameplate h3 em {
+      font-style: italic;
+      font-weight: 500;
+      color: #ff5e63;
+    }
+    /* tiny score readout sticker on the corner of the portrait */
+    .portrait .score-tag {
+      position: absolute;
+      top: -12px;
+      left: -16px;
+      padding: 8px 14px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transform: rotate(-3deg);
+      z-index: 3;
+      box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    }
+    .portrait .score-tag b { font-size: 18px; letter-spacing: -0.02em; }
+
+    @media (max-width: 980px) {
+      .statement { grid-column: 1 / -1; padding-top: 32px; }
+      .portrait { grid-column: 1 / -1; }
+      .portrait .ph { min-height: 300px; }
+      .topband { min-height: auto; }
+    }
+
+    /* ============================================================
+       MID BAND — score block (left), big post (centre), small posts (right)
+    ============================================================ */
+    .midband {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto;
+      gap: 24px 24px;
+      padding: 56px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: stretch;
+    }
+
+    /* big score panel — left columns, used as a primary text block */
+    .score-block {
+      grid-column: 1 / span 4;
+      align-self: stretch;
+      padding-right: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .score-block .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .score-block .number {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(140px, 18vw, 280px);
+      line-height: 0.78;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      margin: 8px 0 0;
+    }
+    .score-block .number em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .score-block .number .small {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 0.18em;
+      letter-spacing: -0.01em;
+      vertical-align: 0.32em;
+      color: var(--red);
+    }
+    .score-block .leg {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 32ch;
+    }
+    .score-block .leg b { color: var(--ink); font-weight: 700; }
+    .score-block .leg em { font-style: italic; color: var(--red); font-weight: 500; }
+    .score-block .breakdown {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .score-block .breakdown > div {
+      padding: 0 10px;
+      border-left: 1px solid var(--rule);
+    }
+    .score-block .breakdown > div:first-child { border-left: 0; padding-left: 0; }
+    .score-block .breakdown dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 4px;
+    }
+    .score-block .breakdown dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .score-block .breakdown dd em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    /* the centerpiece — single 4:5 post, big */
+    .post-hero {
+      grid-column: 5 / span 4;
+      align-self: stretch;
+      position: relative;
+      background: var(--ink);
+      overflow: hidden;
+      box-shadow: 0 32px 56px -28px rgba(0,0,0,0.4);
+    }
+    .post-hero > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4 / 5;
+    }
+    .post-hero .meta-tag {
+      position: absolute;
+      top: 16px; left: 16px;
+      padding: 4px 10px;
+      background: var(--ink);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .post-hero .meta-tag b { color: #ff5e63; font-weight: 800; }
+    .post-hero .pages {
+      position: absolute;
+      top: 16px; right: 16px;
+      padding: 4px 10px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+    }
+    .post-hero .pages::before { content: "▦  "; font-size: 11px; }
+    .post-hero .ovl {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 18px 18px 18px;
+      background: linear-gradient(to top, rgba(26,24,20,0.95), rgba(26,24,20,0));
+      color: var(--paper-w);
+    }
+    .post-hero .ovl .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+    }
+    .post-hero .ovl .ttl em { font-style: italic; font-weight: 500; color: #ff5e63; }
+    .post-hero .ovl .info {
+      margin-top: 5px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .post-hero .ovl .info b { color: var(--paper-w); font-weight: 800; }
+
+    /* right column — small post stack + secondary info */
+    .right-stack {
+      grid-column: 9 / -1;
+      align-self: stretch;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 14px;
+    }
+    .right-stack .small-post {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      background: var(--ink);
+      overflow: hidden;
+      box-shadow: 0 16px 32px -16px rgba(0,0,0,0.32);
+    }
+    .right-stack .small-post > img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .right-stack .small-post .pages {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 7px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+    }
+    .right-stack .small-post .pages::before { content: "▦  "; font-size: 9px; }
+    .right-stack .small-post .pages.live { background: var(--paper-w); color: var(--red); }
+    .right-stack .small-post .pages.live::before { content: "▶  "; }
+    .right-stack .small-post .num {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .right-stack .small-post .num b { color: #ff5e63; }
+
+    /* the website "thumbnail" — sits in the right stack as a card */
+    .website-thumb {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      background: var(--paper-w);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 16px 32px -16px rgba(0,0,0,0.28);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .website-thumb .chrome {
+      background: var(--paper-2);
+      padding: 6px 9px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .website-thumb .chrome .dots { display: flex; gap: 3px; }
+    .website-thumb .chrome .dots span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .website-thumb .chrome .dots span:first-child { background: var(--red); }
+    .website-thumb .chrome .url {
+      flex: 1;
+      padding: 2px 6px;
+      background: var(--paper-w);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      color: var(--ink-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .website-thumb .chrome .url::before { content: "🔒 "; opacity: 0.6; }
+    .website-thumb .chrome .lt {
+      padding: 1px 5px;
+      background: var(--ink);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+    }
+    .website-thumb .body {
+      padding: 16px 16px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .website-thumb .body .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .website-thumb .body h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .website-thumb .body h4 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .website-thumb .body .row {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+    .website-thumb .body .row a {
+      padding: 5px 9px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 7px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .website-thumb .body .row .p { background: var(--red); color: var(--paper-w); }
+    .website-thumb .body .row .s { border: 1px solid var(--ink); color: var(--ink); }
+    .website-thumb .body .strip {
+      padding-top: 8px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .website-thumb .body .strip b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 980px) {
+      .score-block { grid-column: 1 / -1; }
+      .post-hero { grid-column: 1 / -1; }
+      .right-stack { grid-column: 1 / -1; }
+    }
+    @media (max-width: 540px) {
+      .right-stack { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       BOTTOM BAND — values typography + posts strip + byline
+    ============================================================ */
+    .bottomband {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto;
+      gap: 24px;
+      padding: 56px 0 24px;
+      align-items: start;
+    }
+
+    /* the brand DNA values as a typographic block (no labelled grid) */
+    .values-text {
+      grid-column: 1 / span 7;
+      padding-right: 16px;
+      border-right: 1px solid var(--rule);
+    }
+    .values-text .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .values-text h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-style: italic;
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      max-width: 28ch;
+      margin-bottom: 18px;
+    }
+    .values-text h3 b { font-style: normal; font-weight: 900; color: var(--red); }
+    .values-text .pulse {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      max-width: 64ch;
+      column-count: 2;
+      column-gap: 32px;
+    }
+    .values-text .pulse b { font-weight: 800; color: var(--ink); }
+    .values-text .pulse em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    /* the small posts strip on the right, as a 4-up vertical column */
+    .post-strip {
+      grid-column: 8 / span 5;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      align-self: stretch;
+    }
+    .post-strip .tile {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      background: var(--ink);
+      overflow: hidden;
+    }
+    .post-strip .tile > img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .post-strip .tile .num {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .post-strip .tile .num b { color: #ff5e63; }
+    .post-strip .tile .pages {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 7px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+    }
+    .post-strip .tile .pages::before { content: "▦  "; font-size: 9px; }
+    .post-strip .tile .pages.live { background: var(--paper-w); color: var(--red); }
+    .post-strip .tile .pages.live::before { content: "▶  "; }
+    .post-strip .tile .ovl {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 10px 10px 10px;
+      background: linear-gradient(to top, rgba(26,24,20,0.92), transparent);
+      color: var(--paper-w);
+    }
+    .post-strip .tile .ovl .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.05;
+      letter-spacing: -0.005em;
+    }
+    .post-strip .tile .ovl .ttl em { font-style: italic; font-weight: 500; color: #ff5e63; }
+
+    @media (max-width: 980px) {
+      .values-text { grid-column: 1 / -1; padding-right: 0; border-right: 0; }
+      .post-strip { grid-column: 1 / -1; }
+    }
+    @media (max-width: 540px) {
+      .post-strip { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       BYLINE STRIP — bottom edge
+    ============================================================ */
+    .byline-strip {
+      grid-column: 1 / -1;
+      margin-top: 48px;
+      padding-top: 22px;
+      border-top: 4px double var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: end;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .byline-strip .left b { color: var(--ink); font-weight: 800; }
+    .byline-strip .center {
+      text-align: center;
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--ink);
+      max-width: 38ch;
+      margin: 0 auto;
+    }
+    .byline-strip .center em { color: var(--red); }
+    .byline-strip .center b { font-style: normal; font-weight: 800; color: var(--red); }
+    .byline-strip .right { text-align: right; }
+    .byline-strip .right b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 720px) {
+      .sheet { padding: 48px 28px 56px; }
+      .byline-strip { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .byline-strip .right, .byline-strip .center { text-align: center; }
+      .label-tl, .label-tr, .label-bl, .label-br { font-size: 8px; letter-spacing: 0.24em; }
+    }
+
+    /* reveal — single page-load animation */
+    @media (prefers-reduced-motion: no-preference) {
+      .statement, .portrait, .score-block, .post-hero, .right-stack, .values-text, .post-strip, .byline-strip {
+        opacity: 0;
+        transform: translateY(14px);
+        animation: rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      .portrait    { animation-delay: 0.05s; }
+      .statement   { animation-delay: 0.10s; }
+      .score-block { animation-delay: 0.30s; }
+      .post-hero   { animation-delay: 0.40s; }
+      .right-stack { animation-delay: 0.50s; }
+      .values-text { animation-delay: 0.65s; }
+      .post-strip  { animation-delay: 0.75s; }
+      .byline-strip { animation-delay: 0.90s; }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: none; }
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       THE SHEET — single composition
+  ==================================================================== -->
+  <main class="sheet">
+
+    <!-- corner labels — minimal marginalia -->
+    <span class="label-tl">SHEET <b>№ 019</b></span>
+    <span class="label-tr">FRAMEFLOW · TORONTO · <b>2026</b></span>
+    <span class="label-bl">NORTHERN PATHWAYS · <b>RCIC-IRB</b></span>
+    <span class="label-br">PRINTED <b>ONCE</b></span>
+
+    <!-- TOP BAND — headline + portrait -->
+    <header class="topband">
+      <div class="statement">
+        <p class="kicker">A FrameFlow Sheet · for Northern Pathways</p>
+        <h1>One <em>practice<span class="punct">.</span></em><br>Two <em>languages<span class="punct">.</span></em><br>Twelve <em>routes<span class="punct">.</span></em></h1>
+        <p class="deck">A regulated immigration practice <b>led by an RCIC-IRB</b>. <em>Findable</em> in two languages, <em>bookable</em> through a calculator that signs a PDF, <em>trustworthy</em> by virtue of the College's standard.</p>
+      </div>
+
+      <aside class="portrait">
+        <div class="ph">
+          <span class="score-tag">CRS<br><b>487</b></span>
+          <img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB">
+          <div class="nameplate">
+            <p class="role"><b>—</b> The captain</p>
+            <h3>Burcu <em>Akyol</em>.</h3>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <!-- MID BAND — score / hero post / right stack -->
+    <section class="midband">
+      <div class="score-block">
+        <p class="lbl">— A score</p>
+        <p class="number">487<span class="small">CRS</span><em>.</em></p>
+        <p class="leg">A live readout of the <b>Comprehensive Ranking System</b>. The calculator at <em>northernpathways.ca</em> exposes every point and exits on a one-click PDF — <em>signed by counsel.</em></p>
+        <dl class="breakdown">
+          <div><dt>A · Core</dt><dd>404</dd></div>
+          <div><dt>B · Spouse</dt><dd>—</dd></div>
+          <div><dt>C · Transfer</dt><dd>50</dd></div>
+          <div><dt>D · Add.</dt><dd>33</dd></div>
+        </dl>
+      </div>
+
+      <article class="post-hero">
+        <span class="meta-tag">Sheet <b>·</b> Post 04</span>
+        <span class="pages">1 / 9</span>
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan 2026-2028 carousel">
+        <div class="ovl">
+          <p class="ttl">Göç Seviyeleri Planı &mdash; <em>2026 — 2028.</em></p>
+          <p class="info">tr · levels plan · <b>9-slide carousel</b></p>
+        </div>
+      </article>
+
+      <aside class="right-stack">
+        <article class="small-post">
+          <span class="num">№ <b>01</b></span>
+          <span class="pages">1 / 6</span>
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+        </article>
+        <article class="small-post">
+          <span class="num">№ <b>09</b></span>
+          <span class="pages live">Live</span>
+          <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+        </article>
+
+        <article class="website-thumb">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lt">EN</span>
+          </header>
+          <div class="body">
+            <p class="ant">— A website</p>
+            <h4>Guiding your <em>journey</em> with clarity.</h4>
+            <div class="row">
+              <a class="p">Book Consult</a>
+              <a class="s">Services</a>
+            </div>
+            <p class="strip">12 routes <b>·</b> EN+TR <b>·</b> Live</p>
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <!-- BOTTOM BAND — values + posts strip -->
+    <section class="bottomband">
+      <article class="values-text">
+        <p class="ant">— Five values, in continuous prose</p>
+        <h3>Ethical guidance, personalised service, transparency, knowledge &amp; expertise, <b>care.</b></h3>
+        <p class="pulse">
+          The firm does not file what counsel cannot stand behind &mdash;
+          <em>ethical guidance,</em> made operational through the
+          RCIC-IRB licence on the wall. The home page leads with
+          <em>Burcu Akyol&rsquo;s name</em> before any service is
+          offered &mdash; clients meet a counsel, not a form. The
+          fees page lists every line up front; the calculator
+          exposes every point. <b>156 IRCC draws indexed since
+          2015</b> &mdash; the firm reads the weather before every
+          flight. The diaspora arrives in two languages; we meet
+          them in both, on the website, on
+          <em>@kanadadayeniyasam</em>, on draw day.
+        </p>
+      </article>
+
+      <aside class="post-strip">
+        <article class="tile">
+          <span class="num">№ <b>05</b></span>
+          <span class="pages">1 / 8</span>
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit visa officer">
+          <div class="ovl"><p class="ttl">Vize memuru &mdash; <em>neye bakar?</em></p></div>
+        </article>
+        <article class="tile">
+          <span class="num">№ <b>06</b></span>
+          <span class="pages">1 / 3</span>
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+          <div class="ovl"><p class="ttl">Yeni Yaşam &mdash; <em>seminar.</em></p></div>
+        </article>
+        <article class="tile">
+          <span class="num">№ <b>08</b></span>
+          <span class="pages">1 / 6</span>
+          <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+          <div class="ovl"><p class="ttl">OINP &mdash; <em>18 Mart.</em></p></div>
+        </article>
+        <article class="tile">
+          <span class="num">№ <b>10</b></span>
+          <span class="pages live">Live</span>
+          <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+          <div class="ovl"><p class="ttl">Webinar &mdash; <em>Levels Plan PR.</em></p></div>
+        </article>
+      </aside>
+    </section>
+
+    <!-- BYLINE STRIP -->
+    <footer class="byline-strip">
+      <span class="left">Designed by <b>Frame Flow</b> · Toronto</span>
+      <span class="center">A single sheet for <em>Northern Pathways Immigration Consulting,</em> printed once <b>·</b> 2026.</span>
+      <span class="right">SHEET <b>019 / I</b></span>
+    </footer>
+
+  </main>
+
+</body>
+</html>

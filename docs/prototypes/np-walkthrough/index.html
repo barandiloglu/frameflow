@@ -1,0 +1,2071 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Walkthrough (FrameFlow / Prototype 04)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 04 — "The Walkthrough"
+
+       A faithful top-to-bottom rebuild of northernpathways.ca, then
+       the CRS calculator UI, then the Instagram feed for
+       @kanadadayeniyasam — all in the firm's locked typeface
+       (MONTSERRAT only) and locked palette (red / white / off-white
+       / charcoal). The page IS the work — every section of the
+       prototype mirrors a section we shipped to production.
+    ==================================================================== */
+
+    :root {
+      --paper:    #ffffff;
+      --paper-2:  #f9f9f9;       /* off-white from brand */
+      --paper-3:  #f1efe9;
+      --rule:     #e7e5e0;
+      --rule-2:   #d4d2cd;
+      --ink:      #2c2b2b;       /* charcoal from brand */
+      --ink-2:    #4a4946;
+      --ink-3:    #757370;
+      --ink-4:    #a8a6a1;
+      --red:      #b92025;       /* maple red — primary */
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 600; }
+    .rail .center {
+      text-align: center;
+      letter-spacing: 0.4em;
+      color: var(--paper);
+      white-space: nowrap;
+    }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       PAGE INTRO — the FrameFlow framing card
+    ============================================================ */
+    .intro {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 64px;
+      align-items: end;
+      border-bottom: 1px solid var(--rule);
+    }
+    .intro-left .crumb {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .intro-left .crumb::before {
+      content: "";
+      display: inline-block;
+      width: 36px;
+      height: 1px;
+      background: var(--red);
+    }
+    .intro-left h1 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5.6vw, 84px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+    .intro-left h1 i {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .intro-right {
+      max-width: 56ch;
+    }
+    .intro-right p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+    }
+    .intro-right p b { font-weight: 600; color: var(--ink); }
+    .intro-meta {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .intro-meta > div {
+      padding: 10px 14px 0;
+      border-left: 1px solid var(--rule);
+    }
+    .intro-meta > div:first-child { border-left: 0; padding-left: 0; }
+    .intro-meta dt {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .intro-meta dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    @media (max-width: 880px) {
+      .intro { padding: 48px 22px; grid-template-columns: 1fr; gap: 32px; }
+      .intro-meta { grid-template-columns: 1fr 1fr; }
+      .intro-meta > div:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 10px; margin-top: 8px; }
+      .intro-meta > div:nth-child(4) { border-top: 1px solid var(--rule); padding-top: 10px; margin-top: 8px; }
+    }
+
+    /* ============================================================
+       SECTION HEADER (used between site / calc / social blocks)
+    ============================================================ */
+    .swrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 64px 48px 0;
+    }
+    .scaption {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 36px;
+    }
+    .scaption .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      line-height: 0.85;
+    }
+    .scaption .text { padding-bottom: 6px; }
+    .scaption .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .scaption h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .scaption h2 i {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .scaption .right {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .scaption .right b { color: var(--ink); font-weight: 700; }
+    @media (max-width: 720px) {
+      .swrap { padding: 48px 22px 0; }
+      .scaption { grid-template-columns: 1fr; gap: 12px; }
+      .scaption .right { text-align: left; }
+    }
+
+    /* ============================================================
+       BROWSER FRAME (used to hold the website mockup)
+    ============================================================ */
+    .frame {
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 28px 60px -28px rgba(0,0,0,0.18);
+      overflow: hidden;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .frame .chrome {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      padding: 10px 14px;
+      align-items: center;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .langs {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .langs span {
+      padding: 3px 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .langs span.on { background: var(--red); color: var(--paper); }
+
+    /* ============================================================
+       SITE NAV  (faithful — Home · Our Team · Fees · Events · Blog)
+    ============================================================ */
+    .site-nav {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 18px 32px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-nav .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .site-nav .brand .logo {
+      width: 40px; height: 40px;
+      object-fit: contain;
+    }
+    .site-nav .brand .wordmark {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .site-nav .brand .wordmark small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-top: 3px;
+    }
+    .site-nav .menu {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-nav .menu a:hover, .site-nav .menu a.on { color: var(--red); }
+    .site-nav .menu a.on { border-bottom: 2px solid var(--red); padding-bottom: 4px; }
+    .site-nav .right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .site-nav .lang-toggle {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+    }
+    .site-nav .lang-toggle span {
+      padding: 4px 9px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--ink-4);
+    }
+    .site-nav .lang-toggle .on { background: var(--ink); color: var(--paper); }
+    .site-nav .book {
+      padding: 9px 16px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 880px) {
+      .site-nav .menu { display: none; }
+      .site-nav { padding: 14px 22px; }
+    }
+
+    /* ============================================================
+       SITE HERO  (Burcu's headshot · headline · CTAs · credentials)
+    ============================================================ */
+    .site-hero {
+      padding: 56px 48px 64px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: center;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-hero .text { max-width: 56ch; }
+    .site-hero .eyebrow {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .site-hero h1 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(32px, 4.6vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .site-hero h1 i {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .site-hero p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 22px;
+    }
+    .site-hero p b { font-weight: 700; color: var(--ink); }
+    .site-hero .cta-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .site-hero .cta {
+      padding: 12px 18px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .site-hero .cta.primary { background: var(--red); color: var(--paper); }
+    .site-hero .cta.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--ink); }
+    .site-hero .creds {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-hero .creds b { color: var(--red); font-weight: 700; }
+    .site-hero .creds .pipe { color: var(--ink-4); }
+
+    .site-hero .photo-card {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 14px 14px 16px;
+      box-shadow: 0 16px 40px -20px rgba(0,0,0,0.18);
+    }
+    .site-hero .photo-card .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .site-hero .photo-card .ph img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .site-hero .photo-card .who {
+      padding-top: 10px;
+      border-top: 2px solid var(--red);
+      margin-top: 10px;
+    }
+    .site-hero .photo-card .who h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .site-hero .photo-card .who p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 3px;
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+    @media (max-width: 880px) {
+      .site-hero { padding: 36px 22px; grid-template-columns: 1fr; gap: 28px; }
+      .site-hero .photo-card { max-width: 280px; margin: 0 auto; }
+    }
+
+    /* ============================================================
+       SITE — OUR SERVICES (5 numbered service cards)
+    ============================================================ */
+    .site-services {
+      padding: 56px 48px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-services .head {
+      max-width: 880px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+    .site-services .head .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .site-services .head h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(28px, 3.6vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .site-services .head h2 i { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-services .head p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 60ch;
+      margin: 0 auto;
+    }
+    .site-services .grid {
+      max-width: 1080px;
+      margin: 32px auto 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .svc-card {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 22px 18px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .svc-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--red);
+      box-shadow: 0 16px 28px -16px rgba(185,32,37,0.25);
+    }
+    .svc-card .num {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+    }
+    .svc-card .icon {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+    .svc-card h4 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.2;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .svc-card p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-3);
+      flex: 1;
+    }
+    .svc-card .arr {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .svc-card .arr::after { content: " →"; }
+    @media (max-width: 980px) {
+      .site-services .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .site-services .grid { grid-template-columns: 1fr; }
+      .site-services { padding: 36px 22px; }
+    }
+
+    /* ============================================================
+       SITE — WHY WORK WITH US (5 feature blocks)
+    ============================================================ */
+    .site-why {
+      padding: 56px 48px;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-why .head {
+      max-width: 1080px;
+      margin: 0 auto 28px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 32px;
+      align-items: end;
+    }
+    .site-why .head .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .site-why .head h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(28px, 3.6vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .site-why .head h2 i { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-why .head p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-2);
+    }
+    .site-why .grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .why-cell {
+      padding: 22px 16px;
+      border-left: 1px solid var(--rule);
+    }
+    .why-cell:first-child { border-left: 0; }
+    .why-cell .num {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: -0.025em;
+      color: var(--red);
+      line-height: 0.9;
+      margin-bottom: 14px;
+    }
+    .why-cell h4 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.25;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .why-cell p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-3);
+    }
+    @media (max-width: 980px) {
+      .site-why .head { grid-template-columns: 1fr; gap: 12px; }
+      .site-why .grid { grid-template-columns: repeat(2, 1fr); }
+      .why-cell { border-left: 0; border-top: 1px solid var(--rule); }
+      .why-cell:nth-child(-n+2) { border-top: 0; }
+      .why-cell:nth-child(odd) { border-right: 1px solid var(--rule); }
+    }
+
+    /* ============================================================
+       SITE — OUR PROCESS (3 steps)
+    ============================================================ */
+    .site-process {
+      padding: 56px 48px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-process .head {
+      max-width: 1080px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+    .site-process .head .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .site-process .head h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(28px, 3.6vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .site-process .head h2 i { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-process .grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .step {
+      background: var(--paper-2);
+      padding: 28px 22px;
+      position: relative;
+    }
+    .step::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--red);
+    }
+    .step .num {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 56px;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      line-height: 0.85;
+      margin-bottom: 16px;
+    }
+    .step h4 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .step p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink-3);
+    }
+    @media (max-width: 880px) {
+      .site-process { padding: 36px 22px; }
+      .site-process .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       SITE — IMMIGRATION CALCULATORS (card)
+    ============================================================ */
+    .site-calc {
+      padding: 56px 48px;
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .site-calc .inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+    .site-calc .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .site-calc h2 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--paper);
+      margin-bottom: 12px;
+    }
+    .site-calc h2 i { font-style: italic; font-weight: 500; color: #ff5e63; }
+    .site-calc p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.78);
+      max-width: 56ch;
+    }
+    .site-calc .calc-cta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .site-calc .cta {
+      padding: 12px 18px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .site-calc .cta.primary { background: var(--red); color: var(--paper); }
+    .site-calc .cta.secondary { background: transparent; color: var(--paper); border: 1px solid var(--paper); }
+    @media (max-width: 880px) {
+      .site-calc { padding: 36px 22px; }
+      .site-calc .inner { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       SITE — FOOTER
+    ============================================================ */
+    .site-foot {
+      padding: 48px 48px 0;
+      background: var(--paper-2);
+      color: var(--ink-2);
+      border-top: 4px solid var(--red);
+    }
+    .site-foot .row {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+      gap: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-foot .row .col h5 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-foot .row .col p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 0.7em;
+    }
+    .site-foot .row .col p i {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .site-foot .row .col ul {
+      list-style: none;
+      padding: 0;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 2;
+      color: var(--ink-2);
+    }
+    .site-foot .row .col ul li:hover { color: var(--red); }
+    .site-foot .ctline {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 0 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-foot .ctline b { color: var(--red); font-weight: 700; }
+
+    /* The Frame Flow credit — proof of work */
+    .ff-credit-callout {
+      max-width: 1080px;
+      margin: 24px auto 0;
+      padding: 18px 22px;
+      background: var(--paper);
+      border: 2px dashed var(--red);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ff-credit-callout .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .ff-credit-callout .line {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .ff-credit-callout .line b { color: var(--red); font-weight: 800; }
+    @media (max-width: 880px) {
+      .site-foot { padding: 36px 22px 0; }
+      .site-foot .row { grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+
+    /* ============================================================
+       CRS CALCULATOR — recreated UI
+    ============================================================ */
+    .calc-frame { margin-top: 32px; }
+    .calc-body {
+      padding: 32px 36px 36px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+    }
+    .calc-body .form-side .calc-head {
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 18px;
+    }
+    .calc-body .form-side .calc-head .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .calc-body .form-side .calc-head h3 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .calc-body .form-side .calc-head p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+
+    .calc-progress {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      margin-bottom: 14px;
+    }
+    .calc-progress .bar {
+      height: 6px;
+      background: var(--rule);
+      position: relative;
+      overflow: hidden;
+    }
+    .calc-progress .bar-fill {
+      position: absolute;
+      inset: 0 33% 0 0;
+      background: var(--red);
+    }
+    .calc-progress .bar-label {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--ink-2);
+      margin-bottom: 6px;
+    }
+    .calc-progress .bar-label b { color: var(--red); font-weight: 800; }
+    .calc-progress .pct {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .calc-fields { display: flex; flex-direction: column; gap: 10px; }
+    .calc-field {
+      display: grid;
+      grid-template-columns: 1fr 130px;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 14px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      transition: border-color 0.2s;
+    }
+    .calc-field:hover, .calc-field.active { border-color: var(--red); }
+    .calc-field .key {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .calc-field .key small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--ink-3);
+      margin-top: 3px;
+      text-transform: none;
+    }
+    .calc-field select, .calc-field .val {
+      padding: 7px 10px;
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      width: 100%;
+      text-align: center;
+    }
+    .calc-field.active .val {
+      border-color: var(--red);
+      color: var(--red);
+      font-weight: 700;
+    }
+    .calc-foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .calc-foot .next {
+      padding: 10px 18px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .calc-foot .calc {
+      padding: 10px 18px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .calc-body .score {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .calc-body .score .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #ff5e63;
+    }
+    .calc-body .score .total {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 88px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper);
+    }
+    .calc-body .score .total small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .calc-body .score dl {
+      border-top: 1px solid rgba(255,255,255,0.16);
+      padding-top: 12px;
+    }
+    .calc-body .score dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+    .calc-body .score dl > div b { color: var(--paper); font-weight: 700; }
+    .calc-body .score .pdf {
+      padding: 10px 14px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+    }
+    @media (max-width: 880px) {
+      .calc-body { grid-template-columns: 1fr; padding: 22px; gap: 22px; }
+    }
+
+    /* ============================================================
+       SECTION — INSTAGRAM (Phone mockup + grid)
+    ============================================================ */
+    .ig-section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 48px 100px;
+    }
+    .ig-section .body {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .ig-side h3 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .ig-side h3 i { font-style: italic; font-weight: 500; color: var(--red); }
+    .ig-side p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+    }
+    .ig-side p b { color: var(--ink); font-weight: 700; }
+
+    /* phone */
+    .phone {
+      width: 320px;
+      max-width: 100%;
+      margin-top: 18px;
+      background: var(--ink);
+      border-radius: 32px;
+      padding: 12px;
+      box-shadow: 0 24px 48px -16px rgba(0,0,0,0.3);
+    }
+    .phone .screen {
+      background: var(--paper);
+      border-radius: 22px;
+      overflow: hidden;
+    }
+    .phone .ig-bar {
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .phone .ig-bar .handle {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .phone .ig-bar .ic { font-size: 16px; color: var(--ink-3); }
+    .phone .ig-profile {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .phone .ig-profile .avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+      border: 3px solid var(--paper);
+      outline: 2px solid var(--red);
+    }
+    .phone .ig-profile dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      text-align: center;
+    }
+    .phone .ig-profile dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .phone .ig-profile dd {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+    }
+    .phone .ig-bio {
+      padding: 0 14px 14px;
+    }
+    .phone .ig-bio .name {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .phone .ig-bio .bio {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-2);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+    .phone .ig-bio .bio i {
+      font-style: italic;
+      color: var(--red);
+    }
+    .phone .ig-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 0 0 12px;
+    }
+    .phone .ig-grid .post {
+      aspect-ratio: 1;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 7px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .phone .ig-grid .post.red { background: var(--red); }
+    .phone .ig-grid .post.dark { background: var(--ink); }
+    .phone .ig-grid .post .top {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .phone .ig-grid .post.red .top, .phone .ig-grid .post.dark .top { color: rgba(255,255,255,0.7); }
+    .phone .ig-grid .post .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .phone .ig-grid .post.red .body { color: var(--paper); }
+    .phone .ig-grid .post.dark .body { color: var(--paper); }
+    .phone .ig-grid .post .body i { font-style: italic; font-weight: 500; color: var(--red); }
+    .phone .ig-grid .post.red .body i { color: var(--paper); }
+    .phone .ig-grid .post.dark .body i { color: var(--red); }
+    .phone .ig-grid .post .foot {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 7px;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+    }
+    .phone .ig-grid .post.red .foot, .phone .ig-grid .post.dark .foot { color: rgba(255,255,255,0.55); }
+
+    /* the right-hand grid (full-size posts) */
+    .ig-feed {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .ig-feed .post {
+      aspect-ratio: 1;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ig-feed .post:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -16px rgba(0,0,0,0.18);
+    }
+    .ig-feed .post.red { background: var(--red); border-color: var(--red); }
+    .ig-feed .post.dark { background: var(--ink); border-color: var(--ink); }
+    .ig-feed .post .top {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .ig-feed .post.red .top, .ig-feed .post.dark .top { color: rgba(255,255,255,0.75); }
+    .ig-feed .post.red .top { color: var(--paper); }
+    .ig-feed .post .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(15px, 1.6vw, 20px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .ig-feed .post .body i { font-style: italic; font-weight: 500; color: var(--red); }
+    .ig-feed .post .body small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: -0.005em;
+      line-height: 1.4;
+      color: var(--ink-2);
+    }
+    .ig-feed .post.red .body, .ig-feed .post.dark .body { color: var(--paper); }
+    .ig-feed .post.red .body i { color: var(--paper); }
+    .ig-feed .post.dark .body i { color: var(--red); }
+    .ig-feed .post.red .body small, .ig-feed .post.dark .body small { color: rgba(255,255,255,0.78); }
+    .ig-feed .post .foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .ig-feed .post.red .foot, .ig-feed .post.dark .foot { color: rgba(255,255,255,0.55); }
+    .ig-feed .post .foot b { color: var(--red); }
+    .ig-feed .post.red .foot b { color: var(--paper); }
+    .ig-feed .post .seal {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 3px 6px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+    }
+    .ig-feed .post.red .seal { background: var(--paper); color: var(--red); }
+    .ig-feed .post.dark .seal { background: var(--red); color: var(--paper); }
+
+    @media (max-width: 980px) {
+      .ig-section .body { grid-template-columns: 1fr; gap: 32px; }
+      .phone { margin: 0 auto 12px; }
+      .ig-feed { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .ig-feed { grid-template-columns: repeat(2, 1fr); }
+      .ig-section { padding: 48px 22px; }
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 100px 32px;
+      text-align: center;
+    }
+    .end .lbl {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .end h3 i { font-style: italic; font-weight: 500; color: var(--red); }
+    .end p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .end .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .end .cta:hover { background: var(--red); }
+
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 700; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Walkthrough</span>
+    <span class="right"><b>Live</b> · since 2025</span>
+  </header>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro">
+    <div class="intro-left">
+      <p class="crumb">Reel 019 · Northern Pathways · Walkthrough</p>
+      <h1>What we built, <i>page by page.</i></h1>
+    </div>
+    <div class="intro-right">
+      <p>
+        A faithful walkthrough of the work we shipped for
+        <b>Northern Pathways Immigration Consulting</b> &mdash; a
+        Toronto regulated practice led by an RCIC. The page below
+        is the actual production site at northernpathways.ca, then
+        the CRS calculator, then the @kanadadayeniyasam Instagram
+        feed for the Turkish-speaking diaspora.
+      </p>
+      <dl class="intro-meta">
+        <div><dt>Engaged</dt><dd>2025</dd></div>
+        <div><dt>Live</dt><dd>2026</dd></div>
+        <div><dt>Locales</dt><dd>EN · TR</dd></div>
+        <div><dt>Status</dt><dd style="color: var(--red);">● Ongoing</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION 01 — THE WEBSITE (faithful rebuild)
+  ==================================================================== -->
+  <section class="swrap reveal">
+    <header class="scaption">
+      <span class="num">01</span>
+      <div class="text">
+        <p class="lbl">Section 01 · Website Design</p>
+        <h2><i>northernpathways.ca</i> — the home page.</h2>
+      </div>
+      <p class="right">12 routes · EN+TR<br><b>Live · since 2025</b></p>
+    </header>
+
+    <article class="frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en</span>
+        <span class="langs"><span class="on">EN</span><span>TR</span></span>
+      </header>
+
+      <!-- NAV -->
+      <nav class="site-nav">
+        <a class="brand" href="#">
+          <img class="logo" src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="Northern Pathways mark">
+          <span class="wordmark">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+        </a>
+        <nav class="menu">
+          <a class="on">Home</a>
+          <a>Our Team</a>
+          <a>Fees</a>
+          <a>Events</a>
+          <a>Blog</a>
+        </nav>
+        <div class="right">
+          <span class="lang-toggle"><span class="on">EN</span><span>TR</span></span>
+          <a class="book">Book a Consultation</a>
+        </div>
+      </nav>
+
+      <!-- HERO -->
+      <section class="site-hero">
+        <div class="text">
+          <p class="eyebrow">Northern Pathways · Immigration Consulting</p>
+          <h1>Guiding your <i>Canadian immigration journey</i> with clarity.</h1>
+          <p>
+            Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>,
+            Regulated Canadian Immigration Consultant (RCIC-IRB), adjunct
+            professor at Queen&rsquo;s University, and CAPIC Board Member.
+            Eligibility assessments, strategic guidance, and legal
+            representation for permanent residency, study permits, and
+            family sponsorship.
+          </p>
+          <div class="cta-row">
+            <a class="cta primary">Book a Consultation</a>
+            <a class="cta secondary">Explore Services</a>
+          </div>
+          <div class="creds">
+            <span><b>RCIC-IRB</b> · College of ICC</span>
+            <span class="pipe">|</span>
+            <span><b>CAPIC</b> · Board Member</span>
+            <span class="pipe">|</span>
+            <span>Queen&rsquo;s · Adjunct</span>
+          </div>
+        </div>
+
+        <aside class="photo-card">
+          <div class="ph">
+            <img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB">
+          </div>
+          <div class="who">
+            <h4>Burcu Akyol</h4>
+            <p>RCIC-IRB · Principal</p>
+          </div>
+        </aside>
+      </section>
+
+      <!-- OUR SERVICES -->
+      <section class="site-services">
+        <div class="head">
+          <p class="lbl">— Our Services —</p>
+          <h2>Five <i>pathways,</i> one practice.</h2>
+          <p>
+            Canada&rsquo;s immigration system offers multiple pathways,
+            and choosing the right one matters. Each of our practice
+            areas connects to a tailored eligibility assessment.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="svc-card">
+            <span class="num">01</span>
+            <img class="icon" src="../../../public/portfolio/northern-pathways/services/cec.png" alt="">
+            <h4>Economic Immigration</h4>
+            <p>Express Entry, FSWP, CEC, and Provincial Nominee streams.</p>
+            <span class="arr">Learn more</span>
+          </article>
+          <article class="svc-card">
+            <span class="num">02</span>
+            <img class="icon" src="../../../public/portfolio/northern-pathways/services/spousal-sponsorship.png" alt="">
+            <h4>Family Sponsorship</h4>
+            <p>Spousal, common-law partner, parents and grandparents.</p>
+            <span class="arr">Learn more</span>
+          </article>
+          <article class="svc-card">
+            <span class="num">03</span>
+            <img class="icon" src="../../../public/portfolio/northern-pathways/services/study-permit.png" alt="">
+            <h4>Temporary Residence</h4>
+            <p>Visitor, study permit, work permit and renewals.</p>
+            <span class="arr">Learn more</span>
+          </article>
+          <article class="svc-card">
+            <span class="num">04</span>
+            <img class="icon" src="../../../public/portfolio/northern-pathways/services/pr-card.png" alt="">
+            <h4>PR Card Renewal &amp; PRTD</h4>
+            <p>PR card renewal and PR Travel Documents from outside Canada.</p>
+            <span class="arr">Learn more</span>
+          </article>
+          <article class="svc-card">
+            <span class="num">05</span>
+            <img class="icon" src="../../../public/portfolio/northern-pathways/services/citizenship.png" alt="">
+            <h4>Citizenship</h4>
+            <p>Canadian citizenship applications, residency calculations.</p>
+            <span class="arr">Learn more</span>
+          </article>
+        </div>
+      </section>
+
+      <!-- WHY WORK WITH US -->
+      <section class="site-why">
+        <header class="head">
+          <div>
+            <p class="lbl">— Why Work With Us —</p>
+          </div>
+          <h2>A regulated practice, <i>built on the four brand values.</i></h2>
+        </header>
+        <div class="grid">
+          <div class="why-cell">
+            <p class="num">01</p>
+            <h4>Knowledge &amp; Experience</h4>
+            <p>Technical legal expertise plus ongoing development since 2019.</p>
+          </div>
+          <div class="why-cell">
+            <p class="num">02</p>
+            <h4>Strategic, Ethical Guidance</h4>
+            <p>Clear direction grounded in regulator-set professional standards.</p>
+          </div>
+          <div class="why-cell">
+            <p class="num">03</p>
+            <h4>Transparent Fees</h4>
+            <p>Pricing listed up front. No hidden lines, no surprises.</p>
+          </div>
+          <div class="why-cell">
+            <p class="num">04</p>
+            <h4>Personalised Approach</h4>
+            <p>Tailored to circumstances, lived experience, and goals.</p>
+          </div>
+          <div class="why-cell">
+            <p class="num">05</p>
+            <h4>Client-Centred Service</h4>
+            <p>Organised support via secure platforms &mdash; from intake to ITA.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- OUR PROCESS -->
+      <section class="site-process">
+        <div class="head">
+          <p class="lbl">— Our Process —</p>
+          <h2>Three steps, <i>start to finish.</i></h2>
+        </div>
+        <div class="grid">
+          <article class="step">
+            <p class="num">01</p>
+            <h4>Pre-Assessment</h4>
+            <p>Complete a structured form. Receive an initial pathway overview within 48 hours.</p>
+          </article>
+          <article class="step">
+            <p class="num">02</p>
+            <h4>Consultation</h4>
+            <p>A tailored eligibility and strategy discussion with the principal RCIC.</p>
+          </article>
+          <article class="step">
+            <p class="num">03</p>
+            <h4>Application Preparation &amp; Submission</h4>
+            <p>Full support through filing, including IRCC follow-up and any subsequent steps.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- IMMIGRATION CALCULATORS -->
+      <section class="site-calc">
+        <div class="inner">
+          <div>
+            <p class="lbl">— Immigration Calculators —</p>
+            <h2>The <i>CRS</i> &amp; <i>FSWP</i> calculators, in-house.</h2>
+            <p>Estimate your Comprehensive Ranking System score for Express Entry, or check eligibility under the Federal Skilled Worker Six Selection Factors. Both export a one-click PDF.</p>
+          </div>
+          <div class="calc-cta-row">
+            <a class="cta primary">CRS Calculator →</a>
+            <a class="cta secondary">FSWP Calculator</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER (faithful) -->
+      <footer class="site-foot">
+        <div class="row">
+          <div class="col">
+            <h5>Northern Pathways</h5>
+            <p>
+              <i>Guiding your Canadian immigration journey with
+              competence, care, and clarity.</i>
+            </p>
+            <p style="margin-top: 14px;">LinkedIn · Instagram (TR) · Instagram (EN)</p>
+          </div>
+          <div class="col">
+            <h5>Quick Links</h5>
+            <ul>
+              <li>Home</li>
+              <li>Our Team</li>
+              <li>Fees</li>
+              <li>Events</li>
+              <li>Blog</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h5>Services</h5>
+            <ul>
+              <li>Economic Immigration</li>
+              <li>Family Class</li>
+              <li>Temporary Residence</li>
+              <li>PR Card Renewal &amp; PRTD</li>
+              <li>Citizenship</li>
+              <li style="margin-top: 6px; color: var(--red); font-weight: 700;">CRS Calculator</li>
+              <li style="color: var(--red); font-weight: 700;">FSW Selection Factors</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h5>Contact Us</h5>
+            <p>5200 Yonge Street, 2nd floor<br>North York, ON, M2N 5P6<br>Canada</p>
+            <p style="margin-top: 8px;">Mon &ndash; Fri: 9:00 AM &ndash; 5:00 PM EST</p>
+            <p style="margin-top: 8px; color: var(--red); font-weight: 600;">info@northernpathways.ca</p>
+          </div>
+        </div>
+        <p class="ctline">
+          <span>© 2026 Northern Pathways Immigration Consulting · All Rights Reserved.</span>
+          <span>Design &amp; development by <b>Frame Flow</b></span>
+        </p>
+
+        <!-- The FF credit callout -->
+        <div class="ff-credit-callout">
+          <span class="lbl">— Footer credit · live on every page —</span>
+          <p class="line">Design &amp; development by <b>Frame Flow</b></p>
+        </div>
+      </footer>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       SECTION 02 — CRS CALCULATOR
+  ==================================================================== -->
+  <section class="swrap reveal">
+    <header class="scaption">
+      <span class="num">02</span>
+      <div class="text">
+        <p class="lbl">Section 02 · Web Application</p>
+        <h2>The <i>CRS Calculator</i> — line by line.</h2>
+      </div>
+      <p class="right">15 fields · 6 categories<br><b>Bilingual · PDF</b></p>
+    </header>
+
+    <article class="frame calc-frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en/crs-calculator</span>
+        <span class="langs"><span class="on">EN</span><span>TR</span></span>
+      </header>
+
+      <div class="calc-body">
+        <div class="form-side">
+          <header class="calc-head">
+            <p class="lbl">CRS Score Calculator</p>
+            <h3>Calculate your CRS score.</h3>
+            <p>Calculate your Comprehensive Ranking System score for Express Entry. Complete the sections below to see your estimated CRS score.</p>
+          </header>
+
+          <div class="calc-progress">
+            <div>
+              <p class="bar-label">Form progress · <b>5 / 15 fields</b></p>
+              <div class="bar"><span class="bar-fill"></span></div>
+            </div>
+            <p class="pct">33%</p>
+          </div>
+
+          <div class="calc-fields">
+            <div class="calc-field active">
+              <span class="key">Age <small>How old are you? *</small></span>
+              <span class="val">32 years</span>
+            </div>
+            <div class="calc-field active">
+              <span class="key">Marital Status <small>Are you married or in a common-law relationship?</small></span>
+              <span class="val">Single</span>
+            </div>
+            <div class="calc-field active">
+              <span class="key">Education <small>Highest level of education *</small></span>
+              <span class="val">Master&rsquo;s</span>
+            </div>
+            <div class="calc-field active">
+              <span class="key">First Language · CLB <small>English · all four skills</small></span>
+              <span class="val">CLB 9</span>
+            </div>
+            <div class="calc-field active">
+              <span class="key">Canadian Work Experience <small>NOC TEER 0–3</small></span>
+              <span class="val">1 year</small></span>
+            </div>
+            <div class="calc-field">
+              <span class="key">Foreign Work Experience <small>Skilled, paid, in occupation</small></span>
+              <span class="val">— select —</span>
+            </div>
+          </div>
+
+          <div class="calc-foot">
+            <a class="next">← Previous</a>
+            <a class="calc">Next: Additional Factors →</a>
+          </div>
+        </div>
+
+        <aside class="score">
+          <p class="lbl">Estimated CRS · Live</p>
+          <p class="total">487<small>CRS · est. / 1200</small></p>
+          <dl>
+            <div><span>A · Core / Human Capital</span><b>404</b></div>
+            <div><span>B · Spouse</span><b>—</b></div>
+            <div><span>C · Skill Transferability</span><b>50</b></div>
+            <div><span>D · Additional Factors</span><b>33</b></div>
+          </dl>
+          <span class="pdf">↓ Download PDF report</span>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       SECTION 03 — INSTAGRAM (@kanadadayeniyasam)
+  ==================================================================== -->
+  <section class="ig-section reveal">
+    <header class="scaption">
+      <span class="num">03</span>
+      <div class="text">
+        <p class="lbl">Section 03 · Social Media</p>
+        <h2>@kanadadayeniyasam — <i>yeni bir yaşam.</i></h2>
+      </div>
+      <p class="right">Turkish · ongoing<br><b>Draw-day · Reels · explainers</b></p>
+    </header>
+
+    <div class="body">
+      <aside class="ig-side">
+        <h3>The diaspora <i>handle.</i></h3>
+        <p>
+          Most of Northern Pathways&rsquo; prospective clients arrive
+          through Turkish-language search and word-of-mouth. We run
+          <b>@kanadadayeniyasam</b> (&ldquo;new life in Canada&rdquo;)
+          as the firm&rsquo;s public-facing channel.
+        </p>
+        <p>
+          Every post is bilingual-aware: it links back to the EN or TR
+          calculator depending on locale, and mirrors the firm&rsquo;s
+          brand voice &mdash; <b>professional, empathetic, clear,
+          authoritative.</b>
+        </p>
+
+        <!-- Phone preview -->
+        <div class="phone">
+          <div class="screen">
+            <div class="ig-bar">
+              <span class="ic">←</span>
+              <span class="handle">kanadadayeniyasam</span>
+              <span class="ic">⋯</span>
+            </div>
+            <div class="ig-profile">
+              <span class="avatar">N<span style="color: var(--ink);">P</span></span>
+              <dl>
+                <div><dt>248</dt><dd>posts</dd></div>
+                <div><dt>14.2k</dt><dd>followers</dd></div>
+                <div><dt>312</dt><dd>following</dd></div>
+              </dl>
+            </div>
+            <div class="ig-bio">
+              <p class="name">Northern Pathways · Burcu Akyol, RCIC</p>
+              <p class="bio">Düzenlenmiş Kanada Göçmenlik Danışmanı · <i>Yeni bir yaşamın ilk adımı.</i><br>📍 Toronto · 🇨🇦 RCIC-IRB · linktr.ee/np</p>
+            </div>
+            <div class="ig-grid">
+              <div class="post red"><span class="top">Draw 347</span><span class="body">CRS <i>504</i></span><span class="foot">healthcare</span></div>
+              <div class="post"><span class="top">Reel · :42</span><span class="body">NCLC <i>7+</i></span><span class="foot">tr · explainer</span></div>
+              <div class="post dark"><span class="top">Carousel</span><span class="body">PGWP <i>2025</i></span><span class="foot">en · 8 slides</span></div>
+              <div class="post"><span class="top">Quote</span><span class="body"><i>Yeni</i> bir yaşam.</span><span class="foot">brand line</span></div>
+              <div class="post"><span class="top">FAQ</span><span class="body">PNP <i>nedir?</i></span><span class="foot">tr · primer</span></div>
+              <div class="post dark"><span class="top">Reel · :28</span><span class="body">10dk <i>CRS</i></span><span class="foot">tr · consult</span></div>
+              <div class="post red"><span class="top">Card</span><span class="body">FSWP <i>67</i></span><span class="foot">en · primer</span></div>
+              <div class="post"><span class="top">Story</span><span class="body"><i>RCIC.</i></span><span class="foot">credentials</span></div>
+              <div class="post"><span class="top">Tip</span><span class="body">CLB <i>9+</i></span><span class="foot">en · primer</span></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- main feed -->
+      <div class="ig-feed">
+        <article class="post red">
+          <span class="seal">347</span>
+          <p class="top">Draw card · 02 Apr</p>
+          <p class="body">CRS <i>504</i><small>Healthcare · 3,000 ITAs · the lowest healthcare cutoff since 2023.</small></p>
+          <p class="foot"><b>likes</b> 412 · <b>shares</b> 118</p>
+        </article>
+        <article class="post">
+          <span class="seal">EN</span>
+          <p class="top">FAQ · primer</p>
+          <p class="body">FSWP <i>67/100</i><small>The Six Selection Factors, in plain English.</small></p>
+          <p class="foot"><b>saves</b> 286</p>
+        </article>
+        <article class="post dark">
+          <span class="seal">Reel</span>
+          <p class="top">Reel · :42 · TR</p>
+          <p class="body"><i>NCLC 7+</i> bonusu<small>French test puanları, üç dakikada açıklama.</small></p>
+          <p class="foot"><b>views</b> 8.2k</p>
+        </article>
+        <article class="post">
+          <span class="seal">TR</span>
+          <p class="top">Carousel · 8 slide</p>
+          <p class="body">PNP <i>nedir?</i><small>Provincial Nominee Programme &mdash; her eyalet için bir bakış.</small></p>
+          <p class="foot"><b>saves</b> 619</p>
+        </article>
+        <article class="post">
+          <span class="seal">EN</span>
+          <p class="top">Quote · brand</p>
+          <p class="body">Treat clients as <i>individuals,</i> not case numbers.<small>From the brand voice.</small></p>
+          <p class="foot"><b>shares</b> 92</p>
+        </article>
+        <article class="post red">
+          <span class="seal">Card</span>
+          <p class="top">Tool · CRS</p>
+          <p class="body">CRS <i>Calculator</i><small>Ücretsiz · Türkçe · linktr.ee/np</small></p>
+          <p class="foot"><b>clicks</b> 1.4k</p>
+        </article>
+        <article class="post dark">
+          <span class="seal">Reel</span>
+          <p class="top">Reel · :28 · TR</p>
+          <p class="body">Burcu&rsquo;dan <i>10 dk</i> CRS<small>Konsültasyon takeover &mdash; sıkça sorulan beş soru.</small></p>
+          <p class="foot"><b>views</b> 12.4k</p>
+        </article>
+        <article class="post">
+          <span class="seal">TR</span>
+          <p class="top">Story · highlight</p>
+          <p class="body"><i>RCIC.</i><small>Düzenlenmiş Kanada Göçmenlik Danışmanı &mdash; ne demek?</small></p>
+          <p class="foot"><b>opens</b> 3.1k</p>
+        </article>
+        <article class="post red">
+          <span class="seal">346</span>
+          <p class="top">Draw card · 27 Mar</p>
+          <p class="body">CRS <i>379</i><small>French · 7,500 ITAs &mdash; the largest French draw of the year.</small></p>
+          <p class="foot"><b>shares</b> 184</p>
+        </article>
+        <article class="post">
+          <span class="seal">EN</span>
+          <p class="top">Tip · explainer</p>
+          <p class="body">CLB <i>9</i> + French<small>How a single language combo adds 50 CRS points.</small></p>
+          <p class="foot"><b>saves</b> 478</p>
+        </article>
+        <article class="post dark">
+          <span class="seal">Reel</span>
+          <p class="top">Reel · :22 · EN</p>
+          <p class="body">Onboarding <i>form</i><small>Walk-through &mdash; from "merhaba" to first consult.</small></p>
+          <p class="foot"><b>views</b> 4.7k</p>
+        </article>
+        <article class="post">
+          <span class="seal">TR</span>
+          <p class="top">Quote</p>
+          <p class="body"><i>Şeffaflık,</i> bir başlangıç değil &mdash; bir standart.<small>Burcu Akyol · 2026</small></p>
+          <p class="foot"><b>likes</b> 522</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end">
+    <p class="lbl">— Roll the next reel —</p>
+    <h3>Set the next <i>practice.</i></h3>
+    <p>Build the website, the in-house tools, and the bilingual social programme that a regulated practice deserves &mdash; with FrameFlow.</p>
+    <a class="cta">Begin a project →</a>
+  </section>
+
+  <footer class="colophon">
+    <span>Designed by <strong>FrameFlow</strong> · Toronto · 2026</span>
+    <span class="center">Reel <b>019</b> · Northern Pathways</span>
+    <span class="right">All Reels →</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

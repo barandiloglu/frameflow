@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Wall (FrameFlow / Prototype 17)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  <style>
+    /* ====================================================================
+       PROTOTYPE 17 — "The Wall"
+
+       No header. No sections. No chapter bars. No FF rail across the
+       top. The visitor lands directly on a wall — Pinterest masonry,
+       varied card sizes, real Instagram posts coexisting with the
+       website-as-card, calculator-as-card, Burcu-as-card, brand-
+       value text cards. FF appears only as a small fixed watermark
+       in the bottom-right corner. The page IS the work.
+    ==================================================================== */
+
+    :root {
+      --paper:    #2c2b2b;       /* dark gallery wall */
+      --paper-2:  #1f1d18;
+      --paper-3:  #f9f9f9;
+      --paper-w:  #ffffff;
+      --rule:     #4a4744;
+      --rule-2:   #6e695b;
+      --ink:      #1a1814;
+      --ink-2:    #38332a;
+      --ink-3:    #6a6453;
+      --red:      #b92025;
+      --red-l:    #ff5e63;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--paper);
+      color: var(--paper-w);
+      min-height: 100vh;
+    }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding: 24px;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* gallery wall texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.06;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    /* a single soft red wash radiating from the top-left */
+    body::after {
+      content: "";
+      position: fixed;
+      top: -200px;
+      left: -200px;
+      width: 800px;
+      height: 800px;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(185,32,37,0.16), transparent 65%);
+    }
+
+    /* ============================================================
+       MASONRY — the wall itself. CSS columns for true variable-height
+       layout.
+    ============================================================ */
+    .wall {
+      column-count: 5;
+      column-gap: 16px;
+      max-width: 1800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    @media (max-width: 1500px) { .wall { column-count: 4; } }
+    @media (max-width: 1100px) { .wall { column-count: 3; } }
+    @media (max-width: 720px) { .wall { column-count: 2; column-gap: 12px; } }
+    @media (max-width: 460px) { .wall { column-count: 1; } }
+
+    /* Card — the universal masonry unit */
+    .card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      position: relative;
+      background: var(--ink);
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+      box-shadow: 0 16px 40px -16px rgba(0,0,0,0.5);
+    }
+    @media (max-width: 720px) { .card { margin-bottom: 12px; } }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 56px -16px rgba(0,0,0,0.7);
+      z-index: 5;
+    }
+
+    /* === Post card (4:5 photo) === */
+    .card.post {
+      aspect-ratio: 4 / 5;
+    }
+    .card.post > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .card.post:hover > img { transform: scale(1.04); }
+    .card.post .pages {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 9px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 2;
+    }
+    .card.post .pages::before { content: "▦"; font-size: 10px; line-height: 1; }
+    .card.post .pages.live { background: var(--paper-w); color: var(--red); }
+    .card.post .pages.live::before { content: "▶"; }
+    /* hover overlay caption */
+    .card.post .ovl {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px 14px 14px;
+      background: linear-gradient(to top, rgba(26,24,20,0.95), rgba(26,24,20,0));
+      transform: translateY(8px);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 2;
+    }
+    .card.post:hover .ovl { opacity: 1; transform: none; }
+    .card.post .ovl .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      line-height: 1.2;
+      color: var(--paper-w);
+      letter-spacing: -0.005em;
+    }
+    .card.post .ovl .ttl em { font-style: italic; font-weight: 500; color: var(--red-l); }
+    .card.post .ovl .info {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+    .card.post .ovl .info b { color: var(--red-l); font-weight: 800; }
+
+    /* === Burcu card — portrait + name === */
+    .card.burcu {
+      aspect-ratio: 4 / 5;
+      background: var(--paper-w);
+      color: var(--ink);
+    }
+    .card.burcu > .ph {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .card.burcu > .ph img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.04) saturate(0.95);
+    }
+    .card.burcu > .ph::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,24,20,0.85), rgba(26,24,20,0.05) 60%);
+    }
+    .card.burcu .stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background: var(--red);
+      z-index: 2;
+    }
+    .card.burcu .nameplate {
+      position: absolute;
+      bottom: 16px; left: 16px; right: 16px;
+      z-index: 2;
+      color: var(--paper-w);
+    }
+    .card.burcu .nameplate .role {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-l);
+      margin-bottom: 6px;
+    }
+    .card.burcu .nameplate h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(18px, 1.6vw, 26px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--paper-w);
+    }
+    .card.burcu .nameplate h3 em { font-style: italic; font-weight: 500; color: var(--red-l); }
+    .card.burcu .nameplate .creds {
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    .card.burcu .nameplate .creds b { color: var(--paper-w); font-weight: 800; }
+
+    /* === Website card (different aspect ratio — wider) === */
+    .card.website {
+      background: var(--paper-w);
+      color: var(--ink);
+      padding: 0;
+    }
+    .card.website .chrome {
+      background: var(--paper-3);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--rule-2);
+    }
+    .card.website .chrome .dots { display: flex; gap: 4px; }
+    .card.website .chrome .dots span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(31,29,24,0.18);
+    }
+    .card.website .chrome .dots span:first-child { background: var(--red); }
+    .card.website .chrome .url {
+      flex: 1;
+      padding: 3px 7px;
+      background: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      color: var(--ink-2);
+      letter-spacing: 0;
+      border: 1px solid rgba(31,29,24,0.12);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .card.website .chrome .lt {
+      padding: 2px 5px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      color: var(--ink);
+      background: var(--paper-3);
+      border: 1px solid rgba(31,29,24,0.18);
+    }
+    .card.website .chrome .lt b { color: var(--red); }
+    .card.website .body {
+      padding: 24px 22px 22px;
+    }
+    .card.website .body .tag {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .card.website .body h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 1.8vw, 26px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .card.website .body h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .card.website .body p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin-bottom: 14px;
+    }
+    .card.website .body p b { color: var(--ink); font-weight: 800; }
+    .card.website .body .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .card.website .body .row a {
+      padding: 7px 12px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .card.website .body .row .p { background: var(--red); color: var(--paper-w); }
+    .card.website .body .row .s { border: 1px solid var(--ink); color: var(--ink); }
+    .card.website .body .strip {
+      padding-top: 12px;
+      border-top: 1px solid rgba(31,29,24,0.12);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .card.website .body .strip b { color: var(--red); font-weight: 800; }
+
+    /* === Calculator card (square, dark, score-led) === */
+    .card.calc {
+      aspect-ratio: 1 / 1;
+      background: var(--paper-2);
+      color: var(--paper-w);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card.calc::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.18) 2px 3px);
+      opacity: 0.45;
+      mix-blend-mode: multiply;
+    }
+    .card.calc .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-l);
+      position: relative;
+      z-index: 2;
+    }
+    .card.calc .total {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(64px, 7vw, 96px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper-w);
+      position: relative;
+      z-index: 2;
+    }
+    .card.calc .total small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .card.calc dl {
+      border-top: 1px solid rgba(255,255,255,0.16);
+      padding-top: 8px;
+      position: relative;
+      z-index: 2;
+      margin-top: auto;
+    }
+    .card.calc dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 0;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      color: rgba(255,255,255,0.7);
+    }
+    .card.calc dl > div b { color: var(--red-l); font-weight: 800; }
+    .card.calc .pdf {
+      margin-top: 6px;
+      padding: 7px 10px;
+      background: var(--red);
+      color: var(--paper-w);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* === Quote card (text only, value or brand voice) === */
+    .card.quote {
+      aspect-ratio: 4 / 5;
+      background: var(--paper-w);
+      color: var(--ink);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card.quote.red { background: var(--red); color: var(--paper-w); }
+    .card.quote.dark { background: var(--ink); color: var(--paper-w); }
+    .card.quote .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .card.quote.red .lbl { color: rgba(255,255,255,0.78); }
+    .card.quote.dark .lbl { color: var(--red); }
+    .card.quote .body-q {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(16px, 1.8vw, 22px);
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      max-width: 22ch;
+    }
+    .card.quote .body-q b { font-style: normal; font-weight: 800; color: var(--red); }
+    .card.quote.red .body-q { color: var(--paper-w); }
+    .card.quote.red .body-q b { color: var(--paper-w); font-weight: 800; }
+    .card.quote.dark .body-q { color: var(--paper-w); }
+    .card.quote.dark .body-q b { color: var(--red); }
+    .card.quote .from {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .card.quote .from b { color: var(--ink); font-weight: 800; }
+    .card.quote.red .from { color: rgba(255,255,255,0.55); }
+    .card.quote.red .from b { color: var(--paper-w); }
+    .card.quote.dark .from { color: rgba(255,255,255,0.55); }
+    .card.quote.dark .from b { color: var(--paper-w); }
+
+    /* === Stat card (a big number, a tiny caption) === */
+    .card.stat {
+      aspect-ratio: 1 / 1;
+      background: var(--paper-w);
+      color: var(--ink);
+      padding: 18px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card.stat.red { background: var(--red); color: var(--paper-w); }
+    .card.stat.cream { background: var(--paper-3); color: var(--ink); }
+    .card.stat .num {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(48px, 6vw, 80px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .card.stat.red .num { color: var(--paper-w); }
+    .card.stat .num em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .card.stat.red .num em { color: var(--paper-w); opacity: 0.85; }
+    .card.stat .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .card.stat.red .lbl { color: rgba(255,255,255,0.78); }
+    .card.stat .lbl b { color: var(--ink); font-weight: 800; }
+    .card.stat.red .lbl b { color: var(--paper-w); }
+
+    /* === Service tile (small icon + name) === */
+    .card.service {
+      aspect-ratio: 1 / 1;
+      background: var(--paper-w);
+      color: var(--ink);
+      padding: 18px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card.service .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .card.service > img {
+      width: 56px; height: 56px; object-fit: contain;
+      align-self: center;
+    }
+    .card.service h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.1;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .card.service h4 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .card.service p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    /* === Wordmark card — bold black/red statement === */
+    .card.mark {
+      aspect-ratio: 4 / 3;
+      background: var(--ink);
+      color: var(--paper-w);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card.mark.red { background: var(--red); }
+    .card.mark .ant {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red-l);
+    }
+    .card.mark.red .ant { color: rgba(255,255,255,0.72); }
+    .card.mark .word {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(22px, 2.4vw, 36px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper-w);
+    }
+    .card.mark .word em { font-style: italic; font-weight: 500; color: var(--red); }
+    .card.mark.red .word em { color: var(--paper-w); }
+    .card.mark .foot {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card.mark .foot b { color: var(--paper-w); font-weight: 800; }
+
+    /* === Webinar card (live, has portrait + date, square) === */
+    .card.webinar {
+      aspect-ratio: 4 / 5;
+    }
+    /* uses post styling underneath */
+
+    /* ============================================================
+       FF WATERMARK — small, fixed, bottom-right.
+    ============================================================ */
+    .watermark {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .watermark:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+    .watermark .mark {
+      width: 22px; height: 22px;
+      background: var(--red);
+      color: var(--paper-w);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 9px;
+      letter-spacing: -0.02em;
+    }
+    .watermark .text {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--paper-w);
+      line-height: 1.4;
+    }
+    .watermark .text small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: rgba(255,255,255,0.55);
+    }
+    .watermark .text b { color: var(--red-l); }
+    @media (max-width: 720px) {
+      .watermark { bottom: 12px; right: 12px; padding: 6px 10px; }
+      .watermark .mark { width: 18px; height: 18px; font-size: 8px; }
+      .watermark .text { font-size: 8px; }
+    }
+
+    /* ============================================================
+       INTRO PIN — tiny pin in the top-left corner of the wall.
+       Does NOT span the page; it sits as a card in the masonry but
+       at the very start of the column flow.
+    ============================================================ */
+    .card.intro {
+      background: transparent;
+      box-shadow: none;
+      padding: 8px 8px 6px;
+    }
+    .card.intro:hover { transform: none; box-shadow: none; }
+    .card.intro .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .card.intro .ant b { color: var(--red-l); font-weight: 800; }
+    .card.intro h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--paper-w);
+    }
+    .card.intro h2 em { font-style: italic; font-weight: 500; color: var(--red-l); }
+
+    /* reveal — staggered card pop-in */
+    @media (prefers-reduced-motion: no-preference) {
+      .card {
+        opacity: 0;
+        transform: translateY(12px);
+        animation: pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      .card:nth-child(3n+1) { animation-delay: 0.05s; }
+      .card:nth-child(3n+2) { animation-delay: 0.10s; }
+      .card:nth-child(3n+3) { animation-delay: 0.15s; }
+      .card:nth-child(5n+1) { animation-delay: 0.20s; }
+      .card:nth-child(5n+2) { animation-delay: 0.25s; }
+      .card:nth-child(5n+3) { animation-delay: 0.30s; }
+      .card:nth-child(5n+4) { animation-delay: 0.35s; }
+      .card:nth-child(7n+1) { animation-delay: 0.40s; }
+      .card:nth-child(7n+2) { animation-delay: 0.45s; }
+      @keyframes pop {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: none; }
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       THE WALL — masonry, varied cards, no chrome
+  ==================================================================== -->
+  <main class="wall">
+
+    <!-- intro pin — sits in the masonry but unstyled background -->
+    <div class="card intro">
+      <p class="ant">— A wall by <b>FrameFlow</b> for —</p>
+      <h2>Northern <em>Pathways<br>Immigration</em> Consulting<br>2026.</h2>
+    </div>
+
+    <!-- Burcu card -->
+    <article class="card burcu">
+      <span class="stripe"></span>
+      <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB"></div>
+      <div class="nameplate">
+        <p class="role">— Captain</p>
+        <h3>Burcu <em>Akyol.</em></h3>
+        <p class="creds">RCIC-IRB <b>·</b> CICC <b>·</b> CAPIC <b>·</b> Queen&rsquo;s</p>
+      </div>
+    </article>
+
+    <!-- Post 1 — Express Entry (carousel, 6 slides) -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry public consultation">
+      <span class="pages">1 / 6</span>
+      <div class="ovl">
+        <p class="ttl">Express Entry · <em>kamuoyu görüşü.</em></p>
+        <p class="info">tr · IRCC · <b>23 Apr — 24 May 26</b></p>
+      </div>
+    </article>
+
+    <!-- Calculator card — square, score-led -->
+    <article class="card calc">
+      <p class="lbl">— CRS estimate · live</p>
+      <p class="total">487<small>CRS / 1200</small></p>
+      <dl>
+        <div><span>A · Core</span><b>404</b></div>
+        <div><span>B · Spouse</span><b>—</b></div>
+        <div><span>C · Transfer</span><b>50</b></div>
+        <div><span>D · Additional</span><b>33</b></div>
+      </dl>
+      <p class="pdf">↓ PDF · signed by counsel</p>
+    </article>
+
+    <!-- Quote card — brand voice -->
+    <article class="card quote red">
+      <p class="lbl">— Brand voice</p>
+      <p class="body-q">Treat clients as <b>individuals,</b><br>not case numbers.</p>
+      <p class="from"><b>—</b> Northern Pathways</p>
+    </article>
+
+    <!-- Post 2 — Levels Plan (longest carousel, 9 slides) -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Canada Immigration Levels Plan 2026-2028">
+      <span class="pages">1 / 9</span>
+      <div class="ovl">
+        <p class="ttl">Göç Seviyeleri Planı · <em>2026 – 2028.</em></p>
+        <p class="info">tr · levels plan · <b>9-slide</b></p>
+      </div>
+    </article>
+
+    <!-- Stat card — posts shipped -->
+    <article class="card stat">
+      <p class="lbl">— posts shipped <b>2026</b></p>
+      <p class="num">248<em>.</em></p>
+    </article>
+
+    <!-- Post 3 — Super Visa -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa application update">
+      <span class="pages">1 / 4</span>
+      <div class="ovl">
+        <p class="ttl">Süper Vize · <em>gelir esnekliği.</em></p>
+        <p class="info">tr · super visa · <b>2026</b></p>
+      </div>
+    </article>
+
+    <!-- Quote card — value 02 personalised -->
+    <article class="card quote">
+      <p class="lbl">— Value № 02</p>
+      <p class="body-q"><b>Personalised</b> service.<br>Clients meet a <em>counsel,</em> not a form.</p>
+      <p class="from">Tied to the <b>website</b>.</p>
+    </article>
+
+    <!-- Post 4 — Doctor immigration -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Doctor immigration carousel">
+      <span class="pages">1 / 4</span>
+      <div class="ovl">
+        <p class="ttl">Doktor açığı · <em>yeni adımlar.</em></p>
+        <p class="info">tr · healthcare · <b>RCIC note</b></p>
+      </div>
+    </article>
+
+    <!-- Wordmark card — Designed by Frame Flow credit -->
+    <article class="card mark">
+      <p class="ant">— A footer credit, on every route —</p>
+      <p class="word">Designed &amp; developed<br>by <em>Frame Flow.</em></p>
+      <p class="foot"><span>northernpathways.ca</span><span><b>EN+TR</b></span></p>
+    </article>
+
+    <!-- Stat card — followers -->
+    <article class="card stat cream">
+      <p class="lbl">— @kanadadayeniyasam</p>
+      <p class="num">14.<em>2k</em></p>
+    </article>
+
+    <!-- Post 5 — Study permit (8 slides) -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit visa officer post">
+      <span class="pages">1 / 8</span>
+      <div class="ovl">
+        <p class="ttl">Vize memuru · <em>neye bakar?</em></p>
+        <p class="info">tr · study · <b>NP × EduPathways</b></p>
+      </div>
+    </article>
+
+    <!-- Service tile -->
+    <article class="card service">
+      <p class="num">№ 01</p>
+      <img src="../../../public/portfolio/northern-pathways/services/cec.png" alt="">
+      <h4>Economic <em>Immigration</em></h4>
+      <p>Express · FSWP · CEC · PNP</p>
+    </article>
+
+    <!-- Post 6 — Yeni Yaşam seminar -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+      <span class="pages">1 / 3</span>
+      <div class="ovl">
+        <p class="ttl">Yeni Yaşam · <em>ANK + IST.</em></p>
+        <p class="info">tr · seminar · <b>13 / 20 Ekim</b></p>
+      </div>
+    </article>
+
+    <!-- Quote card — value 04 knowledge -->
+    <article class="card quote dark">
+      <p class="lbl">— Value № 04</p>
+      <p class="body-q"><b>Knowledge</b> &amp; <em>expertise.</em><br>156+ IRCC draws indexed since 2015.</p>
+      <p class="from">Tied to the <b>draws feed</b>.</p>
+    </article>
+
+    <!-- Post 7 — webinar (live) -->
+    <article class="card post webinar">
+      <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+      <span class="pages live">Live</span>
+      <div class="ovl">
+        <p class="ttl">Webinar · <em>PGWP rules.</em></p>
+        <p class="info">tr · 22 Aralık 25 · <b>Burcu Akyol</b></p>
+      </div>
+    </article>
+
+    <!-- Website card — wider, holds the site -->
+    <article class="card website">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">🔒 northernpathways.ca/en</span>
+        <span class="lt"><b>EN</b> / TR</span>
+      </header>
+      <div class="body">
+        <p class="tag">— The home page</p>
+        <h3>Guiding your <em>journey</em> with clarity.</h3>
+        <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, RCIC-IRB. Twelve routes per locale.</p>
+        <div class="row">
+          <a class="p">Book Consult</a>
+          <a class="s">Services</a>
+        </div>
+        <p class="strip"><b>·</b> 12 routes <b>·</b> EN + TR <b>·</b> Live since 2026</p>
+      </div>
+    </article>
+
+    <!-- Post 8 — Ontario OINP -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP carousel">
+      <span class="pages">1 / 6</span>
+      <div class="ovl">
+        <p class="ttl">Ontario · <em>OINP yeni programlar.</em></p>
+        <p class="info">tr · OINP · <b>Bill 30 · 2025</b></p>
+      </div>
+    </article>
+
+    <!-- Stat card — total carousels -->
+    <article class="card stat red">
+      <p class="lbl">— carousels in this set</p>
+      <p class="num">8<em>×</em></p>
+    </article>
+
+    <!-- Quote card — value 03 transparency -->
+    <article class="card quote">
+      <p class="lbl">— Value № 03</p>
+      <p class="body-q"><b>Transparency</b><br>· in <em>pricing.</em></p>
+      <p class="from">Tied to the <b>fees page &amp; calculator</b>.</p>
+    </article>
+
+    <!-- Post 9 — OINP March 2026 -->
+    <article class="card post">
+      <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+      <span class="pages">1 / 6</span>
+      <div class="ovl">
+        <p class="ttl">OINP · <em>18 Mart davet turu.</em></p>
+        <p class="info">tr · ontario · <b>2026</b></p>
+      </div>
+    </article>
+
+    <!-- Service tile -->
+    <article class="card service">
+      <p class="num">№ 05</p>
+      <img src="../../../public/portfolio/northern-pathways/services/citizenship.png" alt="">
+      <h4>Citizenship</h4>
+      <p>Applications · residency calc</p>
+    </article>
+
+    <!-- Quote card — value 05 care -->
+    <article class="card quote red">
+      <p class="lbl">— Value № 05</p>
+      <p class="body-q"><b>Care</b> &amp; lived experience.<br>Two languages, <em>two registers.</em></p>
+      <p class="from"><b>—</b> @kanadadayeniyasam</p>
+    </article>
+
+    <!-- Post 10 — Levels Plan webinar -->
+    <article class="card post webinar">
+      <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+      <span class="pages live">Live</span>
+      <div class="ovl">
+        <p class="ttl">Webinar · <em>Levels Plan PR.</em></p>
+        <p class="info">tr · 11 Kasım 25 · <b>Burcu Akyol</b></p>
+      </div>
+    </article>
+
+    <!-- Mark — red brand statement -->
+    <article class="card mark red">
+      <p class="ant">— Brand line · 2026</p>
+      <p class="word">Yeni bir <em>yaşamın</em><br>ilk adımı.</p>
+      <p class="foot"><span>EN/TR</span><span><b>brand voice</b></span></p>
+    </article>
+
+    <!-- Service tile -->
+    <article class="card service">
+      <p class="num">№ 03</p>
+      <img src="../../../public/portfolio/northern-pathways/services/study-permit.png" alt="">
+      <h4>Temporary <em>Residence</em></h4>
+      <p>Visitor · study · work</p>
+    </article>
+
+    <!-- Stat card — site routes -->
+    <article class="card stat">
+      <p class="lbl">— routes per locale</p>
+      <p class="num">12<em>×</em></p>
+    </article>
+
+    <!-- Quote card — value 01 ethical -->
+    <article class="card quote dark">
+      <p class="lbl">— Value № 01</p>
+      <p class="body-q"><b>Ethical</b><br><em>guidance.</em></p>
+      <p class="from">Tied to the <b>RCIC licence</b>.</p>
+    </article>
+
+    <!-- Service tile -->
+    <article class="card service">
+      <p class="num">№ 02</p>
+      <img src="../../../public/portfolio/northern-pathways/services/spousal-sponsorship.png" alt="">
+      <h4>Family <em>Sponsorship</em></h4>
+      <p>Spousal · partner · parents</p>
+    </article>
+
+    <!-- Stat card — draws indexed -->
+    <article class="card stat cream">
+      <p class="lbl">— IRCC draws indexed</p>
+      <p class="num">156<em>+</em></p>
+    </article>
+
+    <!-- Service tile -->
+    <article class="card service">
+      <p class="num">№ 04</p>
+      <img src="../../../public/portfolio/northern-pathways/services/pr-card.png" alt="">
+      <h4>PR Card &amp; <em>PRTD</em></h4>
+      <p>Renewals · travel docs</p>
+    </article>
+
+    <!-- last mark — closing thought -->
+    <article class="card mark">
+      <p class="ant">— Filed in good faith</p>
+      <p class="word">A practice<br>in <em>two languages.</em></p>
+      <p class="foot"><span>Toronto · 2026</span><span><b>NP × FF</b></span></p>
+    </article>
+
+  </main>
+
+  <!-- =================================================================
+       FF WATERMARK — only chrome on the page
+  ==================================================================== -->
+  <a class="watermark" href="#">
+    <span class="mark">FF</span>
+    <span class="text">FRAMEFLOW<small>NP <b>·</b> 2026</small></span>
+  </a>
+
+</body>
+</html>

@@ -1,0 +1,1994 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adrian's Wasaga Beach — Case Study (FrameFlow / Prototype 04)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · ADRIAN'S WASAGA BEACH
+       Prototype 04 — "The Case Study" (portfolio-substance, 3 deliverables)
+
+       Same Postcard visual register Baran liked (sand surface, tape,
+       polaroid moments) — but pivoted from "decorative" to "showing
+       the work." Three big deliverable sections: Photography, Social
+       Campaign, Website. The website section includes a browser-
+       chrome mockup of adrianswasagabeach.ca built from the real
+       site's content (Two Locations · One Heartfelt Welcome).
+    ==================================================================== */
+
+    :root {
+      --sand:       #ecd798;
+      --sand-d:     #d8c280;
+      --sand-l:     #f5e6b8;
+      --paper:      #fdf9ec;
+      --seafoam:    #98e5d8;
+      --seafoam-d:  #6dc7b6;
+      --orange:     #f9a21b;
+      --orange-d:   #d8830a;
+      --gray:       #353747;
+      --gray-2:     #4a4d5e;
+      --gray-3:     #7a7e90;
+      --rule:       rgba(53, 55, 71, 0.18);
+
+      --display:   "Montserrat", system-ui, sans-serif;
+      --body:      "Quicksand", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--sand); color: var(--gray); overflow-x: hidden; }
+    body {
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0 0.2  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .ff-rail {
+      position: relative;
+      z-index: 5;
+      padding: 12px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ff-rail b { color: var(--orange); }
+    .ff-rail .center { letter-spacing: 0.5em; color: var(--seafoam); }
+
+    /* ============================================================
+       MASKING TAPE (utility)
+    ============================================================ */
+    .tape {
+      position: absolute;
+      width: 110px;
+      height: 24px;
+      background: rgba(152, 229, 216, 0.78);
+      box-shadow: 0 4px 8px -2px rgba(53, 55, 71, 0.2);
+      z-index: 4;
+      pointer-events: none;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(0,0,0,0.04));
+    }
+    .tape::before, .tape::after {
+      content: "";
+      position: absolute;
+      width: 12px; height: 100%; top: 0;
+      background: inherit;
+      opacity: 0.5;
+    }
+    .tape::before { left: -6px; clip-path: polygon(100% 0, 0 30%, 0 70%, 100% 100%); }
+    .tape::after  { right: -6px; clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%); }
+    .tape.orange { background: rgba(249, 162, 27, 0.82); }
+    .tape.sand { background: rgba(216, 194, 128, 0.82); }
+
+    /* ============================================================
+       COVER HERO — case study card
+    ============================================================ */
+    .hero {
+      padding: 80px 32px 60px;
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-text .crumb {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 22px;
+      padding: 10px 16px;
+      background: var(--paper);
+      display: inline-block;
+      box-shadow: 4px 4px 0 var(--gray);
+    }
+    .hero-text h1 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(56px, 8vw, 128px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 24px;
+      max-width: 14ch;
+    }
+    .hero-text h1 em {
+      font-style: italic;
+      font-weight: 800;
+      color: var(--orange-d);
+    }
+    .hero-text .deck {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: clamp(18px, 1.8vw, 22px);
+      line-height: 1.5;
+      color: var(--gray-2);
+      max-width: 38ch;
+      margin-bottom: 40px;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .hero-tags span {
+      padding: 8px 14px;
+      border: 2px solid var(--gray);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .hero-tags span.live { background: var(--orange); border-color: var(--gray); }
+    .hero-tags span.live::before { content: "● "; color: var(--gray); }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      max-width: 460px;
+      border-top: 2px solid var(--gray);
+      border-bottom: 2px solid var(--gray);
+    }
+    .hero-meta > div {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta > div:last-child, .hero-meta > div:nth-last-child(2) { border-bottom: 0; }
+    .hero-meta > div:nth-child(odd) { padding-right: 16px; }
+    .hero-meta > div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--rule); }
+    .hero-meta dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 4px;
+    }
+    .hero-meta dd {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: var(--gray);
+    }
+
+    .hero-stack {
+      position: relative;
+      height: clamp(380px, 42vw, 500px);
+    }
+    .hero-stack figure {
+      position: absolute;
+      background: var(--paper);
+      padding: 12px 12px 50px;
+      box-shadow: 4px 8px 18px -4px rgba(53, 55, 71, 0.45);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .hero-stack figure:hover { transform: rotate(0deg) translateY(-4px) !important; z-index: 5; }
+    .hero-stack figure .ph {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .hero-stack figure .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-stack figure figcaption {
+      position: absolute;
+      bottom: 14px;
+      left: 18px;
+      right: 18px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+    }
+    .hero-stack figure figcaption small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-top: 2px;
+    }
+
+    .hero-stack .h1 { width: 60%; max-width: 320px; top: 0; left: 4%; transform: rotate(-4deg); }
+    .hero-stack .h1 .tape { top: -10px; left: 30%; transform: rotate(-6deg); }
+    .hero-stack .h2 { width: 56%; max-width: 300px; top: 22%; right: 4%; transform: rotate(5deg); z-index: 2; }
+    .hero-stack .h2 .tape { top: -10px; right: 30%; transform: rotate(8deg); }
+    .hero-stack .h3 { width: 54%; max-width: 280px; bottom: 0; left: 24%; transform: rotate(2deg); z-index: 3; }
+    .hero-stack .h3 .tape { top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+
+    /* ============================================================
+       BRIEF — what they came to us for
+    ============================================================ */
+    .brief {
+      background: var(--gray);
+      color: var(--sand-l);
+      padding: 80px 32px;
+      position: relative;
+    }
+    .brief::before, .brief::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle, var(--sand) 5px, transparent 5.5px);
+      background-size: 22px 14px;
+      background-position: center;
+      background-repeat: repeat-x;
+    }
+    .brief::before { top: -1px; }
+    .brief::after  { bottom: -1px; }
+
+    .brief-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .brief .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .brief h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--paper);
+    }
+    .brief h2 em { font-style: italic; color: var(--orange); }
+    .brief p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.75;
+      color: rgba(245, 230, 184, 0.86);
+      margin-bottom: 1em;
+      max-width: 56ch;
+    }
+    .brief p strong { color: var(--paper); font-weight: 700; }
+    .brief p em { color: var(--orange); font-style: italic; font-weight: 600; }
+    @media (max-width: 880px) {
+      .brief-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ============================================================
+       SECTION HEAD — for each deliverable
+    ============================================================ */
+    .deliverable-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: end;
+      max-width: 1280px;
+      margin: 0 auto 48px;
+      padding: 100px 32px 24px;
+      border-bottom: 3px dashed rgba(53, 55, 71, 0.25);
+    }
+    .deliverable-head .stamp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--gray);
+      color: var(--orange);
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      box-shadow: 4px 4px 0 var(--orange);
+    }
+    .deliverable-head .text .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 8px;
+    }
+    .deliverable-head .text h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+    }
+    .deliverable-head .text h3 em { font-style: italic; color: var(--orange-d); }
+    .deliverable-head .nums {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      text-align: right;
+    }
+    .deliverable-head .nums b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       DELIVERABLE 1 — PHOTOGRAPHY
+    ============================================================ */
+    .photo-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+    .photo-approach {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 56px;
+    }
+    .approach-card {
+      background: var(--paper);
+      padding: 32px;
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--orange);
+    }
+    .approach-card h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .approach-card p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      margin-bottom: 0.9em;
+    }
+    .approach-card p strong { color: var(--gray); font-weight: 700; }
+    .approach-card .dl {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .approach-card .dl > div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .approach-card .dl dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .approach-card .dl dd {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--gray);
+    }
+
+    .photo-feature {
+      position: relative;
+      background: var(--paper);
+      padding: 14px 14px 64px;
+      box-shadow: 4px 8px 18px -4px rgba(53, 55, 71, 0.45);
+      transform: rotate(-1deg);
+    }
+    .photo-feature .tape { top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+    .photo-feature .ph {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .photo-feature .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-feature .write {
+      position: absolute;
+      bottom: 16px;
+      left: 22px;
+      right: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--display);
+      font-weight: 700;
+      color: var(--gray);
+    }
+    .photo-feature .write .t { font-size: 14px; }
+    .photo-feature .write .t small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-top: 3px;
+    }
+    .photo-feature .write .meta {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    @media (max-width: 880px) {
+      .photo-approach { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* contact sheet — 16 photos */
+    .contact-sheet {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      padding: 24px;
+      box-shadow: 8px 8px 0 var(--gray);
+    }
+    .contact-sheet-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--gray);
+      margin-bottom: 18px;
+    }
+    .contact-sheet-head h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+    }
+    .contact-sheet-head h4 em { font-style: italic; color: var(--orange-d); }
+    .contact-sheet-head .meta {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .contact-sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+    }
+    .contact-sheet-grid figure {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--sand-d);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .contact-sheet-grid figure:hover { transform: translateY(-3px); }
+    .contact-sheet-grid img { width: 100%; height: 100%; object-fit: cover; }
+    .contact-sheet-grid .num {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      padding: 2px 6px;
+      background: rgba(53, 55, 71, 0.78);
+      color: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+    }
+    @media (max-width: 980px) {
+      .contact-sheet-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .contact-sheet-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ============================================================
+       DELIVERABLE 2 — SOCIAL CAMPAIGN
+    ============================================================ */
+    .social-section {
+      background: var(--seafoam);
+      padding: 100px 32px;
+      position: relative;
+    }
+    .social-section::before, .social-section::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle, var(--sand) 5px, transparent 5.5px);
+      background-size: 22px 14px;
+      background-position: center;
+      background-repeat: repeat-x;
+    }
+    .social-section::before { top: -1px; }
+    .social-section::after  { bottom: -1px; }
+
+    .social-section .deliverable-head {
+      padding: 0 0 24px;
+    }
+
+    .system-card {
+      max-width: 1280px;
+      margin: 0 auto 48px;
+      background: var(--paper);
+      padding: 32px;
+      border: 2px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+    }
+    .system-card h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      margin-bottom: 18px;
+    }
+    .system-card .templates {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+    .template {
+      aspect-ratio: 1 / 1;
+      background: var(--sand-l);
+      border: 2px solid var(--gray);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .template .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--orange-d);
+    }
+    .template .name {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.1;
+      color: var(--gray);
+    }
+    .template.t-postcard { background: var(--sand-l); }
+    .template.t-postcard::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--gray);
+    }
+    .template.t-polaroid { background: var(--paper); }
+    .template.t-polaroid::after {
+      content: "";
+      position: absolute;
+      top: 8px; left: 8px;
+      width: calc(100% - 16px);
+      height: 60%;
+      background: var(--gray);
+      opacity: 0.18;
+    }
+    .template.t-quote { background: var(--orange); }
+    .template.t-quote .name { color: var(--gray); }
+    .template.t-quote::before {
+      content: "“";
+      position: absolute;
+      top: 4px; right: 12px;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 60px;
+      color: var(--gray);
+      line-height: 0.5;
+    }
+    .template.t-headline { background: var(--gray); }
+    .template.t-headline .num { color: var(--orange); }
+    .template.t-headline .name { color: var(--paper); }
+    .template.t-aerial::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      background-image:
+        linear-gradient(to right, var(--gray) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, var(--gray) 0 1px, transparent 1px 100%);
+      background-size: 18px 18px;
+      opacity: 0.12;
+    }
+    .template.t-mask { background: var(--gray); position: relative; overflow: hidden; }
+    .template.t-mask .name { color: var(--orange); -webkit-background-clip: text; background-clip: text; }
+    .template.t-mask::after {
+      content: "STAY";
+      position: absolute;
+      bottom: 8px; right: 10px;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      color: rgba(249, 162, 27, 0.4);
+      letter-spacing: -0.04em;
+    }
+    @media (max-width: 880px) {
+      .system-card .templates { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    }
+
+    .social-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .social-card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--gray);
+      box-shadow: 4px 6px 12px -2px rgba(53, 55, 71, 0.4);
+      transition: transform 0.4s;
+      cursor: pointer;
+    }
+    .social-card:hover { transform: translateY(-3px) scale(1.01); }
+    .social-card img { width: 100%; height: 100%; object-fit: cover; }
+    .social-card .badge {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 8px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 880px) { .social-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+    @media (max-width: 540px) { .social-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .social-results {
+      max-width: 1280px;
+      margin: 48px auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: var(--paper);
+      border: 2px solid var(--gray);
+    }
+    .social-results > div {
+      padding: 22px 18px;
+      text-align: center;
+      border-left: 1px solid var(--rule);
+    }
+    .social-results > div:first-child { border-left: 0; }
+    .social-results dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 6px;
+    }
+    .social-results dd {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      line-height: 1;
+    }
+    @media (max-width: 720px) {
+      .social-results { grid-template-columns: 1fr 1fr; }
+      .social-results > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--rule); }
+      .social-results > div:nth-child(4) { border-top: 1px solid var(--rule); }
+    }
+
+    /* ============================================================
+       DELIVERABLE 3 — WEBSITE — full browser mockup
+    ============================================================ */
+    .website-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 32px 100px;
+    }
+    .browser-frame {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.06),
+        12px 18px 30px -6px rgba(53, 55, 71, 0.42);
+      overflow: hidden;
+      max-width: 1280px;
+      margin: 0 auto 48px;
+    }
+    .browser-chrome {
+      background: var(--sand-d);
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      border-bottom: 2px solid var(--gray);
+    }
+    .browser-chrome .dots {
+      display: flex;
+      gap: 6px;
+    }
+    .browser-chrome .dots span {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--gray);
+      opacity: 0.4;
+    }
+    .browser-chrome .dots span:first-child { background: var(--orange); opacity: 1; }
+    .browser-chrome .url {
+      padding: 6px 14px;
+      background: var(--paper);
+      border: 1px solid var(--gray);
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--gray);
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browser-chrome .url::before {
+      content: "🔒";
+      font-size: 11px;
+      opacity: 0.6;
+    }
+    .browser-chrome .url b { color: var(--orange-d); font-weight: 700; }
+    .browser-chrome .actions {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .browser-chrome .actions.live::before {
+      content: "● ";
+      color: var(--orange);
+    }
+
+    /* simulated site nav */
+    .site-nav {
+      background: var(--paper);
+      padding: 18px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-nav .logo {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+    .site-nav .logo small {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      color: var(--gray-3);
+      margin-top: 2px;
+    }
+    .site-nav .menu {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .site-nav .menu a:hover { color: var(--orange-d); }
+    .site-nav .book {
+      padding: 8px 16px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 880px) {
+      .site-nav { grid-template-columns: 1fr auto; gap: 12px; padding: 12px 18px; }
+      .site-nav .menu { display: none; }
+    }
+
+    /* simulated site hero */
+    .site-hero {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--gray);
+    }
+    .site-hero img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .site-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(53,55,71,0.05), rgba(53,55,71,0.5) 70%, rgba(53,55,71,0.85));
+    }
+    .site-hero-text {
+      position: absolute;
+      bottom: 36px;
+      left: 32px;
+      right: 32px;
+      z-index: 2;
+      color: var(--paper);
+      max-width: 720px;
+    }
+    .site-hero-text h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      margin-bottom: 12px;
+    }
+    .site-hero-text p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: clamp(13px, 1.4vw, 17px);
+      line-height: 1.4;
+      color: rgba(253, 249, 236, 0.9);
+      margin-bottom: 18px;
+      max-width: 56ch;
+    }
+    .site-hero-text .book {
+      display: inline-block;
+      padding: 11px 22px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    /* simulated site cards */
+    .site-cards {
+      padding: 48px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      background: var(--paper);
+    }
+    .site-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .site-card .ph {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .site-card .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-card .body {
+      padding: 18px 18px 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: center;
+    }
+    .site-card .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .site-card h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      line-height: 1.05;
+    }
+    .site-card .meta {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--gray-2);
+      line-height: 1.4;
+    }
+    .site-card .more {
+      margin-top: 6px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--gray);
+      align-self: flex-start;
+    }
+    @media (max-width: 880px) {
+      .site-cards { grid-template-columns: 1fr; padding: 24px 18px; }
+      .site-card { grid-template-columns: 1fr; }
+    }
+
+    /* simulated site footer */
+    .site-foot {
+      background: var(--gray);
+      color: var(--sand-l);
+      padding: 24px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 24px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .site-foot h4 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+    .site-foot ul { list-style: none; line-height: 1.6; }
+    .site-foot ul li { color: rgba(245, 230, 184, 0.75); }
+    .site-foot .credit {
+      grid-column: 1 / -1;
+      padding-top: 18px;
+      border-top: 1px solid rgba(245, 230, 184, 0.18);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      color: rgba(245, 230, 184, 0.6);
+    }
+    .site-foot .credit b { color: var(--orange); font-weight: 700; }
+    @media (max-width: 720px) {
+      .site-foot { grid-template-columns: 1fr 1fr; }
+      .site-foot .credit { flex-direction: column; gap: 4px; }
+    }
+
+    /* sub-pages mini-mockups */
+    .pages-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .mini-frame {
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      box-shadow: 6px 8px 0 var(--gray);
+      overflow: hidden;
+      transition: transform 0.4s;
+    }
+    .mini-frame:hover { transform: translateY(-4px); }
+    .mini-chrome {
+      background: var(--sand-d);
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--gray);
+    }
+    .mini-chrome .dots {
+      display: flex;
+      gap: 3px;
+    }
+    .mini-chrome .dots span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gray);
+      opacity: 0.4;
+    }
+    .mini-chrome .dots span:first-child { background: var(--orange); opacity: 1; }
+    .mini-chrome .url {
+      flex: 1;
+      padding: 3px 8px;
+      background: var(--paper);
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 10px;
+      color: var(--gray);
+      letter-spacing: 0;
+      border: 1px solid var(--gray);
+    }
+    .mini-content {
+      aspect-ratio: 4 / 3;
+      background: var(--paper);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mini-content .ph {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .mini-content .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-content .name {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .mini-content .meta {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--gray-2);
+      line-height: 1.4;
+    }
+    .mini-frame .label {
+      padding: 8px 14px;
+      background: var(--gray);
+      color: var(--orange);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    @media (max-width: 880px) {
+      .pages-row { grid-template-columns: 1fr; }
+    }
+
+    /* sitemap */
+    .sitemap {
+      max-width: 1280px;
+      margin: 48px auto 0;
+      background: var(--paper);
+      border: 2px solid var(--gray);
+      padding: 28px;
+      box-shadow: 6px 6px 0 var(--orange);
+    }
+    .sitemap h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .sitemap h4 small {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: var(--orange-d);
+    }
+    .sitemap-tree {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+      line-height: 2;
+    }
+    .sitemap-tree .node {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--sand-l);
+      border: 1px solid var(--gray);
+      margin-right: 6px;
+    }
+    .sitemap-tree .node.root { background: var(--orange); }
+    .sitemap-tree ul { list-style: none; padding-left: 24px; }
+    .sitemap-tree ul li::before { content: "└"; color: var(--orange-d); margin-right: 8px; }
+    .sitemap-tree ul ul { padding-left: 32px; }
+    .sitemap-tree ul ul li::before { content: "└"; }
+
+    /* live-site CTA */
+    .live-cta {
+      max-width: 1280px;
+      margin: 56px auto 0;
+      padding: 32px 36px;
+      background: var(--orange);
+      border: 2px solid var(--gray);
+      box-shadow: 8px 8px 0 var(--gray);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+    .live-cta .text {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 36px);
+      letter-spacing: -0.015em;
+      color: var(--gray);
+      line-height: 1.1;
+    }
+    .live-cta .text small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: rgba(53, 55, 71, 0.78);
+      margin-top: 4px;
+    }
+    .live-cta .visit {
+      padding: 16px 24px;
+      background: var(--gray);
+      color: var(--orange);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: transform 0.2s;
+    }
+    .live-cta .visit:hover { transform: translateX(3px); }
+    @media (max-width: 720px) {
+      .live-cta { grid-template-columns: 1fr; gap: 18px; padding: 24px; }
+      .live-cta .visit { text-align: center; }
+    }
+
+    /* ============================================================
+       PROOF — reviews + designed-by-FrameFlow callout
+    ============================================================ */
+    .proof {
+      background: var(--gray);
+      color: var(--sand-l);
+      padding: 100px 32px;
+      position: relative;
+    }
+    .proof::before, .proof::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle, var(--sand) 5px, transparent 5.5px);
+      background-size: 22px 14px;
+      background-position: center;
+      background-repeat: repeat-x;
+    }
+    .proof::before { top: -1px; }
+    .proof::after  { bottom: -1px; }
+
+    .proof-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .proof-head {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .proof-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 18px;
+    }
+    .proof-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+    .proof-head h3 em { font-style: italic; color: var(--orange); }
+    .proof-head .stars {
+      margin-top: 14px;
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+    }
+    .proof-head .stars b {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      color: var(--paper);
+      margin-left: 12px;
+      vertical-align: 4px;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .review {
+      background: var(--paper);
+      color: var(--gray);
+      padding: 26px 26px 22px;
+      box-shadow: 4px 6px 14px -4px rgba(0, 0, 0, 0.5);
+      transform: rotate(-0.6deg);
+    }
+    .review:nth-child(even) { transform: rotate(0.7deg); }
+    .review .stars {
+      color: var(--orange);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .review .stars b {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+      margin-left: 10px;
+      vertical-align: 2px;
+    }
+    .review .quote {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+    .review .by {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .review .by b { color: var(--gray); }
+    @media (max-width: 720px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+
+    .ff-credit {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 32px;
+      border: 2px dashed var(--orange);
+      text-align: center;
+    }
+    .ff-credit .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+    .ff-credit p {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--paper);
+    }
+    .ff-credit p b {
+      font-weight: 900;
+      color: var(--orange);
+    }
+    .ff-credit .small {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: rgba(245, 230, 184, 0.7);
+      margin-top: 10px;
+      text-transform: none;
+    }
+
+    /* ============================================================
+       MARKS
+    ============================================================ */
+    .marks {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+    }
+    .marks h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 2px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.sand { background: var(--sand); }
+    .pchip.seafoam { background: var(--seafoam); }
+    .pchip.orange { background: var(--orange); }
+    .pchip.gray { background: var(--gray); color: var(--sand-l); }
+    .pchip .role { font-family: var(--display); font-weight: 700; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray); opacity: 0.7; }
+    .pchip.gray .role { color: var(--sand-l); opacity: 0.7; }
+    .pchip .name { font-family: var(--display); font-weight: 900; font-size: 22px; color: var(--gray); }
+    .pchip.gray .name { color: var(--sand-l); }
+    .pchip .hex { font-family: var(--display); font-weight: 700; font-size: 11px; letter-spacing: 0.18em; color: var(--gray); }
+    .pchip.gray .hex { color: var(--sand-l); }
+
+    .type-stack { display: flex; flex-direction: column; }
+    .trow { padding: 16px 0; border-top: 1px dashed var(--rule); }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow .label { font-family: var(--display); font-weight: 700; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gray-2); margin-bottom: 6px; }
+    .trow .specimen.h { font-family: var(--display); font-weight: 900; font-size: 36px; color: var(--gray); letter-spacing: -0.015em; line-height: 1; }
+    .trow .specimen.b { font-family: var(--body); font-weight: 500; font-size: 18px; line-height: 1.5; color: var(--gray); }
+    .trow .specimen.l { font-family: var(--display); font-weight: 700; font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gray); }
+    @media (max-width: 880px) { .marks { grid-template-columns: 1fr; gap: 48px; padding: 60px 22px; } }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      padding: 120px 32px 80px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .end h3 em { font-style: italic; color: var(--orange-d); }
+    .end p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 30px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 3px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cta:hover { transform: translateY(-3px); box-shadow: 9px 9px 0 var(--gray); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .foot .ce { text-align: center; color: var(--orange); letter-spacing: 0.5em; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--seafoam); }
+    .foot b { color: var(--orange); }
+    @media (max-width: 720px) {
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+      .ff-rail { padding: 12px 16px; font-size: 9px; gap: 12px; }
+    }
+
+    /* responsive */
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; gap: 36px; padding: 60px 22px 40px; }
+      .hero-stack { height: clamp(380px, 80vw, 480px); }
+      .deliverable-head { grid-template-columns: 1fr; gap: 16px; padding: 60px 22px 18px; }
+      .deliverable-head .nums { text-align: left; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="ff-rail">
+    <span>FrameFlow · Reel <b>008</b></span>
+    <span class="center">ADRIAN'S · CASE STUDY</span>
+    <span style="text-align: right">Wasaga Beach · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       HERO
+  ==================================================================== -->
+  <section class="hero">
+    <div class="hero-text">
+      <span class="crumb">Case study · Reel 008 · Spring 2026</span>
+      <h1>Three deliverables, <em>one summer.</em></h1>
+      <p class="deck">Adrian's came to us with a brief and a beach. We came back with photography, a 35-post social campaign, and the website that's been live since spring.</p>
+      <div class="hero-tags">
+        <span>📷 Photography</span>
+        <span>✦ Social Media</span>
+        <span class="live">Website Live</span>
+      </div>
+      <dl class="hero-meta">
+        <div><dt>Plates kept</dt><dd>16 · 110 made</dd></div>
+        <div><dt>Posts shipped</dt><dd>35 · Q2–Q3</dd></div>
+        <div><dt>Site pages</dt><dd>12 · live</dd></div>
+        <div><dt>Google rating</dt><dd>4.9 ★ · 100+</dd></div>
+      </dl>
+    </div>
+    <div class="hero-stack">
+      <figure class="h1">
+        <span class="tape"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></div>
+        <figcaption>📷 Photography<small>16 plates kept</small></figcaption>
+      </figure>
+      <figure class="h2">
+        <span class="tape orange"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/social/11-sunset-doors.png" alt=""></div>
+        <figcaption>✦ Social Campaign<small>35 posts · summer</small></figcaption>
+      </figure>
+      <figure class="h3">
+        <span class="tape sand"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""></div>
+        <figcaption>🌐 Website<small>adrianswasagabeach.ca</small></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       BRIEF
+  ==================================================================== -->
+  <section class="brief reveal">
+    <div class="brief-inner">
+      <div>
+        <p class="label">The Brief</p>
+        <h2>Make us <em>findable.</em></h2>
+      </div>
+      <div>
+        <p>Adrian's runs <strong>two locations</strong> in Wasaga Beach — the <strong>Suites at Beach Area 1</strong> and the <strong>Resort at Beach Area 3</strong> — eight cabins between them, plus a beach house. The brief was practical: <em>make us findable, make us bookable, make the Google reviews matter.</em></p>
+        <p>We wrote three answers — a season of photography, a 35-post social campaign, and a booking-first website. Below: what each one looks like, how it landed, and why it works.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       DELIVERABLE 1 — PHOTOGRAPHY
+  ==================================================================== -->
+  <header class="deliverable-head reveal">
+    <span class="stamp">01</span>
+    <div class="text">
+      <p class="label">Deliverable · 01 / 03</p>
+      <h3>Photography — <em>two shoots, sixteen plates.</em></h3>
+    </div>
+    <p class="nums"><b>110</b>frames · 16 kept</p>
+  </header>
+
+  <section class="photo-section reveal">
+    <div class="photo-approach">
+      <div class="approach-card">
+        <h4>Approach</h4>
+        <p>Two shoots across spring and summer. <strong>Daylight only</strong> on the morning shoot for clean cabin facades; <strong>sunset + golden hour</strong> on the evening shoot for the courtyard, firepit, and door numbers — Adrian's strongest visual asset.</p>
+        <p>Aerials added in midday to show the property's relationship to Beach Area 1 and Beach Area 3. Interiors photographed last, after the housekeepers had set the rooms.</p>
+        <dl class="dl">
+          <div><dt>Shoots</dt><dd>2</dd></div>
+          <div><dt>Frames</dt><dd>110</dd></div>
+          <div><dt>Kept</dt><dd>16</dd></div>
+          <div><dt>Categories</dt><dd>5</dd></div>
+        </dl>
+      </div>
+      <figure class="photo-feature">
+        <span class="tape"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></div>
+        <div class="write">
+          <span class="t">Hero plate · Courtyard at sunset<small>plate 01 · 19:14, July</small></span>
+          <span class="meta">F 4.0 · 1/200</span>
+        </div>
+      </figure>
+    </div>
+
+    <div class="contact-sheet">
+      <header class="contact-sheet-head">
+        <h4>Contact sheet · <em>16 selects</em></h4>
+        <span class="meta">Sunset · Day · Aerial · Interior · Beach</span>
+      </header>
+      <div class="contact-sheet-grid">
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""><span class="num">01</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt=""><span class="num">02</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/03-courtyard-wide-sunset.jpg" alt=""><span class="num">03</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""><span class="num">04</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/05-courtyard-day-firepit.jpg" alt=""><span class="num">05</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""><span class="num">06</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""><span class="num">07</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/08-aerial-top-down.jpg" alt=""><span class="num">08</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/09-aerial-property-context.jpg" alt=""><span class="num">09</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/10-beach-wasaga-aerial.jpg" alt=""><span class="num">10</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt=""><span class="num">11</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/12-bedroom-white-modern.jpg" alt=""><span class="num">12</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/13-kitchen-with-bedroom.jpg" alt=""><span class="num">13</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/14-kitchen-close.jpg" alt=""><span class="num">14</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""><span class="num">15</span></figure>
+        <figure><img src="../../../public/portfolio/adrians-wasaga-beach/photos/16-living-kitchen-combo.jpg" alt=""><span class="num">16</span></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       DELIVERABLE 2 — SOCIAL CAMPAIGN
+  ==================================================================== -->
+  <section class="social-section reveal">
+    <header class="deliverable-head" style="max-width: 1280px;">
+      <span class="stamp">02</span>
+      <div class="text">
+        <p class="label">Deliverable · 02 / 03</p>
+        <h3>Social Media — <em>one system, thirty-five posts.</em></h3>
+      </div>
+      <p class="nums"><b>35</b>posts · Q2–Q3</p>
+    </header>
+
+    <div class="system-card">
+      <h4>The template system</h4>
+      <p style="font-family: var(--body); font-weight: 500; font-size: 14px; line-height: 1.6; color: var(--gray-2); margin-bottom: 18px;">Every post in the campaign is built from one of <strong>six layout patterns</strong> — gives the feed visual coherence, lets the hostess approve a post in 30 seconds, lets us ship five posts in an hour.</p>
+      <div class="templates">
+        <div class="template t-postcard"><span class="num">T.01</span><span class="name">Postcard<br>frame</span></div>
+        <div class="template t-polaroid"><span class="num">T.02</span><span class="name">Polaroid<br>stack</span></div>
+        <div class="template t-quote"><span class="num">T.03</span><span class="name">Quote<br>pull</span></div>
+        <div class="template t-headline"><span class="num">T.04</span><span class="name">Color<br>headline</span></div>
+        <div class="template t-aerial"><span class="num">T.05</span><span class="name">Aerial<br>callout</span></div>
+        <div class="template t-mask"><span class="num">T.06</span><span class="name">Masked<br>type</span></div>
+      </div>
+    </div>
+
+    <div class="social-grid">
+      <figure class="social-card"><span class="badge">T.04 · Headline</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/01-now-booking.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.04 · Headline</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/04-color-headline.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.05 · Aerial</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/09-aerial-courtyard.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.04 · Headline</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/11-sunset-doors.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.03 · Quote</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/12-firepit-quote.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.04 · Headline</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/14-daytime-patio.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.01 · Postcard</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/17-card-kitchen.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.02 · Polaroid</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/20-polaroid-three.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.01 · Postcard</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/23-postcard-doors.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.01 · Postcard</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/25-postcard-aerial.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.06 · Mask</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/27-mask-stay.png" alt=""></figure>
+      <figure class="social-card"><span class="badge">T.03 · Quote</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/33-quote-yara.png" alt=""></figure>
+    </div>
+
+    <dl class="social-results">
+      <div><dt>Posts</dt><dd>35</dd></div>
+      <dt class="hidden"></dt>
+      <div><dt>Templates</dt><dd>06</dd></div>
+      <div><dt>Months</dt><dd>Q2–Q3</dd></div>
+      <div><dt>Approval cycle</dt><dd>≤ 30 sec</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       DELIVERABLE 3 — WEBSITE
+  ==================================================================== -->
+  <header class="deliverable-head reveal">
+    <span class="stamp">03</span>
+    <div class="text">
+      <p class="label">Deliverable · 03 / 03 · Live</p>
+      <h3>Website — <em>adrianswasagabeach.ca</em></h3>
+    </div>
+    <p class="nums"><b>12</b>pages · live</p>
+  </header>
+
+  <section class="website-section reveal">
+    <!-- Full browser mockup of the homepage -->
+    <div class="browser-frame">
+      <div class="browser-chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">adrianswasagabeach.ca<b>/</b></span>
+        <span class="actions live">Live · ssl</span>
+      </div>
+
+      <nav class="site-nav">
+        <a href="#" class="logo">ADRIAN'S<small>WASAGA BEACH</small></a>
+        <div class="menu">
+          <a href="#">Home</a>
+          <a href="#">About</a>
+          <a href="#">Suites ▾</a>
+          <a href="#">Resort ▾</a>
+          <a href="#">Wasaga Beach</a>
+          <a href="#">Gallery</a>
+          <a href="#">Contact</a>
+        </div>
+        <a href="#" class="book">Book Your Stay</a>
+      </nav>
+
+      <div class="site-hero">
+        <img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt="">
+        <div class="site-hero-text">
+          <h2>Two Locations<br>One Heartfelt Welcome.</h2>
+          <p>Looking for the perfect beach location for a great family getaway? Whether you're visiting us at Adrian's Beach Resort at Beach Area 3 or Adrian's Suites at Beach Area 1 we extend a warm and sincere welcome to you.</p>
+          <a href="#" class="book">Book Your Stay →</a>
+        </div>
+      </div>
+
+      <div class="site-cards">
+        <article class="site-card">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""></div>
+          <div class="body">
+            <span class="label">Beach Area 3 · Resort</span>
+            <h3>The Resort</h3>
+            <p class="meta">8 cabins · Beach House · 184–190 Dunkerron Ave</p>
+            <a class="more" href="#">Explore the resort →</a>
+          </div>
+        </article>
+        <article class="site-card">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/12-bedroom-white-modern.jpg" alt=""></div>
+          <div class="body">
+            <span class="label">Beach Area 1 · Suites</span>
+            <h3>The Suites</h3>
+            <p class="meta">1BR &amp; 2BR suites · 148 Mosley St</p>
+            <a class="more" href="#">Explore the suites →</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="site-foot">
+        <div>
+          <h4>Browse</h4>
+          <ul><li>Home</li><li>About</li><li>Gallery</li><li>Blog</li><li>Contact</li></ul>
+        </div>
+        <div>
+          <h4>Suites · Area 1</h4>
+          <ul><li>One Bedroom</li><li>Two Bedroom</li></ul>
+        </div>
+        <div>
+          <h4>Resort · Area 3</h4>
+          <ul><li>Beach House</li><li>Beach Aparts</li><li>Large Cottages</li><li>Standard Cottages</li></ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul><li>Instagram</li><li>Facebook</li><li>1-365-777-7700</li></ul>
+        </div>
+        <div class="credit">
+          <span>© 2025 Adrian's Wasaga Beach · All Rights Reserved</span>
+          <span>Designed by <b>FrameFlow</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- sub-page mockups -->
+    <div class="pages-row">
+      <div class="mini-frame">
+        <div class="mini-chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">adrianswasagabeach.ca/beach-house</span>
+        </div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""></div>
+          <p class="name">Beach House</p>
+          <p class="meta">Sleeps 10–12 · 4BR · 75-inch TV<br>Master Queen + 3 more bedrooms</p>
+        </div>
+        <p class="label">Property page</p>
+      </div>
+
+      <div class="mini-frame">
+        <div class="mini-chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">adrianswasagabeach.ca/standard-cottages</span>
+        </div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""></div>
+          <p class="name">Standard Cottages</p>
+          <p class="meta">Cottages #1–#5 · 2BR · 2 Doubles<br>Sleeps 5 adults or 4 + 2 kids</p>
+        </div>
+        <p class="label">Property page</p>
+      </div>
+
+      <div class="mini-frame">
+        <div class="mini-chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">adrianswasagabeach.ca/gallery</span>
+        </div>
+        <div class="mini-content">
+          <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""></div>
+          <p class="name">Gallery</p>
+          <p class="meta">All 16 plates organised by location<br>+ social campaign archive</p>
+        </div>
+        <p class="label">Gallery page</p>
+      </div>
+    </div>
+
+    <!-- sitemap -->
+    <div class="sitemap">
+      <h4>Sitemap · 12 pages live <small>spring 2026</small></h4>
+      <div class="sitemap-tree">
+        <span class="node root">/</span> Home
+        <ul>
+          <li><span class="node">/about</span> About</li>
+          <li><span class="node">/wasaga-beach</span> Wasaga Beach guide</li>
+          <li><span class="node">/gallery</span> Gallery</li>
+          <li><span class="node">/blog</span> Blog</li>
+          <li><span class="node">/contact</span> Contact
+            <ul>
+              <li>· Phone · Email · Two addresses</li>
+            </ul>
+          </li>
+          <li>Suites · Area 1 (148 Mosley St)
+            <ul>
+              <li><span class="node">/one-bedroom</span> One Bedroom</li>
+              <li><span class="node">/two-bedroom</span> Two Bedroom</li>
+            </ul>
+          </li>
+          <li>Resort · Area 3 (184–190 Dunkerron Ave)
+            <ul>
+              <li><span class="node">/beach-house</span> Beach House (sleeps 10–12)</li>
+              <li><span class="node">/beach-aparts</span> Beach Aparts</li>
+              <li><span class="node">/large-cottages</span> Large Cottages</li>
+              <li><span class="node">/standard-cottages</span> Standard Cottages #1–5</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- live CTA -->
+    <a class="live-cta" href="https://www.adrianswasagabeach.ca/" target="_blank" rel="noopener noreferrer">
+      <span class="text">
+        Visit the live site →
+        <small>adrianswasagabeach.ca · designed &amp; built by FrameFlow</small>
+      </span>
+      <span class="visit">Open in new tab ↗</span>
+    </a>
+  </section>
+
+  <!-- =================================================================
+       PROOF
+  ==================================================================== -->
+  <section class="proof reveal">
+    <div class="proof-inner">
+      <header class="proof-head">
+        <p class="label">— The result —</p>
+        <h3>Four reviews. <em>Twelve months later.</em></h3>
+        <p class="stars">★ ★ ★ ★ ★ <b>4.9 / 5 · Google · 100+ reviews</b></p>
+      </header>
+
+      <div class="reviews-grid">
+        <article class="review">
+          <p class="stars">★ ★ ★ ★ ★ <b>5 / 5 · Jan 2026</b></p>
+          <p class="quote">The renovations have made this place the nicest and cleanest around. Modern furnishings and decor and top of the line appliances for a decent rate. Definitely the only place I'd stay in Wasaga.</p>
+          <p class="by"><b>Pam B.</b><span>Verified guest · Google</span></p>
+        </article>
+        <article class="review">
+          <p class="stars">★ ★ ★ ★ ★ <b>5 / 5 · Sept 2025</b></p>
+          <p class="quote">A perfect spot for our annual ladies getaway. Lovely grounds with hot tub and close to the beach. Hostess was friendly and helpful.</p>
+          <p class="by"><b>Anne D.</b><span>Verified guest · Google</span></p>
+        </article>
+        <article class="review">
+          <p class="stars">★ ★ ★ ★ ★ <b>5 / 5 · Aug 2025</b></p>
+          <p class="quote">A hidden gem in the heart of Wasaga. Adrian's is setting the bar on what beachfront luxury should be. Felt like a home away from home.</p>
+          <p class="by"><b>Rougebella</b><span>Verified guest · Google</span></p>
+        </article>
+        <article class="review">
+          <p class="stars">★ ★ ★ ★ ★ <b>5 / 5 · May 2025</b></p>
+          <p class="quote">A great place for a family vacation. Clean, modern and in a great location. The owners are friendly and helpful, which is an extra bonus.</p>
+          <p class="by"><b>L. R.</b><span>Verified guest · Google</span></p>
+        </article>
+      </div>
+
+      <div class="ff-credit">
+        <p class="label">Footer credit · live on the site</p>
+        <p>© 2025 Adrian's Wasaga Beach. <b>Designed by FrameFlow.</b></p>
+        <p class="small">Visible at the bottom of every page on the live site — adrianswasagabeach.ca</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · the locked beach kit</h3>
+      <div class="palette">
+        <div class="pchip sand"><span class="role">Surface</span><div><p class="name">Sand</p><p class="hex">#ECD798</p></div></div>
+        <div class="pchip seafoam"><span class="role">Tonal</span><div><p class="name">Seafoam</p><p class="hex">#98E5D8</p></div></div>
+        <div class="pchip orange"><span class="role">Accent</span><div><p class="name">Live Orange</p><p class="hex">#F9A21B</p></div></div>
+        <div class="pchip gray"><span class="role">Ink</span><div><p class="name">Dark Gray</p><p class="hex">#353747</p></div></div>
+      </div>
+    </div>
+    <div>
+      <h3>Typeset · Montserrat + Quicksand</h3>
+      <div class="type-stack">
+        <div class="trow"><p class="label">Header · Montserrat 900</p><p class="specimen h">Three deliverables, one summer.</p></div>
+        <div class="trow"><p class="label">Body · Quicksand 500</p><p class="specimen b">Boutique cabin stays just off the beach in Wasaga.</p></div>
+        <div class="trow"><p class="label">Label · Montserrat tracked</p><p class="specimen l">Wasaga Beach · Ontario · MMXXVI</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <p class="label">Want yours next?</p>
+    <h3>Photography, social, <em>and</em> a site that <em>books.</em></h3>
+    <p>Adrian's came to us with a brief and a beach. Bring yours — and we'll come back with three deliverables that look like one campaign.</p>
+    <a class="cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 008 · ADRIAN'S</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

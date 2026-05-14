@@ -13,9 +13,19 @@
 import type { ComponentType } from "react";
 import type { Client } from "@/data/clients";
 import { BigBearsPage } from "@/components/portfolio/featured/BigBearsPage";
+import { DestanPage } from "@/components/portfolio/featured/DestanPage";
+import { CanapyPage } from "@/components/portfolio/featured/CanapyPage";
+import { CTBDHPage } from "@/components/portfolio/featured/CTBDHPage";
+import { AdriansPage } from "@/components/portfolio/featured/AdriansPage";
+import { NorthernPathwaysPage } from "@/components/portfolio/featured/NorthernPathwaysPage";
 
 export type FeaturedPageProps = { client: Client };
 
 export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = {
-  "big-bears-baked-potato": BigBearsPage,
+  "big-bears-baked-potato":         BigBearsPage,
+  "destan-turkish-cuisine":         DestanPage,
+  "canapy-furniture":               CanapyPage,
+  "ctbdh":                          CTBDHPage,
+  "adrians-wasaga-beach":           AdriansPage,
+  "northern-pathways-immigration":  NorthernPathwaysPage,
 };

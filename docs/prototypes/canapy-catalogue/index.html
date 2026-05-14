@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canapy — Reel 011 / The Catalogue (FrameFlow Prototype)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · REEL 011 · CANAPY FURNITURE
+       Prototype 04 — "The Catalogue" (specimen catalog)
+
+       Same Canapy brand kit. Same FF Reel skeleton.
+       Difference from Floor:
+         · Hero is type-led (kept the moment Floor uses)
+         · Gallery becomes a SEQUENCE OF NUMBERED ENTRIES — each plate
+           gets its own row with photo + dense spec sheet (SKU code,
+           materials, dimensions, photographer notes). Reads like a
+           Hay/Vitra trade catalog.
+    ==================================================================== */
+
+    :root {
+      --white:    #ffffff;
+      --paper:    #fafaf8;
+      --line:     #e5e3df;
+      --line-2:   #d5d2cc;
+      --ink:      #111111;
+      --ink-2:    #5a5750;
+      --ink-3:    #8c887f;
+
+      --type:    "Hanken Grotesk", "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--white); color: var(--ink); overflow-x: hidden; }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .cc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      gap: 16px;
+      font-weight: 500;
+    }
+    .cc-top-back { color: var(--ink); white-space: nowrap; }
+    .cc-top-back:hover { color: var(--ink-2); }
+    .cc-top-frame {
+      background: var(--ink);
+      color: var(--white);
+      padding: 5px 12px;
+      letter-spacing: 0.24em;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .cc-top-meta { white-space: nowrap; color: var(--ink-2); letter-spacing: 0.32em; }
+    @media (max-width: 640px) {
+      .cc-top { padding: 12px 16px; gap: 12px; font-size: 10px; }
+      .cc-top-meta { display: none; }
+    }
+
+    /* ============================================================
+       HERO — type-led catalogue cover
+    ============================================================ */
+    .cc-hero {
+      padding: 140px 48px 100px;
+      max-width: 1480px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cc-hero-eyebrow {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 56px;
+    }
+    .cc-hero-wordmark {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: clamp(72px, 14vw, 220px);
+      letter-spacing: 0.32em;
+      line-height: 1;
+      color: var(--ink);
+      padding-left: 0.32em;
+      margin-bottom: 18px;
+    }
+    .cc-hero-edition {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      max-width: 480px;
+      margin: 0 auto 56px;
+    }
+    .cc-hero-edition span { color: var(--ink-3); margin: 0 14px; font-weight: 400; }
+    .cc-hero-tag {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(24px, 3vw, 40px);
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      max-width: 22ch;
+      margin: 0 auto 56px;
+    }
+    .cc-hero-tag em { font-style: italic; font-weight: 400; }
+    .cc-hero-scope {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto 64px;
+    }
+    .cc-hero-scope span {
+      padding: 8px 16px;
+      border: 1px solid var(--line-2);
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cc-hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      max-width: 720px;
+      margin: 0 auto;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cc-hero-meta > div {
+      padding: 22px 14px;
+      border-left: 1px solid var(--line);
+    }
+    .cc-hero-meta > div:first-child { border-left: 0; }
+    .cc-hero-meta dt {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .cc-hero-meta dd {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       INTRO
+    ============================================================ */
+    .cc-intro {
+      padding: 80px 32px 100px;
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cc-intro-cap {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .cc-intro h2 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+    .cc-intro h2 b { font-weight: 500; }
+    .cc-intro p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 60ch;
+      margin: 0 auto 1em;
+    }
+    .cc-intro p strong { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       MARKS — palette + type
+    ============================================================ */
+    .cc-marks {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cc-marks h3 {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cc-palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .cc-pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cc-pchip.bone { background: var(--white); }
+    .cc-pchip.paper { background: var(--paper); }
+    .cc-pchip.gray { background: #e7e3dc; }
+    .cc-pchip.ink { background: var(--ink); color: var(--white); }
+    .cc-pchip .role {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-pchip.ink .role { color: rgba(255,255,255,0.5); }
+    .cc-pchip .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+    }
+    .cc-pchip .hex {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cc-pchip.ink .hex { color: rgba(255,255,255,0.7); }
+    .cc-type-stack { display: flex; flex-direction: column; }
+    .cc-type-row {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+    .cc-type-row:first-child { border-top: 0; padding-top: 0; }
+    .cc-type-row:last-child { border-bottom: 1px solid var(--line); }
+    .cc-type-row .label {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .cc-type-row .specimen.h {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 40px;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .cc-type-row .specimen.m {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .cc-type-row .specimen.b {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .cc-type-row .specimen.l {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .cc-type-row .specimen.w {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 28px;
+      letter-spacing: 0.32em;
+      color: var(--ink);
+      padding-left: 0.32em;
+    }
+
+    /* ============================================================
+       CATALOGUE — sequence of specimen entries
+    ============================================================ */
+    .cc-cat {
+      padding: 100px 32px 60px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .cc-cat-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 0;
+    }
+    .cc-cat-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-cat-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cc-cat-head h3 b { font-weight: 500; }
+    .cc-cat-head .count {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-cat-head .count b { color: var(--ink); font-weight: 500; }
+
+    /* a single catalog entry — image + dense spec sheet */
+    .cc-entry {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 56px;
+      padding: 56px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    .cc-entry.flip > .cc-entry-photo { order: 2; }
+    .cc-entry-photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--paper);
+      cursor: pointer;
+    }
+    .cc-entry-photo.land { aspect-ratio: 4 / 3; }
+    .cc-entry-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .cc-entry-photo:hover img { transform: scale(1.03); }
+    .cc-entry-photo .stamp {
+      position: absolute;
+      top: 14px; left: 14px;
+      padding: 4px 8px;
+      background: var(--white);
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .cc-entry-photo .zoom {
+      position: absolute;
+      bottom: 14px; right: 14px;
+      width: 30px; height: 30px;
+      background: var(--white);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .cc-entry-photo:hover .zoom { opacity: 1; }
+
+    .cc-entry-spec {
+      padding-top: 6px;
+    }
+    .cc-entry-spec .num {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(56px, 7vw, 96px);
+      letter-spacing: -0.045em;
+      line-height: 0.85;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .cc-entry-spec .sku {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .cc-entry-spec .sku b { color: var(--ink); font-weight: 500; }
+    .cc-entry-spec h4 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .cc-entry-spec h4 b { font-weight: 500; }
+    .cc-entry-spec .blurb {
+      font-family: var(--type);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 44ch;
+      margin-bottom: 28px;
+    }
+    .cc-entry-spec .blurb em { color: var(--ink); font-style: italic; }
+    .cc-entry-spec .blurb strong { color: var(--ink); font-weight: 500; }
+    .cc-entry-spec dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+    .cc-entry-spec dl > div {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .cc-entry-spec dl > div:nth-child(odd) { padding-right: 14px; }
+    .cc-entry-spec dl > div:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--line); }
+    .cc-entry-spec dt {
+      font-family: var(--type);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .cc-entry-spec dd {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .cc-entry-spec .lab {
+      margin-top: 18px;
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cc-entry-spec .lab b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       CONTACT SHEET — small thumbs at the end of the catalogue
+    ============================================================ */
+    .cc-sheet {
+      padding: 100px 32px 60px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .cc-sheet-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+    .cc-sheet-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-sheet-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(24px, 2.8vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cc-sheet-head h3 b { font-weight: 500; }
+    .cc-sheet-head .download {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--ink);
+      font-weight: 500;
+    }
+    .cc-sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 6px;
+    }
+    .cc-sheet-cell {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--paper);
+      cursor: pointer;
+    }
+    .cc-sheet-cell img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .cc-sheet-cell:hover img { transform: scale(1.06); }
+    .cc-sheet-cell .num {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      font-family: var(--type);
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      color: var(--white);
+      font-weight: 500;
+      mix-blend-mode: difference;
+    }
+
+    /* ============================================================
+       SCOPE
+    ============================================================ */
+    .cc-scope {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-top: 1px solid var(--line);
+    }
+    .cc-scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cc-scope-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-scope-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cc-scope-head h3 b { font-weight: 500; }
+    .cc-scope-head .total {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .cc-scope-row .num {
+      font-family: var(--type);
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-scope-row .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .cc-scope-row .desc {
+      font-family: var(--type);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .cc-scope-row .out {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      font-weight: 500;
+    }
+    .cc-scope-row .out b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       FILMS
+    ============================================================ */
+    .cc-films {
+      padding: 100px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .cc-films-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+    .cc-films-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-films-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cc-films-head h3 b { font-weight: 500; }
+    .cc-films-head .count {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-films-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .cc-film {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background: var(--paper);
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .cc-film:hover { transform: translateY(-3px); }
+    .cc-film img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .cc-film:hover img { transform: scale(1.04); }
+    .cc-film .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      transition: transform 0.4s, background 0.4s;
+    }
+    .cc-film:hover .play {
+      transform: translate(-50%, -50%) scale(1.06);
+      background: var(--white);
+    }
+    .cc-film .meta {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+    }
+    .cc-film .meta b {
+      color: var(--white);
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .cc-end {
+      padding: 140px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cc-end .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .cc-end h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .cc-end h3 b { font-weight: 500; }
+    .cc-end p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 26px;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--type);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      transition: background 0.2s, color 0.2s;
+    }
+    .cc-cta:hover { background: var(--white); color: var(--ink); }
+    .cc-cta .arr { transition: transform 0.2s; }
+    .cc-cta:hover .arr { transform: translateX(3px); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .cc-foot {
+      padding: 22px 32px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cc-foot .ce { text-align: center; color: var(--ink); letter-spacing: 0.32em; }
+    .cc-foot .ri { text-align: right; }
+    .cc-foot a { color: inherit; }
+    .cc-foot a:hover { color: var(--ink); }
+    .cc-foot b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       MODAL
+    ============================================================ */
+    .cc-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(17, 17, 17, 0.92);
+      animation: cc-fade 0.22s ease-out;
+    }
+    @keyframes cc-fade { from { opacity: 0; } to { opacity: 1; } }
+    .cc-modal[hidden] { display: none; }
+    .cc-modal-stage {
+      position: relative;
+      width: min(880px, 92vw);
+      height: min(92vh, 1080px);
+      max-height: 92vh;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      animation: cc-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes cc-pop {
+      from { transform: scale(0.96); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .cc-modal-bar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cc-modal-bar.top { border-bottom: 1px solid var(--line); justify-content: space-between; }
+    .cc-modal-bar.bot {
+      border-top: 1px solid var(--line);
+      justify-content: center;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 16px;
+    }
+    .cc-modal-counter b { color: var(--ink); font-weight: 500; }
+    .cc-modal-brand { letter-spacing: 0.32em; color: var(--ink); }
+    .cc-modal-close {
+      width: 32px; height: 32px;
+      background: var(--ink);
+      color: var(--white);
+      border: 0;
+      cursor: pointer;
+      font-family: var(--type);
+      font-size: 16px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .cc-modal-close:hover { background: var(--ink-2); }
+    .cc-modal-image-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
+      position: relative;
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .cc-modal-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+    .cc-modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      cursor: pointer;
+      font-family: var(--type);
+      font-size: 18px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .cc-modal-nav:hover { transform: translateY(-50%) scale(1.06); }
+    .cc-modal-nav.prev { left: 32px; }
+    .cc-modal-nav.next { right: 32px; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1080px) {
+      .cc-films-grid { grid-template-columns: repeat(2, 1fr); }
+      .cc-sheet-grid { grid-template-columns: repeat(7, 1fr); }
+    }
+    @media (max-width: 880px) {
+      .cc-hero { padding: 80px 22px 60px; }
+      .cc-hero-eyebrow { margin-bottom: 36px; }
+      .cc-hero-edition span { display: none; }
+      .cc-hero-edition { font-size: 11px; padding: 14px 0; }
+      .cc-hero-meta { grid-template-columns: 1fr 1fr; }
+      .cc-hero-meta > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+      .cc-hero-meta > div:nth-child(4) { border-top: 1px solid var(--line); }
+      .cc-intro { padding: 60px 22px; }
+      .cc-marks { padding: 60px 22px; grid-template-columns: 1fr; gap: 48px; }
+      .cc-palette { grid-template-columns: 1fr 1fr; }
+      .cc-cat { padding: 60px 22px 40px; }
+      .cc-cat-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cc-cat-head .label { grid-column: 1 / -1; }
+      .cc-entry { grid-template-columns: 1fr; gap: 28px; padding: 48px 0; }
+      .cc-entry.flip > .cc-entry-photo { order: 0; }
+      .cc-sheet { padding: 60px 22px 40px; }
+      .cc-sheet-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cc-sheet-head .label { grid-column: 1 / -1; }
+      .cc-sheet-grid { grid-template-columns: repeat(5, 1fr); }
+      .cc-scope { padding: 60px 22px; }
+      .cc-scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cc-scope-head .label { grid-column: 1 / -1; }
+      .cc-scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .cc-scope-row .out { text-align: left; }
+      .cc-films { padding: 60px 22px; }
+      .cc-films-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cc-films-head .label { grid-column: 1 / -1; }
+      .cc-films-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cc-end { padding: 80px 22px 60px; }
+      .cc-foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .cc-foot .ri, .cc-foot .ce { text-align: center; }
+      .cc-modal { padding: 16px; }
+      .cc-modal-nav { width: 44px; height: 44px; font-size: 16px; }
+      .cc-modal-nav.prev { left: 8px; }
+      .cc-modal-nav.next { right: 8px; }
+      .cc-modal-brand { display: none; }
+    }
+    @media (max-width: 600px) {
+      .cc-films-grid { grid-template-columns: 1fr; }
+      .cc-palette { grid-template-columns: 1fr; }
+      .cc-sheet-grid { grid-template-columns: repeat(4, 1fr); }
+      .cc-entry-spec dl { grid-template-columns: 1fr; }
+      .cc-entry-spec dl > div:nth-child(even) { padding-left: 0; border-left: 0; }
+      .cc-entry-spec dl > div:nth-child(odd) { padding-right: 0; }
+    }
+
+    /* reveal */
+    .cc-reveal { opacity: 0; transform: translateY(16px); transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .cc-reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .cc-reveal { opacity: 1; transform: none; transition: none; }
+      .cc-entry-photo img, .cc-film img, .cc-sheet-cell img { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       FF RAIL
+  ==================================================================== -->
+  <header class="cc-top">
+    <a href="../" class="cc-top-back">← Portfolio</a>
+    <span class="cc-top-frame">★ #011 ★</span>
+    <span class="cc-top-meta">Canapy · Toronto · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       HERO — type-led catalogue cover
+  ==================================================================== -->
+  <section class="cc-hero">
+    <p class="cc-hero-eyebrow">FrameFlow · Reel 011 · Spring MMXXVI</p>
+    <h1 class="cc-hero-wordmark">CANAPY</h1>
+    <p class="cc-hero-edition">Edition 011<span>·</span>Catalogue<span>·</span>Spring 2026</p>
+    <p class="cc-hero-tag">Sculpted for spaces that <em>breathe.</em></p>
+    <div class="cc-hero-scope">
+      <span>Photography</span>
+      <span>Videography</span>
+      <span>Social Media</span>
+      <span>Ad Management</span>
+    </div>
+    <dl class="cc-hero-meta">
+      <div><dt>Plates</dt><dd>13</dd></div>
+      <div><dt>Films</dt><dd>06</dd></div>
+      <div><dt>Shoots</dt><dd>04</dd></div>
+      <div><dt>Year</dt><dd>2026</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="cc-intro cc-reveal">
+    <p class="cc-intro-cap">A note on the work</p>
+    <h2>A season for <b>Canapy Furniture</b> — Toronto's contract-grade studio on Davenport Road.</h2>
+    <p>We were brought on for the long story. Four shoots in the Davenport Showroom and one private home in the Annex. Photography, films, social, and the small bright work of ads.</p>
+    <p>The Canapy brief was a sentence: <strong>photograph the room honestly.</strong> Daylight only — no fill, no flash. Four hundred and twelve frames came back; thirteen were kept.</p>
+  </section>
+
+  <!-- =================================================================
+       MARKS — palette + type
+  ==================================================================== -->
+  <section class="cc-marks cc-reveal">
+    <div>
+      <h3>Palette · achromatic</h3>
+      <div class="cc-palette">
+        <div class="cc-pchip bone">
+          <span class="role">Surface · 60%</span>
+          <div>
+            <p class="name">Bone</p>
+            <p class="hex">#FFFFFF</p>
+          </div>
+        </div>
+        <div class="cc-pchip paper">
+          <span class="role">Tonal · 20%</span>
+          <div>
+            <p class="name">Paper</p>
+            <p class="hex">#FAFAF8</p>
+          </div>
+        </div>
+        <div class="cc-pchip gray">
+          <span class="role">Hairline · 5%</span>
+          <div>
+            <p class="name">Stone</p>
+            <p class="hex">#E5E3DF</p>
+          </div>
+        </div>
+        <div class="cc-pchip ink">
+          <span class="role">Ink · 15%</span>
+          <div>
+            <p class="name">Charcoal</p>
+            <p class="hex">#111111</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · Hanken Grotesk</h3>
+      <div class="cc-type-stack">
+        <div class="cc-type-row">
+          <p class="label">Wordmark</p>
+          <p class="specimen w">CANAPY</p>
+        </div>
+        <div class="cc-type-row">
+          <p class="label">Display · 200</p>
+          <p class="specimen h">Aa Bb · 0123</p>
+        </div>
+        <div class="cc-type-row">
+          <p class="label">Subhead · 500</p>
+          <p class="specimen m">Sculpted for spaces that breathe.</p>
+        </div>
+        <div class="cc-type-row">
+          <p class="label">Body · 400</p>
+          <p class="specimen b">Daylight only — no fill, no flash. Four hundred and twelve frames came back; thirteen were kept.</p>
+        </div>
+        <div class="cc-type-row">
+          <p class="label">Label · 500</p>
+          <p class="specimen l">Davenport · Toronto · MMXXVI</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       CATALOGUE — sequence of specimen entries
+  ==================================================================== -->
+  <section class="cc-cat cc-reveal">
+    <div class="cc-cat-head">
+      <span class="label">01 / Catalogue</span>
+      <h3>The plates, <b>specimen-by-specimen.</b></h3>
+      <span class="count"><b>13</b> entries · 412 made</span>
+    </div>
+
+    <!-- Entry 01 -->
+    <article class="cc-entry">
+      <div class="cc-entry-photo" data-idx="0">
+        <span class="stamp">P.01 · 09:14</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/01-cane-chair-backlit.jpg" alt="Cane Lounge — backlit at 09:14.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">01.</p>
+        <p class="sku">SKU · <b>CN-001-CL</b> · Cane Lounge / Demo</p>
+        <h4>Cane Lounge — <b>backlit.</b></h4>
+        <p class="blurb">Solid beech, oiled twice. Hand-caned back in <strong>Viennese pattern</strong>. Bouclé seat in undyed wool. Photographed against the south-facing wall in a single morning, with the sunlight doing most of the work.</p>
+        <dl>
+          <div><dt>Frame</dt><dd>Beech, oiled</dd></div>
+          <div><dt>Weave</dt><dd>Viennese cane</dd></div>
+          <div><dt>Seat</dt><dd>Bouclé, cream</dd></div>
+          <div><dt>Footprint</dt><dd>660 × 720 × 760</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>2.0</span><span><b>1/</b>250</span><span><b>ISO</b> 800</span><span><b>50</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 02 (flipped) -->
+    <article class="cc-entry flip">
+      <div class="cc-entry-photo" data-idx="1">
+        <span class="stamp">P.02 · 10:42</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/02-cane-weave-detail.jpg" alt="Viennese cane on a beech frame.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">02.</p>
+        <p class="sku">SKU · <b>CN-002-CW</b> · Cane Weave / Detail</p>
+        <h4>Viennese Cane — <b>detail.</b></h4>
+        <p class="blurb">Hand-laid cane on a beech frame. The pattern is older than the chair, older than the room, older than most of the rooms we put it in.</p>
+        <dl>
+          <div><dt>Pattern</dt><dd>Viennese</dd></div>
+          <div><dt>Material</dt><dd>Rattan core</dd></div>
+          <div><dt>Frame</dt><dd>Beech, oiled</dd></div>
+          <div><dt>Aperture</dt><dd>F 2.0</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>2.0</span><span><b>1/</b>200</span><span><b>ISO</b> 800</span><span><b>50</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 03 -->
+    <article class="cc-entry">
+      <div class="cc-entry-photo" data-idx="2">
+        <span class="stamp">P.04 · 11:08</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/04-wood-arm-cream-cushion.jpg" alt="Beech arm with cream bouclé cushion.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">03.</p>
+        <p class="sku">SKU · <b>CN-004-BA</b> · Beech Arm / Cream</p>
+        <h4>Beech Arm — <b>cream.</b></h4>
+        <p class="blurb">Beech, finger-jointed; tung-oiled, hand-rubbed. Cushion in undyed wool bouclé. <em>A single edge holds the morning.</em></p>
+        <dl>
+          <div><dt>Material</dt><dd>Beech, jointed</dd></div>
+          <div><dt>Finish</dt><dd>Tung oil</dd></div>
+          <div><dt>Cushion</dt><dd>Bouclé, cream</dd></div>
+          <div><dt>Time</dt><dd>11:08, March</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>4.0</span><span><b>1/</b>320</span><span><b>ISO</b> 400</span><span><b>50</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 04 (flipped) -->
+    <article class="cc-entry flip">
+      <div class="cc-entry-photo" data-idx="3">
+        <span class="stamp">P.13 · 16:48</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt="Walnut Arch dining table.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">04.</p>
+        <p class="sku">SKU · <b>CN-013-WA</b> · Walnut Arch / Table</p>
+        <h4>Walnut Arch — <b>2,200 mm.</b></h4>
+        <p class="blurb">A dining table cut in walnut. <strong>Book-matched top</strong>; arched leg panels CNC-cut and hand-finished. Loaded lightly: a vessel, a closed monograph, the corner of a cane chair.</p>
+        <dl>
+          <div><dt>Top</dt><dd>Walnut, b-matched</dd></div>
+          <div><dt>Base</dt><dd>Walnut arch</dd></div>
+          <div><dt>Length</dt><dd>2,200 mm</dd></div>
+          <div><dt>Weight</dt><dd>94 kg</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>4.0</span><span><b>1/</b>200</span><span><b>ISO</b> 800</span><span><b>35</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 05 -->
+    <article class="cc-entry">
+      <div class="cc-entry-photo land" data-idx="4">
+        <span class="stamp">P.12 · 14:32</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/12-sectional-window-grid.jpg" alt="Bouclé sectional with window grid shadow.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">05.</p>
+        <p class="sku">SKU · <b>CN-012-BS</b> · Bouclé Sectional / Window</p>
+        <h4>Bouclé Sectional — <b>window grid.</b></h4>
+        <p class="blurb">Undyed wool bouclé, deep seat geometry. Photographed at 14:32 against a window-grid shadow that returns at the same hour every clear day.</p>
+        <dl>
+          <div><dt>Surface</dt><dd>Bouclé, cream</dd></div>
+          <div><dt>Fill</dt><dd>Down + foam</dd></div>
+          <div><dt>Length</dt><dd>3,000 mm</dd></div>
+          <div><dt>Time</dt><dd>14:32</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>2.8</span><span><b>1/</b>250</span><span><b>ISO</b> 400</span><span><b>35</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 06 (flipped) -->
+    <article class="cc-entry flip">
+      <div class="cc-entry-photo" data-idx="5">
+        <span class="stamp">P.10 · 14:32</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/10-tufted-headboard.jpg" alt="Tufted saddle leather headboard.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">06.</p>
+        <p class="sku">SKU · <b>CN-010-SH</b> · Saddle Headboard / Tufted</p>
+        <h4>Saddle Headboard — <b>tufted.</b></h4>
+        <p class="blurb">A bedroom panel in <strong>saddle leather</strong>. Eight-button hand-set tufting; edge piping rolled by hand. Indirect light from the next room only.</p>
+        <dl>
+          <div><dt>Surface</dt><dd>Saddle leather</dd></div>
+          <div><dt>Tufting</dt><dd>8 buttons</dd></div>
+          <div><dt>Edge</dt><dd>Self-piped</dd></div>
+          <div><dt>Light</dt><dd>Indirect, N</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>2.0</span><span><b>1/</b>125</span><span><b>ISO</b> 1600</span><span><b>50</b> mm</span></p>
+      </div>
+    </article>
+
+    <!-- Entry 07 -->
+    <article class="cc-entry">
+      <div class="cc-entry-photo" data-idx="6">
+        <span class="stamp">P.08 · 13:18</span>
+        <img src="../../../public/portfolio/canapy-furniture/photos/08-showroom-davenport.jpg" alt="The Davenport showroom.">
+        <span class="zoom">↗</span>
+      </div>
+      <div class="cc-entry-spec">
+        <p class="num">07.</p>
+        <p class="sku">SKU · <b>CN-008-SR</b> · Showroom / Davenport</p>
+        <h4>Davenport — <b>the room.</b></h4>
+        <p class="blurb">Vertical timber slats, the wordmark in cream, a bouclé sofa that has been everyone's for a season. The showroom photographed as one photographs a room, not a piece.</p>
+        <dl>
+          <div><dt>Floor</dt><dd>Engineered oak</dd></div>
+          <div><dt>Wall</dt><dd>Plaster, pale</dd></div>
+          <div><dt>Surface</dt><dd>4,500 sq ft</dd></div>
+          <div><dt>Address</dt><dd>Davenport Rd</dd></div>
+        </dl>
+        <p class="lab"><span><b>F</b>2.8</span><span><b>1/</b>200</span><span><b>ISO</b> 800</span><span><b>24</b> mm</span></p>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       CONTACT SHEET — remaining 6 in a single thin row
+  ==================================================================== -->
+  <section class="cc-sheet cc-reveal">
+    <div class="cc-sheet-head">
+      <span class="label">02 / Contact sheet</span>
+      <h3>All thirteen, <b>at thumbnail.</b></h3>
+      <a class="download" href="#">Download PDF →</a>
+    </div>
+    <div class="cc-sheet-grid" id="cc-sheet-grid">
+      <button class="cc-sheet-cell" data-cap="P.01 · Cane Lounge — backlit"><img src="../../../public/portfolio/canapy-furniture/photos/01-cane-chair-backlit.jpg" alt=""><span class="num">01</span></button>
+      <button class="cc-sheet-cell" data-cap="P.02 · Viennese cane — detail"><img src="../../../public/portfolio/canapy-furniture/photos/02-cane-weave-detail.jpg" alt=""><span class="num">02</span></button>
+      <button class="cc-sheet-cell" data-cap="P.03 · First light — frame"><img src="../../../public/portfolio/canapy-furniture/photos/03-cane-frame-light.jpg" alt=""><span class="num">03</span></button>
+      <button class="cc-sheet-cell" data-cap="P.04 · Beech arm — cream"><img src="../../../public/portfolio/canapy-furniture/photos/04-wood-arm-cream-cushion.jpg" alt=""><span class="num">04</span></button>
+      <button class="cc-sheet-cell" data-cap="P.05 · Frame & cushion"><img src="../../../public/portfolio/canapy-furniture/photos/05-frame-cushion-detail.jpg" alt=""><span class="num">05</span></button>
+      <button class="cc-sheet-cell" data-cap="P.06 · Bouclé — cushion"><img src="../../../public/portfolio/canapy-furniture/photos/06-arm-boucle-detail.jpg" alt=""><span class="num">06</span></button>
+      <button class="cc-sheet-cell" data-cap="P.07 · Cane corner — sun"><img src="../../../public/portfolio/canapy-furniture/photos/07-cane-corner-sunlit.jpg" alt=""><span class="num">07</span></button>
+      <button class="cc-sheet-cell" data-cap="P.08 · Showroom — Davenport"><img src="../../../public/portfolio/canapy-furniture/photos/08-showroom-davenport.jpg" alt=""><span class="num">08</span></button>
+      <button class="cc-sheet-cell" data-cap="P.09 · Living, reading"><img src="../../../public/portfolio/canapy-furniture/photos/09-living-room-reading.jpg" alt=""><span class="num">09</span></button>
+      <button class="cc-sheet-cell" data-cap="P.10 · Saddle headboard — tufted"><img src="../../../public/portfolio/canapy-furniture/photos/10-tufted-headboard.jpg" alt=""><span class="num">10</span></button>
+      <button class="cc-sheet-cell" data-cap="P.11 · Vessel — from above"><img src="../../../public/portfolio/canapy-furniture/photos/11-vessel-topdown.jpg" alt=""><span class="num">11</span></button>
+      <button class="cc-sheet-cell" data-cap="P.12 · Sectional — window grid"><img src="../../../public/portfolio/canapy-furniture/photos/12-sectional-window-grid.jpg" alt=""><span class="num">12</span></button>
+      <button class="cc-sheet-cell" data-cap="P.13 · Walnut Arch — table"><img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt=""><span class="num">13</span></button>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="cc-scope cc-reveal">
+    <div class="cc-scope-head">
+      <span class="label">03 / Scope</span>
+      <h3>What we made for <b>Canapy.</b></h3>
+      <span class="total">04 services</span>
+    </div>
+    <div class="cc-scope-row">
+      <span class="num">01.</span>
+      <span class="name">Photography</span>
+      <p class="desc">Four shoots in the Davenport Showroom and one private home. Daylight only — no fill, no flash. Stills delivered with cutlines written.</p>
+      <p class="out"><b>13</b>stills</p>
+    </div>
+    <div class="cc-scope-row">
+      <span class="num">02.</span>
+      <span class="name">Videography</span>
+      <p class="desc">Quiet handheld films cut in the same edit as the stills — no music, the room as the soundtrack. 9:16 native; 1:1 cut-downs supplied.</p>
+      <p class="out"><b>06</b>trailers</p>
+    </div>
+    <div class="cc-scope-row">
+      <span class="num">03.</span>
+      <span class="name">Social Media</span>
+      <p class="desc">Calendar planned monthly with the studio. Reels and carousels in a single voice. Audience: trade and design-aware homeowners.</p>
+      <p class="out"><b>Q1–Q3</b>planned</p>
+    </div>
+    <div class="cc-scope-row">
+      <span class="num">04.</span>
+      <span class="name">Ad Management</span>
+      <p class="desc">Paid placements built from the same shoots. Meta &amp; Google sized to the room, routed through the Trade landing pages.</p>
+      <p class="out"><b>Meta · Google</b></p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FILMS
+  ==================================================================== -->
+  <section class="cc-films cc-reveal">
+    <div class="cc-films-head">
+      <span class="label">04 / Films</span>
+      <h3>Six trailers, <b>cut quietly.</b></h3>
+      <span class="count">9:16 · 1:1</span>
+    </div>
+    <div class="cc-films-grid">
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/03-cane-frame-light.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>The Showroom, slow</b><span>0:18</span></div>
+      </figure>
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/12-sectional-window-grid.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Bouclé in window light</b><span>0:09</span></div>
+      </figure>
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/02-cane-weave-detail.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Cane, hand-laid</b><span>0:15</span></div>
+      </figure>
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Walnut Arch, set</b><span>0:22</span></div>
+      </figure>
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/10-tufted-headboard.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Saddle leather, dusk</b><span>0:11</span></div>
+      </figure>
+      <figure class="cc-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/09-living-room-reading.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Living, reading</b><span>0:14</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="cc-end cc-reveal">
+    <p class="label">Roll the next reel</p>
+    <h3>Set the next <b>room.</b></h3>
+    <p>If your space holds light worth waiting for, we would like to spend a season in it. Brand, photography, films, social, and the small bright work of advertising.</p>
+    <a class="cc-cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="cc-foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 011 · CANAPY</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <!-- =================================================================
+       LIGHTBOX
+  ==================================================================== -->
+  <div class="cc-modal" id="cc-modal" hidden role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button class="cc-modal-nav prev" id="cc-prev" aria-label="Previous photo">←</button>
+    <div class="cc-modal-stage">
+      <div class="cc-modal-bar top">
+        <span class="cc-modal-counter">★ Frame <b id="cc-modal-num">01</b> / 13</span>
+        <span class="cc-modal-brand">CANAPY · DAILIES</span>
+        <button class="cc-modal-close" id="cc-close" aria-label="Close">×</button>
+      </div>
+      <div class="cc-modal-image-wrap">
+        <img id="cc-modal-img" src="" alt="">
+      </div>
+      <div class="cc-modal-bar bot">
+        <span id="cc-modal-cap">Plate caption</span>
+      </div>
+    </div>
+    <button class="cc-modal-nav next" id="cc-next" aria-label="Next photo">→</button>
+  </div>
+
+  <script>
+    /* lightbox sourced from contact-sheet thumbs */
+    (() => {
+      const cells = Array.from(document.querySelectorAll(".cc-sheet-cell"));
+      const photos = cells.map((c) => ({
+        src: c.querySelector("img").getAttribute("src"),
+        cap: c.dataset.cap,
+      }));
+      const total = photos.length;
+
+      const modal = document.getElementById("cc-modal");
+      const img   = document.getElementById("cc-modal-img");
+      const num   = document.getElementById("cc-modal-num");
+      const cap   = document.getElementById("cc-modal-cap");
+      let i = -1;
+
+      function render(n) {
+        i = (n + total) % total;
+        const p = photos[i];
+        img.src = p.src;
+        img.alt = p.cap;
+        num.textContent = String(i + 1).padStart(2, "0");
+        cap.textContent = p.cap;
+      }
+      function open(n) { render(n); modal.hidden = false; document.body.style.overflow = "hidden"; }
+      function close() { modal.hidden = true; document.body.style.overflow = ""; }
+
+      cells.forEach((c, idx) => c.addEventListener("click", () => open(idx)));
+      /* also wire the catalogue entry photos to open the same lightbox */
+      const entries = Array.from(document.querySelectorAll(".cc-entry-photo"));
+      entries.forEach((e) => {
+        e.addEventListener("click", () => {
+          const src = e.querySelector("img").getAttribute("src");
+          const idx = photos.findIndex((p) => p.src === src);
+          if (idx !== -1) open(idx);
+        });
+      });
+
+      document.getElementById("cc-close").addEventListener("click", close);
+      document.getElementById("cc-prev").addEventListener("click", () => render(i - 1));
+      document.getElementById("cc-next").addEventListener("click", () => render(i + 1));
+      modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+      window.addEventListener("keydown", (e) => {
+        if (modal.hidden) return;
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowLeft") render(i - 1);
+        if (e.key === "ArrowRight") render(i + 1);
+      });
+    })();
+
+    /* reveal */
+    (() => {
+      const els = document.querySelectorAll(".cc-reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

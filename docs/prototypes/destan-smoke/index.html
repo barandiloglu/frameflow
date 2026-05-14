@@ -1,0 +1,1234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Destan — The Smoke (FrameFlow / Prototype 02)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       DESTAN · THE SMOKE
+       Prototype 02 — cinematic / Chef's Table title-card
+
+       Black-on-black with ember glow. Letterboxed scenes, slow scrolling,
+       full-bleed photography, condensed display serif title cards,
+       mono UI tags. The page is a film about fire.
+    ==================================================================== */
+
+    :root {
+      --noir:    #08070a;        /* deepest black */
+      --char:    #14110e;        /* charcoal */
+      --smoke:   #2b211a;        /* warm brown smoke */
+      --ember:   #d65b1f;        /* glowing ember */
+      --ember-hi:#ff7a2a;        /* hot ember accent */
+      --gold:    #e9b44a;        /* destan gold */
+      --bone:    #f0e3c4;        /* bone / off-white text */
+      --bone-d:  rgba(240, 227, 196, 0.65);
+      --burgundy:#73191c;
+
+      --display: "Bodoni Moda", "Didot", serif;
+      --body:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--noir);
+      color: var(--bone);
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: 0.005em;
+    }
+
+    /* film grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      opacity: 0.55;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.5  0 0 0 0 0.2  0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+      animation: grain 1.4s steps(6) infinite;
+    }
+    @keyframes grain {
+      0%   { transform: translate(0,0) }
+      20%  { transform: translate(-3%, 4%) }
+      40%  { transform: translate(2%, -3%) }
+      60%  { transform: translate(-1%, 2%) }
+      80%  { transform: translate(3%, -1%) }
+      100% { transform: translate(0,0) }
+    }
+
+    /* warm ambient color washes */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 70% 60% at 20% 30%, rgba(214, 91, 31, 0.12), transparent 70%),
+        radial-gradient(ellipse 80% 70% at 90% 80%, rgba(115, 25, 28, 0.18), transparent 70%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       FF RAIL — top fixed strip, mono "Destan / Reel 010 / Smoke"
+    ============================================================ */
+    .ff-rail {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 14px 28px;
+      background: linear-gradient(to bottom, rgba(8, 7, 10, 0.92), rgba(8, 7, 10, 0));
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .ff-rail .rec {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ff-rail .rec::before {
+      content: "";
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--ember-hi);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--ember-hi);
+      animation: rec-pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes rec-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .ff-rail .center {
+      letter-spacing: 0.5em;
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .ff-rail .end {
+      text-align: right;
+    }
+    .ff-rail .ts {
+      display: inline-block;
+      min-width: 8ch;
+    }
+
+    /* ============================================================
+       OPENING TITLE CARD — full-screen
+    ============================================================ */
+    .opener {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    /* hero photo as background, very darkened */
+    .opener-photo {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+    .opener-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.32) saturate(1.1) contrast(1.05);
+    }
+    .opener-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 50%, transparent 30%, var(--noir) 95%);
+    }
+    .letterbox {
+      position: absolute;
+      left: 0; right: 0;
+      height: 80px;
+      background: var(--noir);
+      z-index: 2;
+    }
+    .letterbox.top { top: 0; }
+    .letterbox.bot { bottom: 0; }
+
+    .opener-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--ember-hi);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      text-shadow: 0 0 24px rgba(255, 122, 42, 0.6);
+    }
+    .opener-presents {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--bone-d);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+    .opener-title {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(72px, 14vw, 220px);
+      letter-spacing: 0.05em;
+      line-height: 0.95;
+      color: var(--bone);
+      margin-bottom: 22px;
+    }
+    .opener-title em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+    .opener-sub {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(20px, 2.2vw, 30px);
+      color: var(--bone-d);
+      letter-spacing: 0.04em;
+      max-width: 30ch;
+      line-height: 1.4;
+    }
+    .opener-meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 56px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .opener-meta b { color: var(--bone); font-weight: 500; }
+    .opener-scope {
+      position: absolute;
+      bottom: 110px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 0 24px;
+      z-index: 5;
+    }
+    .scope-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      padding: 6px 14px;
+      border: 1px solid rgba(240, 227, 196, 0.18);
+    }
+    .opener-scroll-cue {
+      position: absolute;
+      bottom: 110px;
+      right: 32px;
+      z-index: 5;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+    .opener-scroll-cue::after {
+      content: "↓";
+      display: block;
+      margin-top: 10px;
+      animation: cue-bob 2.4s ease-in-out infinite;
+    }
+    @keyframes cue-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ============================================================
+       ACT — title card between scenes
+    ============================================================ */
+    .act {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px;
+      position: relative;
+      z-index: 3;
+    }
+    .act-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--ember-hi);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .act-rule {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      margin: 0 auto 32px;
+    }
+    .act-title {
+      font-family: var(--display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(56px, 9vw, 140px);
+      letter-spacing: 0.03em;
+      color: var(--bone);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .act-blurb {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: clamp(18px, 2vw, 24px);
+      color: var(--bone-d);
+      max-width: 36ch;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       SCENE — full-bleed photo with caption strip
+    ============================================================ */
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 3;
+    }
+    .scene img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7) contrast(1.08) saturate(1.05);
+      transition: transform 8s ease-out;
+      transform: scale(1);
+    }
+    .scene.in img { transform: scale(1.06); }
+
+    .scene-letterbox-top, .scene-letterbox-bot {
+      position: absolute;
+      left: 0; right: 0;
+      height: 70px;
+      background: var(--noir);
+      z-index: 4;
+    }
+    .scene-letterbox-top { top: 0; }
+    .scene-letterbox-bot { bottom: 0; }
+
+    .scene-slate {
+      position: absolute;
+      top: 90px;
+      left: 32px;
+      z-index: 5;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .scene-slate .num { color: var(--ember-hi); font-weight: 500; }
+
+    .scene-caption {
+      position: absolute;
+      bottom: 90px;
+      left: 32px;
+      right: 32px;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 24px;
+    }
+    .scene-caption-title {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(32px, 5vw, 76px);
+      color: var(--bone);
+      line-height: 1.05;
+      max-width: 18ch;
+      letter-spacing: 0.02em;
+    }
+    .scene-caption-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      text-align: right;
+    }
+    .scene-caption-meta b { color: var(--gold); font-weight: 500; }
+
+    /* alternating split scene */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 3;
+    }
+    .split-photo {
+      position: relative;
+      overflow: hidden;
+    }
+    .split-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7);
+    }
+    .split-text {
+      padding: 80px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+      background: var(--char);
+    }
+    .split-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--ember-hi);
+      text-transform: uppercase;
+    }
+    .split-title {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(40px, 5.4vw, 72px);
+      color: var(--bone);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+    .split-body {
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--bone-d);
+      max-width: 44ch;
+    }
+    .split-body em { color: var(--gold); font-style: italic; }
+    .split-meta {
+      margin-top: 24px;
+      display: flex;
+      gap: 24px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .split-meta b { color: var(--bone); font-weight: 500; }
+
+    /* ============================================================
+       MARQUEE — Turkish proverb scrolling between acts
+    ============================================================ */
+    .marquee {
+      position: relative;
+      z-index: 3;
+      overflow: hidden;
+      border-top: 1px solid rgba(240, 227, 196, 0.08);
+      border-bottom: 1px solid rgba(240, 227, 196, 0.08);
+      padding: 22px 0;
+      background: rgba(20, 17, 14, 0.5);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 64px;
+      white-space: nowrap;
+      animation: marquee 50s linear infinite;
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 28px;
+      color: var(--bone-d);
+      letter-spacing: 0.04em;
+    }
+    .marquee-track span {
+      display: inline-flex;
+      align-items: center;
+      gap: 64px;
+    }
+    .marquee-track span::after {
+      content: "✦";
+      color: var(--gold);
+      font-style: normal;
+      font-size: 12px;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-33.333%); }
+    }
+
+    /* ============================================================
+       FILMS GRID — six trailers
+    ============================================================ */
+    .films {
+      position: relative;
+      z-index: 3;
+      padding: 140px 32px 160px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .films-head {
+      max-width: 720px;
+      margin-bottom: 72px;
+    }
+    .films-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .film {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(240, 227, 196, 0.08);
+      transition: border-color 0.4s;
+    }
+    .film:hover { border-color: var(--gold); }
+    .film img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7) contrast(1.05);
+      transition: filter 0.6s, transform 0.6s;
+    }
+    .film:hover img {
+      filter: brightness(0.9);
+      transform: scale(1.04);
+    }
+    .film-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px 18px 22px;
+      background: linear-gradient(180deg, rgba(8,7,10,0.55) 0%, transparent 30%, transparent 60%, rgba(8,7,10,0.95) 100%);
+    }
+    .film-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ember-hi);
+      align-self: flex-start;
+      padding: 4px 8px;
+      background: rgba(8,7,10,0.6);
+      border: 1px solid rgba(214, 91, 31, 0.4);
+    }
+    .film-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .film-title {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--bone);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+    .film-meta {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      display: flex;
+      gap: 16px;
+    }
+    .film-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 1px solid var(--bone);
+      background: rgba(214, 91, 31, 0.15);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bone);
+      font-family: var(--display);
+      font-size: 22px;
+      transition: transform 0.4s, background 0.4s, border-color 0.4s;
+    }
+    .film:hover .film-play {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: var(--ember);
+      border-color: var(--gold);
+    }
+
+    /* ============================================================
+       CREDITS — vertical scroll list, cinema closing credits style
+    ============================================================ */
+    .credits {
+      position: relative;
+      z-index: 3;
+      padding: 160px 32px 200px;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .credits-head {
+      font-family: var(--display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(48px, 6vw, 88px);
+      color: var(--bone);
+      line-height: 1;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+    }
+    .credits-head em { color: var(--gold); }
+    .credits-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      margin-bottom: 80px;
+    }
+    .credit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(240, 227, 196, 0.08);
+      align-items: baseline;
+    }
+    .credit-role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      text-align: left;
+    }
+    .credit-name {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--bone);
+      text-align: right;
+    }
+    .credit-name b { color: var(--gold); font-weight: 500; }
+
+    /* palette + type small cards */
+    .marks-strip {
+      position: relative;
+      z-index: 3;
+      padding: 100px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      border-top: 1px solid rgba(240, 227, 196, 0.08);
+    }
+    .marks-strip h3 {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ember-hi);
+      margin-bottom: 32px;
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+    .pchip {
+      aspect-ratio: 3 / 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--bone);
+      position: relative;
+      overflow: hidden;
+    }
+    .pchip span { display: block; opacity: 0.85; font-size: 9px; margin-top: 2px; }
+    .pchip.ember { background: var(--burgundy); }
+    .pchip.gold { background: var(--gold); color: var(--noir); }
+    .pchip.gold span { opacity: 0.7; }
+    .pchip.smoke { background: var(--smoke); }
+    .pchip.bone { background: var(--bone); color: var(--noir); }
+    .pchip.bone span { opacity: 0.7; }
+    .pchip b { font-family: var(--display); font-style: italic; font-size: 18px; font-weight: 400; letter-spacing: 0.01em; }
+    .pchip.gold b, .pchip.bone b { color: var(--noir); }
+
+    .type-stack { display: flex; flex-direction: column; gap: 22px; }
+    .type-card {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(240, 227, 196, 0.08);
+    }
+    .type-card:last-child { border-bottom: 0; }
+    .type-card-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      margin-bottom: 12px;
+    }
+    .type-card .display {
+      font-family: var(--display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 38px;
+      color: var(--bone);
+    }
+    .type-card .body {
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 19px;
+      color: var(--bone);
+      line-height: 1.4;
+    }
+    .type-card .mono {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+
+    /* ============================================================
+       END SLATE — final fade-out
+    ============================================================ */
+    .end-slate {
+      position: relative;
+      z-index: 3;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 32px;
+      gap: 22px;
+    }
+    .end-slate .word {
+      font-family: var(--display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(56px, 9vw, 140px);
+      color: var(--bone);
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+    }
+    .end-slate .word em { color: var(--ember); font-style: italic; }
+    .end-slate .meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .end-slate .cta {
+      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      border: 1px solid var(--ember-hi);
+      color: var(--bone);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+    }
+    .end-slate .cta:hover {
+      background: var(--ember-hi);
+      color: var(--noir);
+    }
+
+    .footer-rail {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 28px;
+      border-top: 1px solid rgba(240, 227, 196, 0.06);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .footer-rail b { color: var(--gold); font-weight: 500; }
+
+    /* reveals */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 1s, transform 1s; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 880px) {
+      .ff-rail { font-size: 9px; padding: 10px 14px; letter-spacing: 0.24em; }
+      .ff-rail .end .ts { display: none; }
+      .opener-meta { gap: 16px; flex-wrap: wrap; justify-content: center; }
+      .opener-scope { bottom: 90px; gap: 8px; }
+      .scope-tag { font-size: 9px; padding: 5px 10px; }
+      .opener-scroll-cue { display: none; }
+      .scene-caption { grid-template-columns: 1fr; gap: 12px; }
+      .scene-slate { top: 80px; left: 18px; }
+      .scene-caption { left: 18px; right: 18px; bottom: 80px; }
+      .split { grid-template-columns: 1fr; min-height: auto; }
+      .split-photo { height: 60vh; }
+      .split-text { padding: 60px 28px; }
+      .films-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .marks-strip { grid-template-columns: 1fr; gap: 36px; }
+      .palette { grid-template-columns: repeat(2, 1fr); }
+      .credit-row { grid-template-columns: 1fr; gap: 4px; }
+      .credit-role { text-align: center; }
+      .credit-name { text-align: center; font-size: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .marquee-track { animation: none; }
+      body::before { animation: none; }
+      .scene img { transition: none; transform: none; }
+      .scene.in img { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       FRAMEFLOW RAIL — top fixed
+  ==================================================================== -->
+  <header class="ff-rail">
+    <span class="rec">REC · FrameFlow · Reel 010</span>
+    <span class="center">DESTAN · SMOKE</span>
+    <span class="end"><span class="ts" id="ts">TC&nbsp;01:00:00:00</span></span>
+  </header>
+
+  <!-- =================================================================
+       OPENING TITLE CARD
+  ==================================================================== -->
+  <section class="opener">
+    <div class="opener-photo">
+      <img src="../../../public/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg" alt="" />
+    </div>
+    <div class="letterbox top"></div>
+
+    <p class="opener-eyebrow">Reel 010 · Toronto · MMXXVI</p>
+    <p class="opener-presents">FrameFlow Studio Presents</p>
+    <h1 class="opener-title">DESTAN<em>.</em></h1>
+    <p class="opener-sub">A short film about a kebab house, told in fire and bread.</p>
+
+    <div class="opener-meta">
+      <span><b>110 min.</b> &nbsp;dailies</span>
+      <span><b>15</b> &nbsp;stills kept</span>
+      <span><b>6</b> &nbsp;trailers</span>
+    </div>
+
+    <div class="opener-scope">
+      <span class="scope-tag">Photography</span>
+      <span class="scope-tag">Videography</span>
+      <span class="scope-tag">Social Media</span>
+      <span class="scope-tag">Ad Management</span>
+    </div>
+    <span class="opener-scroll-cue">Scroll · Continue</span>
+
+    <div class="letterbox bot"></div>
+  </section>
+
+  <!-- =================================================================
+       MARQUEE — Turkish proverb
+  ==================================================================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Ateşin yanına yaklaşan ateşten korkmaz</span>
+      <span>Who sits beside the fire does not fear the smoke</span>
+      <span>— Anatolian proverb</span>
+      <span>Ateşin yanına yaklaşan ateşten korkmaz</span>
+      <span>Who sits beside the fire does not fear the smoke</span>
+      <span>— Anatolian proverb</span>
+      <span>Ateşin yanına yaklaşan ateşten korkmaz</span>
+      <span>Who sits beside the fire does not fear the smoke</span>
+      <span>— Anatolian proverb</span>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       ACT I — TITLE CARD
+  ==================================================================== -->
+  <section class="act reveal">
+    <p class="act-num">Act I</p>
+    <span class="act-rule"></span>
+    <h2 class="act-title">The Fire.</h2>
+    <p class="act-blurb">In which the cağ begins to turn, and the room learns to wait.</p>
+  </section>
+
+  <!-- SCENE 01 — full-bleed cag with caption -->
+  <section class="scene reveal">
+    <img src="../../../public/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg" alt="" />
+    <div class="scene-letterbox-top"></div>
+    <div class="scene-slate">
+      <span class="num">SCN 01.A</span>
+      <span>EXT · OAK FIRE · NIGHT</span>
+      <span>F&nbsp;5.6&nbsp;·&nbsp;1/200&nbsp;·&nbsp;ISO&nbsp;800</span>
+    </div>
+    <div class="scene-caption">
+      <h3 class="scene-caption-title">The roast learns its first dark crust.</h3>
+      <p class="scene-caption-meta">Plate&nbsp;<b>02</b><br>01·04·26</p>
+    </div>
+    <div class="scene-letterbox-bot"></div>
+  </section>
+
+  <!-- SPLIT — cag rotating with text -->
+  <section class="split reveal">
+    <div class="split-photo">
+      <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="" />
+    </div>
+    <div class="split-text">
+      <p class="split-eyebrow">Scene 02 · The Rotation</p>
+      <h3 class="split-title">A cağ does not stand. <em>It lies down.</em></h3>
+      <p class="split-body">
+        Where the doner is a tower, the cağ is a story — bound horizontally to the spit, rolled slowly above oak embers, fed by a chef who watches the fire as one watches a long sentence resolve itself.
+      </p>
+      <p class="split-body">
+        We waited. Four shoots, in light that asked to be waited on.
+      </p>
+      <div class="split-meta">
+        <span>Cam.&nbsp;<b>A7S III</b></span>
+        <span>Lens&nbsp;<b>50mm f/1.4</b></span>
+        <span>Cam Op.&nbsp;<b>FF</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE — full-bleed: chicken on coals -->
+  <section class="scene reveal">
+    <img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="" />
+    <div class="scene-letterbox-top"></div>
+    <div class="scene-slate">
+      <span class="num">SCN 03</span>
+      <span>INT · LOW EMBERS · DUSK</span>
+      <span>F&nbsp;2.8&nbsp;·&nbsp;1/320&nbsp;·&nbsp;ISO&nbsp;1600</span>
+    </div>
+    <div class="scene-caption">
+      <h3 class="scene-caption-title">Şiş tavuk, kept low and patient.</h3>
+      <p class="scene-caption-meta">Plate&nbsp;<b>10</b><br>02·15·26</p>
+    </div>
+    <div class="scene-letterbox-bot"></div>
+  </section>
+
+  <!-- =================================================================
+       ACT II — THE CUT
+  ==================================================================== -->
+  <section class="act reveal">
+    <p class="act-num">Act II</p>
+    <span class="act-rule"></span>
+    <h2 class="act-title">The Cut.</h2>
+    <p class="act-blurb">In which a long blade meets a slow roast, and an epic becomes a portion.</p>
+  </section>
+
+  <section class="scene reveal" style="height: 100vh;">
+    <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="" />
+    <div class="scene-letterbox-top"></div>
+    <div class="scene-slate">
+      <span class="num">SCN 04</span>
+      <span>INT · CARVING · NIGHT</span>
+      <span>F&nbsp;2.0&nbsp;·&nbsp;1/250&nbsp;·&nbsp;ISO&nbsp;1250</span>
+    </div>
+    <div class="scene-caption">
+      <h3 class="scene-caption-title">The blade is long enough that one pull frees a portion.</h3>
+      <p class="scene-caption-meta">Plate&nbsp;<b>05</b><br>03·14·26</p>
+    </div>
+    <div class="scene-letterbox-bot"></div>
+  </section>
+
+  <section class="split reveal">
+    <div class="split-text">
+      <p class="split-eyebrow">Scene 05 · The Hand</p>
+      <h3 class="split-title">A wrist soft enough that the meat <em>remembers</em>.</h3>
+      <p class="split-body">
+        Between the chef and the spit, a black glove and a handle worn pale by ten thousand of these movements. We made six frames of the gesture, then chose three.
+      </p>
+      <div class="split-meta">
+        <span>Frames&nbsp;<b>412</b></span>
+        <span>Kept&nbsp;<b>15</b></span>
+      </div>
+    </div>
+    <div class="split-photo">
+      <img src="../../../public/portfolio/destan-turkish-cuisine/photos/06-blade-on-meat.jpg" alt="" />
+    </div>
+  </section>
+
+  <!-- =================================================================
+       ACT III — THE PLATE
+  ==================================================================== -->
+  <section class="act reveal">
+    <p class="act-num">Act III</p>
+    <span class="act-rule"></span>
+    <h2 class="act-title">The Plate.</h2>
+    <p class="act-blurb">In which adana, ezme, and lavash become a single sentence.</p>
+  </section>
+
+  <section class="scene reveal">
+    <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="" />
+    <div class="scene-letterbox-top"></div>
+    <div class="scene-slate">
+      <span class="num">SCN 06</span>
+      <span>INT · TABLE · DAY</span>
+      <span>F&nbsp;4.0&nbsp;·&nbsp;1/160&nbsp;·&nbsp;ISO&nbsp;400</span>
+    </div>
+    <div class="scene-caption">
+      <h3 class="scene-caption-title">A table set in Toronto, with the grammar of Anatolia.</h3>
+      <p class="scene-caption-meta">Plate&nbsp;<b>15</b><br>01·31·26</p>
+    </div>
+    <div class="scene-letterbox-bot"></div>
+  </section>
+
+  <!-- marquee again -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Adana · Cağ · Şiş Tavuk · Lahmacun · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt</span>
+      <span>Adana · Cağ · Şiş Tavuk · Lahmacun · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt</span>
+      <span>Adana · Cağ · Şiş Tavuk · Lahmacun · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt</span>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       FILMS GRID — six trailers
+  ==================================================================== -->
+  <section class="films reveal">
+    <div class="films-head">
+      <p class="act-num" style="text-align: left; margin-bottom: 18px;">B-Roll</p>
+      <h2 class="act-title" style="text-align: left; font-size: clamp(40px, 5vw, 64px);">The films.</h2>
+      <p class="act-blurb" style="text-align: left; margin-top: 12px;">Six trailers cut from the four shoots, for social and for paid placements.</p>
+    </div>
+    <div class="films-grid">
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 01</span>
+          <div class="film-bottom">
+            <span class="film-title">The Rotation, slow</span>
+            <span class="film-meta"><span>0:18</span><span>9:16</span><span>Reels</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 02</span>
+          <div class="film-bottom">
+            <span class="film-title">The Cut</span>
+            <span class="film-meta"><span>0:09</span><span>9:16</span><span>Reels · TT</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 03</span>
+          <div class="film-bottom">
+            <span class="film-title">Şiş Tavuk on the coals</span>
+            <span class="film-meta"><span>0:15</span><span>9:16</span><span>Reels</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 04</span>
+          <div class="film-bottom">
+            <span class="film-title">A table, set</span>
+            <span class="film-meta"><span>0:22</span><span>1:1</span><span>Feed · Ads</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 05</span>
+          <div class="film-bottom">
+            <span class="film-title">Fish on flame</span>
+            <span class="film-meta"><span>0:11</span><span>9:16</span><span>Reels</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+      <figure class="film">
+        <img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt="" />
+        <div class="film-overlay">
+          <span class="film-tag">Trailer · 06</span>
+          <div class="film-bottom">
+            <span class="film-title">Adana, end to end</span>
+            <span class="film-meta"><span>0:14</span><span>9:16</span><span>Reels · Ads</span></span>
+          </div>
+        </div>
+        <span class="film-play">▶</span>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS STRIP — palette + type
+  ==================================================================== -->
+  <section class="marks-strip reveal">
+    <div>
+      <h3>Marks &amp; Palette</h3>
+      <div class="palette">
+        <div class="pchip ember"><b>Burgundy</b><span>#73191C</span></div>
+        <div class="pchip gold"><b>Saffron</b><span>#E9B44A</span></div>
+        <div class="pchip smoke"><b>Smoke</b><span>#2B211A</span></div>
+        <div class="pchip bone"><b>Bone</b><span>#F0E3C4</span></div>
+      </div>
+    </div>
+    <div>
+      <h3>Typeset</h3>
+      <div class="type-stack">
+        <div class="type-card">
+          <p class="type-card-tag">Display · Bodoni Moda</p>
+          <p class="display">Aa Bb 0123 — <em>Destan.</em></p>
+        </div>
+        <div class="type-card">
+          <p class="type-card-tag">Body · Inter Light</p>
+          <p class="body">A short film about a kebab house, told in fire and bread.</p>
+        </div>
+        <div class="type-card">
+          <p class="type-card-tag">UI · JetBrains Mono</p>
+          <p class="mono">SCN&nbsp;06 · F4.0 · 1/160 · ISO 400</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       CREDITS
+  ==================================================================== -->
+  <section class="credits reveal">
+    <h2 class="credits-head">Crew &amp; <em>Credits.</em></h2>
+    <p class="credits-sub">Directed, photographed, and run by FrameFlow · Toronto</p>
+
+    <div class="credit-row"><span class="credit-role">Direction</span><span class="credit-name"><b>FrameFlow</b></span></div>
+    <div class="credit-row"><span class="credit-role">Photography</span><span class="credit-name">FrameFlow Studio</span></div>
+    <div class="credit-row"><span class="credit-role">Videography</span><span class="credit-name">FrameFlow Studio</span></div>
+    <div class="credit-row"><span class="credit-role">Edit</span><span class="credit-name">FrameFlow Post</span></div>
+    <div class="credit-row"><span class="credit-role">Social Media</span><span class="credit-name">FrameFlow Reach</span></div>
+    <div class="credit-row"><span class="credit-role">Ad Management</span><span class="credit-name">FrameFlow Reach</span></div>
+    <div class="credit-row"><span class="credit-role">Cuisine</span><span class="credit-name"><b>Destan, Toronto</b></span></div>
+    <div class="credit-row"><span class="credit-role">Year</span><span class="credit-name">MMXXVI</span></div>
+  </section>
+
+  <!-- =================================================================
+       END SLATE
+  ==================================================================== -->
+  <section class="end-slate">
+    <div class="word">Cut to <em>black.</em></div>
+    <p class="meta">End of Reel 010 · Destan · 110 min. dailies · 15 stills · 6 trailers</p>
+    <a class="cta" href="#">Roll the next reel →</a>
+  </section>
+
+  <footer class="footer-rail">
+    <span>FrameFlow · <b>Reel 010</b> · Destan</span>
+    <span>Toronto · 2026</span>
+  </footer>
+
+  <script>
+    /* timecode in the rail — fake but fitting */
+    (() => {
+      const ts = document.getElementById("ts");
+      if (!ts) return;
+      let f = 0;
+      const start = performance.now();
+      function tick(t) {
+        f = Math.floor((t - start) / (1000 / 24));
+        const tot = f;
+        const ff = String(tot % 24).padStart(2, "0");
+        const ss = String(Math.floor(tot / 24) % 60).padStart(2, "0");
+        const mm = String(Math.floor(tot / (24 * 60)) % 60).padStart(2, "0");
+        const hh = String((1 + Math.floor(tot / (24 * 60 * 60))) % 24).padStart(2, "0");
+        ts.textContent = `TC ${hh}:${mm}:${ss}:${ff}`;
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    /* reveals */
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            // keep observing scenes for the slow zoom transform
+            if (!e.target.classList.contains("scene")) io.unobserve(e.target);
+          } else if (e.target.classList.contains("scene")) {
+            // optional: don't pop out; comment if undesired
+          }
+        }
+      }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

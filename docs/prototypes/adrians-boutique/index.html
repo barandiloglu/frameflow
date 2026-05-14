@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adrian's Wasaga Beach — The Boutique Stay (FrameFlow / Prototype 02)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · ADRIAN'S WASAGA BEACH
+       Prototype 02 — "The Boutique Stay" (hospitality booking site)
+
+       White-led with seafoam + sand accents and a single hero
+       sunset. Suite cards (Cabin 4 & 5, Beach House, etc), aerial
+       location guide, real reviews, "book your stay" CTAs. The
+       most utilitarian of the three — closest to Adrian's actual
+       site at adrianswasagabeach.ca, refined and showcased.
+    ==================================================================== */
+
+    :root {
+      --paper:      #fdfbf4;
+      --paper-2:    #f7eed8;
+      --sand:       #ecd798;
+      --sand-l:     #f5e6b8;
+      --seafoam:    #98e5d8;
+      --seafoam-d:  #6dc7b6;
+      --orange:     #f9a21b;
+      --orange-d:   #d8830a;
+      --gray:       #353747;
+      --gray-2:     #4a4d5e;
+      --gray-3:     #7a7e90;
+      --rule:       #e2dccb;
+
+      --display:   "Montserrat", system-ui, sans-serif;
+      --body:      "Quicksand", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--gray); overflow-x: hidden; }
+    body {
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .ff-rail {
+      padding: 12px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ff-rail b { color: var(--orange); }
+    .ff-rail .center { letter-spacing: 0.5em; color: var(--seafoam); }
+
+    /* ============================================================
+       MAIN NAV — booking-site style
+    ============================================================ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      padding: 18px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav .logo {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      color: var(--gray);
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .nav .logo small {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--gray-3);
+    }
+    .nav .menu {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .nav .menu a { padding: 6px 0; border-bottom: 2px solid transparent; transition: border-color 0.2s, color 0.2s; }
+    .nav .menu a:hover { border-bottom-color: var(--orange); color: var(--orange-d); }
+    .nav .actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .nav .actions .book {
+      padding: 11px 22px;
+      background: var(--orange);
+      color: var(--gray);
+      transition: background 0.2s;
+    }
+    .nav .actions .book:hover { background: var(--orange-d); color: var(--paper); }
+    .nav .actions .phone { color: var(--gray-2); }
+    .nav .actions .phone:hover { color: var(--gray); }
+    @media (max-width: 980px) {
+      .nav .menu { display: none; }
+      .nav .actions .phone { display: none; }
+    }
+
+    /* ============================================================
+       HERO — single sunset image + booking widget
+    ============================================================ */
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: end;
+      padding: 0;
+      background: var(--gray);
+      overflow: hidden;
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(53,55,71,0.18) 0%, transparent 35%, transparent 60%, rgba(53,55,71,0.78) 100%);
+    }
+    .hero-text {
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      color: var(--paper);
+    }
+    .hero-eyebrow {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+      margin-bottom: 18px;
+      max-width: 18ch;
+    }
+    .hero-title em {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .hero-sub {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: clamp(18px, 1.8vw, 22px);
+      line-height: 1.5;
+      color: rgba(253, 251, 244, 0.92);
+      max-width: 38ch;
+      margin-bottom: 36px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+      padding-top: 22px;
+      border-top: 1px solid rgba(253, 251, 244, 0.3);
+    }
+    .hero-stats div {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(253, 251, 244, 0.72);
+    }
+    .hero-stats div b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--paper);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       BOOKING BAR — Airbnb-style strip
+    ============================================================ */
+    .booking {
+      max-width: 1280px;
+      margin: -42px auto 0;
+      padding: 0 48px;
+      position: relative;
+      z-index: 5;
+    }
+    .booking-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      align-items: center;
+      gap: 0;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      box-shadow: 0 24px 48px -16px rgba(53, 55, 71, 0.32);
+      padding: 6px;
+    }
+    .booking-cell {
+      padding: 14px 20px;
+      border-right: 1px solid var(--rule);
+    }
+    .booking-cell:nth-child(4) { border-right: 0; }
+    .booking-cell label {
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 4px;
+    }
+    .booking-cell .v {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .booking-cell .v small {
+      font-family: var(--body);
+      font-weight: 500;
+      color: var(--gray-3);
+      margin-left: 6px;
+    }
+    .booking-bar .check {
+      padding: 14px 28px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      border: 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .booking-bar .check:hover { background: var(--orange-d); color: var(--paper); }
+    @media (max-width: 880px) {
+      .booking { padding: 0 22px; margin-top: -32px; }
+      .booking-bar { grid-template-columns: 1fr 1fr; }
+      .booking-cell { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+      .booking-cell:nth-child(2) { border-right: 0; }
+      .booking-cell:nth-child(3), .booking-cell:nth-child(4) { border-bottom: 0; }
+      .booking-bar .check { grid-column: 1 / -1; padding: 16px; }
+    }
+
+    /* ============================================================
+       INTRO — about strip
+    ============================================================ */
+    .intro {
+      padding: 100px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .intro .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .intro h2 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(28px, 3.6vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .intro h2 em { font-style: italic; color: var(--orange-d); }
+    .intro p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--gray-2);
+      margin-bottom: 1em;
+      max-width: 56ch;
+    }
+    .intro p strong { color: var(--gray); font-weight: 700; }
+    @media (max-width: 880px) {
+      .intro { grid-template-columns: 1fr; gap: 24px; padding: 60px 22px; }
+    }
+
+    /* ============================================================
+       SUITES — property cards grid
+    ============================================================ */
+    .suites {
+      padding: 60px 48px 100px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .suites-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 36px;
+    }
+    .suites-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .suites-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 3.6vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .suites-head h3 em { font-style: italic; color: var(--orange-d); }
+    .suites-head .filter {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      display: flex;
+      gap: 12px;
+    }
+    .suites-head .filter span {
+      padding: 7px 14px;
+      border: 1px solid var(--rule);
+      cursor: pointer;
+    }
+    .suites-head .filter span.on,
+    .suites-head .filter span:hover {
+      background: var(--gray);
+      color: var(--paper);
+      border-color: var(--gray);
+    }
+
+    .suites-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 24px;
+    }
+    .suite {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .suite:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 32px -12px rgba(53, 55, 71, 0.22);
+    }
+    .suite .ph {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--paper-2);
+    }
+    .suite .ph img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .suite:hover .ph img { transform: scale(1.04); }
+    .suite .ph .badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      padding: 5px 10px;
+      background: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .suite .ph .price {
+      position: absolute;
+      top: 12px; right: 12px;
+      padding: 6px 12px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+    .suite .ph .price small {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      margin-left: 2px;
+    }
+    .suite-body {
+      padding: 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .suite-body .meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .suite-body .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .suite-body .stars {
+      font-size: 13px;
+      color: var(--orange);
+    }
+    .suite-body .stars span {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--gray-2);
+      margin-left: 4px;
+    }
+    .suite-body h4 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+      line-height: 1.15;
+    }
+    .suite-body .specs {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--gray-2);
+    }
+    .suite-body .specs span { display: inline-flex; align-items: center; gap: 4px; }
+    .suite-body .specs b { color: var(--gray); font-weight: 700; }
+    .suite-body .desc {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--gray-2);
+      max-width: 38ch;
+    }
+    .suite-body .foot {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .suite-body .foot a {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-bottom: 2px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .suite-body .foot a:hover { color: var(--orange-d); border-color: var(--orange-d); }
+    .suite-body .foot .booknow {
+      padding: 9px 16px;
+      background: var(--gray);
+      color: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      border: 0;
+    }
+    .suite-body .foot .booknow:hover {
+      background: var(--orange);
+      color: var(--gray);
+    }
+    @media (max-width: 1080px) {
+      .suites-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .suites { padding: 40px 22px 60px; }
+      .suites-head { grid-template-columns: 1fr; gap: 16px; }
+      .suites-head .filter { flex-wrap: wrap; }
+      .suites-grid { grid-template-columns: 1fr; gap: 22px; }
+    }
+
+    /* ============================================================
+       LOCATION — aerial + map info
+    ============================================================ */
+    .location {
+      padding: 100px 48px;
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 48px;
+      align-items: stretch;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .location-photo {
+      position: relative;
+      aspect-ratio: 16 / 11;
+      overflow: hidden;
+      background: var(--paper-2);
+    }
+    .location-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .location-photo .pin {
+      position: absolute;
+      top: 30%; left: 24%;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--orange);
+      border: 4px solid var(--paper);
+      box-shadow: 0 0 0 8px rgba(249, 162, 27, 0.25);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 8px rgba(249, 162, 27, 0.25); }
+      50% { box-shadow: 0 0 0 16px rgba(249, 162, 27, 0); }
+    }
+    .location-photo .pin .label {
+      position: absolute;
+      top: -34px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 10px;
+      background: var(--gray);
+      color: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .location-text {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .location-text .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .location-text h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: -0.015em;
+      line-height: 1.05;
+      color: var(--gray);
+    }
+    .location-text h3 em { font-style: italic; color: var(--orange-d); }
+    .location-text p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      max-width: 40ch;
+    }
+    .location-text dl {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .location-text dl > div {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .location-text dl > div:nth-child(odd) { padding-right: 16px; }
+    .location-text dl > div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--rule); }
+    .location-text dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 4px;
+    }
+    .location-text dd {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gray);
+    }
+    @media (max-width: 980px) {
+      .location { grid-template-columns: 1fr; gap: 32px; padding: 60px 22px; }
+    }
+
+    /* ============================================================
+       SOCIAL FEED — show social campaign
+    ============================================================ */
+    .social-strip {
+      padding: 100px 48px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .social-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 36px;
+    }
+    .social-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .social-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 3.6vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .social-head h3 em { font-style: italic; color: var(--orange-d); }
+    .social-head .more {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-bottom: 2px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+    .social-grid figure {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .social-grid figure:hover { transform: translateY(-3px); }
+    .social-grid img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .social-grid figure:hover img { transform: scale(1.04); }
+    @media (max-width: 980px) {
+      .social-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .social-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ============================================================
+       REVIEWS — booking-site testimonial block
+    ============================================================ */
+    .reviews {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .reviews-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 36px;
+    }
+    .reviews-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .reviews-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 3.6vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .reviews-head h3 em { font-style: italic; color: var(--orange-d); }
+    .reviews-head .score {
+      text-align: right;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .reviews-head .score b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      color: var(--gray);
+      line-height: 1;
+    }
+    .reviews-head .score .stars {
+      color: var(--orange);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .review {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 28px;
+    }
+    .review .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+    .review .stars {
+      color: var(--orange);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+    .review .stars b {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+      margin-left: 8px;
+      vertical-align: 2px;
+    }
+    .review .src {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+    .review .quote {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--gray);
+      margin-bottom: 18px;
+    }
+    .review .by {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .review .by b { color: var(--gray); }
+
+    /* ============================================================
+       MARKS
+    ============================================================ */
+    .marks {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .marks h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.sand { background: var(--sand); }
+    .pchip.seafoam { background: var(--seafoam); }
+    .pchip.orange { background: var(--orange); }
+    .pchip.gray { background: var(--gray); color: var(--paper); }
+    .pchip .role {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .pchip .name {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+    }
+    .pchip .hex {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+    }
+    .type-stack { display: flex; flex-direction: column; }
+    .trow {
+      padding: 16px 0;
+      border-top: 1px solid var(--rule);
+    }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-bottom: 6px;
+    }
+    .trow .specimen.h {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 36px;
+      color: var(--gray);
+      letter-spacing: -0.015em;
+      line-height: 1;
+    }
+    .trow .specimen.b {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--gray);
+    }
+    .trow .specimen.l {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    @media (max-width: 880px) {
+      .marks { grid-template-columns: 1fr; gap: 48px; padding: 60px 22px; }
+    }
+
+    /* ============================================================
+       SCOPE
+    ============================================================ */
+    .scope {
+      padding: 100px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .scope-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .scope-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 3.6vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .scope-head h3 em { font-style: italic; color: var(--orange-d); }
+    .scope-head .total {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+    }
+    .scope-row .num {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--orange-d);
+    }
+    .scope-row .name {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+    }
+    .scope-row .desc {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      max-width: 56ch;
+    }
+    .scope-row .out {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      text-align: right;
+    }
+    .scope-row .out b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    @media (max-width: 720px) {
+      .scope { padding: 60px 22px; }
+      .scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .scope-head .label { grid-column: 1 / -1; }
+      .scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .scope-row .out { text-align: left; }
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      padding: 140px 48px 100px;
+      background: var(--gray);
+      color: var(--paper);
+    }
+    .end-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+      margin-bottom: 24px;
+    }
+    .end h3 em { font-style: italic; color: var(--orange); }
+    .end p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(253, 251, 244, 0.78);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 30px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 0;
+      transition: background 0.2s;
+    }
+    .cta:hover { background: var(--paper); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      background: var(--gray);
+      color: rgba(253, 251, 244, 0.72);
+      border-top: 1px solid rgba(253, 251, 244, 0.14);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .foot .ce { text-align: center; color: var(--orange); letter-spacing: 0.5em; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--seafoam); }
+    .foot b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .suite, .suite img, .social-grid img, .pin { transition: none; animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="ff-rail">
+    <span>FrameFlow · Reel <b>008</b></span>
+    <span class="center">ADRIAN'S · BOUTIQUE</span>
+    <span style="text-align: right">Wasaga Beach · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       MAIN NAV — like the live booking site
+  ==================================================================== -->
+  <nav class="nav">
+    <a href="#" class="logo">ADRIAN'S<small>WASAGA BEACH</small></a>
+    <div class="menu">
+      <a href="#">Cabins</a>
+      <a href="#">Suites</a>
+      <a href="#">The Resort</a>
+      <a href="#">Wasaga Beach</a>
+      <a href="#">Reviews</a>
+    </div>
+    <div class="actions">
+      <a href="#" class="phone">+1 705 · 429 · 0000</a>
+      <a href="#" class="book">Book</a>
+    </div>
+  </nav>
+
+  <!-- =================================================================
+       HERO
+  ==================================================================== -->
+  <section class="hero">
+    <div class="hero-photo"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt="Courtyard with firepit at sunset"></div>
+    <div class="hero-text">
+      <p class="hero-eyebrow">Now booking · Summer 2026</p>
+      <h1 class="hero-title">Steps from <em>the sand.</em></h1>
+      <p class="hero-sub">Boutique cabin stays just off the beach in Wasaga — <strong>two locations, one heartfelt welcome.</strong></p>
+      <div class="hero-stats">
+        <div><b>8</b>cabins</div>
+        <div><b>3</b>min walk to the beach</div>
+        <div><b>4.9</b>★ on Google</div>
+        <div><b>$185+</b>per night</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       BOOKING BAR
+  ==================================================================== -->
+  <div class="booking">
+    <div class="booking-bar">
+      <div class="booking-cell">
+        <label>Check in</label>
+        <p class="v">Fri, Jul 12 <small>·  3pm</small></p>
+      </div>
+      <div class="booking-cell">
+        <label>Check out</label>
+        <p class="v">Sun, Jul 14 <small>· 11am</small></p>
+      </div>
+      <div class="booking-cell">
+        <label>Guests</label>
+        <p class="v">2 adults <small>· 0 kids</small></p>
+      </div>
+      <div class="booking-cell">
+        <label>Cabin type</label>
+        <p class="v">Any <small>· 8 available</small></p>
+      </div>
+      <button class="check">Check availability →</button>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro reveal">
+    <span class="label">A note</span>
+    <div>
+      <h2>An eight-cabin courtyard, on <em>Dunkerron Avenue.</em></h2>
+      <p>Adrian's is a boutique vacation rental in central Wasaga Beach — eight cabin units arranged around a shared firepit and courtyard, with a hot tub, gas grills, and a hostess who actually checks in.</p>
+      <p>FrameFlow built the brand kit, photographed two seasons of the resort, ran the social calendar through summer, and shipped the live site at <strong>adrianswasagabeach.ca</strong>. Below is the showcase — the cabins, the location, the social campaign, and the reviews that came back.</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SUITES — property cards
+  ==================================================================== -->
+  <section class="suites reveal">
+    <header class="suites-head">
+      <span class="label">01 / Cabins</span>
+      <h3>Eight cabins, all <em>booking now.</em></h3>
+      <div class="filter">
+        <span class="on">All · 8</span>
+        <span>King · 3</span>
+        <span>Queen · 5</span>
+      </div>
+    </header>
+
+    <div class="suites-grid">
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt="">
+          <span class="badge">Cabin 4 &amp; 5</span>
+          <span class="price">$195<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">King · West-facing</span>
+            <span class="stars">★★★★★ <span>4.9</span></span>
+          </div>
+          <h4>Sunset cabin.</h4>
+          <p class="specs"><span><b>2</b>guests</span><span><b>1</b>king bed</span><span><b>1</b>bath</span><span><b>kitchenette</b></span></p>
+          <p class="desc">Each cabin opens onto the courtyard — yours waits for you with the porch lights on.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt="">
+          <span class="badge">Cabin 1–3</span>
+          <span class="price">$165<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">Queen · Garden side</span>
+            <span class="stars">★★★★★ <span>5.0</span></span>
+          </div>
+          <h4>Yellow facade.</h4>
+          <p class="specs"><span><b>2</b>guests</span><span><b>1</b>queen bed</span><span><b>1</b>bath</span><span><b>kitchenette</b></span></p>
+          <p class="desc">Bright daytime cabin, two-step access, garden chairs out front. Ideal for a quiet weekend.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt="">
+          <span class="badge">Cabin 6 · 8 · 9</span>
+          <span class="price">$175<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">Queen · Firepit-side</span>
+            <span class="stars">★★★★★ <span>4.9</span></span>
+          </div>
+          <h4>Firepit cabins.</h4>
+          <p class="specs"><span><b>2</b>guests</span><span><b>1</b>queen bed</span><span><b>1</b>bath</span><span><b>kitchenette</b></span></p>
+          <p class="desc">Steps from the shared firepit and gas grills. Best for evening lingerers.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt="">
+          <span class="badge">King interior</span>
+          <span class="price">$210<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">King · Premium</span>
+            <span class="stars">★★★★★ <span>5.0</span></span>
+          </div>
+          <h4>King cabin · #10.</h4>
+          <p class="specs"><span><b>2</b>guests</span><span><b>1</b>king bed</span><span><b>1.5</b>bath</span><span><b>full kit.</b></span></p>
+          <p class="desc">Newest renovation — full kitchenette, towels rolled, blackout blinds for late risers.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/13-kitchen-with-bedroom.jpg" alt="">
+          <span class="badge">Studio</span>
+          <span class="price">$145<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">Queen · Studio</span>
+            <span class="stars">★★★★★ <span>4.8</span></span>
+          </div>
+          <h4>Open studio · #2.</h4>
+          <p class="specs"><span><b>2</b>guests</span><span><b>1</b>queen bed</span><span><b>1</b>bath</span><span><b>kitchenette</b></span></p>
+          <p class="desc">Open-plan layout — bed, kitchenette, two-burner stove, all in one bright room.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="suite">
+        <div class="ph">
+          <img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt="">
+          <span class="badge">Two-bed</span>
+          <span class="price">$245<small>/nt</small></span>
+        </div>
+        <div class="suite-body">
+          <div class="meta-top">
+            <span class="num">Two-bed · Family</span>
+            <span class="stars">★★★★★ <span>4.9</span></span>
+          </div>
+          <h4>Family cabin · #7.</h4>
+          <p class="specs"><span><b>4</b>guests</span><span><b>1</b>queen + sofa</span><span><b>1</b>bath</span><span><b>full kit.</b></span></p>
+          <p class="desc">Living room with a sofa-sleeper, full kitchenette, AC unit. Sleeps four comfortably.</p>
+          <div class="foot">
+            <a href="#">View cabin →</a>
+            <a href="#" class="booknow">Book</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       LOCATION
+  ==================================================================== -->
+  <section class="location reveal">
+    <div class="location-photo">
+      <img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt="Aerial of Adrian's with beach in distance">
+      <span class="pin"><span class="label">You are here</span></span>
+    </div>
+    <div class="location-text">
+      <span class="label">02 / Location</span>
+      <h3>Three blocks from <em>Beach Area 1.</em></h3>
+      <p>184 Dunkerron Avenue is a seven-minute walk to the boardwalk and the longest freshwater beach in the world. Restaurants, ice cream, and the Wasaga River are all within walking distance.</p>
+      <dl>
+        <div><dt>Address</dt><dd>184 Dunkerron Ave</dd></div>
+        <div><dt>To Beach 1</dt><dd>3 blocks · 7 min</dd></div>
+        <div><dt>From Toronto</dt><dd>1h 50m · 165 km</dd></div>
+        <div><dt>Parking</dt><dd>Free, on-site</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SOCIAL FEED
+  ==================================================================== -->
+  <section class="social-strip reveal">
+    <header class="social-head">
+      <span class="label">03 / @adrianswasagabeach</span>
+      <h3>From the <em>summer feed.</em></h3>
+      <a href="#" class="more">Open Instagram →</a>
+    </header>
+    <div class="social-grid">
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/01-now-booking.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/11-sunset-doors.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/09-aerial-courtyard.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/12-firepit-quote.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/14-daytime-patio.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/17-card-kitchen.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/20-polaroid-three.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/23-postcard-doors.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/25-postcard-aerial.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/27-mask-stay.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/33-quote-yara.png" alt=""></figure>
+      <figure><img src="../../../public/portfolio/adrians-wasaga-beach/social/04-color-headline.png" alt=""></figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       REVIEWS
+  ==================================================================== -->
+  <section class="reviews reveal">
+    <header class="reviews-head">
+      <span class="label">04 / Reviews</span>
+      <h3>Four real <em>five-star stays.</em></h3>
+      <div class="score">
+        <b>4.9</b>
+        <span class="stars">★ ★ ★ ★ ★</span>
+        <span>Google · 100+ reviews</span>
+      </div>
+    </header>
+
+    <div class="reviews-grid">
+      <article class="review">
+        <div class="top"><span class="stars">★★★★★ <b>5 / 5</b></span><span class="src">Google · Jan 2026</span></div>
+        <p class="quote">The renovations have made this place the nicest and cleanest around. Modern furnishings and decor and top of the line appliances for a decent rate. Definitely the only place I'd stay in Wasaga.</p>
+        <div class="by"><b>Pam B.</b><span>Verified guest</span></div>
+      </article>
+      <article class="review">
+        <div class="top"><span class="stars">★★★★★ <b>5 / 5</b></span><span class="src">Google · Sept 2025</span></div>
+        <p class="quote">A perfect spot for our annual ladies getaway. Lovely grounds with hot tub and close to the beach. The apartment was spacious, clean, and well equipped. Hostess was friendly and helpful.</p>
+        <div class="by"><b>Anne D.</b><span>Verified guest</span></div>
+      </article>
+      <article class="review">
+        <div class="top"><span class="stars">★★★★★ <b>5 / 5</b></span><span class="src">Google · Aug 2025</span></div>
+        <p class="quote">A hidden gem in the heart of Wasaga. Adrian's is setting the bar on what beachfront luxury should be. Dilber and team really elevated the entire experience — it felt like a home away from home.</p>
+        <div class="by"><b>Rougebella</b><span>Verified guest</span></div>
+      </article>
+      <article class="review">
+        <div class="top"><span class="stars">★★★★★ <b>5 / 5</b></span><span class="src">Google · May 2025</span></div>
+        <p class="quote">A great place for a family vacation. Clean, modern and in a great location. The owners are friendly and helpful, which is an extra bonus.</p>
+        <div class="by"><b>L. R.</b><span>Verified guest</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · beach kit</h3>
+      <div class="palette">
+        <div class="pchip sand"><span class="role">Sand · 30%</span><div><p class="name">Sand</p><p class="hex">#ECD798</p></div></div>
+        <div class="pchip seafoam"><span class="role">Seafoam · 15%</span><div><p class="name">Seafoam</p><p class="hex">#98E5D8</p></div></div>
+        <div class="pchip orange"><span class="role">Live Orange · 15%</span><div><p class="name">Live Orange</p><p class="hex">#F9A21B</p></div></div>
+        <div class="pchip gray"><span class="role">Dark Gray · 40%</span><div><p class="name">Dark Gray</p><p class="hex">#353747</p></div></div>
+      </div>
+    </div>
+    <div>
+      <h3>Typeset · Montserrat + Quicksand</h3>
+      <div class="type-stack">
+        <div class="trow"><p class="label">Header · Montserrat Black 900</p><p class="specimen h">Steps from the sand.</p></div>
+        <div class="trow"><p class="label">Subhead · Montserrat Bold 700</p><p class="specimen h" style="font-size: 22px; font-weight: 700;">Now booking · Summer 2026</p></div>
+        <div class="trow"><p class="label">Body · Quicksand 500</p><p class="specimen b">Boutique cabin stays just off the beach in Wasaga.</p></div>
+        <div class="trow"><p class="label">Label · Montserrat tracked</p><p class="specimen l">Wasaga Beach · Ontario · MMXXVI</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <header class="scope-head">
+      <span class="label">05 / Scope</span>
+      <h3>What we made for <em>Adrian's.</em></h3>
+      <span class="total">03 services</span>
+    </header>
+    <div class="scope-row"><span class="num">01</span><span class="name">Photography</span><p class="desc">Two shoots across spring and summer — sunset courtyard, daytime cabins, four full interiors and a beach-context aerial set. 110 frames, 16 kept.</p><p class="out"><b>16</b>kept · 2 shoots</p></div>
+    <div class="scope-row"><span class="num">02</span><span class="name">Social Media</span><p class="desc">A 35-post summer campaign — postcards, polaroids, headline blocks, quote pulls, aerials. Calendar planned monthly with the hostess. Booking-conversion focus.</p><p class="out"><b>35</b>posts · Q2–Q3</p></div>
+    <div class="scope-row"><span class="num">03</span><span class="name">Website</span><p class="desc">A booking-first site at <strong>adrianswasagabeach.ca</strong> — eight cabin pages, photo galleries, location guide, contact form, and a guest-review module. Live since spring.</p><p class="out"><b>1</b>site · 12 pages</p></div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <div class="end-inner">
+      <p class="label">Now booking · Summer 2026</p>
+      <h3>Save your <em>cabin.</em></h3>
+      <p>Eight cabins, three blocks from the beach, hostess on site. Book direct and skip the booking fee.</p>
+      <a class="cta" href="#">Check availability <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 008 · ADRIAN'S</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

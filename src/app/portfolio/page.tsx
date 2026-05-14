@@ -349,6 +349,12 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
               Now showing
             </span>
           )}
+          {client.wip && (
+            <span className="ml-4 align-middle inline-flex items-center gap-1.5 border border-amber/50 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-amber not-italic font-normal">
+              <span className="w-1 h-1 rounded-full bg-amber animate-pulse-dot" />
+              Work in progress
+            </span>
+          )}
         </h3>
       </div>
 

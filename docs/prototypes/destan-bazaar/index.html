@@ -1,0 +1,1478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Destan — The Bazaar (FrameFlow / Prototype 03)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Marcellus&family=Italianno&family=Caveat:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       DESTAN · THE BAZAAR
+       Prototype 03 — maximalist / Ottoman tactile
+
+       Loud, ornate, bilingual. Gold-on-burgundy and burgundy-on-cream
+       full-bleed blocks. Tile-pattern borders, lantern-frame photos,
+       marquee with Turkish + English food terms, mixed display type
+       (Cinzel engraved, Italianno cursive, Caveat handwritten).
+    ==================================================================== */
+
+    :root {
+      --burgundy:   #73191c;
+      --burgundy-d: #4f0d10;
+      --burgundy-e: #2a0608;
+      --gold:       #e9b44a;
+      --gold-deep:  #c08e2a;
+      --cream:      #fbf1d6;
+      --cream-d:    #f3e3b6;
+      --ink:        #1a0a08;
+
+      --display: "Cinzel", "Trajan Pro", serif;
+      --serif:   "DM Serif Display", "Marcellus", serif;
+      --hand:    "Caveat", cursive;
+      --script:  "Italianno", cursive;
+      --body:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* paper grain over the whole page */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.32  0 0 0 0 0.18  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FRAMEFLOW RAIL — minimal top rail
+    ============================================================ */
+    .ff-rail {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--gold-deep);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .ff-rail .center {
+      letter-spacing: 0.5em;
+      color: var(--gold-deep);
+      font-weight: 500;
+    }
+
+    /* tile-band horizontal divider */
+    .tile-band {
+      height: 28px;
+      background:
+        repeating-linear-gradient(90deg,
+          var(--burgundy) 0,
+          var(--burgundy) 28px,
+          var(--gold) 28px,
+          var(--gold) 30px,
+          var(--burgundy) 30px,
+          var(--burgundy) 56px),
+        var(--burgundy);
+      position: relative;
+      overflow: hidden;
+    }
+    .tile-band::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 4 L18 10 L24 14 L18 18 L14 24 L10 18 L4 14 L10 10 Z' fill='%23e9b44a' opacity='0.95'/%3E%3Ccircle cx='14' cy='14' r='1.5' fill='%23731919'/%3E%3C/svg%3E");
+      background-size: 28px 28px;
+      background-repeat: repeat-x;
+      background-position: center center;
+    }
+
+    /* gold rule */
+    .gold-rule {
+      height: 4px;
+      background: linear-gradient(90deg,
+        transparent 0%, var(--gold-deep) 10%, var(--gold) 50%, var(--gold-deep) 90%, transparent 100%);
+    }
+
+    /* ============================================================
+       HERO — burgundy block, gold ornament, massive Cinzel
+    ============================================================ */
+    .hero {
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(233, 180, 74, 0.18), transparent 50%),
+        var(--burgundy);
+      color: var(--cream);
+      padding: 100px 32px 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      /* tile pattern in the corners */
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M40 4 L48 24 L72 28 L52 44 L60 68 L40 56 L20 68 L28 44 L8 28 L32 24 Z' fill='none' stroke='%23e9b44a' stroke-width='0.7' opacity='0.1'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .hero-flame {
+      width: 82px;
+      height: auto;
+      color: var(--gold);
+      margin: 0 auto 24px;
+      display: block;
+    }
+    .hero-title {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(80px, 16vw, 240px);
+      letter-spacing: 0.16em;
+      line-height: 0.95;
+      color: var(--cream);
+      text-shadow:
+        0 0 1px var(--gold),
+        2px 2px 0 var(--burgundy-d);
+      margin-bottom: 4px;
+    }
+    .hero-script {
+      font-family: var(--script);
+      font-size: clamp(48px, 7vw, 92px);
+      color: var(--gold);
+      line-height: 1;
+      margin: -12px 0 18px;
+      letter-spacing: 0.02em;
+    }
+    .hero-rule-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin: 18px auto 26px;
+      max-width: 720px;
+    }
+    .hero-rule-row .l, .hero-rule-row .r {
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    .hero-rule-row .star {
+      color: var(--gold);
+      font-size: 14px;
+    }
+    .hero-sub {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.4vw, 30px);
+      font-style: italic;
+      color: var(--cream);
+      max-width: 30ch;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+    .hero-meta {
+      margin-top: 56px;
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .hero-meta b {
+      color: var(--cream);
+      font-weight: 500;
+      display: block;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       MARQUEE — bilingual menu items
+    ============================================================ */
+    .marquee {
+      position: relative;
+      overflow: hidden;
+      background: var(--gold);
+      color: var(--burgundy);
+      padding: 18px 0;
+      border-top: 4px double var(--burgundy);
+      border-bottom: 4px double var(--burgundy);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 56px;
+      white-space: nowrap;
+      animation: marquee 60s linear infinite;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .marquee-track span {
+      display: inline-flex;
+      align-items: center;
+      gap: 56px;
+    }
+    .marquee-track span::after {
+      content: "✦";
+      color: var(--burgundy-d);
+      font-size: 14px;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-33.333%); }
+    }
+
+    /* ============================================================
+       INTRO — bilingual, with the script "destan" big
+    ============================================================ */
+    .intro {
+      padding: 120px 32px 80px;
+      text-align: center;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .intro-cap {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--gold-deep);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .intro h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(40px, 5.5vw, 72px);
+      color: var(--burgundy);
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      margin-bottom: 24px;
+    }
+    .intro h2 em {
+      font-family: var(--script);
+      font-size: 1.6em;
+      color: var(--gold-deep);
+      font-style: normal;
+      letter-spacing: 0;
+    }
+    .intro p {
+      font-family: var(--body);
+      font-size: 19px;
+      line-height: 1.7;
+      color: var(--ink);
+      max-width: 60ch;
+      margin: 0 auto 1em;
+    }
+    .intro p .turk {
+      font-family: var(--hand);
+      font-size: 1.4em;
+      color: var(--burgundy);
+      letter-spacing: 0;
+    }
+
+    /* the bilingual chips row */
+    .bi-row {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-top: 56px;
+    }
+    .bi {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 26px;
+      border: 1px solid var(--gold-deep);
+      background: rgba(233, 180, 74, 0.12);
+    }
+    .bi .turk {
+      font-family: var(--hand);
+      font-size: 30px;
+      color: var(--burgundy);
+      line-height: 1;
+    }
+    .bi .eng {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+    }
+
+    /* ============================================================
+       LANTERN GALLERY — photos in ornate frames
+    ============================================================ */
+    .lanterns {
+      padding: 80px 32px 140px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .lanterns-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+    .lanterns-head h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(36px, 4.4vw, 56px);
+      color: var(--burgundy);
+      line-height: 1.05;
+    }
+    .lanterns-head h3 em {
+      font-family: var(--script);
+      font-size: 1.5em;
+      color: var(--gold-deep);
+      font-style: normal;
+    }
+    .lanterns-head .turk {
+      font-family: var(--hand);
+      font-size: 28px;
+      color: var(--gold-deep);
+    }
+    .lanterns-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 36px 28px;
+    }
+    .lantern {
+      position: relative;
+      padding: 12px;
+      background:
+        linear-gradient(135deg, var(--cream-d) 0%, var(--cream) 50%, var(--cream-d) 100%);
+      border: 1px solid var(--gold-deep);
+      box-shadow:
+        0 0 0 1px var(--cream),
+        0 0 0 4px var(--burgundy),
+        14px 14px 0 var(--burgundy-d);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .lantern:hover {
+      transform: translateY(-4px) rotate(-0.5deg);
+      box-shadow:
+        0 0 0 1px var(--cream),
+        0 0 0 4px var(--burgundy),
+        18px 18px 0 var(--burgundy-d);
+    }
+    .lantern-frame {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+    .lantern-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.05) saturate(1.05);
+      transition: transform 0.6s;
+    }
+    .lantern:hover .lantern-frame img { transform: scale(1.05); }
+    .lantern-corner {
+      position: absolute;
+      width: 24px; height: 24px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .lantern-corner svg { width: 100%; height: 100%; color: var(--gold); }
+    .lantern-corner.tl { top: 4px; left: 4px; }
+    .lantern-corner.tr { top: 4px; right: 4px; transform: scaleX(-1); }
+    .lantern-corner.bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+    .lantern-corner.br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
+    .lantern-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 12px;
+      padding: 0 4px;
+    }
+    .lantern-meta .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: var(--burgundy);
+    }
+    .lantern-meta .date {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--gold-deep);
+      text-transform: uppercase;
+    }
+    .lantern-cap {
+      padding: 4px 4px 6px;
+      font-family: var(--hand);
+      font-size: 24px;
+      color: var(--burgundy);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    .lantern-cap small {
+      display: block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: var(--gold-deep);
+      text-transform: uppercase;
+      margin-top: 2px;
+      opacity: 0.85;
+    }
+
+    /* ============================================================
+       BIG-BLEED FEATURE — full-width photo, cream block beside
+    ============================================================ */
+    .feature {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      min-height: 80vh;
+      background: var(--burgundy);
+      color: var(--cream);
+      position: relative;
+    }
+    .feature::before {
+      /* gold edge stripe between */
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 54.5%;
+      width: 6px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    .feature-photo {
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .feature-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(115, 25, 28, 0.4));
+    }
+    .feature-text {
+      padding: 80px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+    .feature-eye {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .feature h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(40px, 5.4vw, 72px);
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+    .feature h3 em {
+      font-family: var(--script);
+      font-size: 1.5em;
+      color: var(--gold);
+      font-style: normal;
+      letter-spacing: 0;
+      display: block;
+      line-height: 1;
+    }
+    .feature p {
+      font-family: var(--body);
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(251, 241, 214, 0.85);
+      max-width: 44ch;
+    }
+    .feature p strong { color: var(--gold); font-weight: 500; }
+    .feature-stats {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      max-width: 460px;
+    }
+    .feature-stats .stat {
+      padding: 14px 0;
+      border-top: 1px solid var(--gold);
+    }
+    .feature-stats .stat b {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--gold);
+      display: block;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+    .feature-stats .stat span {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(251, 241, 214, 0.7);
+    }
+
+    /* ============================================================
+       MENU TICKER — list of dishes laid out like a menu poster
+    ============================================================ */
+    .menu-poster {
+      padding: 120px 32px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .menu-head {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .menu-head h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(36px, 5vw, 60px);
+      color: var(--burgundy);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .menu-head .sub {
+      font-family: var(--script);
+      font-size: 38px;
+      color: var(--gold-deep);
+      margin-top: -8px;
+    }
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .menu-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: baseline;
+      padding: 16px 0;
+      border-bottom: 1px dashed var(--gold-deep);
+    }
+    .menu-item:last-child { border-bottom: 0; }
+    .menu-item .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--gold-deep);
+      letter-spacing: 0.2em;
+    }
+    .menu-item .name {
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--burgundy);
+      line-height: 1.1;
+    }
+    .menu-item .name em {
+      font-family: var(--hand);
+      font-size: 1.1em;
+      color: var(--gold-deep);
+      font-style: normal;
+      margin-left: 8px;
+    }
+    .menu-item .desc {
+      display: block;
+      font-family: var(--body);
+      font-size: 14px;
+      color: var(--ink);
+      opacity: 0.78;
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+    }
+    .menu-item .price {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--burgundy);
+      letter-spacing: 0.18em;
+    }
+
+    /* ============================================================
+       FILMS STRIP — videos as poster cards in burgundy block
+    ============================================================ */
+    .films {
+      padding: 100px 32px 120px;
+      background: var(--burgundy-e);
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .films::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M40 4 L48 24 L72 28 L52 44 L60 68 L40 56 L20 68 L28 44 L8 28 L32 24 Z' fill='none' stroke='%23e9b44a' stroke-width='0.6' opacity='0.07'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+    .films-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .films-head {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .films-head .cap {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .films-head h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(40px, 5.4vw, 64px);
+      color: var(--cream);
+      line-height: 1.05;
+    }
+    .films-head h3 em {
+      font-family: var(--script);
+      font-size: 1.5em;
+      color: var(--gold);
+      font-style: normal;
+      letter-spacing: 0;
+    }
+    .films-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .film {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      border: 4px solid var(--gold);
+      cursor: pointer;
+      box-shadow: 8px 8px 0 var(--burgundy);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .film:hover {
+      transform: translateY(-4px) rotate(-0.4deg);
+      box-shadow: 12px 12px 0 var(--burgundy);
+    }
+    .film img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7);
+      transition: filter 0.5s, transform 0.5s;
+    }
+    .film:hover img { filter: brightness(0.9); transform: scale(1.04); }
+    .film-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(42,6,8,0.4) 0%, transparent 30%, transparent 60%, rgba(42,6,8,0.92) 100%);
+    }
+    .film-tag {
+      align-self: flex-start;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--burgundy);
+      background: var(--gold);
+      padding: 4px 10px;
+    }
+    .film-bottom .title {
+      display: block;
+      font-family: var(--script);
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .film-bottom .meta {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      color: var(--cream);
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+    .film-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--burgundy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 22px;
+      border: 3px solid var(--burgundy);
+      box-shadow: 0 0 0 2px var(--gold);
+      transition: transform 0.4s;
+    }
+    .film:hover .film-play {
+      transform: translate(-50%, -50%) scale(1.1) rotate(-4deg);
+    }
+
+    /* ============================================================
+       MARKS — palette + type, ornate
+    ============================================================ */
+    .marks {
+      padding: 120px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+    .marks h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gold-deep);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--gold-deep);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .pchip.burgundy { background: var(--burgundy); color: var(--cream); }
+    .pchip.gold { background: var(--gold); color: var(--burgundy); }
+    .pchip.cream { background: var(--cream); color: var(--burgundy); border-color: var(--burgundy); }
+    .pchip.ink { background: var(--ink); color: var(--cream); }
+    .pchip .turk {
+      font-family: var(--script);
+      font-size: 38px;
+      line-height: 1;
+    }
+    .pchip .eng {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .pchip .hex {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      opacity: 0.85;
+    }
+    .pchip.cream .turk, .pchip.cream .eng { color: var(--burgundy); }
+    .pchip.gold .turk { color: var(--burgundy-d); }
+
+    .type-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .type-card {
+      padding: 20px;
+      border: 1px solid var(--gold-deep);
+      background: var(--cream-d);
+    }
+    .type-card .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 8px;
+    }
+    .type-card .specimen-display {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: 0.18em;
+      color: var(--burgundy);
+    }
+    .type-card .specimen-serif {
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--ink);
+      font-style: italic;
+    }
+    .type-card .specimen-script {
+      font-family: var(--script);
+      font-size: 46px;
+      color: var(--burgundy);
+      line-height: 1;
+    }
+    .type-card .specimen-hand {
+      font-family: var(--hand);
+      font-size: 28px;
+      color: var(--burgundy);
+    }
+    .type-card .specimen-mono {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       CTA / END — ornate closing block
+    ============================================================ */
+    .end-block {
+      position: relative;
+      background: var(--burgundy);
+      color: var(--cream);
+      padding: 120px 32px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .end-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 6 L72 36 L108 42 L78 66 L90 102 L60 84 L30 102 L42 66 L12 42 L48 36 Z' fill='none' stroke='%23e9b44a' stroke-width='0.7' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: 120px 120px;
+      pointer-events: none;
+    }
+    .end-flame {
+      width: 80px;
+      height: auto;
+      color: var(--gold);
+      margin: 0 auto 24px;
+      display: block;
+    }
+    .end-block h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+    .end-block h3 em {
+      font-family: var(--script);
+      font-size: 1.5em;
+      color: var(--gold);
+      font-style: normal;
+      letter-spacing: 0;
+      display: block;
+      line-height: 1;
+      margin-top: 8px;
+    }
+    .end-block p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 22px;
+      max-width: 50ch;
+      margin: 24px auto 32px;
+      color: rgba(251, 241, 214, 0.85);
+    }
+    .end-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 30px;
+      background: var(--gold);
+      color: var(--burgundy);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      border: 3px solid var(--cream);
+      box-shadow: 6px 6px 0 var(--burgundy-e);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .end-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 9px 9px 0 var(--burgundy-e);
+    }
+
+    .footer-rail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 32px;
+      background: var(--cream);
+      border-top: 1px solid var(--gold-deep);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+    }
+    .footer-rail b { color: var(--gold-deep); font-weight: 500; }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .ff-rail .end { display: none; }
+      .hero { padding: 60px 20px 50px; }
+      .hero-meta { gap: 18px; }
+      .lanterns-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 14px; }
+      .lantern { padding: 8px; }
+      .feature { grid-template-columns: 1fr; min-height: auto; }
+      .feature::before { display: none; }
+      .feature-photo { aspect-ratio: 16/10; }
+      .feature-text { padding: 60px 28px; }
+      .menu-poster { padding: 80px 20px; }
+      .menu-item { grid-template-columns: auto 1fr; gap: 12px; }
+      .menu-item .price { grid-column: 2 / 3; }
+      .films-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .film { box-shadow: 4px 4px 0 var(--burgundy); }
+      .marks { grid-template-columns: 1fr; gap: 48px; padding: 80px 24px; }
+      .palette { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .marquee-track { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- reusable corner ornament (Ottoman tile-style) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="corner" viewBox="0 0 24 24">
+        <path d="M2 2 L22 2 M2 2 L2 22 M2 2 L10 10 M22 2 L14 10 M2 22 L10 14" stroke="currentColor" stroke-width="0.8" fill="none"/>
+        <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
+      </symbol>
+      <symbol id="flame" viewBox="0 0 64 80">
+        <path d="M32 4 C24 16 22 28 32 36 C26 28 22 16 14 28 C10 38 18 48 24 50 C16 50 12 58 18 66 C24 72 32 70 38 64 C42 60 44 54 40 48 C46 50 52 46 50 38 C48 30 42 26 36 30 C42 22 44 14 32 4 Z" fill="currentColor"/>
+        <path d="M28 30 Q32 22 36 30 Q34 38 32 42 Q30 38 28 30 Z" fill="var(--burgundy)" opacity="0.5"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- =================================================================
+       FRAMEFLOW RAIL
+  ==================================================================== -->
+  <header class="ff-rail">
+    <a href="../">← FrameFlow · Reel</a>
+    <span class="center">DESTAN · BAZAAR</span>
+    <span class="end">Toronto · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       HERO
+  ==================================================================== -->
+  <section class="hero">
+    <p class="hero-eyebrow">Reel · 010 · Toronto · MMXXVI</p>
+    <svg class="hero-flame" viewBox="0 0 64 80" aria-hidden="true"><use href="#flame"/></svg>
+    <h1 class="hero-title">DESTAN</h1>
+    <p class="hero-script">Türk Mutfağı.</p>
+    <div class="hero-rule-row">
+      <span class="l"></span><span class="star">✦</span><span class="r"></span>
+    </div>
+    <p class="hero-sub">A kebab house. A saga of fire &amp; salt. Bound at FrameFlow Studio.</p>
+
+    <div class="hero-meta">
+      <div><b>15</b><span>Plates</span></div>
+      <div><b>06</b><span>Films</span></div>
+      <div><b>04</b><span>Shoots</span></div>
+      <div><b>04</b><span>Services</span></div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARQUEE 01 — bilingual menu items
+  ==================================================================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Adana · Cağ Kebabı · Şiş Tavuk · Lahmacun · Pide · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt · Bread · Fire</span>
+      <span>Adana · Cağ Kebabı · Şiş Tavuk · Lahmacun · Pide · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt · Bread · Fire</span>
+      <span>Adana · Cağ Kebabı · Şiş Tavuk · Lahmacun · Pide · Ezme · Künefe · Çay</span>
+      <span>Bread · Salt · Fire · Smoke · Patience · Salt · Bread · Fire</span>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro reveal">
+    <p class="intro-cap">An introduction · giriş</p>
+    <h2>What we built for <em>Destan</em>.</h2>
+    <p>
+      Destan — Turkish for <span class="turk">epic poem</span> — is a kebab house in Toronto with a wood-fired temperament. We were brought on for the long story: a season of photography, a season of short films for social, paid placements that earn their keep, and the slow craft of building an audience that comes hungry.
+    </p>
+    <div class="bi-row">
+      <div class="bi"><span class="turk">Fotoğraf</span><span class="eng">Photography</span></div>
+      <div class="bi"><span class="turk">Video</span><span class="eng">Videography</span></div>
+      <div class="bi"><span class="turk">Sosyal</span><span class="eng">Social</span></div>
+      <div class="bi"><span class="turk">Reklam</span><span class="eng">Ad Mgmt.</span></div>
+    </div>
+  </section>
+
+  <!-- gold rule + tile band -->
+  <div class="gold-rule"></div>
+  <div class="tile-band"></div>
+  <div class="gold-rule"></div>
+
+  <!-- =================================================================
+       LANTERN GALLERY
+  ==================================================================== -->
+  <section class="lanterns">
+    <div class="lanterns-head reveal">
+      <div>
+        <h3>Plates from <em>the line.</em></h3>
+        <p class="turk">Ateşten on beş kare</p>
+      </div>
+      <p style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-deep)">15 frames · 04 shoots · 2026</p>
+    </div>
+    <div class="lanterns-grid">
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE I</span><span class="date">03·14·26</span></div>
+        <p class="lantern-cap">The rotation begins.<small>cağ — döner</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE II</span><span class="date">01·04·26</span></div>
+        <p class="lantern-cap">The flame answers.<small>ateş — fire</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE III</span><span class="date">02·15·26</span></div>
+        <p class="lantern-cap">Mid-rotation.<small>orta — middle</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/04-cag-kebabi-vertical.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE IV</span><span class="date">01·31·26</span></div>
+        <p class="lantern-cap">The roast at rest.<small>dinlenmiş</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE V</span><span class="date">03·14·26</span></div>
+        <p class="lantern-cap">The blade arrives.<small>bıçak — knife</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/06-blade-on-meat.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE VI</span><span class="date">03·14·26</span></div>
+        <p class="lantern-cap">A short cut.<small>kesim — the cut</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/08-skewers-smoke.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE VIII</span><span class="date">01·10·26</span></div>
+        <p class="lantern-cap">Smoke, two registers.<small>duman — smoke</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE X</span><span class="date">02·15·26</span></div>
+        <p class="lantern-cap">Şiş tavuk on the coals.<small>kömür — coal</small></p>
+      </figure>
+      <figure class="lantern reveal">
+        <div class="lantern-frame">
+          <span class="lantern-corner tl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner tr"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner bl"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <span class="lantern-corner br"><svg viewBox="0 0 24 24"><use href="#corner"/></svg></span>
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/13-adana-plated.jpg" alt="">
+        </div>
+        <div class="lantern-meta"><span class="num">PLATE XIII</span><span class="date">01·04·26</span></div>
+        <p class="lantern-cap">Adana, plated.<small>tabak — plate</small></p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- gold rule + tile band -->
+  <div class="gold-rule"></div>
+  <div class="tile-band"></div>
+  <div class="gold-rule"></div>
+
+  <!-- =================================================================
+       FEATURE — full-bleed photo + burgundy block
+  ==================================================================== -->
+  <section class="feature">
+    <div class="feature-photo">
+      <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="">
+    </div>
+    <div class="feature-text">
+      <p class="feature-eye">A spread · sofra</p>
+      <h3>The grammar of <em>Anatolia.</em></h3>
+      <p>
+        A table set in Toronto — adana in two long lines of <strong>köfte</strong>, ezme in a copper bowl, lavash folded twice. The plate, like the saga, is composed of pieces that only become themselves <strong>in one another’s company</strong>.
+      </p>
+      <div class="feature-stats">
+        <div class="stat"><b>04</b><span>Shoots</span></div>
+        <div class="stat"><b>15</b><span>Plates</span></div>
+        <div class="stat"><b>412</b><span>Frames</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MENU POSTER
+  ==================================================================== -->
+  <section class="menu-poster reveal">
+    <div class="menu-head">
+      <h3>The Menu, in part.</h3>
+      <p class="sub">Yemek listesi.</p>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item">
+        <span class="num">I.</span>
+        <div>
+          <span class="name">Cağ Kebabı <em>· the rotating roast</em></span>
+          <span class="desc">Lamb marinated three days in onion &amp; salt. Bound horizontally, turned slowly above oak embers.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+      <div class="menu-item">
+        <span class="num">II.</span>
+        <div>
+          <span class="name">Adana <em>· hand-minced kebab</em></span>
+          <span class="desc">Lamb minced by hand with red pepper &amp; salt. Two long lines on lavash, with sumac onion.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+      <div class="menu-item">
+        <span class="num">III.</span>
+        <div>
+          <span class="name">Şiş Tavuk <em>· chicken skewers</em></span>
+          <span class="desc">Marinated in yogurt, cumin, lemon — kept low over coals until the colour comes up to gold.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+      <div class="menu-item">
+        <span class="num">IV.</span>
+        <div>
+          <span class="name">Ezme <em>· hand-cut salsa</em></span>
+          <span class="desc">Tomato, hot pepper, onion, parsley. Cut with a knife, never blended.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+      <div class="menu-item">
+        <span class="num">V.</span>
+        <div>
+          <span class="name">Lavaş <em>· flatbread</em></span>
+          <span class="desc">Pulled from the oven hot enough to fold once and serve.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+      <div class="menu-item">
+        <span class="num">VI.</span>
+        <div>
+          <span class="name">Künefe <em>· cheese pastry</em></span>
+          <span class="desc">Shredded kataifi, melted cheese, syrup, crushed pistachio. Hot.</span>
+        </div>
+        <span class="price">— · MP</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FILMS — burgundy block
+  ==================================================================== -->
+  <section class="films">
+    <div class="films-inner">
+      <div class="films-head reveal">
+        <p class="cap">A reel of films · filmler</p>
+        <h3>Six trailers, <em>cut for the feed.</em></h3>
+      </div>
+      <div class="films-grid">
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 01</span>
+            <div class="film-bottom">
+              <span class="title">The Rotation, slow</span>
+              <span class="meta">0:18 · 9:16 · Reels</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 02</span>
+            <div class="film-bottom">
+              <span class="title">The Cut</span>
+              <span class="meta">0:09 · 9:16 · Reels · TT</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 03</span>
+            <div class="film-bottom">
+              <span class="title">Şiş Tavuk on the coals</span>
+              <span class="meta">0:15 · 9:16 · Reels</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 04</span>
+            <div class="film-bottom">
+              <span class="title">A table, set</span>
+              <span class="meta">0:22 · 1:1 · Feed · Ads</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 05</span>
+            <div class="film-bottom">
+              <span class="title">Fish on flame</span>
+              <span class="meta">0:11 · 9:16 · Reels</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+        <figure class="film">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt="">
+          <div class="film-overlay">
+            <span class="film-tag">Trailer · 06</span>
+            <div class="film-bottom">
+              <span class="title">Adana, end to end</span>
+              <span class="meta">0:14 · 9:16 · Reels · Ads</span>
+            </div>
+          </div>
+          <span class="film-play">▶</span>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS — palette + type
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Marks &amp; Palette · renkler</h3>
+      <div class="palette">
+        <div class="pchip burgundy">
+          <span class="turk">Ateş</span>
+          <div>
+            <span class="eng">Burgundy</span>
+            <p class="hex">#73191C</p>
+          </div>
+        </div>
+        <div class="pchip gold">
+          <span class="turk">Altın</span>
+          <div>
+            <span class="eng">Saffron</span>
+            <p class="hex">#E9B44A</p>
+          </div>
+        </div>
+        <div class="pchip cream">
+          <span class="turk">Fildişi</span>
+          <div>
+            <span class="eng">Cream</span>
+            <p class="hex">#FBF1D6</p>
+          </div>
+        </div>
+        <div class="pchip ink">
+          <span class="turk">Mürekkep</span>
+          <div>
+            <span class="eng">Ink</span>
+            <p class="hex">#1A0A08</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · yazı</h3>
+      <div class="type-stack">
+        <div class="type-card">
+          <p class="label">Display · Cinzel</p>
+          <p class="specimen-display">DESTAN · TÜRK MUTFAĞI</p>
+        </div>
+        <div class="type-card">
+          <p class="label">Serif · DM Serif Display</p>
+          <p class="specimen-serif">A short film about a kebab house, told in fire and bread.</p>
+        </div>
+        <div class="type-card">
+          <p class="label">Script · Italianno</p>
+          <p class="specimen-script">Loaded by fire.</p>
+        </div>
+        <div class="type-card">
+          <p class="label">Hand · Caveat</p>
+          <p class="specimen-hand">ateş · ekmek · tuz</p>
+        </div>
+        <div class="type-card">
+          <p class="label">UI · JetBrains Mono</p>
+          <p class="specimen-mono">Reel · 010 · Toronto · MMXXVI</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END BLOCK
+  ==================================================================== -->
+  <section class="end-block">
+    <svg class="end-flame" viewBox="0 0 64 80" aria-hidden="true"><use href="#flame"/></svg>
+    <h3>Set the next plate. <em>Ateşi yak.</em></h3>
+    <p>If your room can hold a fire, we can help your story stand up to it. Brand, photography, films, and the small bright work of advertising.</p>
+    <a class="end-cta" href="#">Start a project →</a>
+  </section>
+
+  <!-- bottom marquee + footer -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>FrameFlow · Reel 010 · Destan · Toronto · MMXXVI</span>
+      <span>★ Loaded by fire ★</span>
+      <span>FrameFlow · Reel 010 · Destan · Toronto · MMXXVI</span>
+      <span>★ Loaded by fire ★</span>
+      <span>FrameFlow · Reel 010 · Destan · Toronto · MMXXVI</span>
+      <span>★ Loaded by fire ★</span>
+    </div>
+  </div>
+
+  <footer class="footer-rail">
+    <span>FrameFlow · <b>Reel 010</b> · Destan</span>
+    <span>Toronto · 2026</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }
+      }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

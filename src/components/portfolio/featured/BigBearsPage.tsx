@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -15,6 +16,34 @@ export function BigBearsPage({ client }: Props) {
   const photos = client.photos ?? [];
 
   const frameNumber = getFrameNumber(client);
+
+  /* PHOTO LIGHTBOX -------------------------------------------------- */
+  const [modalIndex, setModalIndex] = useState<number | null>(null);
+  const isOpen = modalIndex !== null;
+  const activePhoto = isOpen ? photos[modalIndex] : null;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setModalIndex(null);
+      else if (e.key === "ArrowLeft") {
+        setModalIndex((i) =>
+          i === null ? null : (i - 1 + photos.length) % photos.length
+        );
+      } else if (e.key === "ArrowRight") {
+        setModalIndex((i) =>
+          i === null ? null : (i + 1) % photos.length
+        );
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen, photos.length]);
 
   return (
     <>
@@ -202,8 +231,21 @@ export function BigBearsPage({ client }: Props) {
               From <em>the line.</em>
             </h2>
             <div className="bb-photo-row">
-              {photos.map((p) => (
-                <figure key={p.src} className="bb-photo">
+              {photos.map((p, i) => (
+                <figure
+                  key={p.src}
+                  className="bb-photo"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open photo: ${p.alt}`}
+                  onClick={() => setModalIndex(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setModalIndex(i);
+                    }
+                  }}
+                >
                   <Image
                     src={p.src}
                     alt={p.alt}
@@ -212,6 +254,9 @@ export function BigBearsPage({ client }: Props) {
                     style={{ objectFit: "cover" }}
                   />
                   <figcaption>{p.slate}</figcaption>
+                  <span className="bb-photo-zoom" aria-hidden>
+                    ↗
+                  </span>
                 </figure>
               ))}
             </div>
@@ -314,6 +359,80 @@ export function BigBearsPage({ client }: Props) {
             Designed by <strong>FrameFlow</strong> · Toronto · 2024
           </Link>
         </footer>
+
+        {/* PHOTO LIGHTBOX */}
+        {isOpen && activePhoto && (
+          <div
+            className="bb-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activePhoto.slate} — frame ${modalIndex + 1} of ${photos.length}`}
+            onClick={() => setModalIndex(null)}
+          >
+            <button
+              type="button"
+              className="bb-modal-nav bb-modal-nav--prev"
+              aria-label="Previous photo"
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalIndex((i) =>
+                  i === null ? null : (i - 1 + photos.length) % photos.length
+                );
+              }}
+            >
+              ←
+            </button>
+
+            <div
+              className="bb-modal-stage"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bb-modal-bar bb-modal-bar--top">
+                <span className="bb-modal-counter">
+                  ★ FRAME {String(modalIndex + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
+                </span>
+                <span className="bb-modal-brand">BIG BEARS · DAILIES</span>
+                <button
+                  type="button"
+                  className="bb-modal-close"
+                  aria-label="Close"
+                  onClick={() => setModalIndex(null)}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="bb-modal-image-wrap">
+                <Image
+                  src={activePhoto.src}
+                  alt={activePhoto.alt}
+                  fill
+                  sizes="(max-width: 880px) 92vw, 720px"
+                  style={{ objectFit: "contain" }}
+                  priority
+                />
+              </div>
+
+              <div className="bb-modal-bar bb-modal-bar--bot">
+                <span className="bb-modal-slate">{activePhoto.slate}</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="bb-modal-nav bb-modal-nav--next"
+              aria-label="Next photo"
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalIndex((i) =>
+                  i === null ? null : (i + 1) % photos.length
+                );
+              }}
+            >
+              →
+            </button>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -357,6 +476,7 @@ export function BigBearsPage({ client }: Props) {
           color: var(--bb-red);
           text-decoration: none;
           font-weight: 600;
+          white-space: nowrap;
         }
         .bb-top-back:hover { color: var(--bb-ink); }
         .bb-top-frame {
@@ -364,9 +484,20 @@ export function BigBearsPage({ client }: Props) {
           color: var(--bb-yellow);
           padding: 4px 10px;
           letter-spacing: 0.2em;
+          white-space: nowrap;
         }
         .bb-top-meta {
           opacity: 0.7;
+          white-space: nowrap;
+        }
+        @media (max-width: 640px) {
+          .bb-top {
+            padding: 14px 18px;
+            gap: 12px;
+            font-size: 10px;
+          }
+          .bb-top-meta { display: none; }
+          .bb-top-frame { padding: 3px 8px; letter-spacing: 0.15em; }
         }
 
         /* TICKER ------------------------------------------------- */
@@ -741,7 +872,12 @@ export function BigBearsPage({ client }: Props) {
         .bb-photo-row {
           display: flex;
           gap: 16px;
-          padding: 0 16px;
+          /* vertical padding so hovered photos (translateY -6px +
+             rotate) have room to elevate inside the scroll box —
+             overflow-x: auto forces overflow-y to behave as auto
+             too per CSS spec, so without padding the hover would
+             be clipped at the top edge. */
+          padding: 16px;
           overflow-x: auto;
           scroll-snap-type: x mandatory;
         }
@@ -755,10 +891,19 @@ export function BigBearsPage({ client }: Props) {
           position: relative;
           overflow: hidden;
           scroll-snap-align: start;
-          transition: transform 0.4s;
+          transition: transform 0.4s, box-shadow 0.4s;
           margin: 0;
+          cursor: pointer;
+          background: var(--bb-cream);
         }
-        .bb-photo:hover { transform: translateY(-6px) rotate(-1deg); }
+        .bb-photo:hover {
+          transform: translateY(-6px) rotate(-1deg);
+          box-shadow: 12px 12px 0 var(--bb-red);
+        }
+        .bb-photo:focus-visible {
+          outline: 4px solid var(--bb-yellow);
+          outline-offset: 4px;
+        }
         .bb-photo figcaption {
           position: absolute;
           bottom: 8px;
@@ -771,6 +916,191 @@ export function BigBearsPage({ client }: Props) {
           padding: 4px 8px;
           text-transform: uppercase;
           font-weight: 400;
+        }
+        .bb-photo-zoom {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 32px;
+          height: 32px;
+          background: var(--bb-red);
+          color: var(--bb-yellow);
+          border: 2px solid var(--bb-ink);
+          font-family: var(--display);
+          font-size: 18px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transform: rotate(-8deg) scale(0.8);
+          transition: opacity 0.25s, transform 0.25s;
+          pointer-events: none;
+        }
+        .bb-photo:hover .bb-photo-zoom,
+        .bb-photo:focus-visible .bb-photo-zoom {
+          opacity: 1;
+          transform: rotate(0deg) scale(1);
+        }
+
+        /* PHOTO LIGHTBOX ----------------------------------------- */
+        .bb-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 32px;
+          background:
+            radial-gradient(circle at 25% 20%, rgba(243, 168, 5, 0.10), transparent 45%),
+            radial-gradient(circle at 75% 80%, rgba(146, 39, 0, 0.18), transparent 50%),
+            rgba(26, 14, 8, 0.94);
+          animation: bb-modal-fade 0.22s ease-out;
+        }
+        @keyframes bb-modal-fade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .bb-modal-stage {
+          position: relative;
+          width: min(720px, 92vw);
+          height: min(92vh, 960px);
+          max-height: 92vh;
+          background: var(--bb-cream);
+          border: 4px solid var(--bb-ink);
+          box-shadow: 16px 16px 0 var(--bb-red);
+          display: flex;
+          flex-direction: column;
+          animation: bb-modal-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes bb-modal-pop {
+          from { transform: scale(0.85) rotate(-1.5deg); opacity: 0; }
+          to   { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        .bb-modal-bar {
+          display: flex;
+          align-items: center;
+          padding: 10px 14px;
+          font-family: var(--mono);
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 600;
+          flex: 0 0 auto;
+        }
+        .bb-modal-bar--top {
+          background: var(--bb-yellow);
+          color: var(--bb-red);
+          border-bottom: 4px solid var(--bb-ink);
+          justify-content: space-between;
+          gap: 12px;
+        }
+        .bb-modal-counter {
+          white-space: nowrap;
+          font-weight: 800;
+        }
+        .bb-modal-brand {
+          opacity: 0.7;
+          white-space: nowrap;
+          letter-spacing: 0.28em;
+        }
+        .bb-modal-close {
+          background: var(--bb-red);
+          color: var(--bb-yellow);
+          border: 3px solid var(--bb-ink);
+          width: 34px;
+          height: 34px;
+          font-family: var(--display);
+          font-size: 22px;
+          line-height: 1;
+          padding: 0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.18s;
+          flex: 0 0 auto;
+        }
+        .bb-modal-close:hover {
+          transform: rotate(90deg) scale(1.08);
+        }
+        .bb-modal-image-wrap {
+          position: relative;
+          flex: 1 1 auto;
+          min-height: 0;
+          background: var(--bb-cream);
+          overflow: hidden;
+        }
+        .bb-modal-bar--bot {
+          background: var(--bb-ink);
+          color: var(--bb-yellow);
+          border-top: 4px solid var(--bb-ink);
+          justify-content: center;
+          padding: 16px 18px;
+        }
+        .bb-modal-slate {
+          font-family: var(--display);
+          font-size: 20px;
+          letter-spacing: 0.06em;
+          color: var(--bb-yellow);
+          text-transform: uppercase;
+        }
+        .bb-modal-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: var(--bb-yellow);
+          color: var(--bb-red);
+          border: 4px solid var(--bb-ink);
+          box-shadow: 6px 6px 0 var(--bb-red);
+          width: 64px;
+          height: 64px;
+          font-family: var(--display);
+          font-size: 32px;
+          line-height: 1;
+          padding: 0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.18s, box-shadow 0.18s;
+          z-index: 2;
+        }
+        .bb-modal-nav--prev { left: 32px; }
+        .bb-modal-nav--next { right: 32px; }
+        .bb-modal-nav:hover {
+          transform: translateY(-50%) scale(1.08) rotate(-2deg);
+          box-shadow: 8px 8px 0 var(--bb-red);
+        }
+        .bb-modal-nav:active {
+          transform: translateY(-50%) scale(0.95);
+          box-shadow: 3px 3px 0 var(--bb-red);
+        }
+        @media (max-width: 720px) {
+          .bb-modal { padding: 16px; }
+          .bb-modal-stage {
+            width: 92vw;
+            box-shadow: 8px 8px 0 var(--bb-red);
+          }
+          .bb-modal-brand { display: none; }
+          .bb-modal-bar { font-size: 10px; padding: 8px 10px; }
+          .bb-modal-slate { font-size: 16px; }
+          .bb-modal-nav {
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
+            border-width: 3px;
+            box-shadow: 4px 4px 0 var(--bb-red);
+          }
+          .bb-modal-nav--prev { left: 8px; }
+          .bb-modal-nav--next { right: 8px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bb-modal,
+          .bb-modal-stage { animation: none; }
+          .bb-modal-close,
+          .bb-modal-nav { transition: none; }
         }
 
         /* MENU PINBOARD ------------------------------------------ */

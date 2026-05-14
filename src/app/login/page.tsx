@@ -22,7 +22,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-graphite text-ivory flex flex-col lg:flex-row">
+    <div className="relative min-h-screen w-full overflow-hidden bg-graphite text-ivory flex flex-col">
       {/* ================================================================ */}
       {/*  Global backdrops                                                */}
       {/* ================================================================ */}
