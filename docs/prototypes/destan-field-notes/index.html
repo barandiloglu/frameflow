@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Destan — The Field Notes (FrameFlow / Prototype 06)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap">
+  <style>
+    /* ====================================================================
+       DESTAN · THE FIELD NOTES
+       Prototype 06 — travel journal / Bourdain Parts Unknown
+
+       The page is a personal scrapbook. Polaroid-bordered photos
+       rotated and taped down with masking-tape strips. Handwriting in
+       Caveat, typewriter notes in Special Elite. A hand-drawn map of
+       the route Erzurum → Toronto. Receipts, ticket stubs, sticky
+       notes. First-person voice. Layered, tactile, informal.
+    ==================================================================== */
+
+    :root {
+      --paper:       #efe6cf;       /* aged journal paper */
+      --paper-d:     #ddd0a8;       /* darker shadow */
+      --paper-edge:  #c5b389;
+      --polaroid:    #fbf6e4;       /* photo border cream */
+      --tape:        #f0d97c;       /* masking tape yellow */
+      --tape-blue:   #b9c8d6;       /* blue painter tape */
+      --ink:         #2a1d10;       /* brown-black ink */
+      --ink-2:       #4a3424;
+      --pencil:      #3d3528;
+      --burg:        #73191c;
+      --burg-d:      #5a1316;
+      --gold:        #c08e2a;
+      --red-pen:     #c12c2c;
+      --green:       #4a6a35;       /* stamp green */
+
+      --hand:    "Caveat", cursive;
+      --type:    "Special Elite", "Courier New", monospace;
+      --mono:    "IBM Plex Mono", ui-monospace, monospace;
+      --serif:   "Cormorant Garamond", Georgia, serif;
+      --body:    "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--type);
+      font-size: 16px;
+      line-height: 1.7;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 30% 20%, rgba(115, 25, 28, 0.06), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 80% 80%, rgba(192, 142, 42, 0.08), transparent 60%);
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* paper texture: fine grain + faint horizontal rules */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.34  0 0 0 0 0.18  0 0 0 0.42 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    }
+    /* horizontal rule lines like notebook paper */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(74, 52, 36, 0.07) 32px, transparent 33px);
+    }
+
+    /* ============================================================
+       FF RAIL — taped at top
+    ============================================================ */
+    .ff-rail {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      background: var(--paper);
+      border-bottom: 1px dashed var(--paper-edge);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .ff-rail b { color: var(--burg); font-weight: 600; }
+    .ff-rail .center { color: var(--burg); letter-spacing: 0.4em; }
+
+    /* ============================================================
+       MASKING TAPE COMPONENT
+    ============================================================ */
+    .tape {
+      position: absolute;
+      width: 110px;
+      height: 26px;
+      background: var(--tape);
+      opacity: 0.85;
+      box-shadow: 0 4px 8px -2px rgba(42, 29, 16, 0.25);
+      pointer-events: none;
+      z-index: 3;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(0,0,0,0.05));
+    }
+    .tape::before, .tape::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 100%;
+      top: 0;
+      background: inherit;
+      opacity: 0.5;
+    }
+    .tape::before { left: -6px; clip-path: polygon(100% 0, 0 30%, 0 70%, 100% 100%); }
+    .tape::after  { right: -6px; clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%); }
+    .tape.blue { background: var(--tape-blue); }
+
+    /* ============================================================
+       COVER — like the inside-front-cover of a journal
+    ============================================================ */
+    .cover {
+      padding: 80px 48px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .cover-mast {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: end;
+      gap: 32px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--ink);
+      margin-bottom: 32px;
+    }
+    .cover-mast .l, .cover-mast .r {
+      font-family: var(--type);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+    .cover-mast .r { text-align: right; }
+    .cover-mast .l b, .cover-mast .r b { color: var(--burg); font-weight: 400; }
+
+    .cover h1 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(80px, 13vw, 200px);
+      color: var(--burg);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      transform: rotate(-1.5deg);
+      transform-origin: left center;
+      margin-bottom: 8px;
+      text-shadow: 1px 1px 0 rgba(115, 25, 28, 0.15);
+    }
+    .cover h1 small {
+      display: block;
+      font-family: var(--hand);
+      font-weight: 400;
+      font-size: 0.4em;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      transform: rotate(0deg);
+      margin-top: -8px;
+    }
+    .cover .sub {
+      font-family: var(--type);
+      font-size: 18px;
+      letter-spacing: 0.03em;
+      color: var(--ink);
+      max-width: 56ch;
+      margin: 18px 0 0;
+      line-height: 1.5;
+    }
+    .cover .sub b {
+      font-family: var(--hand);
+      font-weight: 700;
+      color: var(--burg);
+      font-size: 1.4em;
+      letter-spacing: 0;
+    }
+
+    .cover-row {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* polaroid component */
+    .polaroid {
+      position: relative;
+      background: var(--polaroid);
+      padding: 12px 12px 56px;
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.06),
+        2px 4px 12px -2px rgba(42, 29, 16, 0.35),
+        8px 14px 24px -8px rgba(42, 29, 16, 0.4);
+      transform: rotate(var(--rot, -2deg));
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s;
+    }
+    .polaroid:hover {
+      transform: rotate(0deg) translateY(-4px) scale(1.02);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.08),
+        4px 6px 16px -2px rgba(42, 29, 16, 0.4),
+        14px 22px 36px -10px rgba(42, 29, 16, 0.5);
+      z-index: 5;
+    }
+    .polaroid .frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--paper-d);
+    }
+    .polaroid .frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: contrast(1.05) saturate(0.92);
+    }
+    .polaroid .write {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      right: 14px;
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--burg);
+      line-height: 1.05;
+      transform: rotate(-1deg);
+      transform-origin: left center;
+    }
+    .polaroid .write small {
+      display: block;
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-top: 2px;
+      transform: rotate(0deg);
+      font-weight: 400;
+    }
+    .polaroid .pin {
+      position: absolute;
+      top: -8px; left: 50%;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd54a 10%, var(--gold) 50%, #6b4d18 100%);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+
+    .cover-poly-wrap {
+      position: relative;
+      padding: 18px 8px;
+    }
+    .cover-poly-wrap .tape {
+      top: -10px; left: 30%; transform: rotate(-6deg);
+    }
+
+    .cover-notes {
+      padding: 8px 12px;
+      font-family: var(--type);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink);
+      position: relative;
+    }
+    .cover-notes::before {
+      content: "✱";
+      position: absolute;
+      top: -6px;
+      left: 0;
+      color: var(--burg);
+      font-size: 22px;
+    }
+    .cover-notes p { margin-bottom: 12px; }
+    .cover-notes p .h {
+      font-family: var(--hand);
+      font-weight: 600;
+      color: var(--burg);
+      font-size: 1.4em;
+      letter-spacing: 0;
+    }
+    .cover-notes .sig {
+      margin-top: 18px;
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: 36px;
+      color: var(--burg);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      transform: rotate(-2deg);
+      display: inline-block;
+      transform-origin: left center;
+    }
+    .cover-notes .sig small {
+      display: block;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-top: 6px;
+      transform: rotate(0deg);
+      font-weight: 400;
+    }
+
+    /* stamp circle */
+    .stamp {
+      position: absolute;
+      width: 130px; height: 130px;
+      border: 3px double var(--red-pen);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red-pen);
+      transform: rotate(-12deg);
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 6;
+    }
+    .stamp::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--red-pen);
+      border-radius: 50%;
+    }
+    .stamp b {
+      display: block;
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: 26px;
+      color: var(--red-pen);
+      letter-spacing: 0;
+      line-height: 1;
+      margin: 4px 0;
+    }
+
+    /* ============================================================
+       MAP — Erzurum → Toronto sketch
+    ============================================================ */
+    .map-section {
+      padding: 80px 48px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .map-section h2 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(40px, 5vw, 64px);
+      color: var(--burg);
+      line-height: 1;
+      transform: rotate(-1deg);
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .map-section .sub {
+      font-family: var(--type);
+      font-size: 16px;
+      color: var(--ink);
+      max-width: 56ch;
+      margin-bottom: 36px;
+    }
+    .map-frame {
+      position: relative;
+      padding: 42px 36px 48px;
+      background:
+        linear-gradient(135deg, rgba(115, 25, 28, 0.04), transparent 50%),
+        var(--paper-d);
+      border: 1px solid var(--paper-edge);
+      box-shadow: 8px 12px 30px -10px rgba(42, 29, 16, 0.45);
+    }
+    .map-frame .corner {
+      position: absolute;
+      width: 22px; height: 22px;
+      border: 1px solid var(--ink-2);
+      opacity: 0.55;
+    }
+    .map-frame .corner.tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+    .map-frame .corner.tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+    .map-frame .corner.bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+    .map-frame .corner.br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+
+    .map-frame svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .map-legend {
+      margin-top: 18px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-size: 12px;
+      color: var(--ink-2);
+      letter-spacing: 0.04em;
+    }
+    .map-legend .dot { color: var(--burg); font-size: 16px; line-height: 1; margin-right: 4px; }
+    .map-legend .dot.gold { color: var(--gold); }
+
+    /* ============================================================
+       NOTES — typewritten letter to the chef
+    ============================================================ */
+    .letter {
+      padding: 80px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .letter-photo-stack {
+      position: relative;
+      padding: 24px 12px 36px;
+    }
+    .letter-photo-stack .polaroid {
+      position: relative;
+    }
+    .letter-photo-stack .polaroid + .polaroid {
+      margin-top: -64px;
+      margin-left: 56px;
+    }
+    .letter-paper {
+      position: relative;
+      background: var(--paper);
+      padding: 36px 36px 48px;
+      box-shadow: 4px 6px 18px -8px rgba(42, 29, 16, 0.35);
+      border: 1px solid var(--paper-edge);
+      transform: rotate(0.4deg);
+    }
+    .letter-paper::before {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 56px;
+      width: 1px;
+      background: var(--red-pen);
+      opacity: 0.4;
+    }
+    .letter-paper p {
+      font-family: var(--type);
+      font-size: 15.5px;
+      line-height: 1.85;
+      color: var(--ink);
+      padding-left: 24px;
+      margin-bottom: 14px;
+      max-width: 56ch;
+    }
+    .letter-paper p:first-child { font-family: var(--hand); font-weight: 600; font-size: 26px; color: var(--burg); padding-left: 24px; line-height: 1.2; }
+    .letter-paper .strike { text-decoration: line-through; text-decoration-color: var(--red-pen); text-decoration-thickness: 1.5px; opacity: 0.7; }
+    .letter-paper .red {
+      color: var(--red-pen);
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 1.3em;
+      letter-spacing: 0;
+      line-height: 1;
+      vertical-align: -0.05em;
+    }
+    .letter-paper .marg {
+      position: absolute;
+      right: -180px;
+      top: 60px;
+      width: 200px;
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--red-pen);
+      line-height: 1.1;
+      transform: rotate(-3deg);
+    }
+    .letter-paper .marg::before {
+      content: "→ ";
+    }
+    .letter-paper .sig {
+      margin-top: 32px;
+      padding-left: 24px;
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: 38px;
+      color: var(--burg);
+      line-height: 1;
+      transform: rotate(-1.5deg);
+      display: inline-block;
+    }
+    .letter-paper .sig small {
+      display: block;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-top: 4px;
+      transform: rotate(0deg);
+      font-weight: 400;
+    }
+
+    .receipt {
+      position: absolute;
+      right: -8px;
+      bottom: -32px;
+      width: 220px;
+      background: var(--polaroid);
+      padding: 16px 14px 24px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink);
+      line-height: 1.55;
+      box-shadow: 4px 6px 14px -4px rgba(42, 29, 16, 0.4);
+      transform: rotate(4deg);
+      z-index: 4;
+    }
+    .receipt::after {
+      /* perforated bottom */
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -8px;
+      height: 8px;
+      background: radial-gradient(circle, var(--paper) 4px, transparent 4.5px) bottom left / 14px 8px repeat-x;
+    }
+    .receipt h5 {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      color: var(--burg);
+      text-align: center;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--ink);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .receipt .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      padding: 2px 0;
+    }
+    .receipt .total {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--ink);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+    .receipt .stamp-mini {
+      margin-top: 6px;
+      text-align: center;
+      font-family: var(--hand);
+      font-weight: 600;
+      color: var(--red-pen);
+      font-size: 16px;
+      transform: rotate(-4deg);
+    }
+
+    /* ============================================================
+       FIELD GRID — collage of polaroids with notes
+    ============================================================ */
+    .field {
+      padding: 80px 48px 100px;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .field h2 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(40px, 5.4vw, 72px);
+      color: var(--burg);
+      line-height: 1;
+      transform: rotate(-1deg);
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .field .sub {
+      font-family: var(--type);
+      font-size: 16px;
+      color: var(--ink);
+      max-width: 60ch;
+      margin-bottom: 42px;
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 36px 32px;
+      align-items: start;
+      position: relative;
+    }
+    .field-grid .pol {
+      position: relative;
+      padding: 12px 4px;
+    }
+    .field-grid .pol .tape {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-4deg);
+    }
+    .field-grid .pol .tape.right { left: auto; right: 8%; transform: rotate(8deg); }
+    .field-grid .pol .tape.left { left: 8%; transform: rotate(-8deg); }
+    .field-grid .col-3 { grid-column: span 3; }
+    .field-grid .col-4 { grid-column: span 4; }
+    .field-grid .col-5 { grid-column: span 5; }
+    .field-grid .col-6 { grid-column: span 6; }
+    .field-grid .col-8 { grid-column: span 8; }
+
+    .field-grid .stickynote {
+      grid-column: span 3;
+      background: var(--tape);
+      padding: 24px 22px;
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--burg);
+      line-height: 1.2;
+      box-shadow: 4px 6px 14px -4px rgba(42, 29, 16, 0.4);
+      transform: rotate(2deg);
+      align-self: center;
+    }
+    .field-grid .stickynote small {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    .field-grid .typed-note {
+      grid-column: span 4;
+      align-self: center;
+      padding: 18px 22px 22px;
+      background: var(--polaroid);
+      box-shadow: 4px 6px 14px -4px rgba(42, 29, 16, 0.3);
+      transform: rotate(-1deg);
+      position: relative;
+    }
+    .field-grid .typed-note .head {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--burg);
+      border-bottom: 1px dashed var(--ink);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    .field-grid .typed-note p {
+      font-family: var(--type);
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .field-grid .typed-note p .red {
+      color: var(--red-pen);
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 1.25em;
+      vertical-align: -0.05em;
+    }
+
+    /* ============================================================
+       VIDEO STRIP — VHS / film negative aesthetic
+  ============================================================ */
+    .reels {
+      padding: 80px 48px 100px;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .reels h2 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(40px, 5.4vw, 72px);
+      color: var(--burg);
+      line-height: 1;
+      transform: rotate(-1deg);
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .reels .sub {
+      font-family: var(--type);
+      font-size: 16px;
+      color: var(--ink);
+      max-width: 60ch;
+      margin-bottom: 36px;
+    }
+    .filmstrip {
+      background: var(--ink);
+      padding: 22px 18px;
+      border-radius: 2px;
+      box-shadow: 6px 8px 20px -6px rgba(42, 29, 16, 0.5);
+      position: relative;
+    }
+    .filmstrip::before, .filmstrip::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 18px;
+      background-image: radial-gradient(circle, var(--paper) 4px, transparent 5px);
+      background-size: 28px 18px;
+      background-repeat: repeat-x;
+      background-position: center center;
+    }
+    .filmstrip::before { top: 0; }
+    .filmstrip::after  { bottom: 0; }
+    .filmstrip-inner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .reel-cell {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .reel-cell:hover { transform: translateY(-3px); }
+    .reel-cell .frame {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border: 1px solid #444;
+    }
+    .reel-cell .frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) saturate(1.05) brightness(0.92);
+    }
+    .reel-cell .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      background: rgba(115, 25, 28, 0.85);
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper);
+      font-size: 18px;
+      transition: transform 0.4s, background 0.4s;
+    }
+    .reel-cell:hover .play {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: var(--burg);
+    }
+    .reel-cell .meta {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--paper);
+      align-items: baseline;
+    }
+    .reel-cell .meta b { color: var(--gold); font-weight: 500; }
+    .reel-cell .meta .name {
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--paper);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       MARKS — palette/type as a torn-paper memo
+  ============================================================ */
+    .memo {
+      padding: 80px 48px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+    }
+    .memo-card {
+      background: var(--polaroid);
+      padding: 32px 28px;
+      box-shadow: 4px 6px 16px -4px rgba(42, 29, 16, 0.3);
+      position: relative;
+      transform: rotate(-0.6deg);
+    }
+    .memo-card + .memo-card { transform: rotate(0.8deg); }
+    .memo-card::before {
+      /* torn top edge */
+      content: "";
+      position: absolute;
+      top: -4px; left: 0; right: 0;
+      height: 8px;
+      background-image: linear-gradient(45deg, transparent 33%, var(--polaroid) 33%, var(--polaroid) 66%, transparent 66%);
+      background-size: 12px 8px;
+      background-repeat: repeat-x;
+    }
+    .memo-card .head {
+      font-family: var(--type);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--burg);
+      border-bottom: 1px dashed var(--ink);
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .memo-card .head .from {
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--ink-2);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .memo-card h4 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--burg);
+      line-height: 1.05;
+      margin-bottom: 16px;
+      transform: rotate(-1deg);
+      display: inline-block;
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .pchip {
+      padding: 14px;
+      border: 1px dashed var(--ink-2);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pchip .swatch {
+      width: 100%;
+      height: 56px;
+      border: 1px solid var(--ink-2);
+      margin-bottom: 8px;
+    }
+    .pchip .name {
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--burg);
+      line-height: 1;
+    }
+    .pchip .name small {
+      display: block;
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--ink-2);
+      text-transform: uppercase;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    .pchip .hex {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+    }
+
+    .typelist .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--ink-2);
+    }
+    .typelist .row:last-child { border-bottom: 0; }
+    .typelist .row .label {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .typelist .row .specimen.h { font-family: var(--hand); font-weight: 700; font-size: 36px; color: var(--burg); line-height: 1; }
+    .typelist .row .specimen.t { font-family: var(--type); font-size: 18px; color: var(--ink); line-height: 1.3; }
+    .typelist .row .specimen.s { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 22px; color: var(--ink); }
+    .typelist .row .specimen.m { font-family: var(--mono); font-size: 13px; letter-spacing: 0.2em; color: var(--ink); text-transform: uppercase; }
+
+    /* ============================================================
+       END — torn ticket stub & sign-off
+  ============================================================ */
+    .end {
+      padding: 80px 48px 120px;
+      max-width: 980px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .end h3 {
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: clamp(48px, 7vw, 110px);
+      color: var(--burg);
+      line-height: 1;
+      transform: rotate(-1deg);
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .end p {
+      font-family: var(--type);
+      font-size: 17px;
+      color: var(--ink);
+      max-width: 50ch;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .end .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 28px;
+      background: var(--burg);
+      color: var(--polaroid);
+      font-family: var(--type);
+      font-size: 14px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      transform: rotate(-1deg);
+      box-shadow: 4px 6px 0 var(--ink);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .end .cta:hover { transform: rotate(0deg) translateY(-2px); box-shadow: 6px 8px 0 var(--ink); }
+
+    .ticket {
+      display: inline-block;
+      padding: 18px 28px;
+      background: var(--polaroid);
+      border: 2px dashed var(--burg);
+      font-family: var(--type);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 32px;
+      transform: rotate(-1.5deg);
+      box-shadow: 3px 5px 12px -3px rgba(42, 29, 16, 0.35);
+    }
+    .ticket b { color: var(--burg); font-weight: 400; font-size: 14px; }
+
+    .foot-rail {
+      padding: 22px 32px;
+      border-top: 1px dashed var(--paper-edge);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .foot-rail .ce { text-align: center; color: var(--burg); letter-spacing: 0.4em; }
+    .foot-rail .ri { text-align: right; }
+    .foot-rail b { color: var(--ink); font-weight: 500; }
+
+    /* responsive */
+    @media (max-width: 980px) {
+      .cover { padding: 48px 24px 60px; }
+      .cover-row { grid-template-columns: 1fr; gap: 56px; }
+      .cover-mast { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+      .cover-mast .r { text-align: left; }
+      .map-section { padding: 48px 20px 60px; }
+      .letter { padding: 48px 24px; grid-template-columns: 1fr; gap: 40px; }
+      .letter-paper .marg { display: none; }
+      .field { padding: 48px 20px 60px; }
+      .field-grid { grid-template-columns: repeat(6, 1fr); gap: 28px 16px; }
+      .field-grid .col-3 { grid-column: span 3; }
+      .field-grid .col-4, .field-grid .col-6 { grid-column: span 6; }
+      .field-grid .col-5, .field-grid .col-8 { grid-column: span 6; }
+      .field-grid .stickynote { grid-column: span 6; }
+      .field-grid .typed-note { grid-column: span 6; }
+      .reels { padding: 48px 20px 60px; }
+      .filmstrip-inner { grid-template-columns: repeat(2, 1fr); }
+      .memo { padding: 48px 20px 60px; grid-template-columns: 1fr; gap: 36px; }
+      .receipt { display: none; }
+      .stamp { width: 100px; height: 100px; font-size: 9px; }
+      .stamp b { font-size: 20px; }
+      .foot-rail { grid-template-columns: 1fr; text-align: center; }
+      .foot-rail .ri, .foot-rail .ce { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .polaroid, .polaroid:hover { transform: rotate(var(--rot, 0deg)); transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       FF RAIL
+  ==================================================================== -->
+  <header class="ff-rail">
+    <span><b>FrameFlow</b> · Reel 010</span>
+    <span class="center">Field Notes · Destan</span>
+    <span><b>Toronto</b> · <b>2026</b></span>
+  </header>
+
+  <!-- =================================================================
+       COVER
+  ==================================================================== -->
+  <section class="cover">
+    <div class="cover-mast">
+      <div class="l">
+        <b>Notebook 010</b><br>
+        Property of FrameFlow,<br>
+        Toronto · MMXXVI
+      </div>
+      <div class="center" style="font-family: var(--type); text-align: center; font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--burg);">
+        Field Notes &middot; Destan
+      </div>
+      <div class="r">
+        <b>Subject</b>: a kebab house<br>
+        <b>Method</b>: stay close to the fire<br>
+        <b>Pages</b>: 15 plates · 6 reels
+      </div>
+    </div>
+
+    <h1>
+      Destan
+      <small>or, the saga according to a slow camera.</small>
+    </h1>
+    <p class="sub">
+      <b>Four shoots.</b> One Toronto street. A roast that lies down instead of standing up. These are the field notes — typewritten, taped down, and out of order.
+    </p>
+
+    <div class="cover-row">
+      <div class="cover-poly-wrap">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: -3deg">
+          <span class="pin"></span>
+          <div class="frame">
+            <img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt="">
+          </div>
+          <p class="write">Day 3 · the room <em style="font-style:normal; color: var(--red-pen);">finally</em> stopped looking at us.<small>03·14·26 · cağ, mid-rotation</small></p>
+        </figure>
+        <span class="stamp" style="bottom: -28px; right: -16px;"><span><b>Hot</b><br>Approved<br>·&nbsp;FF&nbsp;·</span></span>
+      </div>
+
+      <div class="cover-notes">
+        <p><span class="h">Why we are here.</span></p>
+        <p>Destan opened on a quiet Toronto street with a wood-fired temperament and a single product the rest of the city wasn’t serving — <em>cağ kebabı</em>, the rotating roast of Erzurum. Bound horizontally, turned by hand above oak embers.</p>
+        <p>I came back three times before the chef stopped looking at the camera. That was the day we made the picture above. The notebook starts here.</p>
+        <p style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--ink-2); text-transform: uppercase; padding-left: 0;">— Photography · Videography · Social · Ad Mgmt.</p>
+        <p class="sig">FrameFlow<small>Toronto · MMXXVI</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MAP — Erzurum → Toronto sketch
+  ==================================================================== -->
+  <section class="map-section reveal">
+    <h2>The route, more or less.</h2>
+    <p class="sub">From the mountain weddings of Erzurum to a quiet street in Toronto. The cağ travelled. We followed it for four months.</p>
+
+    <div class="map-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+
+      <svg viewBox="0 0 1200 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <pattern id="paper-tex" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect width="6" height="6" fill="transparent"/>
+            <circle cx="1" cy="1" r="0.4" fill="rgba(42,29,16,0.25)"/>
+          </pattern>
+        </defs>
+        <!-- coastline doodle -->
+        <path d="M40 280 Q120 240 200 260 T380 240 T560 270 T720 250 T880 260 T1080 240 T1180 260" stroke="rgba(42,29,16,0.45)" stroke-width="1.4" fill="none" stroke-dasharray="0"/>
+        <path d="M40 320 Q200 300 380 310 T720 300 T1180 320" stroke="rgba(42,29,16,0.25)" stroke-width="1" fill="none" stroke-dasharray="3,4"/>
+        <!-- compass rose -->
+        <g transform="translate(1090,90)" stroke="var(--burg)" stroke-width="1.4" fill="var(--burg)" opacity="0.9">
+          <circle r="38" fill="none"/>
+          <circle r="2"/>
+          <path d="M0 -34 L4 0 L0 4 L-4 0 Z" />
+          <text x="0" y="-44" text-anchor="middle" font-family="Special Elite" font-size="10" fill="var(--burg)" stroke="none">N</text>
+          <text x="44" y="4" text-anchor="middle" font-family="Special Elite" font-size="10" fill="var(--burg)" stroke="none">E</text>
+          <text x="0" y="50" text-anchor="middle" font-family="Special Elite" font-size="10" fill="var(--burg)" stroke="none">S</text>
+          <text x="-44" y="4" text-anchor="middle" font-family="Special Elite" font-size="10" fill="var(--burg)" stroke="none">W</text>
+        </g>
+
+        <!-- route line: Erzurum (right) to Toronto (left) -->
+        <path d="M 990 160 Q 850 90 700 130 Q 540 175 380 110 Q 240 60 130 165"
+              stroke="var(--burg)" stroke-width="2.4" fill="none" stroke-dasharray="2,8" stroke-linecap="round"/>
+        <!-- plane glyphs along the route -->
+        <text x="600" y="118" font-family="Special Elite" font-size="20" fill="var(--burg)" text-anchor="middle">✈</text>
+
+        <!-- Erzurum pin -->
+        <g transform="translate(990,160)">
+          <circle r="9" fill="var(--burg)"/>
+          <circle r="3.5" fill="var(--polaroid)"/>
+          <text x="-4" y="-22" font-family="Caveat" font-size="32" fill="var(--burg)" text-anchor="end" font-weight="700">Erzurum</text>
+          <text x="-4" y="-4" font-family="Special Elite" font-size="11" fill="var(--ink-2)" text-anchor="end">39.9° N · 41.3° E</text>
+          <text x="6" y="22" font-family="Caveat" font-size="20" fill="var(--ink)" text-anchor="start">— birthplace of the cağ</text>
+        </g>
+
+        <!-- Istanbul waypoint -->
+        <g transform="translate(700,130)">
+          <circle r="5" fill="var(--gold)"/>
+          <circle r="2" fill="var(--ink)"/>
+          <text x="0" y="-12" font-family="Special Elite" font-size="11" fill="var(--ink-2)" text-anchor="middle">İstanbul</text>
+        </g>
+
+        <!-- Toronto pin -->
+        <g transform="translate(130,165)">
+          <circle r="11" fill="var(--burg)"/>
+          <circle r="4" fill="var(--polaroid)"/>
+          <text x="0" y="-22" font-family="Caveat" font-size="38" fill="var(--burg)" text-anchor="middle" font-weight="700">Toronto</text>
+          <text x="0" y="-3" font-family="Special Elite" font-size="11" fill="var(--ink-2)" text-anchor="middle">43.7° N · 79.4° W</text>
+          <text x="0" y="36" font-family="Caveat" font-size="22" fill="var(--burg)" text-anchor="middle">Destan · here →</text>
+          <!-- starburst -->
+          <g stroke="var(--burg)" stroke-width="1.2" fill="none">
+            <line x1="-22" y1="0" x2="-30" y2="0"/>
+            <line x1="22" y1="0" x2="30" y2="0"/>
+            <line x1="0" y1="-22" x2="0" y2="-30"/>
+            <line x1="0" y1="22" x2="0" y2="30"/>
+          </g>
+        </g>
+
+        <!-- distance scribble -->
+        <g transform="translate(420, 240)">
+          <text font-family="Caveat" font-weight="600" font-size="26" fill="var(--burg)">~ 8,200 km</text>
+          <text y="22" font-family="Special Elite" font-size="11" fill="var(--ink-2)">(give or take a wedding)</text>
+        </g>
+      </svg>
+
+      <div class="map-legend">
+        <span><span class="dot">●</span> Origin / destination</span>
+        <span><span class="dot gold">●</span> Stopover</span>
+        <span>— — — Route of the cağ</span>
+        <span>· Hand-drawn from memory</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       LETTER — typewritten "to the chef"
+  ==================================================================== -->
+  <section class="letter reveal">
+    <div class="letter-photo-stack">
+      <figure class="polaroid" style="--rot: -4deg">
+        <span class="pin"></span>
+        <div class="frame">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt="">
+        </div>
+        <p class="write">the cut · day 3<small>03·14·26 · plate v</small></p>
+      </figure>
+      <figure class="polaroid" style="--rot: 3.5deg">
+        <span class="pin"></span>
+        <div class="frame">
+          <img src="../../../public/portfolio/destan-turkish-cuisine/photos/06-blade-on-meat.jpg" alt="">
+        </div>
+        <p class="write">soft wrist, long blade.<small>03·14·26 · plate vi</small></p>
+      </figure>
+      <span class="stamp" style="bottom: 60px; left: -16px; transform: rotate(8deg);"><span>Field<br><b>Day 3</b><br>Approved</span></span>
+    </div>
+
+    <div class="letter-paper">
+      <p>Dear chef,</p>
+      <p>I came back three times before you stopped looking at the camera. The first day I made <span class="strike">eighty-two</span> ninety-six frames; you watched all ninety-six of them. The second day I made eighty-four; you only watched the first dozen. The third day, I made one hundred and fifty.</p>
+      <p>By then you’d forgotten I was there. You pulled the lever, you reached for the long blade, you glanced at the doorway where the salt of the marinade had reached the threshold like an invitation. I made the picture <span class="red">→</span> there.</p>
+      <p>What follows are notes from those four shoots. I’ve taped them in the order I think they should be read, but I left the polaroids out of order on purpose. <span class="red">a saga is allowed to skip ahead.</span></p>
+      <p>Thank you for the bread.</p>
+      <span class="marg">stay for the bread,<br>stay for the wait!</span>
+      <p class="sig">FrameFlow<small>Toronto · 14·iii·MMXXVI</small></p>
+
+      <div class="receipt">
+        <h5>Destan · Toronto</h5>
+        <div class="row"><span>Cağ kebabı (regular)</span><span>$24</span></div>
+        <div class="row"><span>Adana</span><span>$22</span></div>
+        <div class="row"><span>Ezme</span><span>$8</span></div>
+        <div class="row"><span>Lavaş (×2)</span><span>$6</span></div>
+        <div class="row"><span>Çay</span><span>$4</span></div>
+        <div class="row total"><span>Subtotal</span><span>$64</span></div>
+        <p class="stamp-mini">paid · with thanks</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FIELD GRID — collage
+  ==================================================================== -->
+  <section class="field reveal">
+    <h2>The grid is a lie.</h2>
+    <p class="sub">A real notebook is not a grid. But this is a website, so we settled on twelve columns and broke them as needed. Below, in order of impatience.</p>
+
+    <div class="field-grid">
+      <div class="pol col-4">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: -3deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg" alt=""></div>
+          <p class="write">the rotation begins<small>03·14·26 · plate i</small></p>
+        </figure>
+      </div>
+      <div class="pol col-5">
+        <span class="tape right"></span>
+        <figure class="polaroid" style="--rot: 2deg">
+          <div class="frame" style="aspect-ratio: 4 / 3;"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg" alt=""></div>
+          <p class="write">first crust, low light<small>01·04·26 · plate ii</small></p>
+        </figure>
+      </div>
+      <div class="stickynote">
+        the chef said<br>“<strong>make it longer</strong>.”<br>so we did.
+        <small>— note to self · 02·15·26</small>
+      </div>
+
+      <div class="pol col-3">
+        <span class="tape left"></span>
+        <figure class="polaroid" style="--rot: 1.5deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/04-cag-kebabi-vertical.jpg" alt=""></div>
+          <p class="write">at rest · iv<small>01·31·26</small></p>
+        </figure>
+      </div>
+      <div class="pol col-5">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: -2deg">
+          <div class="frame" style="aspect-ratio: 4 / 3;"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt=""></div>
+          <p class="write">the spread · everything in three sentences<small>01·31·26 · plate xv</small></p>
+        </figure>
+      </div>
+      <div class="typed-note">
+        <span class="head">F.F. memo · 06</span>
+        <p>
+          The doner stands. <span class="red">the cağ lies down.</span>
+          Where the city hurries, this room insists on its own tempo. Patience is the recipe.
+        </p>
+      </div>
+
+      <div class="pol col-4">
+        <span class="tape right"></span>
+        <figure class="polaroid" style="--rot: -1.5deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt=""></div>
+          <p class="write">şiş tavuk, low coals<small>02·15·26 · plate x</small></p>
+        </figure>
+      </div>
+      <div class="pol col-4">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: 2deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt=""></div>
+          <p class="write">a fish, bound for embers<small>03·14·26 · plate xi</small></p>
+        </figure>
+      </div>
+      <div class="pol col-4">
+        <span class="tape left"></span>
+        <figure class="polaroid" style="--rot: -2.5deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/12-peppers-coals.jpg" alt=""></div>
+          <p class="write">peppers, side by side<small>03·14·26 · plate xii</small></p>
+        </figure>
+      </div>
+
+      <div class="stickynote" style="background: #b9c8d6; transform: rotate(-3deg);">
+        smoke at <strong>1/250</strong>,<br>cağ at <strong>1/200</strong>,<br>plates at <strong>1/160</strong>.<br>
+        <small>— iso log · keep with you</small>
+      </div>
+      <div class="pol col-4">
+        <span class="tape right"></span>
+        <figure class="polaroid" style="--rot: 1deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/13-adana-plated.jpg" alt=""></div>
+          <p class="write">adana, plated · xiii<small>01·04·26</small></p>
+        </figure>
+      </div>
+      <div class="pol col-5">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: -1deg">
+          <div class="frame" style="aspect-ratio: 4 / 3;"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt=""></div>
+          <p class="write">on lavash · xiv<small>01·31·26</small></p>
+        </figure>
+      </div>
+
+      <div class="pol col-4">
+        <span class="tape left"></span>
+        <figure class="polaroid" style="--rot: -3.5deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/07-doner-tongs.jpg" alt=""></div>
+          <p class="write">doner, by way of contrast<small>01·10·26 · plate vii</small></p>
+        </figure>
+      </div>
+      <div class="pol col-4">
+        <span class="tape"></span>
+        <figure class="polaroid" style="--rot: 2.5deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/08-skewers-smoke.jpg" alt=""></div>
+          <p class="write">smoke, two registers<small>01·10·26 · plate viii</small></p>
+        </figure>
+      </div>
+      <div class="pol col-4">
+        <span class="tape right"></span>
+        <figure class="polaroid" style="--rot: -1deg">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/09-skewers-coals.jpg" alt=""></div>
+          <p class="write">coals, kept low<small>01·10·26 · plate ix</small></p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FILMSTRIP — videos as a film negative
+  ==================================================================== -->
+  <section class="reels reveal">
+    <h2>Loose reels.</h2>
+    <p class="sub">Six trailers cut from the same shoots. Tape down for later. Delivered 9:16 for Reels &amp; TikTok, 1:1 cut-downs for the feed and paid placements.</p>
+
+    <div class="filmstrip">
+      <div class="filmstrip-inner">
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·01</b><span class="name">The Rotation, slow</span><span>0:18</span></div>
+        </figure>
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·02</b><span class="name">The Cut</span><span>0:09</span></div>
+        </figure>
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·03</b><span class="name">Şiş Tavuk on coals</span><span>0:15</span></div>
+        </figure>
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·04</b><span class="name">A table, set</span><span>0:22</span></div>
+        </figure>
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·05</b><span class="name">Fish on flame</span><span>0:11</span></div>
+        </figure>
+        <figure class="reel-cell">
+          <div class="frame"><img src="../../../public/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg" alt=""><span class="play">▶</span></div>
+          <div class="meta"><b>R·06</b><span class="name">Adana, end to end</span><span>0:14</span></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS — palette + type as torn memos
+  ==================================================================== -->
+  <section class="memo reveal">
+    <div class="memo-card">
+      <div class="head"><span>Memo · 04 / palette</span><span class="from">— FF Studio</span></div>
+      <h4>Four colours, in case you forget.</h4>
+      <div class="palette">
+        <div class="pchip">
+          <span class="swatch" style="background: #73191c"></span>
+          <span class="name">Burgundy <small>· ateş · fire</small></span>
+          <span class="hex">#73191C</span>
+        </div>
+        <div class="pchip">
+          <span class="swatch" style="background: #c08e2a"></span>
+          <span class="name">Saffron <small>· altın · gold</small></span>
+          <span class="hex">#C08E2A</span>
+        </div>
+        <div class="pchip">
+          <span class="swatch" style="background: #efe6cf; border-color: var(--ink)"></span>
+          <span class="name">Paper <small>· kâğıt · paper</small></span>
+          <span class="hex">#EFE6CF</span>
+        </div>
+        <div class="pchip">
+          <span class="swatch" style="background: #2a1d10"></span>
+          <span class="name">Ink <small>· mürekkep · ink</small></span>
+          <span class="hex">#2A1D10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="memo-card">
+      <div class="head"><span>Memo · 05 / type</span><span class="from">— FF Studio</span></div>
+      <h4>Four hands, one of them mechanical.</h4>
+      <div class="typelist">
+        <div class="row">
+          <span class="label">Hand · Caveat 700</span>
+          <span class="specimen h">stay close to the fire</span>
+        </div>
+        <div class="row">
+          <span class="label">Type · Special Elite</span>
+          <span class="specimen t">A typewriter borrowed from a friend; missing the lower-case e on bad days.</span>
+        </div>
+        <div class="row">
+          <span class="label">Voice · Cormorant Italic</span>
+          <span class="specimen s">For moments that ask to be quoted.</span>
+        </div>
+        <div class="row">
+          <span class="label">UI · IBM Plex Mono</span>
+          <span class="specimen m">F 2.0 · 1/250 · ISO 1250</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <div class="ticket">Admit one · <b>The Next Plate</b> · keep this stub</div>
+    <h3>Bring the next saga.</h3>
+    <p>If your room can hold a fire, and you have the patience for a slow camera, we can probably do this for you too. Photography, films, social, and the small bright work of advertising. Come hungry.</p>
+    <a class="cta" href="#">Send a postcard ✉</a>
+  </section>
+
+  <footer class="foot-rail">
+    <span>FrameFlow / <b>Reel 010</b></span>
+    <span class="ce">Field Notes · Destan</span>
+    <span class="ri">© <b>MMXXVI</b> · Toronto</span>
+  </footer>
+
+  <script>
+    /* reveal */
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

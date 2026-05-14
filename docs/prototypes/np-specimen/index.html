@@ -1,0 +1,2153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Specimen (FrameFlow / Prototype 10)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 10 — "The Specimen"
+
+       The brand IS its typography (Montserrat) and its colour
+       (#B92025). So we publish the brand the way a type foundry
+       publishes a typeface — as a numbered specimen catalogue, with
+       caliper-precise plate captions and dense archive metadata.
+
+       Every plate is a Specimen of the brand at work: the colour
+       itself, the type at every weight, the italic, the pairings,
+       and the live deliverables (website, calculator, social) shown
+       as plates in the catalogue. Set in Montserrat. Inks: black,
+       red, off-white. Printed in Toronto, MMXXVI.
+    ==================================================================== */
+
+    :root {
+      --paper:    #f9f9f9;       /* off-white surface — the foundry paper */
+      --paper-1:  #ffffff;
+      --paper-2:  #f3f1ea;
+      --paper-3:  #ece8db;
+      --rule:     #d4d2cd;
+      --rule-2:   #b6b1a0;
+      --ink:      #2c2b2b;
+      --ink-2:    #4a4946;
+      --ink-3:    #757370;
+      --ink-4:    #a8a6a1;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* archive paper texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.04;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL — foundry running head
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 700; }
+    .rail .center { text-align: center; letter-spacing: 0.4em; color: var(--paper-1); }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper-1); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       PLATE — base unit. Every section is a numbered plate with
+       a caliper caption and corner registration marks.
+    ============================================================ */
+    .plate {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 56px 100px;
+      position: relative;
+      border-bottom: 1px solid var(--rule);
+    }
+    .plate.last { border-bottom: 0; }
+    .plate.dark { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+    .plate.red  { background: var(--red); color: var(--paper); border-bottom-color: var(--red); }
+    .plate.cream { background: var(--paper-2); }
+
+    /* registration marks — small crosshair in corners */
+    .plate::before, .plate::after {
+      content: "";
+      position: absolute;
+      width: 22px; height: 22px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, currentColor 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, currentColor 0 1px, transparent 1px 100%);
+      background-size: 100% 50%, 50% 100%;
+      background-repeat: no-repeat;
+      opacity: 0.32;
+    }
+    .plate::before {
+      top: 22px;
+      left: 22px;
+    }
+    .plate::after {
+      bottom: 22px;
+      right: 22px;
+      transform: rotate(180deg);
+    }
+    .plate.dark::before, .plate.red::before,
+    .plate.dark::after, .plate.red::after { color: var(--paper-1); opacity: 0.45; }
+    .plate:not(.dark):not(.red)::before,
+    .plate:not(.dark):not(.red)::after { color: var(--ink); }
+
+    /* plate header — common to every plate */
+    .plate-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 56px;
+    }
+    .plate.dark .plate-head, .plate.red .plate-head { border-bottom-color: var(--paper); }
+    .plate-head .plate-no {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 6px;
+    }
+    .plate.red .plate-head .plate-no { color: var(--paper); opacity: 0.8; }
+    .plate-head .plate-no b { font-size: 28px; letter-spacing: -0.025em; color: var(--ink); display: block; line-height: 0.85; }
+    .plate.dark .plate-head .plate-no b, .plate.red .plate-head .plate-no b { color: var(--paper); }
+    .plate-head .title { padding-bottom: 6px; }
+    .plate-head .title h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .plate.dark .plate-head .title h2, .plate.red .plate-head .title h2 { color: var(--paper); }
+    .plate-head .title h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .plate.red .plate-head .title h2 em { color: var(--paper); }
+    .plate-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 22ch;
+      line-height: 1.6;
+    }
+    .plate.dark .plate-head .meta, .plate.red .plate-head .meta { color: rgba(255,255,255,0.6); }
+    .plate-head .meta b { color: var(--ink); font-weight: 800; }
+    .plate.dark .plate-head .meta b, .plate.red .plate-head .meta b { color: var(--paper); }
+
+    /* plate caption — bottom of every plate, foundry-grade */
+    .plate-cap {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: baseline;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .plate.dark .plate-cap, .plate.red .plate-cap { border-top-color: rgba(255,255,255,0.32); color: rgba(255,255,255,0.6); }
+    .plate-cap b { color: var(--ink); font-weight: 800; }
+    .plate.dark .plate-cap b, .plate.red .plate-cap b { color: var(--paper); }
+    .plate-cap .left { letter-spacing: 0.32em; }
+    .plate-cap .center { text-align: center; max-width: 60ch; margin: 0 auto; line-height: 1.7; letter-spacing: 0.18em; }
+    .plate-cap .right { text-align: right; }
+
+    @media (max-width: 880px) {
+      .plate { padding: 56px 22px 64px; }
+      .plate::before, .plate::after { display: none; }
+      .plate-head { grid-template-columns: 1fr; gap: 12px; }
+      .plate-head .meta { text-align: left; max-width: none; }
+      .plate-cap { grid-template-columns: 1fr; gap: 8px; }
+      .plate-cap .right, .plate-cap .center { text-align: left; }
+    }
+
+    /* ============================================================
+       COVER PLATE
+    ============================================================ */
+    .cover {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 120px 56px 100px;
+      border-bottom: 4px double var(--ink);
+      position: relative;
+    }
+    .cover::before, .cover::after {
+      content: "";
+      position: absolute;
+      width: 22px; height: 22px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, var(--ink) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px 100%);
+      background-size: 100% 50%, 50% 100%;
+      background-repeat: no-repeat;
+      opacity: 0.4;
+    }
+    .cover::before { top: 22px; left: 22px; }
+    .cover::after  { bottom: 22px; right: 22px; transform: rotate(180deg); }
+
+    .cover-stack {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 64px;
+    }
+    .cover-stack .lt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .cover-stack .ct {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .cover-stack .ct b { color: var(--red); }
+    .cover-stack .rt {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .cover-stack .rt b { color: var(--ink); font-weight: 800; }
+
+    .cover-glyph {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(96px, 18vw, 280px);
+      line-height: 0.78;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .cover-glyph em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .cover-glyph .x {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 0.4em;
+      letter-spacing: 0;
+      color: var(--ink-3);
+      vertical-align: 0.18em;
+      padding: 0 0.08em;
+    }
+
+    .cover-deck {
+      max-width: 60ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.55;
+      color: var(--ink-2);
+      margin-bottom: 56px;
+    }
+    .cover-deck b { color: var(--ink); font-weight: 700; }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      max-width: 760px;
+    }
+    .cover-meta > div {
+      padding: 16px 18px;
+      border-left: 1px solid var(--rule);
+    }
+    .cover-meta > div:first-child { border-left: 0; padding-left: 0; }
+    .cover-meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .cover-meta dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    @media (max-width: 880px) {
+      .cover { padding: 56px 22px; }
+      .cover-stack { grid-template-columns: 1fr; gap: 8px; }
+      .cover-stack .ct, .cover-stack .rt { text-align: left; }
+      .cover-meta { grid-template-columns: 1fr 1fr; }
+      .cover-meta > div:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 8px; }
+      .cover-meta > div:nth-child(4) { border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 8px; }
+    }
+
+    /* ============================================================
+       INDEX OF PLATES
+    ============================================================ */
+    .index {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 96px 56px;
+    }
+    .index h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 0;
+    }
+    .index h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .index ol { list-style: none; padding: 0; counter-reset: pl; }
+    .index ol li {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 70px 1fr 60px 70px;
+      gap: 24px;
+      align-items: baseline;
+      transition: background 0.2s;
+    }
+    .index ol li:hover { background: var(--paper-2); }
+    .index ol li .pn {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      color: var(--red);
+    }
+    .index ol li .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .index ol li .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .index ol li .name small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink-3);
+    }
+    .index ol li .ink {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .index ol li .pg {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .index ol li .pg b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .index { padding: 56px 22px; }
+      .index ol li { grid-template-columns: 50px 1fr auto; }
+      .index ol li .ink { display: none; }
+    }
+
+    /* ============================================================
+       PLATE 01 — THE COLOUR
+    ============================================================ */
+    .colour-plate {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 56px;
+      align-items: stretch;
+    }
+    .colour-swatch {
+      background: var(--red);
+      color: var(--paper);
+      padding: 56px 56px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 32px;
+      min-height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+    .colour-swatch::after {
+      content: "";
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      width: 22px; height: 22px;
+      background-image:
+        linear-gradient(to right, var(--paper) 0 1px, transparent 1px 100%),
+        linear-gradient(to bottom, var(--paper) 0 1px, transparent 1px 100%);
+      background-size: 100% 50%, 50% 100%;
+      background-repeat: no-repeat;
+      opacity: 0.5;
+    }
+    .colour-swatch .top {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .colour-swatch .hex {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(80px, 11vw, 156px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper);
+    }
+    .colour-swatch .hex em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--paper);
+      opacity: 0.7;
+    }
+    .colour-swatch .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+    }
+    .colour-swatch .name small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .colour-meta {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+    }
+    .colour-meta h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 18px;
+    }
+    .colour-meta dl > div {
+      padding: 10px 0;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      align-items: baseline;
+    }
+    .colour-meta dl > div:first-child { border-top: 0; padding-top: 0; }
+    .colour-meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .colour-meta dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    .colour-meta dd em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .colour-meta .swatches {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .colour-meta .swatches > div {
+      aspect-ratio: 1;
+    }
+    .colour-meta .swatches > div:nth-child(1) { background: rgb(125, 20, 22); } /* Maroon dim */
+    .colour-meta .swatches > div:nth-child(2) { background: rgb(155, 28, 32); } /* between */
+    .colour-meta .swatches > div:nth-child(3) { background: var(--red); }
+    .colour-meta .swatches > div:nth-child(4) { background: rgb(232, 130, 134); } /* tint */
+    .colour-meta .swatch-label {
+      grid-column: 1 / -1;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: center;
+    }
+    @media (max-width: 880px) {
+      .colour-plate { grid-template-columns: 1fr; gap: 28px; }
+      .colour-swatch { min-height: 320px; padding: 32px; }
+    }
+
+    /* ============================================================
+       PLATE 02 — THE TYPE  (weight chart)
+    ============================================================ */
+    .type-stack {
+      display: flex;
+      flex-direction: column;
+    }
+    .type-row {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 28px;
+      align-items: baseline;
+      padding: 20px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .type-row:first-child { border-top: 0; padding-top: 0; }
+    .type-row .wt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .type-row .wt b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.025em;
+      text-transform: none;
+      color: var(--ink);
+      line-height: 0.85;
+      margin-bottom: 4px;
+    }
+    .type-row .specimen {
+      font-family: var(--type);
+      font-size: clamp(28px, 4.2vw, 56px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      overflow-wrap: break-word;
+    }
+    .type-row .lab {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      max-width: 14ch;
+      line-height: 1.6;
+    }
+    .type-row.w300 .specimen { font-weight: 300; }
+    .type-row.w400 .specimen { font-weight: 400; }
+    .type-row.w500 .specimen { font-weight: 500; }
+    .type-row.w600 .specimen { font-weight: 600; }
+    .type-row.w700 .specimen { font-weight: 700; }
+    .type-row.w800 .specimen { font-weight: 800; }
+    .type-row.w900 .specimen { font-weight: 900; }
+    @media (max-width: 720px) {
+      .type-row { grid-template-columns: 1fr; gap: 8px; padding: 16px 0; }
+      .type-row .lab { text-align: left; max-width: none; }
+    }
+
+    /* ============================================================
+       PLATE 03 — THE ITALIC
+    ============================================================ */
+    .italic-plate {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 56px;
+      align-items: center;
+    }
+    .italic-display {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(64px, 9.5vw, 156px);
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .italic-display em {
+      font-style: italic;
+      color: var(--red);
+    }
+    .italic-display .punct {
+      color: var(--red);
+      font-style: normal;
+      font-weight: 800;
+    }
+    .italic-meta {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+    }
+    .italic-meta .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 18px;
+    }
+    .italic-meta dl > div {
+      padding: 9px 0;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 14px;
+    }
+    .italic-meta dl > div:first-child { border-top: 0; padding-top: 0; }
+    .italic-meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .italic-meta dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .italic-meta dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    @media (max-width: 880px) {
+      .italic-plate { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ============================================================
+       PLATE 04 — PAIRINGS  (color combinations as type specimens)
+    ============================================================ */
+    .pairings {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .pair-cell {
+      aspect-ratio: 4 / 5;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid transparent;
+      transition: transform 0.2s;
+    }
+    .pair-cell:hover { transform: translateY(-4px); }
+    .pair-cell .hd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .pair-cell .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 64px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+    }
+    .pair-cell .body em { font-style: italic; font-weight: 500; }
+    .pair-cell .ft {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    /* combinations */
+    .pair-cell.p1 { background: var(--ink); color: var(--paper); }
+    .pair-cell.p1 .hd { color: var(--red); }
+    .pair-cell.p1 .body em { color: var(--red); }
+    .pair-cell.p1 .ft { color: rgba(255,255,255,0.6); }
+
+    .pair-cell.p2 { background: var(--red); color: var(--paper); }
+    .pair-cell.p2 .hd, .pair-cell.p2 .ft { color: rgba(255,255,255,0.78); }
+    .pair-cell.p2 .body em { color: var(--paper); opacity: 0.7; font-style: italic; }
+
+    .pair-cell.p3 { background: var(--paper-1); color: var(--ink); border-color: var(--rule); }
+    .pair-cell.p3 .hd { color: var(--red); }
+    .pair-cell.p3 .body em { color: var(--red); }
+    .pair-cell.p3 .ft { color: var(--ink-3); }
+
+    .pair-cell.p4 { background: var(--paper-2); color: var(--ink); border-color: var(--rule); }
+    .pair-cell.p4 .hd { color: var(--red); }
+    .pair-cell.p4 .body em { color: var(--red); }
+    .pair-cell.p4 .ft { color: var(--ink-3); }
+
+    @media (max-width: 880px) { .pairings { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .pairings { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       IN-USE PLATES — small mockups with foundry captions
+    ============================================================ */
+    .in-use {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+      gap: 56px;
+      align-items: start;
+    }
+    .in-use-figure {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    .in-use-figure .chrome {
+      background: var(--paper-2);
+      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .in-use-figure .chrome .dots { display: flex; gap: 4px; }
+    .in-use-figure .chrome .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .in-use-figure .chrome .dots span:first-child { background: var(--red); }
+    .in-use-figure .chrome .url {
+      padding: 4px 10px;
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .in-use-figure .chrome .url::before { content: "🔒  "; }
+    .in-use-figure .chrome .lang {
+      display: inline-flex;
+      gap: 2px;
+      padding: 2px;
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+    }
+    .in-use-figure .chrome .lang span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      color: var(--ink-4);
+    }
+    .in-use-figure .chrome .lang .on { background: var(--red); color: var(--paper); }
+
+    /* In-use FIGURE caption — foundry-grade specimen card */
+    .in-use-card {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      padding: 28px 30px;
+    }
+    .in-use-card .pn {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .in-use-card h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin: 8px 0 18px;
+    }
+    .in-use-card h4 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .in-use-card p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 14px;
+    }
+    .in-use-card p em { font-style: italic; font-weight: 500; color: var(--red); }
+    .in-use-card dl {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1.5px solid var(--ink);
+    }
+    .in-use-card dl > div {
+      padding: 8px 0;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+    }
+    .in-use-card dl > div:first-child { border-top: 0; }
+    .in-use-card dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .in-use-card dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    @media (max-width: 880px) {
+      .in-use { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ============================================================
+       Site mock (compact) reused inside in-use-figures
+    ============================================================ */
+    .site-fig { background: var(--paper-1); }
+    .site-fig .nav-row {
+      padding: 14px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .brand { display: flex; align-items: center; gap: 8px; }
+    .site-fig .nav-row .brand img { width: 26px; height: 26px; object-fit: contain; }
+    .site-fig .nav-row .brand .wm {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.06em; color: var(--ink); line-height: 1;
+    }
+    .site-fig .nav-row .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.18em; color: var(--red);
+      margin-top: 2px;
+    }
+    .site-fig .nav-row .menu {
+      display: flex; justify-content: center; gap: 18px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-fig .nav-row .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+    .site-fig .nav-row .right { display: flex; align-items: center; gap: 8px; }
+    .site-fig .nav-row .lt {
+      display: inline-flex; gap: 2px; padding: 2px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .lt span {
+      padding: 3px 6px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      color: var(--ink-4);
+    }
+    .site-fig .nav-row .lt .on { background: var(--ink); color: var(--paper); }
+    .site-fig .nav-row .book {
+      padding: 7px 12px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .site-fig .hero-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 160px;
+      gap: 24px;
+      align-items: center;
+      padding: 28px 26px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .hero-row .text { min-width: 0; }
+    .site-fig .hero-row .eb {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+    }
+    .site-fig .hero-row h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.8vw, 32px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .site-fig .hero-row h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-fig .hero-row p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 11px;
+      line-height: 1.55; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 12px;
+    }
+    .site-fig .hero-row p b { font-weight: 700; color: var(--ink); }
+    .site-fig .hero-row .ctas { display: flex; gap: 6px; }
+    .site-fig .hero-row .ctas a {
+      padding: 6px 10px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 7px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .site-fig .hero-row .ctas .p { background: var(--red); color: var(--paper); }
+    .site-fig .hero-row .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-fig .hero-row .photo {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      padding: 6px 6px 10px;
+      max-width: 160px;
+    }
+    .site-fig .hero-row .photo .ph {
+      width: 100%; aspect-ratio: 4/5;
+      overflow: hidden; background: var(--paper-3);
+    }
+    .site-fig .hero-row .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-fig .hero-row .photo .who {
+      padding-top: 6px;
+      border-top: 2px solid var(--red);
+      margin-top: 6px;
+    }
+    .site-fig .hero-row .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink);
+    }
+    .site-fig .hero-row .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 1px 0 0;
+      line-height: 1.4;
+    }
+    .site-fig .ff-foot {
+      background: var(--paper-2);
+      padding: 14px 26px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px; align-items: center;
+    }
+    .site-fig .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-fig .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-fig .ff-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .site-fig .nav-row .menu { display: none; }
+      .site-fig .hero-row { grid-template-columns: 1fr; gap: 18px; padding: 22px; }
+    }
+
+    /* ============================================================
+       Calculator mock (compact)
+    ============================================================ */
+    .calc-fig {
+      padding: 24px 28px;
+      background: var(--paper-1);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+    .calc-fig .form { display: flex; flex-direction: column; gap: 6px; }
+    .calc-fig .head {
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 6px;
+    }
+    .calc-fig .head .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 4px;
+    }
+    .calc-fig .head h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 16px;
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .calc-fig .row {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 10px; align-items: center;
+      padding: 8px 10px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .calc-fig .row.on { border-color: var(--red); }
+    .calc-fig .row .k {
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      color: var(--ink);
+    }
+    .calc-fig .row .v {
+      padding: 4px 6px;
+      background: var(--paper-1);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink); text-align: center;
+    }
+    .calc-fig .row.on .v { color: var(--red); border-color: var(--red); }
+    .calc-fig .score {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .calc-fig .score .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: #ff5e63;
+    }
+    .calc-fig .score .total {
+      font-family: var(--type);
+      font-weight: 800; font-size: 56px;
+      line-height: 0.85; letter-spacing: -0.04em;
+    }
+    .calc-fig .score .total small {
+      display: block; margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .calc-fig .score .pdf {
+      margin-top: auto;
+      padding: 7px 10px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      text-align: center;
+    }
+    @media (max-width: 720px) { .calc-fig { grid-template-columns: 1fr; padding: 22px; } }
+
+    /* ============================================================
+       Social grid placeholder (compact)
+    ============================================================ */
+    .social-fig {
+      padding: 22px 24px;
+      background: var(--paper-2);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .social-fig .post {
+      aspect-ratio: 1;
+      padding: 11px;
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      position: relative;
+    }
+    .social-fig .post.red { background: var(--red); }
+    .social-fig .post.dark { background: var(--ink); }
+    .social-fig .post .top {
+      font-family: var(--type);
+      font-weight: 700; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+    }
+    .social-fig .post.red .top, .social-fig .post.dark .top { color: rgba(255,255,255,0.7); }
+    .social-fig .post .body {
+      font-family: var(--type);
+      font-weight: 800; font-size: 12px;
+      line-height: 1.05; letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .social-fig .post .body em { font-style: italic; font-weight: 500; color: var(--red); }
+    .social-fig .post.red .body { color: var(--paper); }
+    .social-fig .post.red .body em { color: var(--paper); }
+    .social-fig .post.dark .body { color: var(--paper); }
+    .social-fig .post.dark .body em { color: var(--red); }
+    .social-fig .post .foot {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+    }
+    .social-fig .post.red .foot, .social-fig .post.dark .foot { color: rgba(255,255,255,0.55); }
+    .social-fig .post.placeholder::after {
+      content: "PLACEHOLDER";
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 1px 4px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 5px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+      background: rgba(255,255,255,0.6);
+    }
+    .social-fig .post.red.placeholder::after { background: rgba(255,255,255,0.92); color: var(--red); }
+    .social-fig .post.dark.placeholder::after { background: rgba(255,255,255,0.18); color: var(--paper); }
+
+    /* ============================================================
+       PLATE 08 — MARGINALIA  (small UI specimens)
+    ============================================================ */
+    .marginalia {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .marg-card {
+      background: var(--paper-1);
+      border: 1px solid var(--rule);
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .marg-card .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .marg-card .examples {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .marg-card .ex-name {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .marg-card .btn-a {
+      padding: 12px 18px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .marg-card .btn-b {
+      padding: 12px 18px;
+      background: var(--paper-1);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .marg-card .pill-a {
+      padding: 4px 10px;
+      background: var(--red-l);
+      color: var(--red-d);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      width: fit-content;
+    }
+    .marg-card .pill-b {
+      padding: 4px 10px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      width: fit-content;
+    }
+    .marg-card .lab {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .marg-card .lab b { color: var(--red); font-weight: 800; }
+    .marg-card .rule-h {
+      height: 1px;
+      background: var(--rule);
+    }
+    .marg-card .rule-d {
+      height: 1.5px;
+      background: var(--ink);
+    }
+    .marg-card .rule-r {
+      height: 4px;
+      background: var(--red);
+    }
+    @media (max-width: 880px) { .marginalia { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .marginalia { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       PLATE 09 — LOCKUP  (the wordmark + mark)
+    ============================================================ */
+    .lockup-plate {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      align-items: stretch;
+      border: 1.5px solid var(--ink);
+    }
+    .lock-cell {
+      padding: 56px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 32px;
+      min-height: 360px;
+      border-left: 1.5px solid var(--ink);
+    }
+    .lock-cell:first-child { border-left: 0; }
+    .lock-cell.dark { background: var(--ink); color: var(--paper); }
+    .lock-cell.light { background: var(--paper-1); }
+    .lock-cell .top {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .lock-cell .mark {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lock-cell .mark img {
+      max-height: 200px;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    .lock-cell .ft {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .lock-cell.dark .ft { color: rgba(255,255,255,0.6); }
+    .lock-cell .ft b {
+      color: var(--ink);
+      font-weight: 800;
+    }
+    .lock-cell.dark .ft b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .lockup-plate { grid-template-columns: 1fr; }
+      .lock-cell { border-left: 0; border-top: 1.5px solid var(--ink); min-height: 240px; padding: 32px 22px; }
+      .lock-cell:first-child { border-top: 0; }
+    }
+
+    /* ============================================================
+       COLOPHON — closing plate
+    ============================================================ */
+    .colophon-plate {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 96px 56px 72px;
+      text-align: center;
+    }
+    .colophon-plate h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .colophon-plate h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .colophon-plate p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin: 0 auto 1.2em;
+    }
+    .colophon-plate p strong { font-weight: 800; color: var(--ink); }
+    .colophon-plate p em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .colophon-plate .colo-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1.5px solid var(--ink);
+    }
+    .colophon-plate .colo-meta > div {
+      padding: 12px 14px;
+      border-left: 1px solid var(--rule);
+    }
+    .colophon-plate .colo-meta > div:first-child { border-left: 0; }
+    .colophon-plate .colo-meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .colophon-plate .colo-meta dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .colophon-plate .end-mark {
+      margin-top: 56px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .colophon-plate .end-mark::before, .colophon-plate .end-mark::after {
+      content: "—";
+      margin: 0 12px;
+      color: var(--ink-3);
+    }
+    @media (max-width: 720px) {
+      .colophon-plate { padding: 56px 22px; }
+      .colophon-plate .colo-meta { grid-template-columns: 1fr; }
+      .colophon-plate .colo-meta > div { border-left: 0; border-top: 1px solid var(--rule); padding-top: 14px; }
+      .colophon-plate .colo-meta > div:first-child { border-top: 0; padding-top: 12px; }
+    }
+
+    /* footer rail */
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper-1); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Specimen</span>
+    <span class="right">Cat. <b>NP/2026</b> · 10 plates</span>
+  </header>
+
+  <!-- =================================================================
+       COVER PLATE
+  ==================================================================== -->
+  <section class="cover">
+    <header class="cover-stack">
+      <span class="lt">— Specimen №<b style="color:var(--ink); font-weight:800;">019</b> —</span>
+      <span class="ct">Northern Pathways <b>·</b> Foundry Catalogue</span>
+      <span class="rt">FrameFlow · Toronto<br><b>MMXXVI</b></span>
+    </header>
+
+    <h1 class="cover-glyph">
+      Montserrat<span class="x">×</span><em>#B92025</em>.
+    </h1>
+
+    <p class="cover-deck">
+      A specimen catalogue for a brand that holds itself to one
+      typeface and four colours. Within that lock, an entire range:
+      eight weights, italic emphasis, three pairings, and a working
+      practice in immigration consultancy. Set in <b>Montserrat</b>.
+      Inks: black, red, off-white, charcoal. <b>Printed in Toronto.</b>
+    </p>
+
+    <dl class="cover-meta">
+      <div><dt>Foundry</dt><dd>FrameFlow · Toronto</dd></div>
+      <div><dt>Subject</dt><dd>Northern Pathways</dd></div>
+      <div><dt>Plates</dt><dd>10</dd></div>
+      <div><dt>Edition</dt><dd>MMXXVI · vol. I</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       INDEX OF PLATES
+  ==================================================================== -->
+  <section class="index reveal">
+    <h2>Index of <em>plates.</em></h2>
+    <ol>
+      <li>
+        <span class="pn">Plate 01</span>
+        <span class="name">The <em>Colour</em><small>Maple Red · #B92025 · with full Pantone-grade metadata.</small></span>
+        <span class="ink">Process · 1 ink</span>
+        <span class="pg"><b>P.</b> 03</span>
+      </li>
+      <li>
+        <span class="pn">Plate 02</span>
+        <span class="name">The <em>Type</em><small>Montserrat at every weight 300 to 900, with sample sentence.</small></span>
+        <span class="ink">Roman · 7 wt.</span>
+        <span class="pg"><b>P.</b> 04</span>
+      </li>
+      <li>
+        <span class="pn">Plate 03</span>
+        <span class="name">The <em>Italic</em><small>Montserrat italic 500 — the brand's emphasis voice.</small></span>
+        <span class="ink">Italic · 1 wt.</span>
+        <span class="pg"><b>P.</b> 05</span>
+      </li>
+      <li>
+        <span class="pn">Plate 04</span>
+        <span class="name">The <em>Pairings</em><small>Four colour combinations as type specimens.</small></span>
+        <span class="ink">Combinations · 4</span>
+        <span class="pg"><b>P.</b> 06</span>
+      </li>
+      <li>
+        <span class="pn">Plate 05</span>
+        <span class="name">In Use · The <em>Website</em><small>northernpathways.ca · Montserrat 700/400 · #B92025.</small></span>
+        <span class="ink">Plate · figure</span>
+        <span class="pg"><b>P.</b> 07</span>
+      </li>
+      <li>
+        <span class="pn">Plate 06</span>
+        <span class="name">In Use · The <em>Calculator</em><small>CRS · 487/1200 · Montserrat 700/500/400.</small></span>
+        <span class="ink">Plate · figure</span>
+        <span class="pg"><b>P.</b> 08</span>
+      </li>
+      <li>
+        <span class="pn">Plate 07</span>
+        <span class="name">In Use · The <em>Feed</em><small>@kanadadayeniyasam · 6 placeholder tiles, swap for real on supply.</small></span>
+        <span class="ink">Plate · figure</span>
+        <span class="pg"><b>P.</b> 09</span>
+      </li>
+      <li>
+        <span class="pn">Plate 08</span>
+        <span class="name">The <em>Marginalia</em><small>Buttons, pills, rules, labels — the small text.</small></span>
+        <span class="ink">UI · 9 specimens</span>
+        <span class="pg"><b>P.</b> 10</span>
+      </li>
+      <li>
+        <span class="pn">Plate 09</span>
+        <span class="name">The <em>Lockup</em><small>NP wordmark and maple-leaf mark, on light and dark.</small></span>
+        <span class="ink">Mark · 2 plates</span>
+        <span class="pg"><b>P.</b> 11</span>
+      </li>
+      <li>
+        <span class="pn">Plate 10</span>
+        <span class="name">The <em>Colophon</em><small>Set in Montserrat · Toronto · MMXXVI.</small></span>
+        <span class="ink">Closing</span>
+        <span class="pg"><b>P.</b> 12</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- =================================================================
+       PLATE 01 — THE COLOUR
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>01</b></p>
+      <div class="title"><h2>The <em>Colour.</em></h2></div>
+      <p class="meta">Maple Red<br><b>One ink · process</b></p>
+    </header>
+
+    <div class="colour-plate">
+      <article class="colour-swatch">
+        <p class="top">— Specimen / 01 / The Colour —</p>
+        <h3 class="hex">#B92025<em>.</em></h3>
+        <p class="name">Maple Red<small>One Ink, used since 2019</small></p>
+      </article>
+
+      <aside class="colour-meta">
+        <h4>Specifications</h4>
+        <dl>
+          <div><dt>Hex</dt><dd>#B92025</dd></div>
+          <div><dt>RGB</dt><dd>185 · 32 · 37</dd></div>
+          <div><dt>CMYK</dt><dd>17 · 100 · 100 · 8</dd></div>
+          <div><dt>HSL</dt><dd>358° · 71% · 43%</dd></div>
+          <div><dt>Pantone <em>(approx.)</em></dt><dd>1797 C</dd></div>
+          <div><dt>Lab</dt><dd>40 · 65 · 49</dd></div>
+          <div><dt>WCAG on <em>#FFF</em></dt><dd>AAA · 6.4:1</dd></div>
+          <div><dt>WCAG on <em>#2C2B2B</em></dt><dd>AA · 4.6:1</dd></div>
+          <div><dt>Used since</dt><dd>2019</dd></div>
+        </dl>
+        <div class="swatches">
+          <div></div><div></div><div></div><div></div>
+          <p class="swatch-label">Range &mdash; -25% / -10% / 100% / +25% tint</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>03</b> · Plate <b>01</b></span>
+      <span class="center">Maple Red &mdash; <b>#B92025</b> &mdash; the firm's only saturated ink, used as accent on no more than 12% of any given page.</span>
+      <span class="right">Cat. <b>NP/2026</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 02 — THE TYPE  (weight chart)
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>02</b></p>
+      <div class="title"><h2>The <em>Type.</em></h2></div>
+      <p class="meta">Montserrat<br><b>Roman · 7 weights</b></p>
+    </header>
+
+    <div class="type-stack">
+      <div class="type-row w300">
+        <p class="wt">Light <b>300</b></p>
+        <p class="specimen">Hamburgevons</p>
+        <p class="lab">— captions, fine print</p>
+      </div>
+      <div class="type-row w400">
+        <p class="wt">Regular <b>400</b></p>
+        <p class="specimen">Guiding clarity</p>
+        <p class="lab">— body, default</p>
+      </div>
+      <div class="type-row w500">
+        <p class="wt">Medium <b>500</b></p>
+        <p class="specimen">Eligibility check</p>
+        <p class="lab">— subhead, italic emphasis</p>
+      </div>
+      <div class="type-row w600">
+        <p class="wt">Semi-Bold <b>600</b></p>
+        <p class="specimen">RCIC · CICC</p>
+        <p class="lab">— labels, marginalia</p>
+      </div>
+      <div class="type-row w700">
+        <p class="wt">Bold <b>700</b></p>
+        <p class="specimen">Book a consult</p>
+        <p class="lab">— ctas, links</p>
+      </div>
+      <div class="type-row w800">
+        <p class="wt">Extra-Bold <b>800</b></p>
+        <p class="specimen">Express Entry</p>
+        <p class="lab">— headlines, h2</p>
+      </div>
+      <div class="type-row w900">
+        <p class="wt">Black <b>900</b></p>
+        <p class="specimen">Northern Pathways</p>
+        <p class="lab">— display, set pieces</p>
+      </div>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>04</b> · Plate <b>02</b></span>
+      <span class="center">Montserrat by <b>Julieta Ulanovsky</b> &mdash; a contemporary geometric sans, drawn in Buenos Aires from urban posters of the early 20th century. Open source. Open Font Licence.</span>
+      <span class="right">Roman · <b>7 wt.</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 03 — THE ITALIC
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>03</b></p>
+      <div class="title"><h2>The <em>Italic.</em></h2></div>
+      <p class="meta">Italic 500<br><b>Emphasis · single voice</b></p>
+    </header>
+
+    <div class="italic-plate">
+      <p class="italic-display">
+        Guiding your <em>journey</em> with <em>clarity</em><span class="punct">.</span>
+      </p>
+      <aside class="italic-meta">
+        <p class="lbl">— Specimen / 03 / Italic —</p>
+        <dl>
+          <div><dt>Family</dt><dd>Montserrat</dd></div>
+          <div><dt>Style</dt><dd>Italic 500</dd></div>
+          <div><dt>Use</dt><dd>Emphasis · pull quotes</dd></div>
+          <div><dt>Setting</dt><dd>tracking <em>-0.025em</em></dd></div>
+          <div><dt>Caveat</dt><dd>One italic only — never bold-italic</dd></div>
+          <div><dt>Found in</dt><dd>Tagline · headlines</dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>05</b> · Plate <b>03</b></span>
+      <span class="center">The italic is the brand's only emphasis voice. Used sparingly &mdash; <em>once or twice per spread</em> &mdash; never for whole sentences. Always paired with the red ink.</span>
+      <span class="right">Italic · <b>500</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 04 — PAIRINGS
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>04</b></p>
+      <div class="title"><h2>The <em>Pairings.</em></h2></div>
+      <p class="meta">Four combinations<br><b>Tested · approved</b></p>
+    </header>
+
+    <div class="pairings">
+      <article class="pair-cell p1">
+        <p class="hd">— Combination 01 —</p>
+        <p class="body">Aa <em>Bb</em></p>
+        <p class="ft">Charcoal × <em style="font-weight: 800; font-style: normal;">Red</em> on Ink</p>
+      </article>
+      <article class="pair-cell p2">
+        <p class="hd">— Combination 02 —</p>
+        <p class="body">Aa <em>Bb</em></p>
+        <p class="ft">Paper × Italic on Red</p>
+      </article>
+      <article class="pair-cell p3">
+        <p class="hd">— Combination 03 —</p>
+        <p class="body">Aa <em>Bb</em></p>
+        <p class="ft">Ink × Red on Paper</p>
+      </article>
+      <article class="pair-cell p4">
+        <p class="hd">— Combination 04 —</p>
+        <p class="body">Aa <em>Bb</em></p>
+        <p class="ft">Ink × Red on Off-white</p>
+      </article>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>06</b> · Plate <b>04</b></span>
+      <span class="center">Each combination meets WCAG AA at body sizes and AAA at display. The italic always carries the red; the body always carries the charcoal.</span>
+      <span class="right">Combinations · <b>04</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 05 — IN USE: THE WEBSITE
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>05</b> · In Use</p>
+      <div class="title"><h2>The <em>Website.</em></h2></div>
+      <p class="meta">northernpathways.ca<br><b>EN/TR · live</b></p>
+    </header>
+
+    <div class="in-use">
+      <article class="in-use-figure">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">northernpathways.ca/en</span>
+          <span class="lang"><span class="on">EN</span><span>TR</span></span>
+        </header>
+        <div class="site-fig">
+          <nav class="nav-row">
+            <span class="brand">
+              <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+              <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+            </span>
+            <nav class="menu">
+              <span class="on">Home</span>
+              <span>Our Team</span>
+              <span>Fees</span>
+              <span>Events</span>
+              <span>Blog</span>
+            </nav>
+            <div class="right">
+              <span class="lt"><span class="on">EN</span><span>TR</span></span>
+              <span class="book">Book Consult</span>
+            </div>
+          </nav>
+          <div class="hero-row">
+            <div class="text">
+              <p class="eb">Northern Pathways · RCIC-IRB</p>
+              <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+              <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility, strategy, and legal representation.</p>
+              <div class="ctas">
+                <a class="p">Book a Consultation</a>
+                <a class="s">Explore Services</a>
+              </div>
+            </div>
+            <aside class="photo">
+              <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+              <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+            </aside>
+          </div>
+          <footer class="ff-foot">
+            <span class="left">© 2026 NP · All Rights Reserved.</span>
+            <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+          </footer>
+        </div>
+      </article>
+
+      <aside class="in-use-card">
+        <p class="pn">Plate 05 · In Use · Website</p>
+        <h4>Hero set in <em>Montserrat 800/400.</em></h4>
+        <p>The home view leads with <em>Burcu Akyol&rsquo;s name</em> and the firm's credentials, italic-emphasised at <strong>Montserrat 500</strong> in <strong>#B92025</strong>. Body in 400 <em>#2C2B2B</em>. Footer rule in <em>#B92025</em>, 4px.</p>
+        <dl>
+          <div><dt>Heading</dt><dd>Montserrat 800 / clamp(28,3.4vw,40) / -0.02em</dd></div>
+          <div><dt>Body</dt><dd>Montserrat 400 / 13px / 1.65</dd></div>
+          <div><dt>Italic</dt><dd>Montserrat italic 500 / #B92025</dd></div>
+          <div><dt>Marginalia</dt><dd>Montserrat 600 / 9px / 0.32em</dd></div>
+          <div><dt>CTA</dt><dd>Bold 700 / 22em / on #B92025</dd></div>
+          <div><dt>Inks used</dt><dd>4 · ink, red, paper, off-white</dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>07</b> · Plate <b>05</b></span>
+      <span class="center">A two-language hero in one typeface. The italic emphasis appears <em>once</em>; everything else holds the line.</span>
+      <span class="right">Use · <b>website hero</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 06 — IN USE: THE CALCULATOR
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>06</b> · In Use</p>
+      <div class="title"><h2>The <em>Calculator.</em></h2></div>
+      <p class="meta">CRS · 487/1200<br><b>Live · PDF export</b></p>
+    </header>
+
+    <div class="in-use">
+      <article class="in-use-figure">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">northernpathways.ca/en/crs-calculator</span>
+          <span class="lang"><span class="on">EN</span><span>TR</span></span>
+        </header>
+        <div class="calc-fig">
+          <div class="form">
+            <header class="head">
+              <p class="lbl">CRS Calculator · Step 02 / 06</p>
+              <h4>Core / Human Capital</h4>
+            </header>
+            <div class="row on"><span class="k">Age · 32</span><span class="v">110</span></div>
+            <div class="row on"><span class="k">Master&rsquo;s</span><span class="v">135</span></div>
+            <div class="row on"><span class="k">CLB 9</span><span class="v">124</span></div>
+            <div class="row on"><span class="k">French · NCLC 7+</span><span class="v">25</span></div>
+            <div class="row"><span class="k">CDN work · 1y</span><span class="v">35</span></div>
+          </div>
+          <aside class="score">
+            <p class="lbl">Estimated CRS</p>
+            <p class="total">487<small>CRS / 1200</small></p>
+            <span class="pdf">↓ Download PDF</span>
+          </aside>
+        </div>
+      </article>
+
+      <aside class="in-use-card">
+        <p class="pn">Plate 06 · In Use · Calculator</p>
+        <h4>Score plate set in <em>Montserrat 800.</em></h4>
+        <p>Form labels in 700 <em>#2C2B2B</em>; tooltips in 500 <em>#757370</em>. Score readout at 56px Montserrat 800 with -0.04em tracking. Active rows highlighted with <em>1px #B92025</em>. PDF CTA on solid red.</p>
+        <dl>
+          <div><dt>Score</dt><dd>Montserrat 800 / 56px / -0.04em</dd></div>
+          <div><dt>Form labels</dt><dd>Montserrat 700 / 11px</dd></div>
+          <div><dt>Tooltips</dt><dd>Montserrat 500 / 9px / #757370</dd></div>
+          <div><dt>Active row</dt><dd>border 1px #B92025</dd></div>
+          <div><dt>Indicator</dt><dd>on #2C2B2B with #B92025 callout</dd></div>
+          <div><dt>Use</dt><dd>15 fields · 6 categories · PDF</dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>08</b> · Plate <b>06</b></span>
+      <span class="center">A regulated calculator set in the same typeface as the hero. The italic carries the score's most legible voice; the form holds the line at 700.</span>
+      <span class="right">Use · <b>calculator</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 07 — IN USE: THE FEED  (placeholder Instagram)
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>07</b> · In Use</p>
+      <div class="title"><h2>The <em>Feed.</em></h2></div>
+      <p class="meta">@kanadadayeniyasam<br><b>Placeholder · 6 of 248</b></p>
+    </header>
+
+    <div class="in-use">
+      <article class="in-use-figure">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">instagram.com/kanadadayeniyasam</span>
+          <span class="lang"><span>EN</span><span class="on">TR</span></span>
+        </header>
+        <div class="social-fig">
+          <div class="post red placeholder">
+            <span class="top">347 · 02 Apr</span>
+            <span class="body">CRS <em>504</em></span>
+            <span class="foot">healthcare</span>
+          </div>
+          <div class="post placeholder">
+            <span class="top">FAQ · primer</span>
+            <span class="body">FSWP <em>67</em></span>
+            <span class="foot">en · primer</span>
+          </div>
+          <div class="post dark placeholder">
+            <span class="top">Reel · :42</span>
+            <span class="body">NCLC <em>7+</em></span>
+            <span class="foot">tr · explainer</span>
+          </div>
+          <div class="post placeholder">
+            <span class="top">Carousel · 8</span>
+            <span class="body">PNP <em>nedir?</em></span>
+            <span class="foot">tr · primer</span>
+          </div>
+          <div class="post dark placeholder">
+            <span class="top">Reel · :28</span>
+            <span class="body">10dk <em>CRS</em></span>
+            <span class="foot">tr · consult</span>
+          </div>
+          <div class="post red placeholder">
+            <span class="top">Tool · CRS</span>
+            <span class="body">CRS <em>Calc</em></span>
+            <span class="foot">link bio</span>
+          </div>
+        </div>
+      </article>
+
+      <aside class="in-use-card">
+        <p class="pn">Plate 07 · In Use · Social</p>
+        <h4>Posts set in <em>Montserrat 800.</em></h4>
+        <p>Each tile holds <strong>three text lines</strong>: a 7px tracked tag at top, a Montserrat 800 body in the centre, and a 7px caption at bottom. The italic appears <em>once per tile</em>, in the red. <strong>Tiles to be replaced with real @kanadadayeniyasam posts when supplied.</strong></p>
+        <dl>
+          <div><dt>Tag</dt><dd>Montserrat 700 / 7px / 0.24em</dd></div>
+          <div><dt>Body</dt><dd>Montserrat 800 / 12–14px / -0.01em</dd></div>
+          <div><dt>Caption</dt><dd>Montserrat 600 / 7px</dd></div>
+          <div><dt>Format</dt><dd>1080×1080 (1:1) · IG square</dd></div>
+          <div><dt>Volume</dt><dd>248 posts · 14.2k followers</dd></div>
+          <div><dt>Locales</dt><dd>EN · TR mixed</dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>09</b> · Plate <b>07</b></span>
+      <span class="center">Six of 248 posts shown. <em>Placeholder tiles</em> &mdash; ready to swap when the marketing team supplies the real exports.</span>
+      <span class="right">Use · <b>social</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 08 — MARGINALIA
+  ==================================================================== -->
+  <section class="plate reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>08</b></p>
+      <div class="title"><h2>The <em>Marginalia.</em></h2></div>
+      <p class="meta">UI · 9 specimens<br><b>Buttons · pills · rules</b></p>
+    </header>
+
+    <div class="marginalia">
+      <article class="marg-card">
+        <p class="lbl">Buttons / Calls to action</p>
+        <div class="examples">
+          <p class="ex-name">Primary</p>
+          <span class="btn-a">Book a Consultation</span>
+          <p class="ex-name">Secondary</p>
+          <span class="btn-b">Explore Services</span>
+        </div>
+      </article>
+
+      <article class="marg-card">
+        <p class="lbl">Pills / Tags / Status</p>
+        <div class="examples">
+          <p class="ex-name">Tag · soft</p>
+          <span class="pill-a">Healthcare · 504</span>
+          <p class="ex-name">Tag · solid</p>
+          <span class="pill-b">RCIC-IRB</span>
+        </div>
+      </article>
+
+      <article class="marg-card">
+        <p class="lbl">Rules / Dividers</p>
+        <div class="examples">
+          <p class="ex-name">Hairline · 1px</p>
+          <div class="rule-h"></div>
+          <p class="ex-name">Section · 1.5px ink</p>
+          <div class="rule-d"></div>
+          <p class="ex-name">Footer · 4px red</p>
+          <div class="rule-r"></div>
+        </div>
+      </article>
+
+      <article class="marg-card">
+        <p class="lbl">Marginalia / Eyebrows</p>
+        <div class="examples">
+          <p class="ex-name">Section eyebrow</p>
+          <p class="lab">— Section <b>I</b> · The Matter —</p>
+          <p class="ex-name">Page folio</p>
+          <p class="lab">P.<b>03</b> · Plate <b>05</b></p>
+        </div>
+      </article>
+
+      <article class="marg-card">
+        <p class="lbl">Numerical · scores</p>
+        <div class="examples">
+          <p class="ex-name">CRS readout</p>
+          <p style="font-family: var(--type); font-weight: 800; font-size: 64px; line-height: 0.85; letter-spacing: -0.04em; color: var(--ink);">487<span style="font-weight: 500; font-size: 0.3em; color: var(--red); letter-spacing: 0.18em; text-transform: uppercase; vertical-align: 0.5em; padding-left: 0.3em;">/1200</span></p>
+        </div>
+      </article>
+
+      <article class="marg-card">
+        <p class="lbl">Lockup · airline-style</p>
+        <div class="examples">
+          <p class="ex-name">Departure</p>
+          <p style="font-family: var(--type); font-weight: 800; font-size: 14px; letter-spacing: 0.06em; color: var(--ink);">YYZ <span style="color: var(--red); padding: 0 6px;">→</span> CAN<small style="display: block; font-family: var(--type); font-weight: 600; font-size: 8px; letter-spacing: 0.32em; color: var(--ink-3); margin-top: 4px;">02 APR 2026 · 14:32 ET</small></p>
+        </div>
+      </article>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>10</b> · Plate <b>08</b></span>
+      <span class="center">Six families of small text. Every UI element across the brand is built from these.</span>
+      <span class="right">Specimens · <b>09</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 09 — LOCKUP
+  ==================================================================== -->
+  <section class="plate cream reveal">
+    <header class="plate-head">
+      <p class="plate-no">Plate <b>09</b></p>
+      <div class="title"><h2>The <em>Lockup.</em></h2></div>
+      <p class="meta">Mark · two surfaces<br><b>Light · Dark</b></p>
+    </header>
+
+    <div class="lockup-plate">
+      <div class="lock-cell light">
+        <p class="top">— On Paper · Plate 09a —</p>
+        <div class="mark"><img src="../../../public/portfolio/northern-pathways/logo/np-primary.png" alt="Northern Pathways primary lockup"></div>
+        <p class="ft">Primary lockup <b>·</b> light field</p>
+      </div>
+      <div class="lock-cell dark">
+        <p class="top">— On Charcoal · Plate 09b —</p>
+        <div class="mark"><img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="Northern Pathways mark"></div>
+        <p class="ft">Mark · maple-leaf <b>·</b> dark field</p>
+      </div>
+    </div>
+
+    <footer class="plate-cap">
+      <span class="left">P.<b>11</b> · Plate <b>09</b></span>
+      <span class="center">Two clearance zones. The mark stands alone on the dark field; the wordmark holds the lockup on paper.</span>
+      <span class="right">Mark · <b>2 plates</b></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       PLATE 10 — COLOPHON
+  ==================================================================== -->
+  <section class="plate last reveal">
+    <div class="colophon-plate">
+      <h2>Colophon &mdash; <em>set in Montserrat.</em></h2>
+      <p>
+        This catalogue is a <strong>portfolio specimen</strong> for
+        Northern Pathways Immigration Consulting, prepared by
+        <strong>FrameFlow Studio</strong> in Toronto, MMXXVI.
+      </p>
+      <p>
+        Set in <strong>Montserrat</strong> by Julieta Ulanovsky &mdash;
+        a contemporary geometric sans drawn in Buenos Aires &mdash;
+        in weights <em>300, 400, 500, 600, 700, 800, 900</em>, with
+        a single italic at <em>500</em>. Inks: charcoal
+        <em>#2C2B2B</em>, paper <em>#FFFFFF</em>, off-white
+        <em>#F9F9F9</em>, and a single saturated accent &mdash; maple
+        red, <em>#B92025</em>.
+      </p>
+      <p>
+        <em>The brand holds itself to one typeface and four colours.
+        Within that lock, an entire range.</em>
+      </p>
+
+      <dl class="colo-meta">
+        <div><dt>Foundry</dt><dd>FrameFlow · Toronto</dd></div>
+        <div><dt>Subject</dt><dd>Northern Pathways</dd></div>
+        <div><dt>Edition</dt><dd>Volume I · MMXXVI</dd></div>
+      </dl>
+
+      <p class="end-mark">End of catalogue</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FOOTER RAIL
+  ==================================================================== -->
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Specimen №019</span>
+    <span class="right">Filed by <strong>FrameFlow</strong></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Transit System (FrameFlow / Prototype 14)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 14 — "The Transit System"
+
+       The brand is "Northern Pathways" — so we render the engagement
+       as a transit system. Five lines for five services, stations
+       for milestones, transfer stops, terminal stations, real
+       bezier route geometry. NYC subway / London Tube / Vignelli
+       schoolbook. Lock the palette to red + charcoal + white +
+       off-white; differentiate the five lines via weight, solid /
+       dashed / striped patterns rather than colour. Posts hang as
+       4:5 platform billboards. Calculator = ticket vending machine.
+    ==================================================================== */
+
+    :root {
+      --paper:    #fdfcf7;       /* slightly off-white system paper */
+      --paper-2:  #f1ede1;
+      --paper-3:  #e3dec9;
+      --rule:     #c9c2a8;
+      --rule-2:   #a39b7c;
+      --ink:      #1a1814;
+      --ink-2:    #36322b;
+      --ink-3:    #6e695a;
+      --ink-4:    #a09a86;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+      --red-soft: rgba(185, 32, 37, 0.45);
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       TRANSIT AUTHORITY HEADER (top "system" rail)
+    ============================================================ */
+    .ta-rail {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ta-rail .left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ta-rail .ident {
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+    .ta-rail .ident.red { background: var(--red); border-color: var(--red); }
+    .ta-rail .center {
+      text-align: center;
+      letter-spacing: 0.4em;
+      color: var(--paper);
+      font-weight: 800;
+    }
+    .ta-rail .center b { color: var(--red); font-weight: 800; }
+    .ta-rail .right {
+      text-align: right;
+      color: rgba(253,252,247,0.6);
+    }
+    .ta-rail .right b { color: var(--paper); font-weight: 800; }
+    @media (max-width: 720px) {
+      .ta-rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .ta-rail .left, .ta-rail .right { justify-content: center; text-align: center; }
+    }
+
+    /* ============================================================
+       SYSTEM HEADER (NP TRANSIT signage)
+    ============================================================ */
+    .system-head {
+      background: var(--paper-2);
+      padding: 24px 48px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+      border-top: 6px solid var(--red);
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .system-head .id-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .system-head .id-block .seal {
+      width: 56px;
+      height: 56px;
+      background: var(--red);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      gap: 4px;
+    }
+    .system-head .id-block .seal small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      opacity: 0.85;
+    }
+    .system-head .id-block .name {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .system-head .id-block .name small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    .system-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .system-head .center b { color: var(--red); }
+    .system-head .clock {
+      text-align: right;
+      font-family: var(--type);
+    }
+    .system-head .clock .time {
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    .system-head .clock .where {
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    @media (max-width: 880px) {
+      .system-head { padding: 20px 22px; grid-template-columns: 1fr; gap: 14px; text-align: center; }
+      .system-head .id-block, .system-head .clock { justify-content: center; text-align: center; }
+    }
+
+    /* ============================================================
+       TITLE — system map page
+    ============================================================ */
+    .title-page {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 64px 48px 24px;
+    }
+    .title-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 64px;
+      align-items: end;
+    }
+    .title-text { min-width: 0; }
+    .title-eyebrow {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .title-eyebrow::before {
+      content: "";
+      flex: 0 0 56px;
+      height: 1.5px;
+      background: var(--red);
+    }
+    .title-page h1 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(56px, 8vw, 124px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 18px;
+      overflow-wrap: break-word;
+    }
+    .title-page h1 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .title-page .deck {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .title-page .deck b { color: var(--ink); font-weight: 700; }
+
+    .title-meta {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 24px 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+      border-top: 6px solid var(--red);
+    }
+    .title-meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      grid-column: 1;
+    }
+    .title-meta dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--paper);
+      grid-column: 2;
+    }
+    .title-meta dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    @media (max-width: 880px) {
+      .title-page { padding: 48px 22px 20px; }
+      .title-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ============================================================
+       MAP — the SVG system map
+    ============================================================ */
+    .map-wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 48px 48px;
+    }
+    .map-frame {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 32px 80px -32px rgba(0,0,0,0.22);
+      overflow: hidden;
+      position: relative;
+    }
+    .map-corners {
+      position: absolute;
+      inset: 16px;
+      border: 1px solid var(--ink);
+      pointer-events: none;
+      opacity: 0.32;
+    }
+    .map-head {
+      padding: 14px 24px;
+      background: var(--ink);
+      color: var(--paper);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 4px solid var(--red);
+    }
+    .map-head .left {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .map-head .left b { color: var(--red); }
+    .map-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(13px, 1.4vw, 16px);
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .map-head .center small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.4em;
+      color: rgba(253,252,247,0.55);
+      margin-top: 4px;
+    }
+    .map-head .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(253,252,247,0.6);
+      text-align: right;
+    }
+    .map-head .right b { color: var(--paper); font-weight: 800; }
+
+    .map-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      background: var(--paper);
+    }
+
+    /* SVG line styles */
+    .map-svg .grid-line {
+      stroke: rgba(26, 24, 20, 0.05);
+      stroke-width: 0.5;
+    }
+    .map-svg .grid-line.major { stroke: rgba(26, 24, 20, 0.10); stroke-width: 0.75; }
+
+    .map-svg .route-1 { stroke: var(--red); stroke-width: 8; }
+    .map-svg .route-2 { stroke: var(--ink); stroke-width: 7; }
+    .map-svg .route-3 { stroke: var(--red); stroke-width: 6; stroke-dasharray: 14 8; }
+    .map-svg .route-4 { stroke: var(--ink); stroke-width: 6; stroke-dasharray: 4 4; }
+    .map-svg .route-5 { stroke: var(--red); stroke-width: 4; }
+    .map-svg .route-5-dbl { stroke: var(--ink); stroke-width: 11; }
+    .map-svg .route { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* stations */
+    .map-svg .station {
+      fill: var(--paper);
+      stroke: var(--ink);
+      stroke-width: 2;
+    }
+    .map-svg .station.transfer {
+      fill: var(--paper);
+      stroke: var(--ink);
+      stroke-width: 3;
+    }
+    .map-svg .station.terminal {
+      fill: var(--ink);
+      stroke: var(--ink);
+    }
+    .map-svg .station-label {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      fill: var(--ink);
+    }
+    .map-svg .station-label.b { font-weight: 800; }
+    .map-svg .station-label small {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      fill: var(--ink-3);
+    }
+    .map-svg .interchange {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      fill: var(--red);
+    }
+
+    /* draw-in animation */
+    @keyframes route-draw {
+      from { stroke-dashoffset: 1200; }
+      to   { stroke-dashoffset: 0; }
+    }
+    .map-svg .route { stroke-dasharray: 1200; animation: route-draw 1.8s ease-out 0.2s both; }
+    .map-svg .route-3 { stroke-dasharray: 14 8; animation: none; opacity: 0; animation: route-fade 1s ease-out 1.6s both; }
+    .map-svg .route-4 { stroke-dasharray: 4 4; animation: none; opacity: 0; animation: route-fade 1s ease-out 1.8s both; }
+    @keyframes route-fade { from { opacity: 0; } to { opacity: 1; } }
+
+    @keyframes station-pop {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+    .map-svg .station, .map-svg .station-label {
+      transform-origin: center;
+      animation: station-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .map-svg .station { animation-delay: calc(var(--d, 0s) + 1.2s); }
+    .map-svg .station-label { animation-delay: calc(var(--d, 0s) + 1.4s); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .map-svg .route, .map-svg .station, .map-svg .station-label { animation: none; opacity: 1; stroke-dashoffset: 0; transform: none; }
+    }
+
+    .map-foot {
+      padding: 14px 24px;
+      background: var(--paper-2);
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .map-foot b { color: var(--ink); font-weight: 800; }
+    .map-foot em { font-style: italic; font-weight: 500; color: var(--red); }
+    .map-foot .right b { color: var(--red); }
+
+    @media (max-width: 880px) {
+      .map-wrap { padding: 22px 22px; }
+      .map-head { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .map-head .center, .map-head .right { text-align: center; }
+      .map-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+    }
+
+    /* ============================================================
+       LINE LISTINGS — the 5 lines as 5 line cards
+    ============================================================ */
+    .lines-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .section-head .label {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .section-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .section-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .section-head .meta b { color: var(--red); font-weight: 800; }
+
+    .line-card-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .line-card {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      padding: 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .line-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 40px -24px rgba(0,0,0,0.22);
+    }
+    .line-card .head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .line-card .bullet {
+      width: 32px; height: 32px;
+      flex-shrink: 0;
+      background: var(--red);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+    .line-card.l2 .bullet { background: var(--ink); }
+    .line-card.l3 .bullet {
+      background:
+        repeating-linear-gradient(45deg, var(--red) 0 6px, var(--paper) 6px 10px);
+      border: 2px solid var(--red);
+      color: var(--ink);
+      background-color: var(--red);
+    }
+    .line-card.l4 .bullet {
+      background: var(--ink);
+      box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 5px var(--ink);
+      color: var(--ink);
+    }
+    .line-card.l4 .bullet::before {
+      content: attr(data-letter);
+      color: var(--paper);
+    }
+    .line-card.l5 .bullet {
+      background: var(--paper);
+      color: var(--red);
+      border: 3px solid var(--red);
+    }
+    .line-card .head h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .line-card .head h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .line-card .head h3 small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 3px;
+    }
+    .line-card p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-2);
+    }
+    .line-card p b { color: var(--ink); font-weight: 700; }
+    .line-card .stations {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 1.7;
+    }
+    .line-card .stations b { color: var(--red); font-weight: 800; }
+    .line-card .doctrine {
+      padding: 6px 9px;
+      background: var(--paper-2);
+      border-left: 4px solid var(--red);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .line-card .doctrine b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 980px) {
+      .line-card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .lines-section { padding: 56px 22px; }
+      .line-card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       TICKET VENDING MACHINE (CRS calculator)
+    ============================================================ */
+    .tvm-section {
+      background: var(--paper-2);
+      padding: 80px 48px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .tvm-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: center;
+    }
+    .tvm-text { min-width: 0; }
+    .tvm-text .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .tvm-text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .tvm-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .tvm-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      max-width: 50ch;
+    }
+    .tvm-text p strong { font-weight: 700; color: var(--ink); }
+    .tvm-text p em { font-style: italic; color: var(--red); font-weight: 500; }
+    .tvm-text .doctrine-tag {
+      margin-top: 22px;
+      padding: 10px 14px;
+      background: var(--paper-4, var(--paper));
+      border-left: 4px solid var(--red);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      max-width: 380px;
+    }
+    .tvm-text .doctrine-tag b { color: var(--red); font-weight: 800; }
+
+    /* the TVM unit */
+    .tvm {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 28px 28px 24px;
+      border: 4px solid var(--ink);
+      box-shadow:
+        inset 0 0 0 4px var(--paper-2),
+        inset 0 0 0 8px var(--ink),
+        0 32px 64px -32px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    /* small "TICKETS" sign on top */
+    .tvm::before {
+      content: "TICKETS";
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+    }
+    .tvm-screen-head {
+      padding: 12px 18px;
+      background: var(--paper-2);
+      color: var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 4px solid var(--red);
+    }
+    .tvm-screen-head .left {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .tvm-screen-head .left b { color: var(--red); }
+    .tvm-screen-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+    }
+    .tvm-screen-head .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .tvm-screen-head .right::before { content: "● "; animation: tvm-pulse 1.6s ease-in-out infinite; }
+    @keyframes tvm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .tvm-body {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+    }
+    .tvm-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .tvm-form .head {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(253,252,247,0.18);
+      margin-bottom: 4px;
+    }
+    .tvm-form .head .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .tvm-form .head h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--paper);
+    }
+    .tvm-form .row {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(253,252,247,0.04);
+      border: 1px solid rgba(253,252,247,0.12);
+    }
+    .tvm-form .row.on {
+      border-color: var(--red);
+      background: rgba(185,32,37,0.18);
+    }
+    .tvm-form .row .k {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--paper);
+    }
+    .tvm-form .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 9px;
+      color: rgba(253,252,247,0.55);
+      margin-top: 2px;
+    }
+    .tvm-form .row .v {
+      padding: 4px 6px;
+      background: var(--ink);
+      border: 1px solid rgba(253,252,247,0.18);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      color: var(--paper);
+      text-align: center;
+    }
+    .tvm-form .row.on .v { color: var(--red); border-color: var(--red); background: var(--paper); }
+
+    .tvm-fare {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+    .tvm-fare::before {
+      content: "FARE";
+      position: absolute;
+      top: -14px;
+      left: 16px;
+      padding: 3px 8px;
+      background: var(--ink);
+      color: var(--red);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+    }
+    .tvm-fare .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    .tvm-fare .total {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 64px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .tvm-fare .total small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .tvm-fare dl {
+      border-top: 1px dashed var(--rule);
+      padding-top: 8px;
+    }
+    .tvm-fare dl > div {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      color: var(--ink-2);
+      letter-spacing: 0.04em;
+    }
+    .tvm-fare dl > div b { color: var(--red); font-weight: 800; }
+    .tvm-fare .receipt {
+      margin-top: auto;
+      padding: 8px 10px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .tvm-foot {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(253,252,247,0.18);
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(253,252,247,0.55);
+    }
+    .tvm-foot b { color: var(--paper); font-weight: 800; }
+    .tvm-foot em { font-style: italic; font-weight: 500; color: var(--red); }
+    .tvm-foot .coin {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--paper);
+      background: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--red);
+    }
+
+    @media (max-width: 880px) {
+      .tvm-grid { grid-template-columns: 1fr; gap: 36px; }
+      .tvm-section { padding: 56px 22px; }
+      .tvm-body { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       PLATFORM BILLBOARDS — real posts as station ads (4:5)
+    ============================================================ */
+    .platform-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .platform-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .platform-head .station-marker {
+      width: 64px; height: 64px;
+      background: var(--paper);
+      border: 4px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      gap: 1px;
+    }
+    .platform-head .station-marker small {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+    }
+    .platform-head .text { padding-bottom: 6px; }
+    .platform-head .text .label {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .platform-head .text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .platform-head .text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .platform-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+    }
+    .platform-head .meta b { color: var(--red); font-weight: 800; }
+
+    .platform-deck {
+      max-width: 60ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin-bottom: 36px;
+    }
+    .platform-deck b { color: var(--ink); font-weight: 700; }
+    .platform-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .platform {
+      background: var(--paper-2);
+      border: 1.5px solid var(--ink);
+      padding: 32px 32px 36px;
+      position: relative;
+    }
+    /* yellow-tile-style platform edge */
+    .platform::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 12px;
+      background:
+        repeating-linear-gradient(135deg, var(--red) 0 16px, var(--ink) 16px 32px);
+    }
+    /* ground tile pattern */
+    .platform::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 12px;
+      background-image:
+        linear-gradient(to right, var(--ink) 0 1px, transparent 1px 100%);
+      background-size: 24px 100%;
+    }
+
+    .platform-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 28px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .platform-row:first-child { border-top: 0; padding-top: 6px; }
+    .platform-row:last-child { padding-bottom: 6px; }
+
+    .platform-row .station-pin {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .platform-row .station-pin .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 4px solid var(--ink);
+    }
+    .platform-row .station-pin.l1 .dot { border-color: var(--red); }
+    .platform-row .station-pin .vtag {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .platform-row .station-pin .vtag b { color: var(--ink); font-weight: 800; }
+
+    .platform-row .billboards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .billboard {
+      position: relative;
+      background: var(--ink);
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      box-shadow: 0 16px 32px -16px rgba(0,0,0,0.32);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .billboard:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 40px -20px rgba(0,0,0,0.42);
+    }
+    .billboard > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .billboard:hover > img { transform: scale(1.04); }
+    .billboard .b-tag {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .billboard .b-tag b { color: var(--red); }
+    .billboard .b-pages {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 7px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .billboard .b-pages::before { content: "▦"; font-size: 9px; }
+    .billboard .b-pages.live { background: var(--paper); color: var(--red); }
+    .billboard .b-pages.live::before { content: "▶"; }
+    .billboard .b-bot {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 10px 10px 12px;
+      background: linear-gradient(to top, rgba(26,24,20,0.92) 30%, transparent);
+      color: var(--paper);
+    }
+    .billboard .b-bot .ttl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--paper);
+      margin-bottom: 3px;
+    }
+    .billboard .b-bot .ttl em { font-style: italic; font-weight: 500; color: #ff5e63; }
+    .billboard .b-bot .info {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(253,252,247,0.7);
+    }
+    .billboard .b-bot .info b { color: var(--paper); font-weight: 800; }
+
+    @media (max-width: 980px) {
+      .platform-row .billboards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .platform-section { padding: 56px 22px; }
+      .platform-row { grid-template-columns: 1fr; gap: 16px; }
+      .platform-row .station-pin { flex-direction: row; }
+      .platform-row .station-pin .vtag { writing-mode: horizontal-tb; transform: none; }
+      .platform-row .billboards { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       SYSTEM-MAP TERMINAL (the website)
+    ============================================================ */
+    .terminal-section {
+      background: var(--paper-2);
+      padding: 80px 48px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .terminal-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .frame-wrap {
+      max-width: 1280px;
+      margin: 36px auto 0;
+    }
+    .frame {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 32px 80px -32px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .frame .chrome {
+      background: var(--paper-2);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .lang span {
+      padding: 3px 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .lang .on { background: var(--red); color: var(--paper); }
+
+    .site-fig { background: var(--paper); }
+    .site-fig .nav-row {
+      padding: 16px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 22px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .brand { display: flex; align-items: center; gap: 10px; }
+    .site-fig .nav-row .brand img { width: 30px; height: 30px; object-fit: contain; }
+    .site-fig .nav-row .brand .wm {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      letter-spacing: 0.06em; color: var(--ink); line-height: 1;
+    }
+    .site-fig .nav-row .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600; font-size: 8px;
+      letter-spacing: 0.18em; color: var(--red);
+      margin-top: 3px;
+    }
+    .site-fig .nav-row .menu {
+      display: flex; justify-content: center; gap: 22px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-fig .nav-row .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+    .site-fig .nav-row .right { display: flex; align-items: center; gap: 10px; }
+    .site-fig .nav-row .lt {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .lt span {
+      padding: 4px 8px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      color: var(--ink-4);
+    }
+    .site-fig .nav-row .lt .on { background: var(--ink); color: var(--paper); }
+    .site-fig .nav-row .book {
+      padding: 8px 14px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .site-fig .hero-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: 32px;
+      align-items: center;
+      padding: 36px 36px 32px;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .hero-row .text { min-width: 0; }
+    .site-fig .hero-row .eb {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .site-fig .hero-row h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .site-fig .hero-row h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-fig .hero-row p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 13px;
+      line-height: 1.65; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 14px;
+    }
+    .site-fig .hero-row p b { font-weight: 700; color: var(--ink); }
+    .site-fig .hero-row .ctas { display: flex; gap: 8px; }
+    .site-fig .hero-row .ctas a {
+      padding: 8px 14px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 9px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .site-fig .hero-row .ctas .p { background: var(--red); color: var(--paper); }
+    .site-fig .hero-row .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-fig .hero-row .photo {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 8px 8px 12px;
+      max-width: 200px;
+    }
+    .site-fig .hero-row .photo .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .site-fig .hero-row .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-fig .hero-row .photo .who {
+      padding-top: 8px;
+      border-top: 2px solid var(--red);
+      margin-top: 8px;
+    }
+    .site-fig .hero-row .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      color: var(--ink);
+    }
+    .site-fig .hero-row .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 2px 0 0;
+    }
+    .site-fig .ff-foot {
+      background: var(--paper-2);
+      padding: 18px 36px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px; align-items: center;
+    }
+    .site-fig .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-fig .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-fig .ff-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .site-fig .nav-row .menu { display: none; }
+      .site-fig .hero-row { grid-template-columns: 1fr; gap: 18px; padding: 22px; }
+      .site-fig .ff-foot { padding: 14px 22px; grid-template-columns: 1fr; gap: 6px; }
+      .terminal-section { padding: 56px 22px; }
+    }
+
+    /* ============================================================
+       SERVICE PAMPHLET — brand DNA as operating doctrine
+    ============================================================ */
+    .pamphlet-section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+    .pamphlet-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border-top: 4px solid var(--ink);
+      border-bottom: 4px solid var(--ink);
+    }
+    .pamphlet-cell {
+      padding: 28px 22px 32px;
+      border-left: 1px solid var(--ink);
+      transition: background 0.25s, color 0.25s;
+    }
+    .pamphlet-cell:first-child { border-left: 0; }
+    .pamphlet-cell:hover { background: var(--ink); color: var(--paper); }
+    .pamphlet-cell:hover .num, .pamphlet-cell:hover h3, .pamphlet-cell:hover .ref { color: var(--paper); }
+    .pamphlet-cell:hover h3 em, .pamphlet-cell:hover .ref b { color: var(--red); }
+    .pamphlet-cell .num {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .pamphlet-cell .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .pamphlet-cell h3 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .pamphlet-cell h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .pamphlet-cell p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-2);
+      margin-bottom: 12px;
+    }
+    .pamphlet-cell:hover p { color: rgba(253,252,247,0.78); }
+    .pamphlet-cell .ref {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-top: 10px;
+      border-top: 1px dashed var(--rule);
+    }
+    .pamphlet-cell .ref b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 980px) {
+      .pamphlet-grid { grid-template-columns: 1fr 1fr; }
+      .pamphlet-cell { border-left: 0; border-top: 1px solid var(--ink); }
+      .pamphlet-cell:nth-child(-n+2) { border-top: 0; }
+      .pamphlet-cell:nth-child(odd) { border-right: 1px solid var(--ink); }
+    }
+    @media (max-width: 540px) {
+      .pamphlet-section { padding: 56px 22px; }
+      .pamphlet-grid { grid-template-columns: 1fr; }
+      .pamphlet-cell:nth-child(odd) { border-right: 0; }
+    }
+
+    /* ============================================================
+       FAREWELL / CLOSING
+    ============================================================ */
+    .end-section {
+      padding: 80px 48px;
+      background: var(--ink);
+      color: var(--paper);
+      text-align: center;
+    }
+    .end-section h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      color: var(--paper);
+      margin-bottom: 22px;
+    }
+    .end-section h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .end-section p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(253,252,247,0.78);
+      max-width: 50ch;
+      margin: 0 auto 28px;
+    }
+    .end-section .ant {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end-section .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 26px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .end-section .cta:hover { background: var(--paper); color: var(--ink); }
+    @media (max-width: 720px) { .end-section { padding: 56px 22px; } }
+
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(253,252,247,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(253,252,247,0.18);
+    }
+    .colophon strong { color: var(--paper); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="ta-rail">
+    <span class="left">
+      <span class="ident red">N</span>
+      <span class="ident">P</span>
+      Northern Pathways · Transit Authority
+    </span>
+    <span class="center">FrameFlow · Reel <b>019</b> · Toronto</span>
+    <span class="right">Map № <b>NP-019</b> · Issued 2026</span>
+  </header>
+
+  <!-- =================================================================
+       SYSTEM HEADER
+  ==================================================================== -->
+  <header class="system-head">
+    <div class="id-block">
+      <span class="seal">NP<small>1985</small></span>
+      <p class="name">NP TRANSIT<small>System Map · Vol. I</small></p>
+    </div>
+    <p class="center">Five lines · One <b>regulated</b> network</p>
+    <div class="clock">
+      <p class="time">14:32 ET</p>
+      <p class="where">Toronto · YYZ</p>
+    </div>
+  </header>
+
+  <!-- =================================================================
+       TITLE PAGE
+  ==================================================================== -->
+  <section class="title-page">
+    <div class="title-grid">
+      <div class="title-text">
+        <p class="title-eyebrow">Reel 019 · Northern Pathways · Transit System</p>
+        <h1>A pathway, <em>plotted as a network.</em></h1>
+        <p class="deck">
+          The engagement rendered as a transit system. Five
+          <b>service lines</b>, eleven <b>stations</b>, four <b>transfer
+          points</b>, two <b>terminals</b>. A network is what you build
+          when one line will not get every passenger to permanent
+          residency.
+        </p>
+      </div>
+      <aside>
+        <dl class="title-meta">
+          <dt>Operator</dt><dd>Northern Pathways</dd>
+          <dt>Studio of record</dt><dd>FrameFlow <em>·</em> Toronto</dd>
+          <dt>Locales</dt><dd>EN <em>·</em> TR</dd>
+          <dt>Lines</dt><dd>05 · numbered 01 to 05</dd>
+          <dt>Stations</dt><dd>11 · interchanges 04</dd>
+          <dt>Status</dt><dd style="color: var(--red);">● Live · ongoing</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MAP — the system map
+  ==================================================================== -->
+  <section class="map-wrap reveal">
+    <article class="map-frame">
+      <span class="map-corners" aria-hidden="true"></span>
+
+      <header class="map-head">
+        <span class="left">SYSTEM MAP <b>·</b> 2026</span>
+        <span class="center">NORTHERN PATHWAYS · TORONTO METRO<small>5 lines · 11 stations · interchange at the calculator</small></span>
+        <span class="right">Last update <b>14:32 ET</b></span>
+      </header>
+
+      <svg class="map-svg" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+        <!-- background grid -->
+        <g aria-hidden="true">
+          <line class="grid-line" x1="0" y1="0" x2="0" y2="900"/>
+          <line class="grid-line" x1="200" y1="0" x2="200" y2="900"/>
+          <line class="grid-line major" x1="400" y1="0" x2="400" y2="900"/>
+          <line class="grid-line" x1="600" y1="0" x2="600" y2="900"/>
+          <line class="grid-line major" x1="800" y1="0" x2="800" y2="900"/>
+          <line class="grid-line" x1="1000" y1="0" x2="1000" y2="900"/>
+          <line class="grid-line major" x1="1200" y1="0" x2="1200" y2="900"/>
+          <line class="grid-line" x1="1400" y1="0" x2="1400" y2="900"/>
+          <line class="grid-line" x1="0" y1="0" x2="1600" y2="0"/>
+          <line class="grid-line major" x1="0" y1="225" x2="1600" y2="225"/>
+          <line class="grid-line" x1="0" y1="450" x2="1600" y2="450"/>
+          <line class="grid-line major" x1="0" y1="675" x2="1600" y2="675"/>
+        </g>
+
+        <!-- Lines drawn under stations -->
+        <!-- Line 01 (red) — Economic Express. Long horizontal trunk through centre -->
+        <path class="route route-1" d="M 100 450 L 180 450 L 260 380 L 720 380 L 800 450 L 1340 450 L 1500 450"/>
+        <!-- Line 02 (charcoal) — Family Connect. Diagonal from bottom-left rising to centre then to top-right -->
+        <path class="route route-2" d="M 200 760 L 360 600 L 800 600 L 800 450 L 1080 250 L 1500 250"/>
+        <!-- Line 03 (red dashed) — Temporary Local. Short loop around the calculator -->
+        <path class="route route-3" d="M 380 720 L 600 720 L 720 600 L 800 600 L 800 450"/>
+        <!-- Line 04 (charcoal dashed) — PR Card. From mid-right down -->
+        <path class="route route-4" d="M 800 450 L 1000 540 L 1200 600 L 1400 760"/>
+        <!-- Line 05 (thin red on charcoal) — Citizenship. Far right vertical -->
+        <path class="route route-5-dbl" d="M 1340 450 L 1340 200 L 1480 100"/>
+        <path class="route route-5" d="M 1340 450 L 1340 200 L 1480 100"/>
+
+        <!-- Stations -->
+        <!-- Origin station: Pre-Assessment (line 02 only, terminal) -->
+        <g style="--d: 0s">
+          <rect class="station terminal" x="190" y="750" width="20" height="20" />
+          <text class="station-label b" x="190" y="800">Pre-Assessment</text>
+          <text class="station-label" x="190" y="816"><tspan class="ti">terminal</tspan> · 02</text>
+        </g>
+
+        <!-- Eligibility check (line 03 terminal) -->
+        <g style="--d: 0.05s">
+          <rect class="station terminal" x="370" y="710" width="20" height="20"/>
+          <text class="station-label b" x="370" y="760">Eligibility check</text>
+          <text class="station-label" x="370" y="776"><tspan class="ti">terminal</tspan> · 03</text>
+        </g>
+
+        <!-- Origin / consultation (transfer point at L2/L3 meet) -->
+        <g style="--d: 0.10s">
+          <circle class="station transfer" cx="600" cy="600" r="11"/>
+          <circle class="station transfer" cx="600" cy="720" r="11"/>
+          <text class="station-label b" x="540" y="650">Consultation</text>
+          <text class="station-label" x="540" y="666">02 / 03 · interchange</text>
+        </g>
+
+        <!-- Origin (line 01 westbound terminus) -->
+        <g style="--d: 0s">
+          <rect class="station terminal" x="90" y="440" width="20" height="20"/>
+          <text class="station-label b" x="90" y="490">Brief</text>
+          <text class="station-label" x="90" y="506"><tspan class="ti">origin</tspan> · 01</text>
+        </g>
+
+        <!-- Onboarding form (line 01 stop) -->
+        <g style="--d: 0.15s">
+          <circle class="station" cx="380" cy="380" r="11"/>
+          <text class="station-label" x="360" y="340">Onboarding form</text>
+        </g>
+
+        <!-- Fees (line 01 stop) -->
+        <g style="--d: 0.20s">
+          <circle class="station" cx="540" cy="380" r="11"/>
+          <text class="station-label" x="520" y="340">Fees</text>
+        </g>
+
+        <!-- ★ Calculator — central interchange (4 lines meet) -->
+        <g style="--d: 0.25s">
+          <circle class="station transfer" cx="800" cy="600" r="13"/>
+          <circle class="station transfer" cx="800" cy="450" r="16"/>
+          <circle class="station transfer" cx="800" cy="380" r="11"/>
+          <text class="station-label b" x="836" y="436" style="font-size: 16px;">★ Calculator</text>
+          <text class="interchange" x="836" y="456">01 · 02 · 03 · 04</text>
+          <text class="station-label" x="836" y="476"><tspan class="ti">central</tspan> · interchange</text>
+        </g>
+
+        <!-- Draws feed (line 01 stop) -->
+        <g style="--d: 0.30s">
+          <circle class="station" cx="1080" cy="450" r="11"/>
+          <text class="station-label" x="1060" y="430">Draws feed</text>
+          <text class="station-label" x="1060" y="446"><tspan class="ti">live · weekly</tspan></text>
+        </g>
+
+        <!-- Social / @kanadadayeniyasam (line 02 stop) -->
+        <g style="--d: 0.35s">
+          <circle class="station" cx="1080" cy="250" r="11"/>
+          <text class="station-label" x="1060" y="230">@kanadadayeniyasam</text>
+          <text class="station-label" x="1060" y="246"><tspan class="ti">social · diaspora</tspan></text>
+        </g>
+
+        <!-- PR Card terminal (line 04 terminal) -->
+        <g style="--d: 0.40s">
+          <rect class="station terminal" x="1390" y="750" width="20" height="20"/>
+          <text class="station-label b" x="1300" y="800">PR Card · PRTD</text>
+          <text class="station-label" x="1300" y="816"><tspan class="ti">terminal</tspan> · 04</text>
+        </g>
+
+        <!-- Citizenship terminal (line 05 + line 01 transfer to 05) -->
+        <g style="--d: 0.45s">
+          <circle class="station transfer" cx="1340" cy="450" r="11"/>
+          <text class="station-label" x="1268" y="436">PR cleared</text>
+          <text class="station-label" x="1268" y="452"><tspan class="ti">01 → 05 · transfer</tspan></text>
+        </g>
+
+        <!-- Citizenship final (line 05 terminal) -->
+        <g style="--d: 0.50s">
+          <rect class="station terminal" x="1470" y="90" width="20" height="20"/>
+          <text class="station-label b" x="1390" y="80">Citizenship</text>
+          <text class="station-label" x="1390" y="96"><tspan class="ti">terminal</tspan> · 05</text>
+        </g>
+
+        <!-- PR Express (line 01 east terminal) -->
+        <g style="--d: 0.55s">
+          <rect class="station terminal" x="1490" y="440" width="20" height="20"/>
+          <text class="station-label b" x="1450" y="490">PR Status</text>
+          <text class="station-label" x="1450" y="506"><tspan class="ti">terminal</tspan> · 01</text>
+        </g>
+
+        <!-- Family terminus (line 02 east terminal) -->
+        <g style="--d: 0.60s">
+          <rect class="station terminal" x="1490" y="240" width="20" height="20"/>
+          <text class="station-label b" x="1390" y="230">Family · sponsored</text>
+          <text class="station-label" x="1390" y="246"><tspan class="ti">terminal</tspan> · 02</text>
+        </g>
+      </svg>
+
+      <footer class="map-foot">
+        <span><b>↘</b> Read the map: every line passes through <em>★ Calculator</em>. Transfer there to switch pathways. <b>Doctrine 03</b> applies system-wide.</span>
+        <span class="right">Scale · <b>1 : ∞</b> · system-grade</span>
+      </footer>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       LINE LISTINGS
+  ==================================================================== -->
+  <section class="lines-section reveal">
+    <header class="section-head">
+      <div>
+        <p class="label">— Section 01 · Service lines —</p>
+        <h2>Five lines, <em>one network.</em></h2>
+      </div>
+      <p class="meta">Numbered 01–05 · <b>NP TRANSIT</b></p>
+    </header>
+
+    <div class="line-card-grid">
+      <article class="line-card l1">
+        <header class="head">
+          <span class="bullet">1</span>
+          <h3>Economic <em>Express</em><small>Line 01 · Trunk line</small></h3>
+        </header>
+        <p>The trunk line. <b>Express Entry</b>, FSWP, CEC, PNP. Runs westbound from the Brief to PR Status, with a transfer at the calculator.</p>
+        <p class="stations">Stops · <b>Brief</b> → Onboarding → Fees → ★ Calculator → Draws feed → PR Status</p>
+        <p class="doctrine">→ <b>Doctrine 04</b> · Knowledge</p>
+      </article>
+
+      <article class="line-card l2">
+        <header class="head">
+          <span class="bullet">2</span>
+          <h3>Family <em>Connect</em><small>Line 02 · Sponsorship</small></h3>
+        </header>
+        <p><b>Family Sponsorship.</b> Spousal · common-law · partners · parents. Diagonal from Pre-Assessment terminal to Family · sponsored.</p>
+        <p class="stations">Stops · <b>Pre-Assessment</b> → Consultation → ★ Calculator → @kanadadayeniyasam → Family · sponsored</p>
+        <p class="doctrine">→ <b>Doctrine 02</b> · Personalised</p>
+      </article>
+
+      <article class="line-card l3">
+        <header class="head">
+          <span class="bullet">3</span>
+          <h3>Temporary <em>Local</em><small>Line 03 · Local stop</small></h3>
+        </header>
+        <p><b>Visitor · study · work permits.</b> A short local loop &mdash; eligibility check, consultation, calculator. Dashed indicates limited service.</p>
+        <p class="stations">Stops · <b>Eligibility check</b> → Consultation → ★ Calculator</p>
+        <p class="doctrine">→ <b>Doctrine 03</b> · Transparency</p>
+      </article>
+
+      <article class="line-card l4">
+        <header class="head">
+          <span class="bullet" data-letter="4">4</span>
+          <h3>PR Card <em>Renewal</em><small>Line 04 · Renewal</small></h3>
+        </header>
+        <p><b>PR card renewal &amp; PRTD.</b> Branches off the calculator interchange south to the PR Card terminal. Dashed line · scheduled service.</p>
+        <p class="stations">Stops · ★ Calculator → PR cleared → PR Card · PRTD</p>
+        <p class="doctrine">→ <b>Doctrine 03</b> · Transparency</p>
+      </article>
+
+      <article class="line-card l5">
+        <header class="head">
+          <span class="bullet">5</span>
+          <h3>Citizenship <em>Limited</em><small>Line 05 · Final</small></h3>
+        </header>
+        <p><b>Citizenship applications.</b> The final leg. Limited stops &mdash; only available after PR is cleared. Inset thin red on charcoal.</p>
+        <p class="stations">Stops · PR cleared → <b>Citizenship</b></p>
+        <p class="doctrine">→ <b>Doctrine 01</b> · Ethical</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       TICKET VENDING MACHINE — CRS calculator
+  ==================================================================== -->
+  <section class="tvm-section reveal">
+    <div class="tvm-grid">
+      <div class="tvm-text">
+        <p class="lbl">— Section 02 · Ticket vending —</p>
+        <h2>Buy your <em>fare</em> at the <em>Calculator</em>.</h2>
+        <p>The CRS calculator is the central interchange. Every line passes through it. <strong>15 fields, 6 categories,</strong> rules current to IRCC's 2026 grid &mdash; including the removal of arranged-employment points.</p>
+        <p>Every session ends on a <em>printed receipt</em> &mdash; a one-click PDF that the Captain (counsel of record) signs as your fare for the journey.</p>
+        <p class="doctrine-tag">→ <b>Doctrine 03</b> · Transparency</p>
+      </div>
+
+      <article class="tvm">
+        <header class="tvm-screen-head">
+          <span class="left">TVM <b>·</b> Step 02 / 06</span>
+          <span class="center">CRS · CORE / HUMAN CAPITAL</span>
+          <span class="right">Live</span>
+        </header>
+
+        <div class="tvm-body">
+          <div class="tvm-form">
+            <header class="head">
+              <p class="lbl">Insert your data</p>
+              <h4>Buy a fare to PR Status.</h4>
+            </header>
+            <div class="row on">
+              <span class="k">Age <small>32 years</small></span>
+              <span class="v">110 / 110</span>
+            </div>
+            <div class="row on">
+              <span class="k">Education <small>Master's · ECA</small></span>
+              <span class="v">135 / 150</span>
+            </div>
+            <div class="row on">
+              <span class="k">CLB · English <small>CLB 9</small></span>
+              <span class="v">124 / 136</span>
+            </div>
+            <div class="row on">
+              <span class="k">French · NCLC <small>7+</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+            <div class="row">
+              <span class="k">CDN work <small>1 year</small></span>
+              <span class="v">35 / 80</span>
+            </div>
+            <div class="row">
+              <span class="k">Foreign work <small>3+ years</small></span>
+              <span class="v">25 / 50</span>
+            </div>
+          </div>
+
+          <aside class="tvm-fare">
+            <p class="lbl">Fare estimate · CRS</p>
+            <p class="total">487<small>CRS / 1200</small></p>
+            <dl>
+              <div><span>A · Core</span><b>404</b></div>
+              <div><span>B · Spouse</span><b>—</b></div>
+              <div><span>C · Transfer</span><b>50</b></div>
+              <div><span>D · Additional</span><b>33</b></div>
+            </dl>
+            <span class="receipt">↓ Print PDF receipt</span>
+          </aside>
+        </div>
+
+        <footer class="tvm-foot">
+          <span>Insert <span class="coin">¢</span> · Choose line · Print receipt</span>
+          <span><em>1 PDF</em> · signed by counsel</span>
+          <span><b>14:32 ET</b></span>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PLATFORM BILLBOARDS — real posts as 4:5 station ads
+  ==================================================================== -->
+  <section class="platform-section reveal">
+    <header class="platform-head">
+      <span class="station-marker">@KYY<small>14.2k</small></span>
+      <div class="text">
+        <p class="label">— Section 03 · Platform billboards —</p>
+        <h2>Posters at the <em>station.</em></h2>
+      </div>
+      <p class="meta">10 distinct posts<br><b>248 / yr · TR</b></p>
+    </header>
+
+    <p class="platform-deck">
+      Walk along the platform of the <b>@kanadadayeniyasam</b>
+      station &mdash; the firm's Turkish-language Instagram. Cover
+      slides hang vertical at 4:5, with carousel pagination ▦ and
+      live ▶ markers. <em>248 posts shipped this season; 10
+      catalogued here as platform advertising.</em>
+    </p>
+
+    <div class="platform">
+      <!-- Row 1 (line 02 platform) -->
+      <div class="platform-row">
+        <div class="station-pin">
+          <span class="dot"></span>
+          <span class="vtag"><b>Line 02</b> · Family</span>
+          <span class="dot"></span>
+        </div>
+        <div class="billboards">
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+            <span class="b-tag">№ <b>01</b></span>
+            <span class="b-pages">1 / 6</span>
+            <div class="b-bot">
+              <p class="ttl">Express Entry · <em>kamuoyu görüşü.</em></p>
+              <p class="info">tr · IRCC · <b>23 Apr — 24 May 26</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa update">
+            <span class="b-tag">№ <b>02</b></span>
+            <span class="b-pages">1 / 4</span>
+            <div class="b-bot">
+              <p class="ttl">Süper Vize · <em>gelir esnekliği.</em></p>
+              <p class="info">tr · super visa · <b>2026</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Doctor immigration">
+            <span class="b-tag">№ <b>03</b></span>
+            <span class="b-pages">1 / 4</span>
+            <div class="b-bot">
+              <p class="ttl">Doktor açığı · <em>yeni adımlar.</em></p>
+              <p class="info">tr · healthcare · <b>RCIC note</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam seminar">
+            <span class="b-tag">№ <b>06</b></span>
+            <span class="b-pages">1 / 3</span>
+            <div class="b-bot">
+              <p class="ttl">Yeni Yaşam · <em>seminar.</em></p>
+              <p class="info">tr · ANK + IST · <b>13 / 20 Ekim</b></p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Row 2 (line 01 platform) -->
+      <div class="platform-row">
+        <div class="station-pin l1">
+          <span class="dot"></span>
+          <span class="vtag"><b>Line 01</b> · Express</span>
+          <span class="dot"></span>
+        </div>
+        <div class="billboards">
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan 2026-2028">
+            <span class="b-tag">№ <b>04</b></span>
+            <span class="b-pages">1 / 9</span>
+            <div class="b-bot">
+              <p class="ttl">Göç Seviyeleri · <em>2026 – 2028.</em></p>
+              <p class="info">tr · levels plan · <b>9 slide</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit">
+            <span class="b-tag">№ <b>05</b></span>
+            <span class="b-pages">1 / 8</span>
+            <div class="b-bot">
+              <p class="ttl">Vize memuru · <em>neye bakar?</em></p>
+              <p class="info">tr · study · <b>NP × EduPathways</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP">
+            <span class="b-tag">№ <b>07</b></span>
+            <span class="b-pages">1 / 6</span>
+            <div class="b-bot">
+              <p class="ttl">Ontario · <em>OINP yeni programlar.</em></p>
+              <p class="info">tr · OINP · <b>Bill 30 · 2025</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP March 2026">
+            <span class="b-tag">№ <b>08</b></span>
+            <span class="b-pages">1 / 6</span>
+            <div class="b-bot">
+              <p class="ttl">OINP · <em>18 Mart davet turu.</em></p>
+              <p class="info">tr · ontario · <b>2026</b></p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Row 3 (live webinars + archive) -->
+      <div class="platform-row">
+        <div class="station-pin">
+          <span class="dot"></span>
+          <span class="vtag"><b>Webinars</b> · live</span>
+          <span class="dot"></span>
+        </div>
+        <div class="billboards">
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar">
+            <span class="b-tag">№ <b>09</b></span>
+            <span class="b-pages live">Live</span>
+            <div class="b-bot">
+              <p class="ttl">Webinar · <em>PGWP rules.</em></p>
+              <p class="info">tr · 22 Aralık 25 · <b>Burcu Akyol</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+            <span class="b-tag">№ <b>10</b></span>
+            <span class="b-pages live">Live</span>
+            <div class="b-bot">
+              <p class="ttl">Webinar · <em>Levels Plan PR.</em></p>
+              <p class="info">tr · 11 Kasım 25 · <b>Burcu Akyol</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-04/05.png" alt="Levels Plan slide 5">
+            <span class="b-tag">№ <b>04i</b></span>
+            <span class="b-pages">5 / 9</span>
+            <div class="b-bot">
+              <p class="ttl">Levels Plan &mdash; <em>slide 5.</em></p>
+              <p class="info">tr · interior · <b>carousel № 04</b></p>
+            </div>
+          </article>
+          <article class="billboard">
+            <img src="../../../public/portfolio/northern-pathways/social/carousel-01/03.png" alt="Express Entry slide 3">
+            <span class="b-tag">№ <b>01i</b></span>
+            <span class="b-pages">3 / 6</span>
+            <div class="b-bot">
+              <p class="ttl">Express Entry &mdash; <em>slide 3.</em></p>
+              <p class="info">tr · interior · <b>carousel № 01</b></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SYSTEM-MAP TERMINAL (the website)
+  ==================================================================== -->
+  <section class="terminal-section reveal">
+    <div class="terminal-grid">
+      <header class="section-head">
+        <div>
+          <p class="label">— Section 04 · System map terminal —</p>
+          <h2>The terminal at <em>northernpathways.ca.</em></h2>
+        </div>
+        <p class="meta">12 routes · EN+TR<br><b>Live · since 2026</b></p>
+      </header>
+
+      <div class="frame-wrap">
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+          </header>
+          <div class="site-fig">
+            <nav class="nav-row">
+              <span class="brand">
+                <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+                <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+              </span>
+              <nav class="menu">
+                <span class="on">Home</span>
+                <span>Our Team</span>
+                <span>Fees</span>
+                <span>Events</span>
+                <span>Blog</span>
+              </nav>
+              <div class="right">
+                <span class="lt"><span class="on">EN</span><span>TR</span></span>
+                <span class="book">Book a Consultation</span>
+              </div>
+            </nav>
+            <div class="hero-row">
+              <div class="text">
+                <p class="eb">Northern Pathways · RCIC-IRB</p>
+                <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+                <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility, strategy, and legal representation.</p>
+                <div class="ctas">
+                  <a class="p">Book a Consultation</a>
+                  <a class="s">Explore Services</a>
+                </div>
+              </div>
+              <aside class="photo">
+                <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+                <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+              </aside>
+            </div>
+            <footer class="ff-foot">
+              <span class="left">© 2026 NP · All Rights Reserved.</span>
+              <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+            </footer>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SERVICE PAMPHLET — brand DNA as operating doctrine
+  ==================================================================== -->
+  <section class="pamphlet-section reveal">
+    <header class="section-head">
+      <div>
+        <p class="label">— Section 05 · Operating doctrine —</p>
+        <h2>The five <em>operating articles.</em></h2>
+      </div>
+      <p class="meta">Brand DNA · <b>D-01 — D-05</b></p>
+    </header>
+
+    <div class="pamphlet-grid">
+      <article class="pamphlet-cell">
+        <p class="num">01</p>
+        <p class="lbl">Article 01</p>
+        <h3>Ethical <em>Guidance.</em></h3>
+        <p>Every word the firm publishes is signed by an RCIC-IRB. The College's standard sets the floor.</p>
+        <p class="ref">→ <b>Line 05</b> · Citizenship</p>
+      </article>
+      <article class="pamphlet-cell">
+        <p class="num">02</p>
+        <p class="lbl">Article 02</p>
+        <h3>Personalised <em>Service.</em></h3>
+        <p>The home page leads with Burcu's name. Clients meet a counsel, not a form.</p>
+        <p class="ref">→ <b>Line 02 / 03</b> · Family / Temp</p>
+      </article>
+      <article class="pamphlet-cell">
+        <p class="num">03</p>
+        <p class="lbl">Article 03</p>
+        <h3>Transparency <em>· in pricing.</em></h3>
+        <p>Fees listed up front. The TVM exposes every point. PDF signed by counsel.</p>
+        <p class="ref">→ <b>★ Calculator</b> · TVM</p>
+      </article>
+      <article class="pamphlet-cell">
+        <p class="num">04</p>
+        <p class="lbl">Article 04</p>
+        <h3>Knowledge <em>&amp; Expertise.</em></h3>
+        <p>156+ IRCC draws indexed since 2015. Live tracker. RCIC-grade commentary.</p>
+        <p class="ref">→ <b>Line 01</b> · Express + Draws feed</p>
+      </article>
+      <article class="pamphlet-cell">
+        <p class="num">05</p>
+        <p class="lbl">Article 05</p>
+        <h3>Care <em>&amp; Lived Experience.</em></h3>
+        <p>The diaspora arrives in two languages. We meet them in both.</p>
+        <p class="ref">→ <b>@kanadadayeniyasam</b> · platform</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end-section reveal">
+    <p class="ant">— End of line —</p>
+    <h2>Mind the <em>gap.</em></h2>
+    <p>If your firm holds a record worth networking, we'd be glad to draft year one of yours. Same lock, same colour, same care.</p>
+    <a class="cta">Begin a project →</a>
+  </section>
+
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Transit System № NP-019</span>
+    <span class="right">Operated by <strong>FrameFlow</strong></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

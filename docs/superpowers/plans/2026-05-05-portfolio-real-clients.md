@@ -58,7 +58,7 @@ export type Client = {
    * Service tags. ORDER MATTERS — the first tag is the primary service,
    * used as the FilmStill badge and the OG description lead.
    */
-  services: Service[];
+  services: readonly Service[];
 
   // Optional spotlight fields. All real or absent — never invented.
   // Their presence promotes the client into richer rendering automatically.
@@ -68,10 +68,10 @@ export type Client = {
   scene?: string;
   synopsis?: string;
   featured?: boolean;
-  scene_order?: number;
+  sceneOrder?: number;
 };
 
-export const clients: Client[] = [
+export const clients: readonly Client[] = [
   { slug: "acorn-accounting",            name: "Acorn Accounting",                          services: ["Web Application"] },
   { slug: "adrians-wasaga-beach",        name: "Adrian's Wasaga Beach",                     services: ["Social Media"] },
   { slug: "asd-laminate",                name: "ASD Laminate",                              services: ["Ad Management", "Social Media"] },
@@ -93,31 +93,33 @@ export const clients: Client[] = [
   { slug: "northern-pathways-immigration", name: "Northern Pathways Immigration Consulting", services: ["App", "Social Media", "Videography"] },
 ];
 
+/**
+ * Lookup a client by slug. Returns `undefined` for unknown slugs.
+ */
 export const getClient = (slug: string): Client | undefined =>
   clients.find((c) => c.slug === slug);
 
 /**
  * Returns the prev/next clients in the array order, wrapping around at the
  * ends so the reel always has a "next title" — a loop, not a paginated list.
- * Returns `null` if the slug isn't found.
+ *
+ * Pass a `Client` obtained from `getClient` or the `clients` array directly.
+ * Throws if the client isn't in the roster (caller bug).
  */
 export const getAdjacentClients = (
-  slug: string
-): { prev: Client; next: Client } | null => {
-  const i = clients.findIndex((c) => c.slug === slug);
-  if (i === -1) return null;
+  client: Client
+): { prev: Client; next: Client } => {
+  const i = clients.findIndex((c) => c.slug === client.slug);
+  if (i === -1) {
+    throw new Error(`Client "${client.slug}" is not in the roster`);
+  }
   return {
     prev: i > 0 ? clients[i - 1] : clients[clients.length - 1],
     next: i < clients.length - 1 ? clients[i + 1] : clients[0],
   };
 };
 
-/**
- * Service-tag counts across all clients, sorted descending. Ties broken
- * alphabetically by service name. Pure derivation — used by the Archive
- * Manifest tiles.
- */
-export const getServiceCounts = (): Array<{ service: Service; count: number }> => {
+const SERVICE_COUNTS: ReadonlyArray<{ service: Service; count: number }> = (() => {
   const counts = new Map<Service, number>();
   for (const c of clients) {
     for (const s of c.services) {
@@ -127,12 +129,19 @@ export const getServiceCounts = (): Array<{ service: Service; count: number }> =
   return Array.from(counts.entries())
     .map(([service, count]) => ({ service, count }))
     .sort((a, b) => b.count - a.count || a.service.localeCompare(b.service));
-};
+})();
+
+/**
+ * Service-tag counts across all clients, sorted descending by count. Ties
+ * are broken alphabetically by service name. Computed once at module load.
+ */
+export const getServiceCounts = (): ReadonlyArray<{ service: Service; count: number }> =>
+  SERVICE_COUNTS;
 
 /**
  * Distinct services used by at least one client. Currently 11.
  */
-export const getDistinctServiceCount = (): number => getServiceCounts().length;
+export const getDistinctServiceCount = (): number => SERVICE_COUNTS.length;
 ```
 
 - [ ] **Step 2: Verify it compiles**
@@ -760,7 +769,7 @@ git add src/app/portfolio/page.tsx
 git commit -m "feat(portfolio): replace fictional projects with real 19-client roster
 
 - Drop Now Showing and Selected Scenes sections (return when real
-  case studies are written and clients have featured/scene_order set).
+  case studies are written and clients have featured/sceneOrder set).
 - Redesign Index row: 4 cols (Frame · Client · Services · Act),
   whole row links to /portfolio/[slug], services wrap freely.
 - Hero stats now derive from data: 19 clients, 05 years, 11 services.
@@ -819,8 +828,7 @@ export default async function Page({ params }: Props) {
   const client = getClient(slug);
   if (!client) notFound();
 
-  const adjacent = getAdjacentClients(slug);
-  if (!adjacent) notFound(); // unreachable when client is non-null, but keeps the type narrow
+  const adjacent = getAdjacentClients(client);
   const frameNumber = String(
     clients.findIndex((c) => c.slug === slug) + 1
   ).padStart(3, "0");
@@ -1367,7 +1375,7 @@ After all tasks above are complete, all of these should be true. Verify in order
 ## Out of scope (not in this plan)
 
 - Real case-study copy for any client (synopsis, year, location, runtime). Plan for those is to set the fields on individual `Client` entries; the templates already render them.
-- The `featured` and `scene_order` fields exist in the type but no client uses them in V1. When a client should appear in a re-introduced Now Showing or Selected Scenes section, set the field and add the section's JSX back to `portfolio/page.tsx`.
+- The `featured` and `sceneOrder` fields exist in the type but no client uses them in V1. When a client should appear in a re-introduced Now Showing or Selected Scenes section, set the field and add the section's JSX back to `portfolio/page.tsx`.
 - Per-client photography. `gallery_placeholders` rule still applies.
 - Filter/search UI on the index.
 - Sitemap.xml updates. (Next.js auto-generates entries for prerendered routes; if there's a custom `sitemap.ts`, audit separately.)

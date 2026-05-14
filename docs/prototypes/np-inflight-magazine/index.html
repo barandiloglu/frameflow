@@ -1,0 +1,2528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The In-Flight Magazine (FrameFlow / Prototype 11)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 11 — "The In-Flight Magazine"
+
+       The conceit: an airline publishes a magazine carried in every
+       seatback. We render the Northern Pathways engagement as
+       Volume I, Issue 019 of that magazine — Yeni Yaşam, "new life".
+       Real magazine chrome (cover lines, barcode, masthead, page
+       numbers, photo credits, pull quotes), with the brand DNA
+       values as the five feature themes that organise the book.
+
+       Lineage: Lufthansa Magazin · Pan Am Clipper · Air Canada
+       enRoute · Cereal magazine. Editorial restraint at maximum
+       weight. MONTSERRAT only. Locked palette.
+    ==================================================================== */
+
+    :root {
+      --paper:    #fbf8f1;       /* warm magazine paper */
+      --paper-2:  #f4efe2;
+      --paper-3:  #ece6d4;
+      --paper-4:  #ffffff;       /* white insert pages */
+      --rule:     #d4cdb8;
+      --rule-2:   #b8b09a;
+      --ink:      #1f1d1a;
+      --ink-2:    #4a4744;
+      --ink-3:    #757065;
+      --ink-4:    #aba79a;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* warm magazine paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.045;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0 0.15  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL — running head
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 700; }
+    .rail .center { text-align: center; letter-spacing: 0.4em; color: var(--paper-4); }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper-4); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       PAGE — base unit. Every editorial section is a "page" with a
+       running header (title + page number) and a folio.
+    ============================================================ */
+    .page {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 56px 56px 64px;
+      position: relative;
+      border-bottom: 1px solid var(--rule);
+    }
+    .page.last { border-bottom: 0; }
+    .page.dark { background: var(--ink); color: var(--paper); }
+    .page.red  { background: var(--red); color: var(--paper); }
+    .page.cream { background: var(--paper-2); }
+    .page.white { background: var(--paper-4); }
+
+    /* running head — top of every interior page */
+    .running-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: baseline;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 36px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .page.dark .running-head, .page.red .running-head {
+      color: rgba(251, 248, 241, 0.6);
+      border-bottom-color: rgba(251, 248, 241, 0.18);
+    }
+    .running-head .left b { color: var(--ink); font-weight: 800; }
+    .running-head .center { text-align: center; letter-spacing: 0.4em; color: var(--red); }
+    .running-head .right { text-align: right; }
+    .running-head .right b { color: var(--ink); font-weight: 800; }
+    .page.dark .running-head .left b, .page.red .running-head .left b,
+    .page.dark .running-head .right b, .page.red .running-head .right b { color: var(--paper); }
+    .page.red .running-head { color: rgba(251, 248, 241, 0.7); }
+    .page.red .running-head .center { color: var(--paper); }
+
+    /* folio — page number bottom-right */
+    .folio {
+      position: absolute;
+      bottom: 22px;
+      right: 56px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .folio b {
+      color: var(--ink);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+    }
+    .page.dark .folio, .page.red .folio { color: rgba(251, 248, 241, 0.55); }
+    .page.dark .folio b, .page.red .folio b { color: var(--paper); }
+    .folio .pipe { color: var(--ink-4); }
+    .page.dark .folio .pipe, .page.red .folio .pipe { color: rgba(251, 248, 241, 0.32); }
+
+    @media (max-width: 880px) {
+      .page { padding: 40px 22px 56px; }
+      .folio { right: 22px; bottom: 18px; }
+      .running-head { grid-template-columns: 1fr; gap: 4px; text-align: center; }
+      .running-head .right, .running-head .center, .running-head .left { text-align: center; }
+    }
+
+    /* ============================================================
+       COVER PAGE
+    ============================================================ */
+    .cover {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 36px 56px 64px;
+      border-bottom: 4px double var(--ink);
+      position: relative;
+    }
+    /* magazine top strip */
+    .cover-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 32px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .cover-strip .left { display: flex; align-items: center; gap: 12px; }
+    .cover-strip .left b { color: var(--red); font-weight: 800; }
+    .cover-strip .left .seal {
+      padding: 4px 8px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+    }
+    .cover-strip .center { text-align: center; letter-spacing: 0.5em; color: var(--ink-2); font-weight: 600; }
+    .cover-strip .center b { color: var(--red); font-weight: 800; }
+    .cover-strip .right { text-align: right; font-weight: 600; color: var(--ink-3); }
+    .cover-strip .right b { color: var(--ink); font-weight: 800; }
+
+    .cover-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 56px;
+      align-items: end;
+    }
+    .cover-titling { min-width: 0; }
+    .cover-magname {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(72px, 11vw, 168px);
+      line-height: 0.85;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .cover-magname em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .cover-tagline {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding: 10px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 32px;
+      max-width: 760px;
+    }
+    .cover-tagline em { font-style: italic; color: var(--red); }
+
+    .cover-lines {
+      max-width: 56ch;
+    }
+    .cover-line {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 16px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .cover-line:first-child { border-top: 0; padding-top: 0; }
+    .cover-line .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+    }
+    .cover-line .text {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .cover-line .text em { font-style: italic; font-weight: 500; color: var(--red); }
+    .cover-line .pn {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .cover-line .pn b { color: var(--red); font-weight: 800; }
+
+    /* the captain portrait card */
+    .cover-photo {
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 14px 14px 18px;
+      box-shadow: 0 24px 60px -28px rgba(0,0,0,0.28);
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    .cover-photo .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .cover-photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .cover-photo .who {
+      padding-top: 12px;
+      border-top: 4px solid var(--red);
+      margin-top: 12px;
+    }
+    .cover-photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .cover-photo .who p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin: 4px 0 0;
+    }
+    .cover-photo .who p em { font-style: italic; color: var(--ink-2); }
+
+    /* bottom strip: barcode + price + issue */
+    .cover-foot {
+      margin-top: 48px;
+      padding-top: 18px;
+      border-top: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+    .cover-foot .barcode {
+      width: 110px;
+      height: 38px;
+      background-image:
+        linear-gradient(to right,
+          var(--ink) 0 1px, transparent 1px 3px,
+          var(--ink) 3px 4px, transparent 4px 6px,
+          var(--ink) 6px 8px, transparent 8px 11px,
+          var(--ink) 11px 12px, transparent 12px 16px,
+          var(--ink) 16px 18px, transparent 18px 20px,
+          var(--ink) 20px 22px, transparent 22px 25px,
+          var(--ink) 25px 27px, transparent 27px 30px,
+          var(--ink) 30px 31px);
+      background-size: 31px 100%;
+      background-repeat: repeat-x;
+    }
+    .cover-foot .barcode-meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .cover-foot .barcode-meta b { color: var(--ink); font-weight: 800; }
+    .cover-foot .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .cover-foot .center b { color: var(--red); font-weight: 800; }
+    .cover-foot .price {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      text-align: right;
+    }
+    .cover-foot .price small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 980px) {
+      .cover { padding: 24px 22px 40px; }
+      .cover-grid { grid-template-columns: 1fr; gap: 32px; }
+      .cover-photo { max-width: none; }
+      .cover-strip, .cover-foot { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .cover-strip .right, .cover-strip .center,
+      .cover-foot .center, .cover-foot .price { text-align: center; }
+      .cover-foot .barcode { margin: 0 auto; }
+    }
+
+    /* ============================================================
+       MASTHEAD PAGE
+    ============================================================ */
+    .masthead-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 56px;
+    }
+    .masthead-text h1 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5.6vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .masthead-text h1 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .masthead-text .deck {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .masthead-text .deck b { color: var(--ink); font-weight: 700; }
+    .masthead-text .deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .masthead-card {
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 28px 30px;
+      max-width: 380px;
+      margin: 0 0 0 auto;
+    }
+    .masthead-card h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 14px;
+    }
+    .masthead-card dl > div {
+      padding: 9px 0;
+      border-top: 1px dashed var(--rule);
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      align-items: baseline;
+    }
+    .masthead-card dl > div:first-child { border-top: 0; padding-top: 0; }
+    .masthead-card dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .masthead-card dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .masthead-card dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    .masthead-card .seal {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1.5px solid var(--ink);
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .masthead-card .seal b { color: var(--red); }
+    @media (max-width: 880px) {
+      .masthead-grid { grid-template-columns: 1fr; gap: 32px; }
+      .masthead-card { max-width: none; margin: 0; }
+    }
+
+    /* ============================================================
+       TABLE OF CONTENTS
+    ============================================================ */
+    .toc-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 36px;
+    }
+    .toc-head h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .toc-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .toc-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .toc-head .meta b { color: var(--ink); font-weight: 800; }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 56px;
+    }
+    .toc-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 60px;
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid var(--rule);
+      align-items: baseline;
+      transition: background 0.2s;
+    }
+    .toc-row:hover { background: var(--paper-2); }
+    .toc-row .pn {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: var(--red);
+    }
+    .toc-row .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .toc-row .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .toc-row .blurb {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      line-height: 1.5;
+      color: var(--ink-3);
+    }
+    .toc-row .pg {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .toc-row .pg b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .toc-grid { grid-template-columns: 1fr; gap: 0; }
+      .toc-row { grid-template-columns: 50px 1fr auto; }
+    }
+
+    /* ============================================================
+       LETTER FROM THE CAPTAIN
+    ============================================================ */
+    .letter-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .letter-text { min-width: 0; }
+    .letter-eyebrow {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .letter-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 56px; height: 1.5px;
+      background: var(--red);
+    }
+    .letter-text h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5.4vw, 80px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .letter-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .letter-body {
+      column-count: 2;
+      column-gap: 36px;
+      column-rule: 1px solid var(--rule);
+    }
+    .letter-body p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14.5px;
+      line-height: 1.8;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .letter-body p:first-child::first-letter {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 64px;
+      line-height: 0.85;
+      float: left;
+      padding: 4px 12px 0 0;
+      color: var(--red);
+    }
+    .letter-body p strong { font-weight: 700; color: var(--ink); }
+    .letter-body p em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .letter-sig {
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .letter-sig .scribble {
+      font-family: var(--type);
+      font-weight: 800;
+      font-style: italic;
+      font-size: 36px;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      padding: 0 4px 6px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .letter-sig .who h5 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .letter-sig .who p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 4px;
+    }
+
+    .letter-portrait {
+      background: var(--paper-4);
+      border: 1.5px solid var(--ink);
+      padding: 14px 14px 18px;
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.22);
+    }
+    .letter-portrait .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .letter-portrait .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .letter-portrait .cap {
+      padding-top: 12px;
+      border-top: 4px solid var(--red);
+      margin-top: 12px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .letter-portrait .cap b { color: var(--ink); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .letter-grid { grid-template-columns: 1fr; gap: 32px; }
+      .letter-body { column-count: 1; }
+    }
+
+    /* ============================================================
+       BRAND DNA — five themed feature spreads (the values as a layer)
+    ============================================================ */
+    .dna-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 56px;
+    }
+    .dna-head h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .dna-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .dna-head .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .dna-head .meta b { color: var(--red); font-weight: 800; }
+
+    .dna-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border-top: 1.5px solid var(--ink);
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .dna-cell {
+      padding: 28px 22px 32px;
+      border-left: 1px solid var(--ink);
+      transition: background 0.25s, color 0.25s;
+      cursor: default;
+    }
+    .dna-cell:first-child { border-left: 0; }
+    .dna-cell:hover { background: var(--ink); color: var(--paper); }
+    .dna-cell:hover .dn, .dna-cell:hover .dt-h, .dna-cell:hover .dt-tied {
+      color: var(--paper);
+    }
+    .dna-cell:hover .dn b, .dna-cell:hover .dt-h em, .dna-cell:hover .dt-tied b { color: var(--red); }
+    .dna-cell .dn {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 18px;
+    }
+    .dna-cell .dn b { color: var(--red); font-weight: 800; }
+    .dna-cell .dt-num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .dna-cell .dt-h {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .dna-cell .dt-h em { font-style: italic; font-weight: 500; color: var(--red); }
+    .dna-cell p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin-bottom: 12px;
+    }
+    .dna-cell:hover p { color: rgba(251, 248, 241, 0.78); }
+    .dna-cell .dt-tied {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+    }
+    .dna-cell .dt-tied b { color: var(--ink); font-weight: 800; }
+    @media (max-width: 980px) {
+      .dna-grid { grid-template-columns: 1fr 1fr; }
+      .dna-cell { border-left: 0; border-top: 1px solid var(--ink); }
+      .dna-cell:nth-child(-n+2) { border-top: 0; }
+      .dna-cell:nth-child(odd) { border-right: 1px solid var(--ink); }
+    }
+    @media (max-width: 540px) {
+      .dna-grid { grid-template-columns: 1fr; }
+      .dna-cell:nth-child(odd) { border-right: 0; }
+    }
+
+    /* ============================================================
+       FEATURE — long-form article template
+    ============================================================ */
+    .feature-banner {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 48px;
+    }
+    .page.dark .feature-banner, .page.red .feature-banner { border-bottom-color: var(--paper); }
+    .feature-banner .feat-no {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 6px;
+    }
+    .feature-banner .feat-no b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .page.dark .feature-banner .feat-no b, .page.red .feature-banner .feat-no b { color: var(--paper); }
+    .feature-banner .kicker {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 6px;
+    }
+    .feature-banner .title { padding-bottom: 6px; }
+    .feature-banner .title h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(32px, 4.4vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .page.dark .feature-banner .title h2, .page.red .feature-banner .title h2 { color: var(--paper); }
+    .feature-banner .title h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .page.red .feature-banner .title h2 em { color: var(--paper); }
+    .feature-banner .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      padding-bottom: 6px;
+      max-width: 18ch;
+      line-height: 1.6;
+    }
+    .feature-banner .meta b { color: var(--ink); font-weight: 800; }
+    .page.dark .feature-banner .meta, .page.red .feature-banner .meta { color: rgba(251,248,241,0.6); }
+    .page.dark .feature-banner .meta b, .page.red .feature-banner .meta b { color: var(--paper); }
+
+    @media (max-width: 880px) {
+      .feature-banner { grid-template-columns: auto 1fr; gap: 16px; }
+      .feature-banner .kicker { grid-column: 1 / -1; padding-bottom: 0; }
+      .feature-banner .meta { grid-column: 1 / -1; text-align: left; max-width: none; }
+    }
+
+    .feature-deck {
+      max-width: 60ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(17px, 1.8vw, 22px);
+      line-height: 1.55;
+      color: var(--ink-2);
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .page.dark .feature-deck, .page.red .feature-deck {
+      color: rgba(251,248,241,0.78);
+      border-bottom-color: rgba(251,248,241,0.18);
+    }
+    .feature-deck b { color: var(--ink); font-weight: 700; }
+    .page.dark .feature-deck b, .page.red .feature-deck b { color: var(--paper); }
+    .feature-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+    .page.red .feature-deck em { color: var(--paper); }
+
+    .feature-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 56px;
+      align-items: start;
+    }
+    .feature-copy {
+      column-count: 2;
+      column-gap: 36px;
+      column-rule: 1px solid var(--rule);
+      min-width: 0;
+    }
+    .feature-copy p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .feature-copy p strong { font-weight: 700; color: var(--ink); }
+    .feature-copy p em { font-style: italic; font-weight: 500; color: var(--red); }
+    .feature-copy p:first-child::first-letter {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 0.85;
+      float: left;
+      padding: 4px 10px 0 0;
+      color: var(--red);
+    }
+    .feature-figure {
+      min-width: 0;
+    }
+    .feature-figure-cap {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule);
+      line-height: 1.6;
+    }
+    .feature-figure-cap b { color: var(--red); font-weight: 800; }
+    .feature-figure-cap em { font-style: italic; font-weight: 500; color: var(--ink); }
+
+    @media (max-width: 980px) {
+      .feature-body { grid-template-columns: 1fr; gap: 32px; }
+      .feature-copy { column-count: 1; }
+    }
+
+    /* ============================================================
+       FRAME (browser mockup)
+    ============================================================ */
+    .frame {
+      background: var(--paper-4);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 32px 80px -36px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .frame .chrome {
+      background: var(--paper-2);
+      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 4px; }
+    .frame .chrome .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 4px 10px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      display: inline-flex;
+      gap: 2px;
+      padding: 2px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .lang span {
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .lang .on { background: var(--red); color: var(--paper); }
+
+    /* compact site mock */
+    .site-fig { background: var(--paper-4); }
+    .site-fig .nav-row {
+      padding: 14px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .brand { display: flex; align-items: center; gap: 8px; }
+    .site-fig .nav-row .brand img { width: 26px; height: 26px; object-fit: contain; }
+    .site-fig .nav-row .brand .wm {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.06em; color: var(--ink); line-height: 1;
+    }
+    .site-fig .nav-row .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.18em; color: var(--red);
+      margin-top: 2px;
+    }
+    .site-fig .nav-row .menu {
+      display: flex; justify-content: center; gap: 18px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-fig .nav-row .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 3px; }
+    .site-fig .nav-row .right { display: flex; align-items: center; gap: 8px; }
+    .site-fig .nav-row .lt {
+      display: inline-flex; gap: 2px; padding: 2px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .site-fig .nav-row .lt span {
+      padding: 3px 6px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      color: var(--ink-4);
+    }
+    .site-fig .nav-row .lt .on { background: var(--ink); color: var(--paper); }
+    .site-fig .nav-row .book {
+      padding: 7px 12px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .site-fig .hero-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 160px;
+      gap: 24px;
+      align-items: center;
+      padding: 28px 26px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-fig .hero-row .text { min-width: 0; }
+    .site-fig .hero-row .eb {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+    }
+    .site-fig .hero-row h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.8vw, 32px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .site-fig .hero-row h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-fig .hero-row p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 11px;
+      line-height: 1.55; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 12px;
+    }
+    .site-fig .hero-row p b { font-weight: 700; color: var(--ink); }
+    .site-fig .hero-row .ctas { display: flex; gap: 6px; }
+    .site-fig .hero-row .ctas a {
+      padding: 6px 10px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 7px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .site-fig .hero-row .ctas .p { background: var(--red); color: var(--paper); }
+    .site-fig .hero-row .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-fig .hero-row .photo {
+      background: var(--paper-4);
+      border: 1px solid var(--rule);
+      padding: 6px 6px 10px;
+      max-width: 160px;
+    }
+    .site-fig .hero-row .photo .ph {
+      width: 100%; aspect-ratio: 4/5;
+      overflow: hidden; background: var(--paper-3);
+    }
+    .site-fig .hero-row .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-fig .hero-row .photo .who {
+      padding-top: 6px;
+      border-top: 2px solid var(--red);
+      margin-top: 6px;
+    }
+    .site-fig .hero-row .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink);
+    }
+    .site-fig .hero-row .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 1px 0 0;
+      line-height: 1.4;
+    }
+    .site-fig .ff-foot {
+      background: var(--paper-2);
+      padding: 14px 26px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px; align-items: center;
+    }
+    .site-fig .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-fig .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-fig .ff-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .site-fig .nav-row .menu { display: none; }
+      .site-fig .hero-row { grid-template-columns: 1fr; gap: 18px; padding: 22px; }
+      .site-fig .ff-foot { padding: 12px 22px; grid-template-columns: 1fr; gap: 6px; }
+    }
+
+    /* compact calculator mock */
+    .calc-fig {
+      padding: 22px 26px;
+      background: var(--paper-4);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+    .calc-fig .form { display: flex; flex-direction: column; gap: 6px; }
+    .calc-fig .head {
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 6px;
+    }
+    .calc-fig .head .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 4px;
+    }
+    .calc-fig .head h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 16px;
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .calc-fig .row {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 10px; align-items: center;
+      padding: 8px 10px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .calc-fig .row.on { border-color: var(--red); }
+    .calc-fig .row .k {
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      color: var(--ink);
+    }
+    .calc-fig .row .v {
+      padding: 4px 6px;
+      background: var(--paper-4);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 800; font-size: 10px;
+      color: var(--ink); text-align: center;
+    }
+    .calc-fig .row.on .v { color: var(--red); border-color: var(--red); }
+    .calc-fig .score {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .calc-fig .score .lbl {
+      font-family: var(--type);
+      font-weight: 700; font-size: 8px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: #ff5e63;
+    }
+    .calc-fig .score .total {
+      font-family: var(--type);
+      font-weight: 800; font-size: 56px;
+      line-height: 0.85; letter-spacing: -0.04em;
+    }
+    .calc-fig .score .total small {
+      display: block; margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 600; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .calc-fig .score .pdf {
+      margin-top: auto;
+      padding: 7px 10px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 8px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      text-align: center;
+    }
+    @media (max-width: 720px) { .calc-fig { grid-template-columns: 1fr; padding: 22px; } }
+
+    /* ============================================================
+       PHOTO ESSAY — the social posts as a magazine spread
+    ============================================================ */
+    .essay-banner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 20px;
+      border-bottom: 4px double var(--paper);
+      margin-bottom: 40px;
+    }
+    .essay-banner .feat-no {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 6px;
+    }
+    .essay-banner .feat-no b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--paper);
+    }
+    .essay-banner .title { padding-bottom: 6px; }
+    .essay-banner .title .kicker {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .essay-banner .title h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--paper);
+    }
+    .essay-banner .title h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .essay-banner .meta {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(251,248,241,0.55);
+      text-align: right;
+      padding-bottom: 6px;
+    }
+    .essay-banner .meta b { color: var(--paper); font-weight: 800; }
+
+    .essay-deck {
+      max-width: 56ch;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.6;
+      color: rgba(251,248,241,0.78);
+      margin-bottom: 40px;
+    }
+    .essay-deck b { color: var(--paper); font-weight: 700; }
+    .essay-deck em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .essay-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-auto-rows: 220px;
+      gap: 12px;
+    }
+    .essay-tile {
+      background: var(--paper-4);
+      padding: 18px 18px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .essay-tile:hover { transform: translateY(-3px); }
+    /* sizes */
+    .essay-tile.s2 { grid-column: span 2; grid-row: span 2; }
+    .essay-tile.s2-1 { grid-column: span 2; grid-row: span 1; }
+    .essay-tile.s1-2 { grid-column: span 1; grid-row: span 2; }
+    .essay-tile.s3-1 { grid-column: span 3; grid-row: span 1; }
+    .essay-tile.s4-1 { grid-column: span 4; grid-row: span 1; }
+    .essay-tile.s4-2 { grid-column: span 4; grid-row: span 2; }
+    /* themes */
+    .essay-tile.red { background: var(--red); color: var(--paper); }
+    .essay-tile.dark { background: var(--ink); color: var(--paper); }
+    .essay-tile.cream { background: var(--paper-3); }
+    .essay-tile.white { background: var(--paper-4); }
+
+    .essay-tile .top {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .essay-tile.red .top, .essay-tile.dark .top { color: rgba(255,255,255,0.7); }
+    .essay-tile.red .top { color: var(--paper); opacity: 0.78; }
+    .essay-tile.cream .top, .essay-tile.white .top { color: var(--red); }
+    .essay-tile .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(18px, 1.6vw, 28px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .essay-tile.s4-2 .body, .essay-tile.s2 .body { font-size: clamp(28px, 2.4vw, 44px); }
+    .essay-tile .body em { font-style: italic; font-weight: 500; color: var(--red); }
+    .essay-tile.red .body { color: var(--paper); }
+    .essay-tile.red .body em { color: var(--paper); }
+    .essay-tile.dark .body { color: var(--paper); }
+    .essay-tile.dark .body em { color: var(--red); }
+    .essay-tile .body small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: -0.005em;
+      line-height: 1.5;
+      color: var(--ink-2);
+    }
+    .essay-tile.red .body small, .essay-tile.dark .body small { color: rgba(255,255,255,0.78); }
+    .essay-tile .ed-cap {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+    }
+    .essay-tile.red .ed-cap, .essay-tile.dark .ed-cap { color: rgba(255,255,255,0.55); border-top-color: rgba(255,255,255,0.18); }
+    .essay-tile.cream .ed-cap, .essay-tile.white .ed-cap { color: var(--ink-3); }
+    .essay-tile .ed-cap b { color: var(--red); font-weight: 800; }
+    .essay-tile.red .ed-cap b, .essay-tile.dark .ed-cap b { color: var(--paper); }
+
+    /* placeholder marker */
+    .essay-tile.placeholder::after {
+      content: "▢ PLACEHOLDER";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 2px 6px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 7px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+      background: rgba(255,255,255,0.65);
+    }
+    .essay-tile.red.placeholder::after { background: rgba(255,255,255,0.92); color: var(--red); }
+    .essay-tile.dark.placeholder::after { background: rgba(255,255,255,0.18); color: var(--paper); }
+
+    /* real-photo variant — actual Instagram cover slide fills the tile */
+    .essay-tile.real {
+      padding: 0;
+      background: var(--ink);
+      overflow: hidden;
+    }
+    .essay-tile.real > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .essay-tile.real:hover > img { transform: scale(1.04); }
+    .essay-tile.real .e-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 9px;
+      background: rgba(31, 29, 26, 0.82);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--paper-4);
+      z-index: 2;
+    }
+    .essay-tile.real .e-top b { color: var(--red); font-weight: 800; margin-right: 4px; }
+    /* Carousel pagination badge */
+    .essay-tile.real .e-pages {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 9px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .essay-tile.real .e-pages::before {
+      content: "▦";
+      font-size: 10px;
+      line-height: 1;
+    }
+    .essay-tile.real .e-pages.live { background: var(--ink); }
+    .essay-tile.real .e-pages.live::before { content: "▶"; color: var(--red); }
+    .essay-tile.real .e-pages.inner { background: var(--paper-3); color: var(--ink); }
+    .essay-tile.real .e-pages.inner::before { content: "↳"; color: var(--red); }
+
+    /* Bottom plate with editorial caption — the "magazine" credit */
+    .essay-tile.real .e-bot {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 16px 16px;
+      background: linear-gradient(to top, rgba(31,29,26,0.92) 30%, rgba(31,29,26,0.55) 75%, rgba(31,29,26,0));
+      color: var(--paper-4);
+      z-index: 2;
+    }
+    .essay-tile.real .e-bot .e-headline {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(14px, 1.3vw, 18px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--paper);
+      margin-bottom: 4px;
+    }
+    .essay-tile.s4-2.real .e-bot .e-headline,
+    .essay-tile.s2.real .e-bot .e-headline { font-size: clamp(20px, 1.8vw, 26px); }
+    .essay-tile.real .e-bot .e-headline em { font-style: italic; font-weight: 500; color: var(--red); }
+    .essay-tile.real .e-bot .e-cred {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(251,248,241,0.65);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+    .essay-tile.real .e-bot .e-cred b { color: var(--red); font-weight: 800; }
+
+    .essay-foot {
+      margin-top: 36px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(251,248,241,0.32);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(251,248,241,0.55);
+    }
+    .essay-foot b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 1080px) {
+      .essay-grid { grid-template-columns: repeat(4, 1fr); }
+      .essay-tile.s4-2, .essay-tile.s4-1 { grid-column: span 4; }
+      .essay-tile.s3-1 { grid-column: span 4; }
+    }
+    @media (max-width: 600px) {
+      .essay-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 180px; }
+      .essay-tile, .essay-tile.s2, .essay-tile.s3-1, .essay-tile.s4-2, .essay-tile.s4-1 {
+        grid-column: span 2; grid-row: span 1;
+      }
+      .essay-tile.s1-2 { grid-column: span 1; grid-row: span 1; }
+    }
+
+    /* ============================================================
+       PULL QUOTE — full bleed
+    ============================================================ */
+    .pull-spread {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 120px 56px 120px;
+      position: relative;
+    }
+    .pull-spread .open-quote {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(120px, 22vw, 320px);
+      line-height: 0.7;
+      letter-spacing: -0.05em;
+      color: var(--red);
+      margin-bottom: -0.4em;
+    }
+    .pull-spread blockquote {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      max-width: 24ch;
+    }
+    .pull-spread blockquote em {
+      font-style: italic;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .pull-spread .by {
+      margin-top: 56px;
+      padding-top: 22px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .pull-spread .by b { color: var(--ink); font-weight: 800; }
+    @media (max-width: 880px) { .pull-spread { padding: 56px 22px; } }
+
+    /* ============================================================
+       BACK COVER
+    ============================================================ */
+    .back-cover {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 64px 56px 56px;
+      background: var(--red);
+      color: var(--paper);
+      position: relative;
+    }
+    .back-cover::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background: var(--ink);
+    }
+    .back-cover-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+      gap: 56px;
+      align-items: end;
+    }
+    .back-cover-text { min-width: 0; }
+    .back-cover-text .ant {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--paper);
+      opacity: 0.78;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .back-cover-text .ant::before {
+      content: "";
+      display: inline-block;
+      width: 56px; height: 1.5px;
+      background: var(--paper);
+      opacity: 0.5;
+    }
+    .back-cover-text h2 {
+      font-family: var(--type);
+      font-weight: 900;
+      font-size: clamp(48px, 8vw, 128px);
+      line-height: 0.85;
+      letter-spacing: -0.045em;
+      color: var(--paper);
+      margin-bottom: 24px;
+    }
+    .back-cover-text h2 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .back-cover-text p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(14px, 1.4vw, 17px);
+      line-height: 1.65;
+      color: rgba(251,248,241,0.85);
+      max-width: 50ch;
+      margin-bottom: 1em;
+    }
+    .back-cover-text p b { color: var(--paper); font-weight: 700; }
+    .back-cover-text p em { font-style: italic; color: var(--ink); font-weight: 500; }
+    .back-cover-text .credit {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(251,248,241,0.32);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+    .back-cover-text .credit em { font-style: italic; font-weight: 500; color: var(--ink); }
+    .back-cover-text .credit b { color: var(--ink); font-weight: 800; }
+
+    .back-cover-card {
+      background: var(--paper-4);
+      color: var(--ink);
+      padding: 28px 30px;
+      max-width: 380px;
+      margin: 0 0 0 auto;
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.4);
+    }
+    .back-cover-card h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 14px;
+    }
+    .back-cover-card dl > div {
+      padding: 8px 0;
+      border-top: 1px dashed var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .back-cover-card dl > div:first-child { border-top: 0; padding-top: 0; }
+    .back-cover-card dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .back-cover-card dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .back-cover-card dd em { font-style: italic; font-weight: 500; color: var(--red); }
+    .back-cover-card .barcode {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1.5px solid var(--ink);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+    }
+    .back-cover-card .barcode .bar {
+      width: 110px;
+      height: 32px;
+      background-image:
+        linear-gradient(to right,
+          var(--ink) 0 1px, transparent 1px 3px,
+          var(--ink) 3px 4px, transparent 4px 6px,
+          var(--ink) 6px 8px, transparent 8px 11px,
+          var(--ink) 11px 12px, transparent 12px 16px,
+          var(--ink) 16px 18px, transparent 18px 20px,
+          var(--ink) 20px 22px, transparent 22px 25px,
+          var(--ink) 25px 27px, transparent 27px 30px,
+          var(--ink) 30px 31px);
+      background-size: 31px 100%;
+      background-repeat: repeat-x;
+    }
+    .back-cover-card .barcode .ix {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      text-align: right;
+    }
+    .back-cover-card .barcode .ix small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 2px;
+    }
+    @media (max-width: 880px) {
+      .back-cover { padding: 40px 22px; }
+      .back-cover-grid { grid-template-columns: 1fr; gap: 32px; }
+      .back-cover-card { max-width: none; margin: 0; }
+    }
+
+    /* ============================================================
+       COLOPHON
+    ============================================================ */
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper-4); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The In-Flight Magazine</span>
+    <span class="right">Vol. <b>I</b> · Issue 019 · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       COVER
+  ==================================================================== -->
+  <section class="cover">
+    <header class="cover-strip">
+      <span class="left">
+        <span class="seal">VOL <b>I</b></span>
+        Issue <b>019</b> · 2026
+      </span>
+      <span class="center">An <b>NP / FrameFlow</b> publication · Toronto</span>
+      <span class="right">CAD <b>$0.00</b> · cabin only</span>
+    </header>
+
+    <div class="cover-grid">
+      <div class="cover-titling">
+        <h1 class="cover-magname">Yeni <em>Yaşam.</em></h1>
+        <p class="cover-tagline">— The in-flight magazine of <em>Northern Pathways</em> —</p>
+
+        <div class="cover-lines">
+          <div class="cover-line">
+            <span class="num">№ 01</span>
+            <span class="text">A letter from the <em>captain.</em></span>
+            <span class="pn">P. <b>04</b></span>
+          </div>
+          <div class="cover-line">
+            <span class="num">№ 02</span>
+            <span class="text">Five values at <em>cruising altitude.</em></span>
+            <span class="pn">P. <b>06</b></span>
+          </div>
+          <div class="cover-line">
+            <span class="num">№ 03</span>
+            <span class="text">Touch down — the <em>website,</em> rebuilt.</span>
+            <span class="pn">P. <b>08</b></span>
+          </div>
+          <div class="cover-line">
+            <span class="num">№ 04</span>
+            <span class="text">The approach — a CRS in <em>15 fields.</em></span>
+            <span class="pn">P. <b>10</b></span>
+          </div>
+          <div class="cover-line">
+            <span class="num">№ 05</span>
+            <span class="text">Photo essay — <em>yeni yaşam.</em></span>
+            <span class="pn">P. <b>12</b></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="cover-photo">
+        <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Captain Burcu Akyol"></div>
+        <div class="who">
+          <h4>Capt. Burcu Akyol</h4>
+          <p>RCIC-IRB <em>· editor in chief</em></p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="cover-foot">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="barcode" aria-hidden="true"></span>
+        <span class="barcode-meta">ISSN <b>019.2026</b></span>
+      </div>
+      <span class="center"><b>Yeni Yaşam</b> · the in-flight magazine of Northern Pathways · 2026</span>
+      <span class="price">№ 019<small>Spring · 2026</small></span>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       MASTHEAD  (page 02)
+  ==================================================================== -->
+  <section class="page reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Masthead —</span>
+      <span class="right">Page <b>02</b></span>
+    </header>
+
+    <div class="masthead-grid">
+      <div class="masthead-text">
+        <h1>The magazine of a <em>regulated practice.</em></h1>
+        <p class="deck">
+          <em>Yeni Yaşam</em> &mdash; <b>"new life"</b> &mdash; is
+          the in-flight magazine of <b>Northern Pathways Immigration
+          Consulting</b>, prepared by <b>FrameFlow Studio</b> in
+          Toronto. Published in two languages (EN/TR), printed in
+          one typeface (Montserrat), and grounded in five values:
+          <em>Ethical Guidance, Personalised Service, Transparency,
+          Knowledge &amp; Expertise, Care &amp; Lived Experience.</em>
+        </p>
+      </div>
+
+      <aside class="masthead-card">
+        <h4>Masthead</h4>
+        <dl>
+          <div><dt>Editor in Chief</dt><dd>Burcu Akyol <em>RCIC-IRB</em></dd></div>
+          <div><dt>Publisher</dt><dd>Northern Pathways</dd></div>
+          <div><dt>Studio of record</dt><dd>FrameFlow · Toronto</dd></div>
+          <div><dt>Issue</dt><dd>019 · Vol. I</dd></div>
+          <div><dt>Year</dt><dd>MMXXVI</dd></div>
+          <div><dt>Locales</dt><dd>EN <em>·</em> TR</dd></div>
+          <div><dt>Set in</dt><dd>Montserrat 300–900</dd></div>
+          <div><dt>Inks</dt><dd>4 · charcoal, red, paper, off-white</dd></div>
+        </dl>
+        <p class="seal">Filed in good faith <b>·</b> 2026</p>
+      </aside>
+    </div>
+
+    <span class="folio">— <b>02</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       TABLE OF CONTENTS  (page 03)
+  ==================================================================== -->
+  <section class="page cream reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Table of Contents —</span>
+      <span class="right">Page <b>03</b></span>
+    </header>
+
+    <header class="toc-head">
+      <h2>Inside <em>this issue.</em></h2>
+      <p class="meta"><b>06</b> features · spring 2026</p>
+    </header>
+
+    <div class="toc-grid">
+      <article class="toc-row">
+        <span class="pn">№ 01</span>
+        <div>
+          <p class="name">Letter from the <em>Captain</em></p>
+          <p class="blurb">An editorial introduction from Burcu Akyol, RCIC-IRB. The view from the cockpit.</p>
+        </div>
+        <span class="pg">P. <b>04</b></span>
+      </article>
+      <article class="toc-row">
+        <span class="pn">№ 02</span>
+        <div>
+          <p class="name">Five Values at <em>Cruising Altitude</em></p>
+          <p class="blurb">The brand's Five — Ethical Guidance, Personalised Service, Transparency, Knowledge, Care — as the engine of every flight.</p>
+        </div>
+        <span class="pg">P. <b>06</b></span>
+      </article>
+      <article class="toc-row">
+        <span class="pn">№ 03</span>
+        <div>
+          <p class="name">Touch Down · the <em>Website</em></p>
+          <p class="blurb">A long-form feature on northernpathways.ca — twelve routes per locale, the architecture of the home page, the footer credit.</p>
+        </div>
+        <span class="pg">P. <b>08</b></span>
+      </article>
+      <article class="toc-row">
+        <span class="pn">№ 04</span>
+        <div>
+          <p class="name">The Approach · the <em>CRS Calculator</em></p>
+          <p class="blurb">A regulated calculator at the centre of the engagement. 15 fields, six categories, one PDF.</p>
+        </div>
+        <span class="pg">P. <b>10</b></span>
+      </article>
+      <article class="toc-row">
+        <span class="pn">№ 05</span>
+        <div>
+          <p class="name">Photo Essay · <em>Yeni Yaşam</em></p>
+          <p class="blurb">A photo essay from <b>@kanadadayeniyasam</b> &mdash; draw cards, Reels with the Captain, the diaspora's handle. (Tiles to be supplied.)</p>
+        </div>
+        <span class="pg">P. <b>12</b></span>
+      </article>
+      <article class="toc-row">
+        <span class="pn">№ 06</span>
+        <div>
+          <p class="name">Closing Despatch &amp; <em>Colophon</em></p>
+          <p class="blurb">The brand voice at full bleed, the back cover credit, and the colophon for the next issue.</p>
+        </div>
+        <span class="pg">P. <b>14</b></span>
+      </article>
+    </div>
+
+    <span class="folio">— <b>03</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 01 — LETTER FROM THE CAPTAIN  (pages 04–05)
+  ==================================================================== -->
+  <section class="page reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Feature № <b style="color:var(--red);">01</b> · Letter —</span>
+      <span class="right">Page <b>04 — 05</b></span>
+    </header>
+
+    <div class="letter-grid">
+      <div class="letter-text">
+        <p class="letter-eyebrow">Feature № 01 · Letter from the Captain</p>
+        <h2>The view <em>from the cockpit.</em></h2>
+
+        <div class="letter-body">
+          <p>Most of our prospective clients board through Turkish-language search and word-of-mouth. They are looking for two things at once: <em>warmth</em> and <em>authority</em>. A regulated immigration consultancy must be both. This issue of <em>Yeni Yaşam</em> documents an engagement that took those two requirements seriously and shipped them as one piece of work.</p>
+
+          <p>FrameFlow Studio joined us in spring 2025 with one brief: to make the firm <strong>findable, bookable, and trustworthy</strong> in two languages. They built three things. A multilingual marketing site at <strong>northernpathways.ca</strong>. A pair of <em>regulator-grade calculators</em> &mdash; the Comprehensive Ranking System and the Six Selection Factors &mdash; that finish on a one-click PDF I can sign as counsel of record. And a Turkish-language Instagram, <strong>@kanadadayeniyasam</strong>, that mirrors every IRCC draw to the diaspora the morning it lands.</p>
+
+          <p>What follows is one issue of one season. Five values, three deliverables, two languages, one typeface. The footer credit on every page reads <em>Designed and developed by Frame Flow.</em></p>
+        </div>
+
+        <div class="letter-sig">
+          <span class="scribble">B. Akyol</span>
+          <div class="who">
+            <h5>Burcu Akyol</h5>
+            <p>RCIC-IRB <em>·</em> Editor in Chief</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="letter-portrait">
+        <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Captain Burcu Akyol"></div>
+        <p class="cap">Capt. <b>Burcu Akyol</b><br>RCIC-IRB · CICC · CAPIC · Queen&rsquo;s</p>
+      </aside>
+    </div>
+
+    <span class="folio">— <b>04 — 05</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 02 — BRAND DNA · 5 VALUES  (pages 06–07)
+  ==================================================================== -->
+  <section class="page cream reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Feature № <b style="color:var(--red);">02</b> · Brand DNA —</span>
+      <span class="right">Page <b>06 — 07</b></span>
+    </header>
+
+    <header class="dna-head">
+      <h2>Five values <em>at cruising altitude.</em></h2>
+      <p class="meta">Brand DNA · <b>05 / 05</b></p>
+    </header>
+
+    <p class="feature-deck" style="margin-bottom: 36px;">
+      The brand DNA &mdash; five values that organise every flight on
+      the schedule. <em>Each one ties to a deliverable that we
+      shipped.</em>
+    </p>
+
+    <div class="dna-grid">
+      <article class="dna-cell">
+        <p class="dn">Value № <b>01</b></p>
+        <p class="dt-num">01</p>
+        <h3 class="dt-h">Ethical <em>Guidance.</em></h3>
+        <p>Every word the firm publishes is <em>signed</em> by an RCIC-IRB. The College of ICC standard sets the line; the work clears it.</p>
+        <p class="dt-tied">→ Tied to <b>Counsel of record</b></p>
+      </article>
+      <article class="dna-cell">
+        <p class="dn">Value № <b>02</b></p>
+        <p class="dt-num">02</p>
+        <h3 class="dt-h">Personalised <em>Service.</em></h3>
+        <p>The home page leads with Burcu's name and credentials. Clients meet a counsel, not a form.</p>
+        <p class="dt-tied">→ Tied to <b>The Website</b></p>
+      </article>
+      <article class="dna-cell">
+        <p class="dn">Value № <b>03</b></p>
+        <p class="dt-num">03</p>
+        <h3 class="dt-h">Transparency <em>· in pricing.</em></h3>
+        <p>The fees are listed up front. The CRS &amp; FSWP calculators expose every point. The PDF can be taken to any consult.</p>
+        <p class="dt-tied">→ Tied to <b>The Calculator</b></p>
+      </article>
+      <article class="dna-cell">
+        <p class="dn">Value № <b>04</b></p>
+        <p class="dt-num">04</p>
+        <h3 class="dt-h">Knowledge <em>&amp; Expertise.</em></h3>
+        <p>156+ IRCC draws indexed since 2015. Live tracker, weekly updates, RCIC-grade commentary.</p>
+        <p class="dt-tied">→ Tied to <b>The Draws Feed</b></p>
+      </article>
+      <article class="dna-cell">
+        <p class="dn">Value № <b>05</b></p>
+        <p class="dt-num">05</p>
+        <h3 class="dt-h">Care <em>&amp; Lived Experience.</em></h3>
+        <p>The diaspora arrives in two languages. The firm meets them in both — on draw day, in Reels, in Burcu's voice.</p>
+        <p class="dt-tied">→ Tied to <b>@kanadadayeniyasam</b></p>
+      </article>
+    </div>
+
+    <span class="folio">— <b>06 — 07</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 03 — THE WEBSITE  (pages 08–09)
+  ==================================================================== -->
+  <section class="page reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Feature № <b style="color:var(--red);">03</b> · The Website —</span>
+      <span class="right">Page <b>08 — 09</b></span>
+    </header>
+
+    <header class="feature-banner">
+      <p class="feat-no">Feat. № <b>03</b></p>
+      <p class="kicker">A long-form feature</p>
+      <div class="title">
+        <h2>Touch <em>Down</em> &mdash; northernpathways.ca, rebuilt.</h2>
+      </div>
+      <p class="meta">12 routes · EN+TR<br><b>Live · since 2026</b></p>
+    </header>
+
+    <p class="feature-deck">
+      A <b>multilingual marketing site</b> that opens in two
+      languages and asks for the right thing first. The home view
+      leads with <em>Burcu Akyol's name</em>, the firm's
+      credentials, and a single CTA &mdash; <strong>Book a
+      Consultation</strong>.
+    </p>
+
+    <div class="feature-body">
+      <div class="feature-copy">
+        <p>The site is served at <strong>/en</strong> and
+          <strong>/tr</strong> with first-class language detection. A
+          single <em>book a consultation</em> CTA appears on every
+          route. Five service pages map to the firm's five practice
+          areas: Economic Immigration, Family Sponsorship, Temporary
+          Residence, PR Card &amp; PRTD, Citizenship.</p>
+
+        <p>The architecture earns its keep. Each service page
+          terminates at one of two places &mdash; the calculator (if
+          eligibility is the question) or the onboarding form (if
+          the question has been answered). <strong>Every page links
+          to a consultation, a calculator, or both.</strong></p>
+
+        <p>The brand DNA shows up in the small choices. Burcu's
+          headshot in the hero answers <em>Personalised Service</em>.
+          The fees page (with prices listed up front) answers
+          <em>Transparency</em>. The footer credit on every page
+          answers <em>Knowledge &amp; Expertise</em>: <strong>Design
+          &amp; development by Frame Flow.</strong></p>
+      </div>
+
+      <figure class="feature-figure">
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en</span>
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+          </header>
+          <div class="site-fig">
+            <nav class="nav-row">
+              <span class="brand">
+                <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+                <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+              </span>
+              <nav class="menu">
+                <span class="on">Home</span>
+                <span>Our Team</span>
+                <span>Fees</span>
+                <span>Events</span>
+                <span>Blog</span>
+              </nav>
+              <div class="right">
+                <span class="lt"><span class="on">EN</span><span>TR</span></span>
+                <span class="book">Book Consult</span>
+              </div>
+            </nav>
+            <div class="hero-row">
+              <div class="text">
+                <p class="eb">Northern Pathways · RCIC-IRB</p>
+                <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+                <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility, strategy, and legal representation.</p>
+                <div class="ctas">
+                  <a class="p">Book a Consultation</a>
+                  <a class="s">Explore Services</a>
+                </div>
+              </div>
+              <aside class="photo">
+                <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+                <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB</p></div>
+              </aside>
+            </div>
+            <footer class="ff-foot">
+              <span class="left">© 2026 NP · All Rights Reserved.</span>
+              <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+            </footer>
+          </div>
+        </article>
+        <p class="feature-figure-cap">
+          Fig. <b>03.1</b> &mdash; <em>The home view at /en.</em>
+          Hero set in Montserrat 800 / 400 / italic 500. Footer
+          credit reads <b>Design &amp; development by Frame Flow</b>
+          on every page.
+        </p>
+      </figure>
+    </div>
+
+    <span class="folio">— <b>08 — 09</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 04 — CRS CALCULATOR  (pages 10–11)
+  ==================================================================== -->
+  <section class="page cream reveal">
+    <header class="running-head">
+      <span class="left"><b>Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Feature № <b style="color:var(--red);">04</b> · The Approach —</span>
+      <span class="right">Page <b>10 — 11</b></span>
+    </header>
+
+    <header class="feature-banner">
+      <p class="feat-no">Feat. № <b>04</b></p>
+      <p class="kicker">A long-form feature</p>
+      <div class="title">
+        <h2>The <em>Approach</em> &mdash; a CRS in 15 fields.</h2>
+      </div>
+      <p class="meta">15 fields · 6 categories<br><b>Bilingual · PDF</b></p>
+    </header>
+
+    <p class="feature-deck">
+      A regulated <b>Comprehensive Ranking System</b> calculator at
+      the centre of the engagement. Honours IRCC's 2025 grid
+      &mdash; including the <em>removal of arranged-employment
+      points</em> &mdash; and finishes on a one-click PDF.
+    </p>
+
+    <div class="feature-body">
+      <div class="feature-copy">
+        <p>Express Entry is a number game. The applicant has a CRS
+          score, the IRCC has a draw cutoff, and the gap between
+          them is the work of an immigration practice. The
+          calculator we built lets a client see that gap before
+          their first consultation.</p>
+
+        <p>It runs in two languages with full IRCC parity. Every
+          input is tooltipped &mdash; <em>not as a marketing flourish,
+          but as a regulator-grade clarification</em>. NCLC versus
+          CLB. Provincial nominee versus federal stream. Arranged
+          employment status under the new 2025 rules.</p>
+
+        <p>The PDF is the artefact. Counsel can sign it, the client
+          can take it to a consult, and the firm can use it as the
+          basis for an eligibility memo. The Six Selection Factors
+          checker (FSWP eligibility, 67/100 cutoff) sits on the same
+          stack and exports the same PDF format.</p>
+      </div>
+
+      <figure class="feature-figure">
+        <article class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en/crs-calculator</span>
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+          </header>
+          <div class="calc-fig">
+            <div class="form">
+              <header class="head">
+                <p class="lbl">CRS · Step 02 / 06</p>
+                <h4>Core / Human Capital</h4>
+              </header>
+              <div class="row on"><span class="k">Age · 32</span><span class="v">110</span></div>
+              <div class="row on"><span class="k">Master&rsquo;s</span><span class="v">135</span></div>
+              <div class="row on"><span class="k">CLB 9</span><span class="v">124</span></div>
+              <div class="row on"><span class="k">French · NCLC 7+</span><span class="v">25</span></div>
+              <div class="row"><span class="k">CDN work · 1y</span><span class="v">35</span></div>
+            </div>
+            <aside class="score">
+              <p class="lbl">Estimated CRS</p>
+              <p class="total">487<small>CRS / 1200</small></p>
+              <span class="pdf">↓ PDF</span>
+            </aside>
+          </div>
+        </article>
+        <p class="feature-figure-cap">
+          Fig. <b>04.1</b> &mdash; <em>The calculator at step 02 of
+          06.</em> Score plate set in Montserrat 800 / -0.04em.
+          Active rows highlighted with 1px <b>#B92025</b>.
+        </p>
+      </figure>
+    </div>
+
+    <span class="folio">— <b>10 — 11</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       FEATURE 05 — PHOTO ESSAY  (pages 12–13) — DARK BACKGROUND
+  ==================================================================== -->
+  <section class="page dark reveal">
+    <header class="running-head">
+      <span class="left" style="color: rgba(251,248,241,0.6);"><b style="color: var(--paper);">Yeni Yaşam</b> · Vol. I · 019</span>
+      <span class="center">— Feature № <b style="color:var(--red);">05</b> · Photo Essay —</span>
+      <span class="right" style="color: rgba(251,248,241,0.6);">Page <b style="color: var(--paper);">12 — 13</b></span>
+    </header>
+
+    <header class="essay-banner">
+      <p class="feat-no">Feat. № <b style="color: var(--paper);">05</b></p>
+      <div class="title">
+        <p class="kicker">A photo essay from @kanadadayeniyasam</p>
+        <h2><em>Yeni</em> bir yaşam.</h2>
+      </div>
+      <p class="meta">248 posts · 14.2k followers<br><b>Turkish · ongoing</b></p>
+    </header>
+
+    <p class="essay-deck">
+      Twelve frames from the firm's Turkish-language Instagram
+      &mdash; <strong>ten distinct posts</strong>, eight of them
+      multi-slide carousels (4 to 9 slides each) and two live
+      webinars. The final two frames reveal interior slides
+      &mdash; <em>the depth of the carousel work</em>.
+    </p>
+
+    <div class="essay-grid">
+      <article class="essay-tile s2 real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Canada Immigration Levels Plan 2026–2028">
+        <span class="e-top"><b>·</b> Frame 01</span>
+        <span class="e-pages">1 / 9</span>
+        <div class="e-bot">
+          <p class="e-headline">Göç Seviyeleri Planı &mdash; <em>2026 – 2028.</em></p>
+          <p class="e-cred"><span>tr · levels plan</span><span><b>9-slide</b> carousel</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile dark real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-08/01.png" alt="OINP new invitation round 18 March 2026">
+        <span class="e-top"><b>·</b> Frame 02</span>
+        <span class="e-pages">1 / 6</span>
+        <div class="e-bot">
+          <p class="e-headline">OINP &mdash; <em>18 Mart</em> davet turu.</p>
+          <p class="e-cred"><span>tr · ontario</span><span><b>2026</b></span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile cream real">
+        <img src="../../../public/portfolio/northern-pathways/social/post-09.png" alt="PGWP webinar with Burcu Akyol">
+        <span class="e-top"><b>·</b> Frame 03</span>
+        <span class="e-pages live">Live</span>
+        <div class="e-bot">
+          <p class="e-headline">Webinar &mdash; <em>PGWP</em> şartları.</p>
+          <p class="e-cred"><span>tr · 22 Aralık 25</span><span><b>Burcu Akyol</b></span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile s2-1 white real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-06/01.png" alt="Yeni Yaşam — in-person seminar Ankara & Istanbul">
+        <span class="e-top"><b>·</b> Frame 04 · Centerfold</span>
+        <span class="e-pages">1 / 3</span>
+        <div class="e-bot">
+          <p class="e-headline">Yeni Yaşam &mdash; <em>Ankara &amp; İstanbul</em> oturumları.</p>
+          <p class="e-cred"><span>tr · 13 / 20 Ekim</span><span><b>4 speakers</b> · in-person</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-02/01.png" alt="Super Visa application income flexibility">
+        <span class="e-top"><b>·</b> Frame 05</span>
+        <span class="e-pages">1 / 4</span>
+        <div class="e-bot">
+          <p class="e-headline">Süper Vize &mdash; <em>gelir esnekliği.</em></p>
+          <p class="e-cred"><span>tr · super visa</span><span><b>2026</b></span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile s1-2 dark real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario Bill 30 — new OINP programs">
+        <span class="e-top"><b>·</b> Frame 06</span>
+        <span class="e-pages">1 / 6</span>
+        <div class="e-bot">
+          <p class="e-headline">Ontario &mdash; <em>OINP</em> kapsamında yeni programlar.</p>
+          <p class="e-cred"><span>tr · ontario</span><span><b>Bill 30</b> · 2025</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-03/01.png" alt="Canada doctor shortage immigration steps">
+        <span class="e-top"><b>·</b> Frame 07</span>
+        <span class="e-pages">1 / 4</span>
+        <div class="e-bot">
+          <p class="e-headline">Doktor açığını <em>hedefleyen</em> adımlar.</p>
+          <p class="e-cred"><span>tr · healthcare</span><span><b>RCIC</b> note</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile red real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry public consultation 2026">
+        <span class="e-top"><b>·</b> Frame 08</span>
+        <span class="e-pages">1 / 6</span>
+        <div class="e-bot">
+          <p class="e-headline">Express Entry &mdash; <em>kamuoyu görüşü.</em></p>
+          <p class="e-cred"><span>tr · IRCC</span><span><b>23 Apr</b> – 24 May 26</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile s4-2 real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit — what visa officer looks for">
+        <span class="e-top"><b>·</b> Frame 09 · Centerfold spread</span>
+        <span class="e-pages">1 / 8</span>
+        <div class="e-bot">
+          <p class="e-headline">Vize memuru öğrenim izninizde <em>neye bakar?</em></p>
+          <p class="e-cred"><span>tr · study permit</span><span><b>Co-presented</b> · NP × EduPathways</span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile cream real">
+        <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar with Burcu Akyol">
+        <span class="e-top"><b>·</b> Frame 10</span>
+        <span class="e-pages live">Live</span>
+        <div class="e-bot">
+          <p class="e-headline">Webinar &mdash; <em>Levels Plan</em> in PR planning.</p>
+          <p class="e-cred"><span>tr · 11 Kasım 25</span><span><b>Burcu Akyol</b></span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile dark real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-04/05.png" alt="Levels Plan — interior slide">
+        <span class="e-top"><b>·</b> Frame 11</span>
+        <span class="e-pages inner">5 / 9</span>
+        <div class="e-bot">
+          <p class="e-headline">Behind the carousel &mdash; <em>slide 5.</em></p>
+          <p class="e-cred"><span>tr · interior</span><span><b>Carousel № 04</b></span></p>
+        </div>
+      </article>
+
+      <article class="essay-tile red real">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-01/03.png" alt="Express Entry consultation — slide 3">
+        <span class="e-top"><b>·</b> Frame 12</span>
+        <span class="e-pages inner">3 / 6</span>
+        <div class="e-bot">
+          <p class="e-headline">Behind the carousel &mdash; <em>slide 3.</em></p>
+          <p class="e-cred"><span>tr · interior</span><span><b>Carousel № 01</b></span></p>
+        </div>
+      </article>
+    </div>
+
+    <footer class="essay-foot">
+      <span><b>↘</b> Cover slides above with carousel pagination ▦. Two final frames (11 / 12) reveal interior slides &mdash; the depth of the carousel work.</span>
+      <span>Photo Essay <b>·</b> Yeni Yaşam № 019 <b>·</b> 12 frames · <b>10 distinct posts</b></span>
+    </footer>
+
+    <span class="folio">— <b>12 — 13</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b></span>
+  </section>
+
+  <!-- =================================================================
+       PULL QUOTE  (centerfold, page 14)
+  ==================================================================== -->
+  <section class="page reveal" style="padding: 0;">
+    <div class="pull-spread">
+      <p class="open-quote">&ldquo;</p>
+      <blockquote>
+        Treat clients as <em>individuals,</em> not case numbers.
+      </blockquote>
+      <p class="by">
+        <span><b>—</b> Brand voice</span>
+        <span>Northern Pathways · Toronto · <b>2026</b></span>
+      </p>
+      <span class="folio" style="position: static; display: block; margin-top: 56px; padding: 0;">— <b>14</b> <span class="pipe">/</span> Yeni Yaşam № <b>019</b> · Pull quote</span>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       BACK COVER  (page 15)
+  ==================================================================== -->
+  <section class="back-cover reveal">
+    <div class="back-cover-grid">
+      <div class="back-cover-text">
+        <p class="ant">— Closing despatch · Yeni Yaşam № 019 —</p>
+        <h2>Designed<br>by <em>Frame Flow.</em></h2>
+        <p>This issue of <b>Yeni Yaşam</b> documents one season of work for Northern Pathways Immigration Consulting &mdash; a multilingual marketing site, a pair of regulated calculators, a live IRCC draws feed, and the diaspora's Turkish-language handle. <em>Filed in good faith, in two languages, in one typeface.</em></p>
+        <p>If your firm holds a record worth publishing, we&rsquo;d be glad to set the next issue.</p>
+        <p class="credit">Designed &amp; developed by <b>Frame Flow</b> <em>·</em> Toronto · MMXXVI</p>
+      </div>
+
+      <aside class="back-cover-card">
+        <h4>Next issue</h4>
+        <dl>
+          <div><dt>Vol</dt><dd>I · No. 020</dd></div>
+          <div><dt>Year</dt><dd>2027</dd></div>
+          <div><dt>Studio</dt><dd>FrameFlow · Toronto</dd></div>
+          <div><dt>Subject</dt><dd>TBA <em>· your firm?</em></dd></div>
+        </dl>
+        <div class="barcode">
+          <span class="bar" aria-hidden="true"></span>
+          <span class="ix">№ 020<small>Available 2027</small></span>
+        </div>
+      </aside>
+    </div>
+
+    <span class="folio" style="color: rgba(251,248,241,0.55);">— <b style="color: var(--paper);">15</b> <span class="pipe" style="color: rgba(251,248,241,0.32);">/</span> Yeni Yaşam № <b style="color: var(--paper);">019</b></span>
+  </section>
+
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Yeni Yaşam № 019</span>
+    <span class="right">Filed by <strong>FrameFlow</strong></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

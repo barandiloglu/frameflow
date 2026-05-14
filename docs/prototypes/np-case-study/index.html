@@ -1,0 +1,2859 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — Website &amp; Tools · A FrameFlow Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap">
+  <style>
+    /* ==============================================================
+       NORTHERN PATHWAYS — CASE STUDY
+       Institutional · Minimalist · Transparent clarity.
+       Brand kit: Maple Red #b92025 · #f9f9f9 · #2c2b2b · #ffffff.
+       Type: Montserrat only.
+       Lead with the work: website rebuild + 3 tools.
+       Mention the business briefly through brand DNA chips.
+    ============================================================== */
+
+    :root {
+      --red:     #b92025;
+      --paper:   #f9f9f9;
+      --white:   #ffffff;
+      --ink:     #2c2b2b;
+
+      --ink-1:   rgba(44, 43, 43, 0.92);
+      --ink-2:   rgba(44, 43, 43, 0.72);
+      --ink-3:   rgba(44, 43, 43, 0.50);
+      --ink-4:   rgba(44, 43, 43, 0.28);
+      --ink-5:   rgba(44, 43, 43, 0.14);
+      --ink-6:   rgba(44, 43, 43, 0.06);
+
+      --on-dark-1: rgba(255, 255, 255, 0.92);
+      --on-dark-2: rgba(255, 255, 255, 0.62);
+      --on-dark-3: rgba(255, 255, 255, 0.32);
+      --on-dark-4: rgba(255, 255, 255, 0.14);
+
+      --type:    "Montserrat", system-ui, sans-serif;
+
+      --max:     1320px;
+      --pad-x:   clamp(20px, 5vw, 56px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      border-top: 4px solid var(--red);
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding-left: var(--pad-x);
+      padding-right: var(--pad-x);
+    }
+
+    /* Eyebrow / micro-label */
+    .eyebrow {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1.5px;
+      background: var(--red);
+    }
+
+    /* ===========================================================
+       TOP BAR — minimal, institutional credit
+    =========================================================== */
+    .topbar {
+      border-bottom: 1px solid var(--ink-5);
+      background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .topbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      color: var(--ink);
+    }
+    .topbar .brand .dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+    .topbar nav {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+    }
+    .topbar nav a {
+      transition: color 0.2s;
+    }
+    .topbar nav a:hover { color: var(--red); }
+    .topbar .meta {
+      text-align: right;
+      color: var(--ink-2);
+    }
+    .topbar .meta b { color: var(--red); font-weight: 800; }
+    @media (max-width: 880px) {
+      .topbar-inner { grid-template-columns: auto 1fr; }
+      .topbar nav { display: none; }
+    }
+
+    /* ===========================================================
+       HERO — case study cover
+    =========================================================== */
+    .hero {
+      padding-top: clamp(72px, 9vw, 120px);
+      padding-bottom: clamp(56px, 7vw, 88px);
+      position: relative;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      align-items: baseline;
+      margin-bottom: 36px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .hero-meta .e {
+      color: var(--red);
+    }
+    .hero-meta .e::before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      width: 28px;
+      height: 1.5px;
+      background: var(--red);
+      margin-right: 12px;
+      margin-bottom: 3px;
+    }
+    .hero-meta .sep { color: var(--ink-4); }
+
+    .hero h1 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(44px, 7.4vw, 116px);
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 28px;
+      max-width: 17ch;
+    }
+    .hero h1 .red { color: var(--red); }
+    .hero h1 em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .hero .deck {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 64px;
+      align-items: end;
+      padding-top: 28px;
+      border-top: 1px solid var(--ink-5);
+    }
+    .hero .deck .desc {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: clamp(15px, 1.4vw, 18px);
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .hero .deck .desc b { color: var(--ink); font-weight: 700; }
+    .hero .deck .tagline {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(15px, 1.3vw, 17px);
+      line-height: 1.55;
+      color: var(--ink);
+      padding-left: 22px;
+      border-left: 3px solid var(--red);
+    }
+    .hero .deck .tagline small {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 12px;
+    }
+    @media (max-width: 880px) {
+      .hero .deck { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ===========================================================
+       PROJECT SHEET — fact bar
+    =========================================================== */
+    .factsheet {
+      padding-top: 32px;
+      padding-bottom: 56px;
+    }
+    .factsheet-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border-top: 2px solid var(--red);
+      border-bottom: 2px solid var(--red);
+      background: linear-gradient(to right, transparent, transparent);
+    }
+    .factsheet-grid > div {
+      padding: 22px 22px 24px;
+      border-left: 1px solid var(--ink-5);
+    }
+    .factsheet-grid > div:first-child { border-left: 0; padding-left: 0; }
+    .factsheet-grid > div:last-child { padding-right: 0; }
+    .factsheet-grid .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .factsheet-grid .v {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .factsheet-grid .v small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+    @media (max-width: 880px) {
+      .factsheet-grid { grid-template-columns: 1fr 1fr; }
+      .factsheet-grid > div { padding: 18px; border-left: 0; border-top: 1px solid var(--ink-5); }
+      .factsheet-grid > div:nth-child(odd) { border-right: 1px solid var(--ink-5); }
+      .factsheet-grid > div:first-child, .factsheet-grid > div:nth-child(2) { border-top: 0; padding-top: 0; }
+    }
+
+    /* ===========================================================
+       BRIEF — what we built (intro paragraph block)
+    =========================================================== */
+    .brief {
+      padding-top: clamp(56px, 7vw, 88px);
+      padding-bottom: clamp(56px, 7vw, 88px);
+    }
+    .brief-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .brief-grid h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-top: 16px;
+      max-width: 14ch;
+    }
+    .brief-grid h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .brief-grid .body p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-2);
+      margin-bottom: 1.1em;
+      max-width: 60ch;
+    }
+    .brief-grid .body p:first-child {
+      font-size: 18px;
+      color: var(--ink-1);
+      font-weight: 500;
+      padding-left: 18px;
+      border-left: 3px solid var(--red);
+    }
+    .brief-grid .body p:first-child::first-letter {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 48px;
+      line-height: 0.85;
+      float: left;
+      padding: 4px 12px 0 0;
+      color: var(--red);
+    }
+    .brief-grid .body p strong { color: var(--ink); font-weight: 700; }
+    .brief-grid .body p em { font-style: italic; font-weight: 500; color: var(--red); }
+    @media (max-width: 880px) {
+      .brief-grid { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ===========================================================
+       SECTION HEADER — repeating pattern
+    =========================================================== */
+    .sec-head {
+      padding-top: clamp(72px, 8vw, 112px);
+      padding-bottom: clamp(28px, 3.5vw, 44px);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 36px;
+      align-items: end;
+      border-top: 1px solid var(--ink-5);
+      position: relative;
+    }
+    .sec-head::before {
+      content: "";
+      position: absolute;
+      top: -1.5px;
+      left: 0;
+      width: 96px;
+      height: 3px;
+      background: var(--red);
+    }
+    .sec-head .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(48px, 6vw, 80px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--red);
+    }
+    .sec-head .text { padding-bottom: 6px; }
+    .sec-head h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .sec-head h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .sec-head .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .sec-head .meta {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-bottom: 8px;
+      max-width: 22ch;
+      line-height: 1.55;
+    }
+    .sec-head .meta b { color: var(--ink); font-weight: 800; }
+    @media (max-width: 720px) {
+      .sec-head { grid-template-columns: auto 1fr; gap: 18px; }
+      .sec-head .meta { display: none; }
+    }
+
+    /* ===========================================================
+       THE WEBSITE — faithful big mockup
+    =========================================================== */
+    .website {
+      padding-bottom: clamp(72px, 8vw, 112px);
+    }
+    .browser {
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow:
+        0 32px 80px -32px rgba(44, 43, 43, 0.22),
+        0 12px 32px -16px rgba(44, 43, 43, 0.08);
+      position: relative;
+    }
+    .browser::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 5;
+    }
+    .browser .chrome {
+      padding: 12px 16px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+    .browser .chrome .dots { display: flex; gap: 6px; }
+    .browser .chrome .dots span {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--ink-4);
+    }
+    .browser .chrome .dots span:first-child { background: var(--red); }
+    .browser .chrome .url {
+      padding: 5px 14px;
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--ink-2);
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .browser .chrome .url::before { content: "🔒  "; opacity: 0.6; }
+    .browser .chrome .lang {
+      display: inline-flex;
+      gap: 0;
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .browser .chrome .lang span {
+      padding: 4px 9px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--ink-3);
+    }
+    .browser .chrome .lang .on { background: var(--red); color: var(--white); }
+
+    /* the homepage */
+    .site {
+      background: var(--white);
+    }
+    .site-nav {
+      padding: 22px 36px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 36px;
+      align-items: center;
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-nav .logo { display: flex; align-items: center; gap: 12px; }
+    .site-nav .logo img { width: 42px; height: 42px; object-fit: contain; }
+    .site-nav .logo .word {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .site-nav .logo .word small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      color: var(--red);
+      margin-top: 4px;
+    }
+    .site-nav .menu {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--ink-1);
+    }
+    .site-nav .menu .on {
+      color: var(--red);
+      position: relative;
+    }
+    .site-nav .menu .on::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -8px;
+      height: 2px;
+      background: var(--red);
+    }
+    .site-nav .right { display: flex; align-items: center; gap: 14px; }
+    .site-nav .right .lang {
+      display: inline-flex;
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .site-nav .right .lang span {
+      padding: 5px 9px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--ink-3);
+    }
+    .site-nav .right .lang .on { background: var(--ink); color: var(--white); }
+    .site-nav .right .cta {
+      padding: 10px 18px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      border-radius: 4px;
+    }
+
+    /* hero */
+    .site-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+      gap: 56px;
+      align-items: center;
+      padding: 64px 36px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-hero .text { min-width: 0; }
+    .site-hero .eb {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .site-hero h1 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .site-hero h1 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-hero p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 52ch;
+      margin-bottom: 22px;
+    }
+    .site-hero p b { font-weight: 700; color: var(--ink); }
+    .site-hero .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+    .site-hero .ctas a {
+      padding: 11px 18px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+    .site-hero .ctas .p { background: var(--red); color: var(--white); }
+    .site-hero .ctas .s { border: 1.5px solid var(--ink); color: var(--ink); }
+    .site-hero .photo {
+      background: var(--white);
+      padding: 14px 14px 18px;
+      border: 1px solid var(--ink-5);
+      box-shadow: 0 16px 48px -24px rgba(44, 43, 43, 0.25);
+    }
+    .site-hero .photo .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .site-hero .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-hero .photo .who {
+      padding-top: 14px;
+      border-top: 3px solid var(--red);
+      margin-top: 14px;
+    }
+    .site-hero .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .site-hero .photo .who p {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin: 4px 0 0;
+    }
+
+    /* services preview strip */
+    .site-services {
+      padding: 36px 36px 22px;
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .site-services .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+    .site-services h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 22px;
+      max-width: 28ch;
+    }
+    .site-services h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-services .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .site-services .row > div {
+      padding: 14px 12px 16px;
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      background: var(--white);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .site-services .row > div:hover { border-color: var(--red); transform: translateY(-2px); }
+    .site-services .row .n {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .site-services .row .t {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .site-footer {
+      padding: 22px 36px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-top: 4px solid var(--red);
+    }
+    .site-footer .left {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-footer .credit {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-footer .credit b { color: var(--red); }
+
+    @media (max-width: 880px) {
+      .site-nav { padding: 16px 20px; grid-template-columns: auto auto; }
+      .site-nav .menu { display: none; }
+      .site-hero { grid-template-columns: 1fr; padding: 32px 20px; gap: 22px; }
+      .site-services { padding: 22px 20px; }
+      .site-services .row { grid-template-columns: repeat(2, 1fr); }
+      .site-footer { padding: 14px 20px; grid-template-columns: 1fr; gap: 8px; text-align: center; }
+    }
+
+    /* ===========================================================
+       OBSERVATIONS BAR — pinned site facts
+    =========================================================== */
+    .obs {
+      margin-top: 32px;
+      padding: 26px 30px;
+      background: var(--ink);
+      color: var(--white);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .obs > div { padding: 0 22px; border-left: 1px solid var(--on-dark-3); }
+    .obs > div:first-child { border-left: 0; padding-left: 0; }
+    .obs .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .obs .v {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--white);
+    }
+    .obs > div:nth-child(4) .v { color: var(--red); }
+    .obs .v small {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--on-dark-2);
+    }
+    @media (max-width: 880px) {
+      .obs { grid-template-columns: 1fr 1fr; gap: 18px; padding: 22px; }
+      .obs > div { padding: 0; border-left: 0; }
+    }
+
+    /* ===========================================================
+       TOOLS — three custom-built tools
+    =========================================================== */
+    .tools-intro {
+      padding-top: clamp(72px, 8vw, 112px);
+      padding-bottom: clamp(28px, 3.5vw, 48px);
+      border-top: 1px solid var(--ink-5);
+    }
+    .tools-intro .deck {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: end;
+    }
+    .tools-intro h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 4.6vw, 64px);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      max-width: 12ch;
+    }
+    .tools-intro h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .tools-intro .body p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .tools-intro .body p strong { color: var(--ink); font-weight: 700; }
+    @media (max-width: 880px) {
+      .tools-intro .deck { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    .tool {
+      padding-top: clamp(48px, 6vw, 80px);
+      padding-bottom: clamp(48px, 6vw, 80px);
+    }
+    .tool + .tool { border-top: 1px solid var(--ink-5); }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.45fr);
+      gap: 56px;
+      align-items: start;
+    }
+    .tool-grid.alt { grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr); }
+    .tool-grid.alt .tool-text { order: 2; }
+    @media (max-width: 980px) {
+      .tool-grid, .tool-grid.alt { grid-template-columns: 1fr; gap: 32px; }
+      .tool-grid.alt .tool-text { order: 0; }
+    }
+
+    .tool-text { position: sticky; top: 96px; }
+    @media (max-width: 980px) { .tool-text { position: static; } }
+
+    .tool-tag {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .tool-tag b {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    .tool-name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .tool-name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .tool-desc {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-2);
+      margin-bottom: 18px;
+      max-width: 44ch;
+    }
+    .tool-desc b { color: var(--ink); font-weight: 700; }
+    .tool-desc em { font-style: italic; color: var(--red); font-weight: 500; }
+
+    .tool-features {
+      padding-top: 18px;
+      border-top: 2px solid var(--red);
+      list-style: none;
+    }
+    .tool-features li {
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--ink-5);
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-1);
+    }
+    .tool-features li::before {
+      content: "→";
+      flex: 0 0 16px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--red);
+    }
+    .tool-features li > span { flex: 1 1 auto; min-width: 0; }
+    .tool-features li b { color: var(--red); font-weight: 800; }
+
+    /* ----- TOOL CHROME (window) ----- */
+    .toolwin {
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow:
+        0 32px 80px -32px rgba(44, 43, 43, 0.22),
+        0 12px 32px -16px rgba(44, 43, 43, 0.08);
+      position: relative;
+    }
+    .toolwin::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 5;
+    }
+    .toolwin .chrome {
+      padding: 11px 14px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .toolwin .chrome .dots { display: flex; gap: 5px; }
+    .toolwin .chrome .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--ink-4);
+    }
+    .toolwin .chrome .dots span:first-child { background: var(--red); }
+    .toolwin .chrome .url {
+      max-width: 260px;
+      margin: 0 auto;
+      padding: 4px 10px;
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 3px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .toolwin .chrome .live {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .toolwin .chrome .live::before {
+      content: "● ";
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+
+    /* ===========================================================
+       TOOL 01 — CRS CALCULATOR
+    =========================================================== */
+    .crs {
+      padding: 28px 28px 30px;
+    }
+    .crs-head {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      gap: 16px;
+      align-items: baseline;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--ink-5);
+      margin-bottom: 22px;
+    }
+    .crs-head .step {
+      padding: 4px 10px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      border-radius: 3px;
+    }
+    .crs-head .crumb {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .crs-head .crumb b { color: var(--ink); font-weight: 800; }
+    .crs-head .progress {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .crs-head .progress span {
+      width: 22px; height: 4px;
+      background: var(--ink-5);
+      border-radius: 2px;
+    }
+    .crs-head .progress span.on { background: var(--red); }
+    .crs-head .save {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .crs-head .save b { color: var(--ink); }
+
+    .crs-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 22px;
+    }
+    .crs-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .crs-form .head {
+      padding: 8px 0 12px;
+      border-bottom: 1px solid var(--ink-5);
+    }
+    .crs-form .head .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .crs-form .head h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .crs-form .head p {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .crs-form .field {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 10px 14px;
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      background: var(--white);
+    }
+    .crs-form .field.on { border-color: var(--red); background: var(--white); box-shadow: 0 0 0 3px rgba(185, 32, 37, 0.08); }
+    .crs-form .field .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .crs-form .field .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--ink-3);
+      margin-top: 3px;
+    }
+    .crs-form .field .v {
+      padding: 5px 10px;
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+      border-radius: 3px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--ink);
+      min-width: 86px;
+      text-align: center;
+    }
+    .crs-form .field.on .v { background: var(--white); color: var(--red); border-color: var(--red); }
+
+    .crs-readout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .crs-score {
+      padding: 22px 22px 24px;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .crs-score .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .crs-score .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 86px;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: var(--white);
+    }
+    .crs-score .num small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .crs-score .bar {
+      margin-top: 16px;
+      height: 6px;
+      background: var(--on-dark-4);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .crs-score .bar > span {
+      display: block;
+      height: 100%;
+      width: 40.6%;
+      background: var(--red);
+    }
+    .crs-score .delta {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--on-dark-3);
+    }
+    .crs-score .delta b { color: var(--white); font-weight: 800; }
+
+    .crs-section {
+      padding: 14px 16px;
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+    }
+    .crs-section .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .crs-section dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      border-top: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--ink-1);
+    }
+    .crs-section dl > div:first-child { border-top: 0; }
+    .crs-section dl dt { color: var(--ink-2); font-weight: 600; }
+    .crs-section dl dd { color: var(--red); font-weight: 800; }
+    .crs-section dl dd em { font-style: italic; color: var(--red); font-weight: 700; }
+
+    .crs-cta {
+      padding: 12px 14px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: center;
+      border-radius: 4px;
+    }
+    .crs-cta::before { content: "↓ "; }
+
+    @media (max-width: 880px) {
+      .crs { padding: 20px; }
+      .crs-body { grid-template-columns: 1fr; }
+      .crs-head { grid-template-columns: auto auto 1fr; }
+      .crs-head .save { display: none; }
+      .crs-score .num { font-size: 64px; }
+    }
+
+    /* ===========================================================
+       TOOL 02 — FSWP ELIGIBILITY CHECKER
+    =========================================================== */
+    .fswp {
+      padding: 28px 28px 30px;
+    }
+    .fswp-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--ink-5);
+      margin-bottom: 22px;
+      align-items: center;
+    }
+    .fswp-head h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .fswp-head .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .fswp-head .verdict {
+      padding: 6px 14px;
+      border-radius: 3px;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .fswp-head .verdict b { color: var(--red); margin-left: 6px; }
+
+    .fswp-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 22px;
+    }
+    .fswp-factors {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fswp-factor {
+      padding: 12px 14px;
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 22px 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .fswp-factor.on { border-color: var(--red); background: var(--white); }
+    .fswp-factor .pip {
+      width: 18px; height: 18px;
+      border: 2px solid var(--ink-4);
+      border-radius: 50%;
+      position: relative;
+    }
+    .fswp-factor.on .pip { border-color: var(--red); }
+    .fswp-factor.on .pip::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+    .fswp-factor .name {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .fswp-factor .name small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+    .fswp-factor .max {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .fswp-factor .got {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      min-width: 38px;
+      text-align: right;
+    }
+    .fswp-factor.on .got { color: var(--red); }
+
+    .fswp-readout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .fswp-meter {
+      padding: 22px 22px 24px;
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+    }
+    .fswp-meter .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .fswp-meter .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 72px;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+    }
+    .fswp-meter .num em {
+      font-family: var(--type);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .fswp-meter .num small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .fswp-meter .ruler {
+      margin-top: 16px;
+      position: relative;
+      height: 28px;
+    }
+    .fswp-meter .ruler .track {
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      transform: translateY(-50%);
+      height: 4px;
+      background: var(--ink-5);
+      border-radius: 2px;
+    }
+    .fswp-meter .ruler .fill {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 4px;
+      width: 73%;
+      background: var(--red);
+      border-radius: 2px;
+    }
+    .fswp-meter .ruler .marker {
+      position: absolute;
+      top: 50%;
+      left: 67%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 16px;
+      background: var(--ink);
+    }
+    .fswp-meter .ruler .marker::after {
+      content: "67 · pass mark";
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .fswp-meter .ruler .dot {
+      position: absolute;
+      top: 50%;
+      left: 73%;
+      width: 14px; height: 14px;
+      transform: translate(-50%, -50%);
+      background: var(--red);
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 1px var(--red);
+      border-radius: 50%;
+    }
+    .fswp-pass {
+      padding: 12px 14px;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 4px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .fswp-pass .ic {
+      width: 28px; height: 28px;
+      background: var(--red);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .fswp-pass .t {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--white);
+    }
+    .fswp-pass .t small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--on-dark-2);
+      margin-top: 3px;
+    }
+
+    @media (max-width: 880px) {
+      .fswp { padding: 20px; }
+      .fswp-grid { grid-template-columns: 1fr; }
+      .fswp-meter .num { font-size: 56px; }
+    }
+
+    /* ===========================================================
+       TOOL 03 — IRCC DRAWS TRACKER
+    =========================================================== */
+    .draws {
+      padding: 0;
+    }
+    .draws-head {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 18px;
+      align-items: center;
+    }
+    .draws-head .name h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .draws-head .name p {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .draws-head .name p b { color: var(--red); font-weight: 800; }
+    .draws-head .filter {
+      padding: 7px 12px;
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+      border-radius: 3px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--ink-1);
+      cursor: default;
+    }
+    .draws-head .filter.on { background: var(--red); color: var(--white); border-color: var(--red); }
+
+    /* sparkline strip */
+    .draws-spark {
+      padding: 18px 28px 22px;
+      border-bottom: 1px solid var(--ink-5);
+      background: var(--paper);
+    }
+    .draws-spark .top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: baseline;
+    }
+    .draws-spark .top .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .draws-spark .top .lbl b { color: var(--ink); font-weight: 800; margin-left: 8px; }
+    .draws-spark .top .legend {
+      display: flex;
+      gap: 14px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .draws-spark .top .legend span { display: flex; align-items: center; gap: 6px; }
+    .draws-spark .top .legend .ms { display: inline-block; width: 18px; height: 2px; background: var(--red); }
+    .draws-spark .top .legend .mc { display: inline-block; width: 18px; height: 2px; background: var(--ink); }
+
+    .draws-spark svg {
+      width: 100%;
+      height: 90px;
+      display: block;
+    }
+    .draws-spark .scale {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 0;
+      margin-top: 4px;
+    }
+    .draws-spark .scale span {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      color: var(--ink-3);
+      text-align: center;
+    }
+
+    /* table */
+    .draws-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .draws-table thead th {
+      padding: 12px 18px;
+      text-align: left;
+      background: var(--white);
+      border-bottom: 1.5px solid var(--ink);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      vertical-align: middle;
+    }
+    .draws-table thead th.r { text-align: right; }
+    .draws-table tbody td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--ink-5);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink-1);
+      vertical-align: middle;
+    }
+    .draws-table tbody td.r { text-align: right; }
+    .draws-table tbody tr:hover { background: var(--paper); }
+    .draws-table .draw-id {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    .draws-table .pillc {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink-5);
+    }
+    .draws-table .pillc.r { background: var(--red); color: var(--white); border-color: var(--red); }
+    .draws-table .pillc.k { background: var(--ink); color: var(--white); border-color: var(--ink); }
+    .draws-table .num {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .draws-table .num.red { color: var(--red); }
+
+    .draws-foot {
+      padding: 16px 28px;
+      background: var(--paper);
+      border-top: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .draws-foot b { color: var(--ink); font-weight: 800; }
+    .draws-foot em { font-style: italic; font-weight: 500; color: var(--red); letter-spacing: 0.04em; text-transform: none; }
+
+    @media (max-width: 880px) {
+      .draws-head { grid-template-columns: 1fr; padding: 18px; gap: 10px; }
+      .draws-head .filter { display: inline-block; }
+      .draws-spark { padding: 16px 18px 20px; }
+      .draws-table thead { display: none; }
+      .draws-table tbody td { padding: 12px 18px; font-size: 12px; }
+      .draws-table tbody tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 14px;
+        padding: 14px 0;
+      }
+      .draws-table tbody td { border-bottom: 0; padding: 0 18px; }
+      .draws-table tbody tr { border-bottom: 1px solid var(--ink-5); }
+    }
+
+    /* ===========================================================
+       BILINGUAL — EN/TR side-by-side strip
+    =========================================================== */
+    .bilingual {
+      padding-bottom: clamp(72px, 8vw, 112px);
+    }
+    .bilingual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    .bili-card {
+      background: var(--paper);
+      border: 1px solid var(--ink-5);
+      border-radius: 6px;
+      padding: 28px 28px 32px;
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid var(--red);
+    }
+    .bili-card .flag {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      padding: 4px 10px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      border-radius: 3px;
+    }
+    .bili-card .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .bili-card h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.4vw, 26px);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 14px;
+      max-width: 22ch;
+    }
+    .bili-card h4 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .bili-card p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 18px;
+      max-width: 50ch;
+    }
+    .bili-card .routes {
+      padding-top: 14px;
+      border-top: 1px solid var(--ink-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .bili-card .routes span {
+      padding: 4px 9px;
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 3px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--ink-1);
+    }
+    .bili-card .routes span b {
+      color: var(--red);
+      font-weight: 800;
+    }
+    @media (max-width: 720px) {
+      .bilingual-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===========================================================
+       SOCIAL — small content strip (not the hero)
+    =========================================================== */
+    .social {
+      padding-bottom: clamp(72px, 8vw, 112px);
+    }
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .social-card {
+      position: relative;
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 4px;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .social-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red);
+      z-index: 2;
+    }
+    .social-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -16px rgba(44, 43, 43, 0.22);
+      border-color: var(--red);
+    }
+    .social-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .social-card .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 7px;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      border-radius: 2px;
+    }
+    .social-card .pages {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 3px 7px;
+      background: var(--white);
+      color: var(--ink);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      border: 1px solid var(--ink-5);
+      border-radius: 2px;
+    }
+    .social-card .pages.live { background: var(--red); color: var(--white); border-color: var(--red); }
+    @media (max-width: 880px) {
+      .social-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .social-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ===========================================================
+       ABOUT THE CLIENT — brand DNA panel
+    =========================================================== */
+    .about {
+      background: var(--paper);
+      padding-top: clamp(72px, 8vw, 112px);
+      padding-bottom: clamp(72px, 8vw, 112px);
+      border-top: 1px solid var(--ink-5);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .about-portrait {
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      padding: 14px 14px 18px;
+      box-shadow: 0 16px 48px -24px rgba(44, 43, 43, 0.2);
+      position: relative;
+    }
+    .about-portrait::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--red);
+    }
+    .about-portrait::after {
+      content: "RCIC-IRB";
+      position: absolute;
+      top: 22px;
+      left: -10px;
+      padding: 5px 12px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      box-shadow: 0 6px 14px -4px rgba(185, 32, 37, 0.4);
+    }
+    .about-portrait .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .about-portrait .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .about-portrait .who {
+      padding-top: 14px;
+      border-top: 3px solid var(--red);
+      margin-top: 14px;
+    }
+    .about-portrait .who h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .about-portrait .who p {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin: 4px 0 12px;
+    }
+    .about-portrait .who dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-top: 1px dashed var(--ink-5);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .about-portrait .who dl > div:first-child { border-top: 0; }
+    .about-portrait .who dl dd { color: var(--ink); font-weight: 800; }
+
+    .about-text { min-width: 0; }
+    .about-text .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .about-text h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .about-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .about-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+      max-width: 60ch;
+    }
+    .about-text p strong { color: var(--ink); font-weight: 700; }
+    .about-text p em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .dna {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--ink-5);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .dna .col h5 {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .dna .col .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .dna .col .pills span {
+      padding: 6px 11px;
+      background: var(--white);
+      border: 1px solid var(--ink-5);
+      border-radius: 999px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--ink-1);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .dna .col .pills span:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .dna .col:nth-child(1) .pills span:nth-child(1),
+    .dna .col:nth-child(2) .pills span:nth-child(1),
+    .dna .col:nth-child(3) .pills span:nth-child(1) {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--white);
+    }
+    @media (max-width: 880px) {
+      .about-grid { grid-template-columns: 1fr; gap: 28px; }
+      .dna { grid-template-columns: 1fr; gap: 14px; }
+    }
+
+    /* ===========================================================
+       CLOSE — outcome + FF credit
+    =========================================================== */
+    .close {
+      background: var(--ink);
+      color: var(--white);
+      padding-top: clamp(80px, 9vw, 128px);
+      padding-bottom: clamp(72px, 8vw, 112px);
+      position: relative;
+      overflow: hidden;
+      border-top: 6px solid var(--red);
+    }
+    .close::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(185, 32, 37, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .close-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
+      gap: 64px;
+      align-items: end;
+    }
+    .close .lbl {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .close h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5.6vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      max-width: 14ch;
+    }
+    .close h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .close .right {
+      padding-bottom: 8px;
+    }
+    .close .right p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--on-dark-2);
+      margin-bottom: 1em;
+      max-width: 36ch;
+    }
+    .close .right p b { color: var(--white); font-weight: 700; }
+    .close .right .live-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 22px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      margin-top: 18px;
+    }
+    .close .right .live-link::after { content: "↗"; font-size: 14px; }
+
+    .close-credit {
+      margin-top: clamp(56px, 7vw, 96px);
+      padding-top: 28px;
+      border-top: 1px solid var(--on-dark-3);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .close-credit .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .close-credit .right { text-align: right; }
+    .close-credit b { color: var(--white); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .close-grid { grid-template-columns: 1fr; gap: 28px; }
+      .close-credit { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .close-credit .right { text-align: center; }
+    }
+
+    /* ===========================================================
+       reveal animations
+    =========================================================== */
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.8s, transform 0.8s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===========================================================
+       TOP BAR
+  =========================================================== -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <span class="brand"><span class="dot"></span>FRAME · FLOW</span>
+      <nav>
+        <a href="#brief">Brief</a>
+        <a href="#website">Website</a>
+        <a href="#tools">Tools</a>
+        <a href="#bilingual">Bilingual</a>
+        <a href="#client">Client</a>
+      </nav>
+      <span class="meta">Reel <b>019</b> · 2026</span>
+    </div>
+  </header>
+
+  <!-- ===========================================================
+       HERO
+  =========================================================== -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero-meta">
+        <span class="e">Case Study · 019</span>
+        <span class="sep">/</span>
+        <span>Web Design + Development</span>
+        <span class="sep">/</span>
+        <span>Multilingual EN · TR</span>
+      </p>
+
+      <h1>A complete digital rebuild for <em>a regulated</em> Canadian immigration consultancy.</h1>
+
+      <div class="deck">
+        <p class="desc">FrameFlow rebuilt <b>Northern Pathways Immigration Consulting</b> from the ground up &mdash; a marketing site that speaks two languages, paired with three custom client tools that turn IRCC's selection grid into something a prospect can actually use: a CRS calculator, a Six Selection Factors eligibility checker, and a complete searchable archive of every Express Entry &amp; PNP draw since 2015.</p>
+
+        <p class="tagline">&ldquo;Guiding your Canadian immigration journey with competence, care, and clarity.&rdquo;<small>— The brand tagline · locked</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       FACT SHEET
+  =========================================================== -->
+  <section class="container factsheet reveal">
+    <div class="factsheet-grid">
+      <div>
+        <p class="k">Client</p>
+        <p class="v">Northern Pathways<small>Immigration Consulting</small></p>
+      </div>
+      <div>
+        <p class="k">Year</p>
+        <p class="v">2025 — 2026<small>11-month engagement</small></p>
+      </div>
+      <div>
+        <p class="k">Scope</p>
+        <p class="v">Site + 3 tools<small>Design · Build · Deploy</small></p>
+      </div>
+      <div>
+        <p class="k">Locales</p>
+        <p class="v">EN · TR<small>12 routes per locale</small></p>
+      </div>
+      <div>
+        <p class="k">Live at</p>
+        <p class="v">northernpathways.ca<small>Public · indexed</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       BRIEF
+  =========================================================== -->
+  <section id="brief" class="container brief reveal">
+    <div class="brief-grid">
+      <div>
+        <p class="eyebrow">The brief</p>
+        <h2>Findable, bookable, <em>trustworthy.</em> In two languages.</h2>
+      </div>
+      <div class="body">
+        <p>Northern Pathways is a Toronto-based immigration practice led by an <strong>RCIC-IRB</strong> &mdash; a regulated consultant who can speak in front of the Immigration and Refugee Board. The brief was simple to state and difficult to deliver: build a site that is findable on search, bookable in a tap, and trustworthy enough that someone betting their family on the right counsel feels they have made the right choice.</p>
+        <p>The previous site was a static brochure. There was no way for a prospect to self-assess their score, no way to find out whether they would even pass the Federal Skilled Worker eligibility cutoff, and no way to read the latest IRCC draw without leaving the site. Conversion was a phone call.</p>
+        <p>FrameFlow rebuilt the site, designed and shipped <em>three regulator-grade tools</em>, mirrored everything in Turkish for the diaspora that drives most of the firm's prospects, and folded the result into a single coherent brand experience &mdash; institutional in tone, clear in voice, transparent about what a consult costs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       SECTION 01 — THE WEBSITE
+  =========================================================== -->
+  <section id="website" class="container website reveal">
+    <header class="sec-head">
+      <span class="num">01<span style="color: var(--ink); font-weight: 500;">.</span></span>
+      <div class="text">
+        <p class="lbl">— The website</p>
+        <h2>The complete <em>marketing site,</em> rebuilt.</h2>
+      </div>
+      <p class="meta">Routes <b>12</b> · Locales <b>EN+TR</b><br>Live since <b>Q1 2026</b></p>
+    </header>
+
+    <article class="browser">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en</span>
+        <span class="lang"><span class="on">EN</span><span>TR</span></span>
+      </header>
+
+      <div class="site">
+        <nav class="site-nav">
+          <span class="logo">
+            <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+            <span class="word">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+          </span>
+          <nav class="menu">
+            <span class="on">Home</span>
+            <span>Our Team</span>
+            <span>Services</span>
+            <span>Tools</span>
+            <span>Fees</span>
+            <span>Events</span>
+            <span>Blog</span>
+          </nav>
+          <div class="right">
+            <span class="lang"><span class="on">EN</span><span>TR</span></span>
+            <span class="cta">Book a Consultation</span>
+          </div>
+        </nav>
+
+        <header class="site-hero">
+          <div class="text">
+            <p class="eb">— Northern Pathways · RCIC-IRB —</p>
+            <h1>Guiding your <em>Canadian immigration journey</em> with competence, care, and clarity.</h1>
+            <p>Welcome to Northern Pathways &mdash; an immigration practice led by <b>Burcu Akyol, RCIC-IRB</b>. Eligibility assessments, strategic guidance, and legal representation for permanent residency, study permits, and family sponsorship.</p>
+            <div class="ctas">
+              <a class="p">Book a Consultation</a>
+              <a class="s">Try the Calculator</a>
+            </div>
+          </div>
+          <aside class="photo">
+            <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+            <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB · Principal</p></div>
+          </aside>
+        </header>
+
+        <section class="site-services">
+          <p class="lbl">— What we handle</p>
+          <h3>Five practice areas. <em>One regulated counsel</em> on every file.</h3>
+          <div class="row">
+            <div>
+              <p class="n">№ 01</p>
+              <p class="t">Express Entry &amp; PNP</p>
+            </div>
+            <div>
+              <p class="n">№ 02</p>
+              <p class="t">Family Sponsorship</p>
+            </div>
+            <div>
+              <p class="n">№ 03</p>
+              <p class="t">Study &amp; Work Permits</p>
+            </div>
+            <div>
+              <p class="n">№ 04</p>
+              <p class="t">PR Card Renewal</p>
+            </div>
+            <div>
+              <p class="n">№ 05</p>
+              <p class="t">Citizenship</p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <span class="left">© 2026 Northern Pathways Immigration Consulting · All Rights Reserved.</span>
+          <span class="credit">Designed &amp; developed by <b>Frame Flow</b></span>
+        </footer>
+      </div>
+    </article>
+
+    <div class="obs">
+      <div>
+        <p class="k">Pages</p>
+        <p class="v">12<small>routes per locale, 24 total</small></p>
+      </div>
+      <div>
+        <p class="k">Stack</p>
+        <p class="v">Next.js<small>App Router · server components</small></p>
+      </div>
+      <div>
+        <p class="k">A11y</p>
+        <p class="v">WCAG 2.2 AA<small>contrast · focus · keyboard</small></p>
+      </div>
+      <div>
+        <p class="k">Lighthouse</p>
+        <p class="v">99 · 100 · 100 · 100<small>perf · a11y · BP · SEO</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       TOOLS INTRO
+  =========================================================== -->
+  <section id="tools" class="container tools-intro reveal">
+    <div class="deck">
+      <h2>Three custom tools, <em>built for a regulated practice.</em></h2>
+      <div class="body">
+        <p>Each tool is purpose-built around a single decision a prospect actually needs to make &mdash; <strong>can I qualify · can I score · what is happening this week.</strong> Together they replace the phone-call-as-funnel with a self-serve front desk that turns curious visitors into informed consultations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       TOOL 01 — CRS CALCULATOR
+  =========================================================== -->
+  <section class="container tool reveal">
+    <div class="tool-grid">
+      <aside class="tool-text">
+        <p class="tool-tag">Tool <b>01.</b> · Live</p>
+        <h3 class="tool-name">CRS <em>Calculator.</em></h3>
+        <p class="tool-desc">A faithful implementation of the <b>Comprehensive Ranking System</b>. <em>15 fields, 6 categories,</em> 1,200-point ceiling. The score updates live as the prospect fills in their profile, with each category tabulated on the right and an exportable signed PDF the user can take to a consult.</p>
+        <ul class="tool-features">
+          <li><span><b>Six categories</b> — Core / Spouse / Skill Transferability / Additional / French / PNP nomination</span></li>
+          <li><span><b>Tooltipped to source</b> — every field links to the IRCC specification it implements</span></li>
+          <li><span><b>Signed PDF export</b> — counsel-of-record signature on the printable summary</span></li>
+          <li><span><b>Bilingual</b> — full Turkish translation, including all field labels and tooltips</span></li>
+        </ul>
+      </aside>
+
+      <article class="toolwin">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">northernpathways.ca/tools/crs</span>
+          <span class="live">Live</span>
+        </header>
+
+        <div class="crs">
+          <header class="crs-head">
+            <span class="step">02 / 06</span>
+            <span class="crumb">Section <b>B · Human Capital</b></span>
+            <span class="progress"><span class="on"></span><span class="on"></span><span></span><span></span><span></span><span></span></span>
+            <span class="save">Auto-saved <b>14:32</b></span>
+          </header>
+
+          <div class="crs-body">
+            <div class="crs-form">
+              <header class="head">
+                <p class="lbl">Section B · Core / Human Capital</p>
+                <h4>Tell us about your background</h4>
+                <p>Each field maps to an IRCC selection criterion. Hover for the source spec.</p>
+              </header>
+              <div class="field on">
+                <span class="k">Age <small>32 years &middot; at point of application</small></span>
+                <span class="v">110 / 110</span>
+              </div>
+              <div class="field on">
+                <span class="k">Education <small>Master&rsquo;s degree · ECA verified</small></span>
+                <span class="v">135 / 150</span>
+              </div>
+              <div class="field on">
+                <span class="k">English · CLB <small>CLB 9 across all four skills</small></span>
+                <span class="v">124 / 136</span>
+              </div>
+              <div class="field on">
+                <span class="k">French · NCLC <small>NCLC 7+ &middot; bonus path eligible</small></span>
+                <span class="v">25 / 50</span>
+              </div>
+              <div class="field">
+                <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+                <span class="v">35 / 80</span>
+              </div>
+              <div class="field">
+                <span class="k">Foreign work <small>3+ years · skilled, paid</small></span>
+                <span class="v">25 / 50</span>
+              </div>
+            </div>
+
+            <aside class="crs-readout">
+              <article class="crs-score">
+                <p class="lbl">Your CRS score</p>
+                <p class="num">487<small>of 1,200 maximum</small></p>
+                <div class="bar"><span></span></div>
+                <p class="delta"><span>This week's cutoff</span><span><b>539 · Healthcare</b></span></p>
+              </article>
+
+              <article class="crs-section">
+                <p class="lbl">Breakdown by section</p>
+                <dl>
+                  <div><dt>A · Core / Human Capital</dt><dd>404</dd></div>
+                  <div><dt>B · Spouse Factors</dt><dd>—</dd></div>
+                  <div><dt>C · Skill Transferability</dt><dd>50</dd></div>
+                  <div><dt>D · Additional Points</dt><dd>33 <em>(FR)</em></dd></div>
+                </dl>
+              </article>
+
+              <p class="crs-cta">Download signed PDF</p>
+            </aside>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       TOOL 02 — FSWP ELIGIBILITY CHECKER
+  =========================================================== -->
+  <section class="container tool reveal">
+    <div class="tool-grid alt">
+      <article class="toolwin">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">northernpathways.ca/tools/fswp</span>
+          <span class="live">Live</span>
+        </header>
+
+        <div class="fswp">
+          <header class="fswp-head">
+            <div>
+              <p class="lbl">Tool · Six Selection Factors</p>
+              <h4>FSWP Eligibility Checker</h4>
+            </div>
+            <span class="verdict">Result <b>Eligible</b></span>
+          </header>
+
+          <div class="fswp-grid">
+            <div class="fswp-factors">
+              <article class="fswp-factor on">
+                <span class="pip"></span>
+                <span class="name">Language proficiency<small>CLB 9 across reading, writing, speaking, listening</small></span>
+                <span class="max">Max 28</span>
+                <span class="got">24</span>
+              </article>
+              <article class="fswp-factor on">
+                <span class="pip"></span>
+                <span class="name">Education<small>Master&rsquo;s · ECA verified</small></span>
+                <span class="max">Max 25</span>
+                <span class="got">23</span>
+              </article>
+              <article class="fswp-factor on">
+                <span class="pip"></span>
+                <span class="name">Work experience<small>3+ years · NOC TEER 0–3</small></span>
+                <span class="max">Max 15</span>
+                <span class="got">11</span>
+              </article>
+              <article class="fswp-factor on">
+                <span class="pip"></span>
+                <span class="name">Age<small>32 years</small></span>
+                <span class="max">Max 12</span>
+                <span class="got">12</span>
+              </article>
+              <article class="fswp-factor">
+                <span class="pip"></span>
+                <span class="name">Arranged employment<small>not declared</small></span>
+                <span class="max">Max 10</span>
+                <span class="got">0</span>
+              </article>
+              <article class="fswp-factor on">
+                <span class="pip"></span>
+                <span class="name">Adaptability<small>Spouse CLB 4+ · prior study</small></span>
+                <span class="max">Max 10</span>
+                <span class="got">3</span>
+              </article>
+            </div>
+
+            <aside class="fswp-readout">
+              <article class="fswp-meter">
+                <p class="lbl">Total · 6 factors</p>
+                <p class="num">73<em>/100</em><small>67 to qualify · ELIGIBLE</small></p>
+                <div class="ruler">
+                  <span class="track"></span>
+                  <span class="fill"></span>
+                  <span class="marker"></span>
+                  <span class="dot"></span>
+                </div>
+              </article>
+
+              <article class="fswp-pass">
+                <span class="ic">✓</span>
+                <span class="t">You qualify under FSWP.<small>Next: see your CRS score and the latest draws</small></span>
+              </article>
+            </aside>
+          </div>
+        </div>
+      </article>
+
+      <aside class="tool-text">
+        <p class="tool-tag">Tool <b>02.</b> · Live</p>
+        <h3 class="tool-name">FSWP <em>Eligibility.</em></h3>
+        <p class="tool-desc">A real-time pass/fail against the <b>Federal Skilled Worker Programme&rsquo;s</b> Six Selection Factors, with the <em>67/100 cutoff</em> rendered visibly on the meter. Prospects know in seconds whether they qualify before they invest the time of a CRS calculation.</p>
+        <ul class="tool-features">
+          <li><span><b>Six factors</b> — Language · Education · Experience · Age · Arranged Employment · Adaptability</span></li>
+          <li><span><b>67-point pass mark</b> visualised on a horizontal scale, not buried in a footnote</span></li>
+          <li><span><b>Honest verdict</b> — eligible / not yet eligible / not eligible, with a recommended next step for each</span></li>
+          <li><span><b>Hands off to the calculator</b> — pass the FSWP, the next click loads the CRS calc with your data prefilled</span></li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       TOOL 03 — IRCC DRAWS TRACKER
+  =========================================================== -->
+  <section class="container tool reveal">
+    <div class="tool-grid">
+      <aside class="tool-text">
+        <p class="tool-tag">Tool <b>03.</b> · Live</p>
+        <h3 class="tool-name">Latest <em>IRCC Draws.</em></h3>
+        <p class="tool-desc">An indexed, filterable archive of <b>every Express Entry and PNP draw since 2015</b> &mdash; <em>156+ rows</em> at last refresh, mirrored to the database within minutes of an IRCC announcement. The archive is the firm's single source of truth: the practice site, the social handle, and the calculator's "this week's cutoff" all read from it.</p>
+        <ul class="tool-features">
+          <li><span><b>156+ draws indexed</b> from June 2015 through to this week, fully searchable</span></li>
+          <li><span><b>Category filters</b> — General · Healthcare · Trades · French · CEC · PNP · Education · Transport</span></li>
+          <li><span><b>Cutoff sparkline</b> — 12-month trend across draw streams, hover for exact reading</span></li>
+          <li><span><b>Auto-mirrored</b> to the Turkish-language Instagram explainer the morning after a draw</span></li>
+        </ul>
+      </aside>
+
+      <article class="toolwin">
+        <header class="chrome">
+          <span class="dots"><span></span><span></span><span></span></span>
+          <span class="url">northernpathways.ca/draws</span>
+          <span class="live">Live · auto-refresh</span>
+        </header>
+
+        <header class="draws-head">
+          <div class="name">
+            <h4>IRCC Draws Tracker</h4>
+            <p>156 <b>indexed</b> · since 15 Jun 2015</p>
+          </div>
+          <span class="filter on">All draws</span>
+          <span class="filter">Healthcare</span>
+          <span class="filter">PNP</span>
+        </header>
+
+        <section class="draws-spark">
+          <header class="top">
+            <p class="lbl">— Cutoff trend<b>last 12 months · all streams</b></p>
+            <p class="legend">
+              <span><span class="ms"></span>General</span>
+              <span><span class="mc"></span>Category-based</span>
+            </p>
+          </header>
+          <svg viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#b92025" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#b92025" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- gridlines -->
+            <line x1="0" y1="22" x2="1000" y2="22" stroke="#2c2b2b22" stroke-dasharray="2 4"/>
+            <line x1="0" y1="56" x2="1000" y2="56" stroke="#2c2b2b22" stroke-dasharray="2 4"/>
+            <!-- general (red, area) -->
+            <path d="M0,55 L83,46 L166,40 L250,52 L333,38 L416,32 L500,28 L583,42 L666,30 L750,22 L833,34 L916,26 L1000,20 L1000,90 L0,90 Z" fill="url(#rg)"/>
+            <path d="M0,55 L83,46 L166,40 L250,52 L333,38 L416,32 L500,28 L583,42 L666,30 L750,22 L833,34 L916,26 L1000,20" fill="none" stroke="#b92025" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- category (charcoal, dashed) -->
+            <path d="M0,72 L83,68 L166,62 L250,58 L333,64 L416,52 L500,46 L583,40 L666,52 L750,44 L833,38 L916,46 L1000,38" fill="none" stroke="#2c2b2b" stroke-width="1.5" stroke-dasharray="5 4" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- last point markers -->
+            <circle cx="1000" cy="20" r="4" fill="#b92025"/>
+            <circle cx="1000" cy="38" r="3" fill="#2c2b2b"/>
+          </svg>
+          <div class="scale">
+            <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
+          </div>
+        </section>
+
+        <table class="draws-table">
+          <thead>
+            <tr>
+              <th>Draw</th>
+              <th>Date</th>
+              <th>Category</th>
+              <th class="r">Invitations</th>
+              <th class="r">Cutoff</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="draw-id">#347</span></td>
+              <td>06 May 2026</td>
+              <td><span class="pillc r">Healthcare</span></td>
+              <td class="r"><span class="num">3,000</span></td>
+              <td class="r"><span class="num red">510</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#346</span></td>
+              <td>02 May 2026</td>
+              <td><span class="pillc">General</span></td>
+              <td class="r"><span class="num">3,500</span></td>
+              <td class="r"><span class="num">528</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#345</span></td>
+              <td>28 Apr 2026</td>
+              <td><span class="pillc k">PNP</span></td>
+              <td class="r"><span class="num">1,232</span></td>
+              <td class="r"><span class="num">736</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#344</span></td>
+              <td>23 Apr 2026</td>
+              <td><span class="pillc r">French</span></td>
+              <td class="r"><span class="num">2,500</span></td>
+              <td class="r"><span class="num red">421</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#343</span></td>
+              <td>16 Apr 2026</td>
+              <td><span class="pillc">General</span></td>
+              <td class="r"><span class="num">3,711</span></td>
+              <td class="r"><span class="num">521</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#342</span></td>
+              <td>09 Apr 2026</td>
+              <td><span class="pillc r">Trades</span></td>
+              <td class="r"><span class="num">1,500</span></td>
+              <td class="r"><span class="num red">435</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#341</span></td>
+              <td>02 Apr 2026</td>
+              <td><span class="pillc r">Healthcare</span></td>
+              <td class="r"><span class="num">3,500</span></td>
+              <td class="r"><span class="num red">504</span></td>
+            </tr>
+            <tr>
+              <td><span class="draw-id">#340</span></td>
+              <td>26 Mar 2026</td>
+              <td><span class="pillc k">PNP</span></td>
+              <td class="r"><span class="num">1,015</span></td>
+              <td class="r"><span class="num">733</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <footer class="draws-foot">
+          <span>Showing <b>8 of 156</b> draws · <em>auto-mirrored to @kanadadayeniyasam</em></span>
+          <span>Next refresh in <b>02:42</b></span>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       BILINGUAL
+  =========================================================== -->
+  <section id="bilingual" class="container bilingual reveal">
+    <header class="sec-head">
+      <span class="num">02<span style="color: var(--ink); font-weight: 500;">.</span></span>
+      <div class="text">
+        <p class="lbl">— Bilingual</p>
+        <h2>Two languages, <em>one source of truth.</em></h2>
+      </div>
+      <p class="meta">EN+TR · 24 routes<br>Single content model</p>
+    </header>
+
+    <div class="bilingual-grid">
+      <article class="bili-card">
+        <span class="flag">EN</span>
+        <p class="lbl">English locale</p>
+        <h4>Guiding your <em>Canadian immigration journey</em> with competence, care, and clarity.</h4>
+        <p>The English locale is the canonical content. Every page, every tool, every IRCC draw record is written here first &mdash; then mirrored.</p>
+        <div class="routes">
+          <span><b>/</b>en</span><span><b>/</b>en/services</span><span><b>/</b>en/tools/crs</span><span><b>/</b>en/tools/fswp</span><span><b>/</b>en/draws</span><span><b>/</b>en/fees</span><span><b>/</b>en/blog</span>
+        </div>
+      </article>
+
+      <article class="bili-card">
+        <span class="flag">TR</span>
+        <p class="lbl">Turkish locale</p>
+        <h4>Kanada göçmenlik yolculuğunuzda <em>yetkinlik, özen ve netlikle</em> rehberlik.</h4>
+        <p>The Turkish locale serves the diaspora that drives most of the firm's prospects &mdash; same routes, same tools, mirrored Turkish UI.</p>
+        <div class="routes">
+          <span><b>/</b>tr</span><span><b>/</b>tr/hizmetler</span><span><b>/</b>tr/araclar/crs</span><span><b>/</b>tr/araclar/fswp</span><span><b>/</b>tr/cekilisler</span><span><b>/</b>tr/ucretler</span><span><b>/</b>tr/blog</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       SOCIAL CONTENT
+  =========================================================== -->
+  <section class="container social reveal">
+    <header class="sec-head">
+      <span class="num">03<span style="color: var(--ink); font-weight: 500;">.</span></span>
+      <div class="text">
+        <p class="lbl">— Content</p>
+        <h2>The Turkish-language <em>explainer programme.</em></h2>
+      </div>
+      <p class="meta">@kanadadayeniyasam<br>248 posts this season</p>
+    </header>
+
+    <div class="social-grid">
+      <a class="social-card">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-04/01.png" alt="Levels Plan 2026-2028">
+        <span class="badge">№ 04</span>
+        <span class="pages">1 / 9</span>
+      </a>
+      <a class="social-card">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-05/01.png" alt="Study permit visa officer">
+        <span class="badge">№ 05</span>
+        <span class="pages">1 / 8</span>
+      </a>
+      <a class="social-card">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-07/01.png" alt="Ontario OINP">
+        <span class="badge">№ 07</span>
+        <span class="pages">1 / 6</span>
+      </a>
+      <a class="social-card">
+        <img src="../../../public/portfolio/northern-pathways/social/carousel-01/01.png" alt="Express Entry consultation">
+        <span class="badge">№ 01</span>
+        <span class="pages">1 / 6</span>
+      </a>
+      <a class="social-card">
+        <img src="../../../public/portfolio/northern-pathways/social/post-10.png" alt="Levels Plan webinar">
+        <span class="badge">№ 10</span>
+        <span class="pages live">Live</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       ABOUT THE CLIENT
+  =========================================================== -->
+  <section id="client" class="about reveal">
+    <div class="container">
+      <header class="sec-head" style="border-top: 0; padding-top: 0;">
+        <span class="num">04<span style="color: var(--ink); font-weight: 500;">.</span></span>
+        <div class="text">
+          <p class="lbl">— About the client</p>
+          <h2>The <em>practice</em> behind the brief.</h2>
+        </div>
+        <p class="meta">RCIC-IRB · CICC<br>Toronto · 2019 →</p>
+      </header>
+
+      <div class="about-grid">
+        <aside class="about-portrait">
+          <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC-IRB"></div>
+          <div class="who">
+            <h4>Burcu Akyol</h4>
+            <p>RCIC-IRB · Principal</p>
+            <dl>
+              <div><dt>Licence</dt><dd>RCIC-IRB</dd></div>
+              <div><dt>College</dt><dd>CICC</dd></div>
+              <div><dt>Board</dt><dd>CAPIC</dd></div>
+              <div><dt>Faculty</dt><dd>Queen&rsquo;s</dd></div>
+              <div><dt>Practising</dt><dd>2019 →</dd></div>
+            </dl>
+          </div>
+        </aside>
+
+        <div class="about-text">
+          <p class="lbl">— The business</p>
+          <h2>Northern <em>Pathways.</em></h2>
+          <p>A Canadian immigration firm providing <strong>eligibility assessments, strategic guidance, and legal representation</strong> for individuals seeking permanent residency, study permits, and family sponsorship. Led by an <em>RCIC and university professor,</em> the firm combines technical legal expertise with lived experience to provide ethical, client-centered immigration services.</p>
+          <p>This site is the operational front desk for that practice &mdash; the place a prospect arrives at, self-assesses against the IRCC grid, reads the latest draw, and books a consult, in either of two languages.</p>
+
+          <div class="dna">
+            <div class="col">
+              <h5>Brand values</h5>
+              <div class="pills">
+                <span>Ethical Integrity</span>
+                <span>Legal Accuracy</span>
+                <span>Transparency</span>
+                <span>Client-Centred Service</span>
+              </div>
+            </div>
+            <div class="col">
+              <h5>Aesthetic</h5>
+              <div class="pills">
+                <span>Institutional professionalism</span>
+                <span>Canadian identity</span>
+                <span>Transparent clarity</span>
+                <span>Minimalist modernity</span>
+                <span>Authoritative trust</span>
+              </div>
+            </div>
+            <div class="col">
+              <h5>Tone of voice</h5>
+              <div class="pills">
+                <span>Professional</span>
+                <span>Empathetic</span>
+                <span>Clear</span>
+                <span>Authoritative</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================================================
+       CLOSE — outcome + FF credit
+  =========================================================== -->
+  <section class="close reveal">
+    <div class="container">
+      <div class="close-grid">
+        <div>
+          <p class="lbl">— Outcome</p>
+          <h2>A practice with a <em>self-serve front desk,</em> in two languages.</h2>
+        </div>
+        <div class="right">
+          <p>The website is live, the three tools are in production, and the IRCC draws archive auto-mirrors to the firm's Turkish-language handle the morning after every draw. <b>Conversion is no longer a phone call.</b></p>
+          <a class="live-link" href="#">Visit northernpathways.ca</a>
+        </div>
+      </div>
+
+      <footer class="close-credit">
+        <span>Reel <b>019</b> · Northern Pathways · 2025–2026</span>
+        <span class="center">Designed &amp; developed by <b>Frame Flow</b></span>
+        <span class="right">Set in <b>Montserrat</b> · 300–900</span>
+      </footer>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('in'));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

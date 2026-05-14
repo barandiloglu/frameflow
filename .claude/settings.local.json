@@ -5,7 +5,18 @@
       "Bash(npx next:*)",
       "WebFetch(domain:www.remotion.dev)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/portfolio)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "WebFetch(domain:www.canapyfurniture.com)",
+      "Read(//d/CTBDH//**)",
+      "Read(//d/CTBDH/Logos//**)",
+      "WebSearch",
+      "Read(//d/Adrian's Wasaga Beach//**)",
+      "Read(//d/Adrian's Wasaga Beach/Photos//**)",
+      "WebFetch(domain:www.adrianswasagabeach.ca)",
+      "WebFetch(domain:www.northernpathways.ca)",
+      "Read(//c/Users/Baran/Desktop/Projects/Northern Pathways/northern-pathways-calculator-next-js/src/app/**)",
+      "Read(//c/Users/Baran/Desktop/Projects/Northern Pathways/northern-pathways-calculator-next-js/public/**)",
+      "WebFetch(domain:www.instagram.com)"
     ]
   }
 }

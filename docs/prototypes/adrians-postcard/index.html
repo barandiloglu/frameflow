@@ -1,0 +1,1268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adrian's Wasaga Beach — The Postcard Stack (FrameFlow / Prototype 01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · ADRIAN'S WASAGA BEACH
+       Prototype 01 — "The Postcard Stack" (summer scrapbook)
+
+       Adrian's is a boutique 8-cabin courtyard rental in Wasaga Beach.
+       This prototype takes their warmest brand cue — the postcard
+       social posts — and turns the whole portfolio page into a stack
+       of mail from the resort. Polaroid photos rotated and taped down,
+       postal stamps, "wish you were here" copy, real social posts
+       from the campaign featured as a mailbag, real Google reviews
+       as testimonial postcards. Sand surface throughout. The warmest
+       of the three directions.
+    ==================================================================== */
+
+    :root {
+      --sand:       #ecd798;
+      --sand-d:     #d8c280;
+      --sand-l:     #f5e6b8;
+      --seafoam:    #98e5d8;
+      --orange:     #f9a21b;
+      --orange-d:   #d8830a;
+      --gray:       #353747;
+      --gray-2:     #4a4d5e;
+      --gray-3:     #7a7e90;
+      --paper:      #fdf9ec;
+      --rule:       rgba(53, 55, 71, 0.18);
+
+      --display:   "Montserrat", system-ui, sans-serif;
+      --body:      "Quicksand", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--sand);
+      color: var(--gray);
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0 0.2  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       MASKING TAPE
+    ============================================================ */
+    .tape {
+      position: absolute;
+      width: 110px;
+      height: 24px;
+      background: rgba(152, 229, 216, 0.78);
+      box-shadow: 0 4px 8px -2px rgba(53, 55, 71, 0.2);
+      z-index: 4;
+      pointer-events: none;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(0,0,0,0.04));
+    }
+    .tape::before, .tape::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 100%;
+      top: 0;
+      background: inherit;
+      opacity: 0.5;
+    }
+    .tape::before { left: -6px; clip-path: polygon(100% 0, 0 30%, 0 70%, 100% 100%); }
+    .tape::after  { right: -6px; clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%); }
+    .tape.orange { background: rgba(249, 162, 27, 0.82); }
+    .tape.sand { background: rgba(216, 194, 128, 0.82); }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .ff-rail {
+      position: relative;
+      z-index: 5;
+      padding: 12px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ff-rail b { color: var(--orange); }
+    .ff-rail .center { letter-spacing: 0.5em; color: var(--seafoam); }
+
+    /* ============================================================
+       HERO — postcard cover with mail
+    ============================================================ */
+    .hero {
+      position: relative;
+      padding: 90px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .hero-stamp {
+      position: absolute;
+      top: 60px;
+      right: 56px;
+      width: 130px;
+      height: 160px;
+      background: var(--sand-l);
+      border: 4px solid var(--gray);
+      transform: rotate(8deg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 6px 8px 0 var(--orange);
+      z-index: 3;
+      padding: 14px;
+      text-align: center;
+    }
+    .hero-stamp::before {
+      content: "";
+      position: absolute;
+      inset: -7px;
+      background-image: radial-gradient(circle, var(--gray) 4px, transparent 4.5px);
+      background-size: 12px 12px;
+      background-position: 0 0;
+      mask: linear-gradient(#000, #000) top / 100% 7px no-repeat,
+            linear-gradient(#000, #000) bottom / 100% 7px no-repeat,
+            linear-gradient(#000, #000) left / 7px 100% no-repeat,
+            linear-gradient(#000, #000) right / 7px 100% no-repeat;
+      -webkit-mask: linear-gradient(#000, #000) top / 100% 7px no-repeat,
+                    linear-gradient(#000, #000) bottom / 100% 7px no-repeat,
+                    linear-gradient(#000, #000) left / 7px 100% no-repeat,
+                    linear-gradient(#000, #000) right / 7px 100% no-repeat;
+      pointer-events: none;
+    }
+    .hero-stamp .price {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      color: var(--gray);
+      line-height: 1;
+    }
+    .hero-stamp .place {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+    .hero-stamp .date {
+      font-family: var(--body);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--gray-2);
+      margin-top: 2px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 16px;
+      max-width: 14ch;
+    }
+    .hero-title em {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 800;
+      color: var(--orange-d);
+    }
+    .hero-sub {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.5;
+      color: var(--gray-2);
+      max-width: 36ch;
+      margin-bottom: 56px;
+    }
+
+    .hero-stack {
+      position: relative;
+      height: clamp(420px, 48vw, 560px);
+      margin: 0 auto;
+      max-width: 1100px;
+    }
+    .hero-pol {
+      position: absolute;
+      background: var(--paper);
+      padding: 14px 14px 64px;
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.05),
+        4px 8px 18px -4px rgba(53, 55, 71, 0.4),
+        14px 22px 38px -10px rgba(53, 55, 71, 0.4);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s;
+    }
+    .hero-pol:hover {
+      transform: rotate(0deg) translateY(-6px) scale(1.02) !important;
+      z-index: 10;
+    }
+    .hero-pol .ph {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .hero-pol .ph img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-pol .write {
+      position: absolute;
+      bottom: 16px;
+      left: 18px;
+      right: 18px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+    }
+    .hero-pol .write small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-top: 3px;
+      letter-spacing: 0.18em;
+    }
+
+    .hero-pol.p1 { width: 38%; max-width: 360px; top: 0; left: 0; transform: rotate(-4deg); }
+    .hero-pol.p2 { width: 36%; max-width: 340px; top: 12%; left: 32%; transform: rotate(2deg); z-index: 2; }
+    .hero-pol.p3 { width: 38%; max-width: 360px; top: 22%; right: 4%; transform: rotate(5deg); }
+    .hero-pol.p4 { width: 32%; max-width: 320px; bottom: 0; left: 12%; transform: rotate(3deg); z-index: 3; }
+    .hero-pol.p5 { width: 36%; max-width: 340px; bottom: 6%; right: 16%; transform: rotate(-3deg); z-index: 2; }
+
+    .hero-pol .tape {
+      top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+    }
+
+    .hero-meta {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+      border-top: 2px solid var(--gray);
+      border-bottom: 2px solid var(--gray);
+    }
+    .hero-meta > div {
+      padding: 22px 14px;
+      border-left: 2px solid var(--gray);
+      text-align: center;
+    }
+    .hero-meta > div:first-child { border-left: 0; }
+    .hero-meta dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 8px;
+    }
+    .hero-meta dd {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--gray);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       INTRO — letter from the postman
+    ============================================================ */
+    .intro {
+      padding: 100px 32px;
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .intro-cap {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 28px;
+    }
+    .intro h2 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(36px, 5.4vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+    .intro h2 em {
+      font-style: italic;
+      font-weight: 800;
+      color: var(--orange-d);
+    }
+    .intro p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--gray-2);
+      max-width: 60ch;
+      margin: 0 auto 1em;
+    }
+    .intro p strong { color: var(--gray); font-weight: 700; }
+
+    /* ============================================================
+       PROPERTY POSTCARDS — main photo gallery
+    ============================================================ */
+    .postcards {
+      padding: 60px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .postcards-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 56px;
+      padding-bottom: 18px;
+      border-bottom: 2px dashed var(--rule);
+    }
+    .postcards-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .postcards-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .postcards-head h3 em { font-style: italic; color: var(--orange-d); }
+    .postcards-head .meta {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+
+    .postcards-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 36px 28px;
+    }
+    .pc {
+      position: relative;
+      background: var(--paper);
+      padding: 12px 12px 56px;
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.05),
+        4px 6px 14px -4px rgba(53, 55, 71, 0.35),
+        12px 18px 30px -10px rgba(53, 55, 71, 0.35);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+    }
+    .pc:hover {
+      transform: rotate(0deg) translateY(-4px) scale(1.02) !important;
+      z-index: 5;
+    }
+    .pc .ph {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--sand-d);
+    }
+    .pc .ph.land { aspect-ratio: 4 / 3; }
+    .pc .ph img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .pc .write {
+      position: absolute;
+      bottom: 14px;
+      left: 18px;
+      right: 18px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--gray);
+      letter-spacing: 0.02em;
+    }
+    .pc .write small {
+      display: block;
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-top: 3px;
+    }
+    .pc .pin {
+      position: absolute;
+      top: -8px; left: 50%;
+      transform: translateX(-50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 25%, #ffd54a, var(--orange) 65%, var(--orange-d));
+      box-shadow: 0 2px 4px rgba(53, 55, 71, 0.35);
+      z-index: 3;
+    }
+
+    /* col spans + rotation */
+    .pc.c4 { grid-column: span 4; }
+    .pc.c3 { grid-column: span 3; }
+    .pc.c5 { grid-column: span 5; }
+    .pc.c6 { grid-column: span 6; }
+    .pc.c8 { grid-column: span 8; }
+
+    .pc.r1 { transform: rotate(-1.2deg); }
+    .pc.r2 { transform: rotate(1.5deg); }
+    .pc.r3 { transform: rotate(-2deg); }
+    .pc.r4 { transform: rotate(0.8deg); }
+    .pc.r5 { transform: rotate(-0.6deg); }
+
+    /* ============================================================
+       SOCIAL MAILBAG — show real social posts
+    ============================================================ */
+    .mailbag {
+      padding: 80px 32px;
+      max-width: 1480px;
+      margin: 0 auto;
+      background: var(--seafoam);
+      border-top: 3px solid var(--gray);
+      border-bottom: 3px solid var(--gray);
+      position: relative;
+    }
+    .mailbag::before, .mailbag::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background-image: radial-gradient(circle, var(--sand) 5px, transparent 5.5px);
+      background-size: 22px 14px;
+      background-position: center;
+      background-repeat: repeat-x;
+    }
+    .mailbag::before { top: -1px; }
+    .mailbag::after  { bottom: -1px; }
+
+    .mailbag-head {
+      max-width: 1280px;
+      margin: 0 auto 48px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 2px dashed rgba(53, 55, 71, 0.3);
+    }
+    .mailbag-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .mailbag-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(32px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .mailbag-head h3 em { font-style: italic; color: var(--orange-d); }
+    .mailbag-head .meta {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+
+    .mailbag-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .mb-card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--gray);
+      box-shadow: 4px 6px 12px -2px rgba(53, 55, 71, 0.45);
+      transition: transform 0.5s;
+      cursor: pointer;
+    }
+    .mb-card:hover {
+      transform: translateY(-4px) rotate(-0.5deg) scale(1.02);
+    }
+    .mb-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .mb-card .badge {
+      position: absolute;
+      top: 8px; left: 8px;
+      padding: 3px 8px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       REVIEWS — testimonial postcards
+    ============================================================ */
+    .reviews {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .reviews-head {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .reviews-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 14px;
+    }
+    .reviews-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--gray);
+    }
+    .reviews-head h3 em { font-style: italic; color: var(--orange-d); }
+    .reviews-head .stars {
+      margin-top: 14px;
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .review-card {
+      position: relative;
+      background: var(--paper);
+      padding: 28px 28px 24px;
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.05),
+        4px 6px 14px -4px rgba(53, 55, 71, 0.3);
+      transition: transform 0.4s;
+    }
+    .review-card:nth-child(odd) { transform: rotate(-1deg); }
+    .review-card:nth-child(even) { transform: rotate(1deg); }
+    .review-card:hover { transform: rotate(0) translateY(-3px) scale(1.01); }
+    .review-card .stars {
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+    .review-card .stars b {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+      margin-left: 14px;
+      vertical-align: 4px;
+    }
+    .review-card .quote {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--gray);
+      margin-bottom: 18px;
+    }
+    .review-card .quote::before { content: "“ "; color: var(--orange-d); font-weight: 700; }
+    .review-card .quote::after  { content: " ”"; color: var(--orange-d); font-weight: 700; }
+    .review-card .by {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 16px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .review-card .by b { color: var(--gray); }
+
+    /* ============================================================
+       MARKS — palette + type
+    ============================================================ */
+    .marks {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      border-top: 2px dashed var(--rule);
+      border-bottom: 2px dashed var(--rule);
+    }
+    .marks h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 2px solid var(--gray);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.sand { background: var(--sand); }
+    .pchip.seafoam { background: var(--seafoam); }
+    .pchip.orange { background: var(--orange); }
+    .pchip.gray { background: var(--gray); color: var(--sand-l); }
+    .pchip .role {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray);
+      opacity: 0.7;
+    }
+    .pchip.gray .role { color: var(--sand-l); opacity: 0.7; }
+    .pchip .name {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--gray);
+    }
+    .pchip.gray .name { color: var(--sand-l); }
+    .pchip .hex {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gray);
+    }
+    .pchip.gray .hex { color: var(--sand-l); }
+
+    .type-stack { display: flex; flex-direction: column; }
+    .trow {
+      padding: 16px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-bottom: 6px;
+    }
+    .trow .specimen.h {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 36px;
+      color: var(--gray);
+      letter-spacing: -0.015em;
+      line-height: 1;
+    }
+    .trow .specimen.b {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--gray);
+    }
+    .trow .specimen.l {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* ============================================================
+       SCOPE — what FF made
+    ============================================================ */
+    .scope {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 0;
+      padding-bottom: 18px;
+      border-bottom: 2px dashed var(--rule);
+    }
+    .scope-head .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+    }
+    .scope-head h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(32px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      line-height: 1;
+    }
+    .scope-head .total {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+    .scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px dashed var(--rule);
+      align-items: baseline;
+    }
+    .scope-row .num {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--orange-d);
+      line-height: 1;
+    }
+    .scope-row .name {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--gray);
+    }
+    .scope-row .desc {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      max-width: 56ch;
+    }
+    .scope-row .out {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      text-align: right;
+    }
+    .scope-row .out b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       END — Send a postcard CTA
+    ============================================================ */
+    .end {
+      padding: 140px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--orange-d);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .end h3 em { font-style: italic; color: var(--orange-d); }
+    .end p {
+      font-family: var(--body);
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--gray-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 30px;
+      background: var(--orange);
+      color: var(--gray);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 3px solid var(--gray);
+      box-shadow: 6px 6px 0 var(--gray);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 9px 9px 0 var(--gray);
+    }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      background: var(--gray);
+      color: var(--sand-l);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .foot .ce { text-align: center; color: var(--orange); letter-spacing: 0.5em; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--seafoam); }
+    .foot b { color: var(--orange); }
+
+    /* responsive */
+    @media (max-width: 980px) {
+      .postcards-grid { grid-template-columns: repeat(6, 1fr); gap: 28px 14px; }
+      .pc.c8, .pc.c6 { grid-column: span 6; }
+      .pc.c5 { grid-column: span 6; }
+      .pc.c4, .pc.c3 { grid-column: span 3; }
+      .mailbag-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .reviews-grid { grid-template-columns: 1fr; gap: 24px; }
+      .marks { grid-template-columns: 1fr; gap: 48px; }
+      .palette { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 60px 22px; }
+      .hero-stamp { right: 22px; top: 22px; width: 90px; height: 110px; }
+      .hero-stamp .price { font-size: 22px; }
+      .hero-stack { height: clamp(380px, 80vw, 480px); }
+      .hero-meta { grid-template-columns: 1fr 1fr; }
+      .hero-meta > div:nth-child(3) { border-left: 0; border-top: 2px solid var(--gray); }
+      .hero-meta > div:nth-child(4) { border-top: 2px solid var(--gray); }
+      .intro { padding: 60px 22px; }
+      .postcards { padding: 40px 22px 60px; }
+      .postcards-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .postcards-head .label { grid-column: 1 / -1; }
+      .postcards-grid { grid-template-columns: repeat(2, 1fr); gap: 22px 12px; }
+      .pc.c8, .pc.c6, .pc.c5, .pc.c4, .pc.c3 { grid-column: span 2; }
+      .mailbag { padding: 60px 22px; }
+      .mailbag-grid { grid-template-columns: repeat(2, 1fr); }
+      .reviews { padding: 60px 22px; }
+      .marks { padding: 60px 22px; }
+      .scope { padding: 60px 22px; }
+      .scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .scope-head .label { grid-column: 1 / -1; }
+      .scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .scope-row .out { text-align: left; }
+      .end { padding: 80px 22px 60px; }
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+      .ff-rail { padding: 12px 16px; font-size: 9px; gap: 12px; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .pc, .hero-pol, .review-card, .mb-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="ff-rail">
+    <span>FrameFlow · Reel <b>008</b></span>
+    <span class="center">ADRIAN'S · POSTCARD</span>
+    <span style="text-align: right">Wasaga Beach · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       HERO — title + postcard stack
+  ==================================================================== -->
+  <section class="hero">
+    <div class="hero-stamp">
+      <span class="price">75¢</span>
+      <span class="place">Wasaga Beach<br>Ontario · CA</span>
+      <span class="date">May 2026</span>
+    </div>
+
+    <p class="hero-eyebrow">Postcards from Adrian's · MMXXVI</p>
+    <h1 class="hero-title">Wish you<br>were <em>here.</em></h1>
+    <p class="hero-sub">A season of social, photography, and a website for Adrian's Wasaga Beach — boutique cabin stays, steps from the sand.</p>
+
+    <div class="hero-stack">
+      <figure class="hero-pol p1">
+        <span class="tape"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt="Courtyard firepit at sunset"></div>
+        <p class="write">Built around the firepit.<small>courtyard · sunset</small></p>
+      </figure>
+      <figure class="hero-pol p2">
+        <span class="tape orange"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt="Cabins 4 and 5 at sunset"></div>
+        <p class="write">Your door, your sunset.<small>cabin 4 &amp; 5</small></p>
+      </figure>
+      <figure class="hero-pol p3">
+        <span class="tape sand"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt="Aerial with beach in distance"></div>
+        <p class="write">Steps from the sand.<small>aerial · spring</small></p>
+      </figure>
+      <figure class="hero-pol p4">
+        <span class="tape"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt="King bedroom"></div>
+        <p class="write">King cabin.<small>interior</small></p>
+      </figure>
+      <figure class="hero-pol p5">
+        <span class="tape orange"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt="Courtyard at golden hour"></div>
+        <p class="write">Golden hour.<small>courtyard · august</small></p>
+      </figure>
+    </div>
+
+    <dl class="hero-meta">
+      <div><dt>Cabins</dt><dd>08</dd></div>
+      <div><dt>Photos</dt><dd>16</dd></div>
+      <div><dt>Posts</dt><dd>35</dd></div>
+      <div><dt>Stars</dt><dd>5/5</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro reveal">
+    <p class="intro-cap">A note from FrameFlow</p>
+    <h2>Eight cabins, a thousand <em>small joys.</em></h2>
+    <p>Adrian's is a boutique 8-cabin courtyard rental on Dunkerron Avenue — three blocks from the beach, with a hot tub, a shared firepit, and a hostess who actually checks in.</p>
+    <p>We were brought on for the long story — <strong>photography, social, and the website itself.</strong> What you see below is a season of mail from the resort: the photo essays, the social campaign, and four real five-star reviews from the road.</p>
+  </section>
+
+  <!-- =================================================================
+       PROPERTY POSTCARDS
+  ==================================================================== -->
+  <section class="postcards reveal">
+    <header class="postcards-head">
+      <span class="label">01 / The Cabins</span>
+      <h3>Sixteen postcards from <em>the courtyard.</em></h3>
+      <span class="meta">May–Sept 2026 · 16 frames</span>
+    </header>
+
+    <div class="postcards-grid">
+      <figure class="pc c5 r1"><span class="pin"></span>
+        <div class="ph land"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/01-courtyard-firepit-sunset.jpg" alt=""></div>
+        <p class="write">Built around the firepit.<small>courtyard · sunset</small></p>
+      </figure>
+      <figure class="pc c4 r2"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/02-cabins-4-5-sunset.jpg" alt=""></div>
+        <p class="write">Cabins 4 &amp; 5.<small>your door, your sunset</small></p>
+      </figure>
+      <figure class="pc c3 r3"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/06-cabins-day-yellow.jpg" alt=""></div>
+        <p class="write">Yellow facade.<small>day shoot · june</small></p>
+      </figure>
+
+      <figure class="pc c4 r4"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/03-courtyard-wide-sunset.jpg" alt=""></div>
+        <p class="write">Wide courtyard.<small>sunset · grills out</small></p>
+      </figure>
+      <figure class="pc c4 r5"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/04-courtyard-golden-hour.jpg" alt=""></div>
+        <p class="write">Golden hour.<small>august · 19:14</small></p>
+      </figure>
+      <figure class="pc c4 r1"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/05-courtyard-day-firepit.jpg" alt=""></div>
+        <p class="write">Daytime patio.<small>cabin 6 · 8 · 9</small></p>
+      </figure>
+
+      <figure class="pc c8 r2"><span class="pin"></span>
+        <div class="ph land"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/07-aerial-with-beach.jpg" alt=""></div>
+        <p class="write">Steps from the sand.<small>aerial wide · L. Huron in the distance</small></p>
+      </figure>
+      <figure class="pc c4 r3"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/08-aerial-top-down.jpg" alt=""></div>
+        <p class="write">Eight cabins, top-down.<small>aerial · 11:42</small></p>
+      </figure>
+
+      <figure class="pc c4 r4"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/11-bedroom-king.jpg" alt=""></div>
+        <p class="write">King cabin.<small>bedroom · towels rolled</small></p>
+      </figure>
+      <figure class="pc c4 r5"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/13-kitchen-with-bedroom.jpg" alt=""></div>
+        <p class="write">Kitchenette.<small>compact · two-burner</small></p>
+      </figure>
+      <figure class="pc c4 r1"><span class="pin"></span>
+        <div class="ph"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/15-living-room.jpg" alt=""></div>
+        <p class="write">Living, evenings.<small>tv on · feet up</small></p>
+      </figure>
+
+      <figure class="pc c6 r2"><span class="pin"></span>
+        <div class="ph land"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/09-aerial-property-context.jpg" alt=""></div>
+        <p class="write">The whole block.<small>184 dunkerron ave · 11:08</small></p>
+      </figure>
+      <figure class="pc c6 r3"><span class="pin"></span>
+        <div class="ph land"><img src="../../../public/portfolio/adrians-wasaga-beach/photos/10-beach-wasaga-aerial.jpg" alt=""></div>
+        <p class="write">Wasaga Beach.<small>three blocks · seven minutes' walk</small></p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MAILBAG — social posts campaign
+  ==================================================================== -->
+  <section class="mailbag reveal">
+    <header class="mailbag-head">
+      <span class="label">02 / The Mailbag</span>
+      <h3>Twelve posts, one <em>summer.</em></h3>
+      <span class="meta">35 posts shipped · Q2–Q3 2026</span>
+    </header>
+
+    <div class="mailbag-grid">
+      <figure class="mb-card"><span class="badge">01 · Now booking</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/01-now-booking.png" alt="Now booking"></figure>
+      <figure class="mb-card"><span class="badge">04 · Headline</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/04-color-headline.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">09 · Aerial</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/09-aerial-courtyard.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">11 · Sunset doors</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/11-sunset-doors.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">12 · Firepit</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/12-firepit-quote.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">14 · Daytime</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/14-daytime-patio.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">17 · Kitchen</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/17-card-kitchen.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">20 · Polaroid</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/20-polaroid-three.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">23 · Postcard</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/23-postcard-doors.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">25 · Aerial</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/25-postcard-aerial.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">27 · Mask</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/27-mask-stay.png" alt=""></figure>
+      <figure class="mb-card"><span class="badge">33 · Quote</span><img src="../../../public/portfolio/adrians-wasaga-beach/social/33-quote-yara.png" alt=""></figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       REVIEWS — testimonial postcards
+  ==================================================================== -->
+  <section class="reviews reveal">
+    <header class="reviews-head">
+      <span class="label">03 / Five-star mail</span>
+      <h3>Four <em>real</em> reviews.</h3>
+      <p class="stars">★ ★ ★ ★ ★</p>
+    </header>
+
+    <div class="reviews-grid">
+      <article class="review-card">
+        <p class="stars">★ ★ ★ ★ ★ <b>5 / 5</b></p>
+        <p class="quote">The renovations have made this place the nicest and cleanest around. Modern furnishings and decor and top of the line appliances for a decent rate. Definitely the only place I'd stay in Wasaga.</p>
+        <p class="by"><b>Pam B.</b><span>January 2026 · Google</span></p>
+      </article>
+      <article class="review-card">
+        <p class="stars">★ ★ ★ ★ ★ <b>5 / 5</b></p>
+        <p class="quote">Adrian's was a perfect spot for our annual ladies getaway. Lovely grounds with hot tub and close to the beach. The apartment was spacious, clean, and well equipped. The hostess was friendly and helpful.</p>
+        <p class="by"><b>Anne D.</b><span>September 2025 · Google</span></p>
+      </article>
+      <article class="review-card">
+        <p class="stars">★ ★ ★ ★ ★ <b>5 / 5</b></p>
+        <p class="quote">A hidden gem in the heart of Wasaga. The people at Adrian's are setting the bar on what beachfront luxury should be. Dilber and team really elevated the entire experience — it felt like a home away from home.</p>
+        <p class="by"><b>Rougebella</b><span>August 2025 · Google</span></p>
+      </article>
+      <article class="review-card">
+        <p class="stars">★ ★ ★ ★ ★ <b>5 / 5</b></p>
+        <p class="quote">A great place for a family vacation. Clean, modern and in a great location. The owners are friendly and helpful, which is an extra bonus.</p>
+        <p class="by"><b>L. R.</b><span>May 2025 · Google</span></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MARKS
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · Adrian's beach kit</h3>
+      <div class="palette">
+        <div class="pchip sand"><span class="role">Surface · 60%</span><div><p class="name">Sand</p><p class="hex">#ECD798</p></div></div>
+        <div class="pchip seafoam"><span class="role">Tonal · 15%</span><div><p class="name">Seafoam</p><p class="hex">#98E5D8</p></div></div>
+        <div class="pchip orange"><span class="role">Accent · 15%</span><div><p class="name">Live Orange</p><p class="hex">#F9A21B</p></div></div>
+        <div class="pchip gray"><span class="role">Ink · 10%</span><div><p class="name">Dark Gray</p><p class="hex">#353747</p></div></div>
+      </div>
+    </div>
+    <div>
+      <h3>Typeset · Montserrat + Quicksand</h3>
+      <div class="type-stack">
+        <div class="trow"><p class="label">Header · Montserrat Black 900</p><p class="specimen h">Wish you were here.</p></div>
+        <div class="trow"><p class="label">Subhead · Montserrat Bold 700</p><p class="specimen h" style="font-size: 22px; font-weight: 700;">Steps from the sand.</p></div>
+        <div class="trow"><p class="label">Body · Quicksand 500</p><p class="specimen b">Boutique cabin stays just off the beach in Wasaga.</p></div>
+        <div class="trow"><p class="label">Label · Montserrat Bold tracked</p><p class="specimen l">Postcards from Adrian's · MMXXVI</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <header class="scope-head">
+      <span class="label">04 / Scope</span>
+      <h3>What we made for <em>Adrian's.</em></h3>
+      <span class="total">03 services</span>
+    </header>
+    <div class="scope-row"><span class="num">01</span><span class="name">Photography</span><p class="desc">Two shoots across spring and summer — sunset courtyard, daytime cabins, four full interiors and a beach-context aerial set. 110 frames brought back, 16 kept.</p><p class="out"><b>16</b>kept · 2 shoots</p></div>
+    <div class="scope-row"><span class="num">02</span><span class="name">Social Media</span><p class="desc">A 35-post summer campaign — postcards, polaroids, headline blocks, quote pulls, and aerial breakdowns. Calendar planned monthly with the hostess. Booking-conversion focus.</p><p class="out"><b>35</b>posts · Q2–Q3</p></div>
+    <div class="scope-row"><span class="num">03</span><span class="name">Website</span><p class="desc">A booking-first site at <strong>adrianswasagabeach.ca</strong> — eight cabin pages, photo galleries, location guide, contact form, and a guest-review module. Live since spring.</p><p class="out"><b>1</b>site · 12 pages</p></div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <p class="label">Send a postcard</p>
+    <h3>Book your <em>summer.</em></h3>
+    <p>If your stay or your story needs a season's worth of photography, social, or a site that books — write us.</p>
+    <a class="cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 008 · ADRIAN'S</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

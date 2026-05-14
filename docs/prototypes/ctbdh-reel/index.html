@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CTBDH — The Reel (FrameFlow / Prototype 01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · REEL · CTBDH
+       Prototype 01 — "The Reel" (film-festival programme)
+
+       CTBDH is a NETWORK of Turkish-Canadian businesses, and the work
+       we filed is a season of commercial business-story films. This
+       prototype treats the work as a film festival programme — every
+       member business is a "screening" with title card, runtime,
+       sector tag, and synopsis. Black + CTBDH red + white. Cinema
+       register; the videos are the centrepiece.
+    ==================================================================== */
+
+    :root {
+      --black:    #0a0a0a;
+      --black-2:  #141414;
+      --black-3:  #1c1c1c;
+      --red:      #b91d1d;       /* CTBDH primary red */
+      --red-hi:   #d92929;
+      --red-d:    #7a0e0e;
+      --white:    #ffffff;
+      --bone:     #f4f1ea;
+      --bone-d:   rgba(244, 241, 234, 0.75);
+      --rule:     rgba(244, 241, 234, 0.14);
+
+      --type:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--black);
+      color: var(--bone);
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* fine grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.0' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL — top
+    ============================================================ */
+    .rail {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(10, 10, 10, 0.92);
+      border-bottom: 1px solid var(--rule);
+      backdrop-filter: blur(8px);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .rail b { color: var(--bone); font-weight: 500; }
+    .rail .center {
+      text-align: center;
+      letter-spacing: 0.5em;
+      color: var(--red-hi);
+      font-weight: 500;
+    }
+    .rail .end { text-align: right; }
+    .rail a:hover { color: var(--bone); }
+    .rec::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--red-hi);
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 12px var(--red-hi);
+      animation: pulse 1.6s ease-in-out infinite;
+      vertical-align: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ============================================================
+       OPENER — title card / film festival cover
+    ============================================================ */
+    .opener {
+      position: relative;
+      min-height: calc(100vh - 44px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 32px 100px;
+      overflow: hidden;
+    }
+    .opener::before {
+      /* warm radial glow */
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(185, 29, 29, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .opener-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 36px;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+    }
+    .opener-eyebrow .dot { color: var(--red-hi); margin: 0 12px; }
+    .opener-pres {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      margin-bottom: 44px;
+      position: relative;
+      z-index: 2;
+    }
+    .opener-mark {
+      width: clamp(96px, 14vw, 168px);
+      height: auto;
+      margin: 0 auto 32px;
+      position: relative;
+      z-index: 2;
+      display: block;
+    }
+    .opener-title {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      color: var(--bone);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .opener-title b { color: var(--red-hi); font-weight: 300; }
+    .opener-sub {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.35;
+      color: var(--bone-d);
+      max-width: 32ch;
+      margin: 0 auto 56px;
+      position: relative;
+      z-index: 2;
+    }
+    .opener-sub em { color: var(--red-hi); font-style: normal; font-weight: 400; }
+
+    .opener-meta {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 0;
+      max-width: 880px;
+      margin: 0 auto;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      z-index: 2;
+    }
+    .opener-meta > div {
+      padding: 22px 28px;
+      border-left: 1px solid var(--rule);
+      text-align: center;
+    }
+    .opener-meta > div:first-child { border-left: 0; }
+    .opener-meta dt {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .opener-meta dd {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      line-height: 1;
+    }
+
+    .opener-cue {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      font-weight: 500;
+      z-index: 5;
+    }
+    .opener-cue::after {
+      content: "↓";
+      display: block;
+      margin-top: 8px;
+      color: var(--red-hi);
+      animation: bob 2.4s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+
+    /* ============================================================
+       TICKER — bilingual marquee
+    ============================================================ */
+    .ticker {
+      position: relative;
+      overflow: hidden;
+      background: var(--red);
+      color: var(--white);
+      padding: 14px 0;
+      border-top: 1px solid var(--red-d);
+      border-bottom: 1px solid var(--red-d);
+    }
+    .ticker-track {
+      display: flex;
+      gap: 48px;
+      white-space: nowrap;
+      animation: marquee 60s linear infinite;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .ticker-track span {
+      display: inline-flex;
+      align-items: center;
+      gap: 48px;
+    }
+    .ticker-track span::after {
+      content: "✦";
+      color: var(--white);
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-33.333%); }
+    }
+
+    /* ============================================================
+       INTRO — about CTBDH
+    ============================================================ */
+    .intro {
+      padding: 140px 32px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .intro .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .intro h2 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--bone);
+      margin-bottom: 32px;
+    }
+    .intro h2 b { color: var(--red-hi); font-weight: 400; }
+    .intro p {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--bone-d);
+      max-width: 60ch;
+      margin: 0 auto 1.1em;
+    }
+    .intro p strong { color: var(--bone); font-weight: 500; }
+
+    /* ============================================================
+       PROGRAMME HEAD
+    ============================================================ */
+    .programme-head {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 32px 36px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      border-bottom: 1px solid var(--rule);
+    }
+    .programme-head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      font-weight: 500;
+    }
+    .programme-head h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(32px, 4.4vw, 64px);
+      letter-spacing: -0.035em;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .programme-head h3 b { color: var(--red-hi); font-weight: 300; }
+    .programme-head .count {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      font-weight: 500;
+    }
+    .programme-head .count b { color: var(--bone); font-weight: 500; }
+
+    /* ============================================================
+       PROGRAMME — list of 10 screenings
+    ============================================================ */
+    .programme {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 32px 60px;
+    }
+    .screening {
+      display: grid;
+      grid-template-columns: 80px 320px 1fr 220px 140px;
+      gap: 32px;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.3s;
+    }
+    .screening:hover {
+      background: linear-gradient(90deg, transparent 0%, rgba(185, 29, 29, 0.06) 50%, transparent 100%);
+    }
+    .scr-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      color: var(--red-hi);
+      font-weight: 500;
+    }
+    .scr-poster {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--black-3) 0%, var(--black-2) 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .scr-poster:hover { transform: translateY(-2px); }
+    .scr-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(185, 29, 29, 0.18), transparent 60%);
+    }
+    .scr-poster img {
+      max-width: 60%;
+      max-height: 60%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.5s, opacity 0.4s;
+    }
+    .scr-poster:hover img { transform: scale(1.06); opacity: 1; }
+    /* keep brand-coloured logos un-inverted */
+    .scr-poster.keep-color img { filter: none; }
+
+    .scr-poster .play {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 30px; height: 30px;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      z-index: 3;
+      transition: transform 0.3s;
+    }
+    .scr-poster:hover .play { transform: scale(1.1); }
+    .scr-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 8px;
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(4px);
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone);
+      z-index: 3;
+      font-weight: 500;
+    }
+
+    .scr-meta .name {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: clamp(20px, 2vw, 26px);
+      letter-spacing: -0.015em;
+      color: var(--bone);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .scr-meta .sector {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .scr-meta .syn {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--bone-d);
+      max-width: 56ch;
+    }
+    .scr-runtime {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 36px;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      line-height: 1;
+    }
+    .scr-runtime small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      margin-top: 6px;
+    }
+    .scr-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone);
+      font-weight: 500;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      justify-self: end;
+    }
+    .scr-cta:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--white);
+    }
+    .scr-cta .arr { transition: transform 0.2s; }
+    .scr-cta:hover .arr { transform: translateX(3px); }
+
+    /* ============================================================
+       INTERMISSION — break between programme blocks
+    ============================================================ */
+    .intermission {
+      padding: 80px 32px;
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .intermission .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .intermission p {
+      font-family: var(--type);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(22px, 2.6vw, 32px);
+      line-height: 1.4;
+      color: var(--bone);
+    }
+    .intermission p em { color: var(--red-hi); font-style: italic; font-weight: 400; }
+
+    /* ============================================================
+       MARKS — palette + type
+    ============================================================ */
+    .marks {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 100px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .marks h3 {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pchip.black { background: var(--black-2); color: var(--bone); }
+    .pchip.red { background: var(--red); color: var(--white); }
+    .pchip.bone { background: var(--bone); color: var(--black); }
+    .pchip.gray { background: var(--black-3); color: var(--bone); }
+    .pchip .role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .pchip .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+    }
+    .pchip .hex {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      opacity: 0.85;
+    }
+    .type-stack { display: flex; flex-direction: column; }
+    .trow {
+      padding: 16px 0;
+      border-top: 1px solid var(--rule);
+    }
+    .trow:first-child { border-top: 0; padding-top: 0; }
+    .trow:last-child { border-bottom: 1px solid var(--rule); }
+    .trow .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .trow .specimen.h {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 36px;
+      letter-spacing: -0.04em;
+      color: var(--bone);
+      line-height: 1;
+    }
+    .trow .specimen.m {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.005em;
+      color: var(--bone);
+    }
+    .trow .specimen.b {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--bone);
+    }
+    .trow .specimen.l {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .trow .specimen.r {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--red-hi);
+    }
+
+    /* ============================================================
+       SCOPE — what FF made
+    ============================================================ */
+    .scope {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .scope-head .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      font-weight: 500;
+    }
+    .scope-head h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .scope-head h3 b { color: var(--red-hi); font-weight: 300; }
+    .scope-head .count {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      font-weight: 500;
+    }
+    .scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+    }
+    .scope-row .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      color: var(--red-hi);
+      font-weight: 500;
+    }
+    .scope-row .name {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: var(--bone);
+    }
+    .scope-row .desc {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--bone-d);
+      max-width: 56ch;
+    }
+    .scope-row .out {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+      text-align: right;
+      font-weight: 500;
+    }
+    .scope-row .out b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--bone);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       END SLATE
+    ============================================================ */
+    .end {
+      padding: 140px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+      border-top: 1px solid var(--rule);
+    }
+    .end .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 22px;
+      font-weight: 500;
+    }
+    .end h3 {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: clamp(40px, 6vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--bone);
+      margin-bottom: 24px;
+    }
+    .end h3 b { color: var(--red-hi); font-weight: 300; }
+    .end p {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--bone-d);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 26px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      border: 1px solid var(--red);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cta:hover { background: var(--red-hi); border-color: var(--red-hi); }
+    .cta .arr { transition: transform 0.2s; }
+    .cta:hover .arr { transform: translateX(3px); }
+
+    .foot {
+      padding: 22px 32px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--bone-d);
+    }
+    .foot .ce { text-align: center; color: var(--red-hi); letter-spacing: 0.5em; font-weight: 500; }
+    .foot .ri { text-align: right; }
+    .foot a:hover { color: var(--bone); }
+    .foot b { color: var(--bone); font-weight: 500; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1080px) {
+      .screening {
+        grid-template-columns: 50px 220px 1fr;
+        gap: 18px 24px;
+      }
+      .scr-runtime, .scr-cta { grid-column: 2 / 4; }
+      .scr-cta { justify-self: start; }
+      .scr-runtime { display: flex; gap: 12px; align-items: baseline; font-size: 26px; }
+      .scr-runtime small { margin-top: 0; }
+    }
+    @media (max-width: 720px) {
+      .opener { padding: 80px 22px 60px; }
+      .opener-meta { grid-template-columns: 1fr 1fr; }
+      .opener-meta > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--rule); }
+      .opener-meta > div:nth-child(4) { border-top: 1px solid var(--rule); }
+      .ticker-track { font-size: 14px; }
+      .intro { padding: 80px 22px; }
+      .programme-head { padding: 0 22px 24px; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .programme-head .label { grid-column: 1 / -1; }
+      .programme { padding: 0 22px 40px; }
+      .screening { grid-template-columns: 50px 1fr; padding: 22px 0; gap: 16px; }
+      .scr-poster { grid-column: 1 / -1; }
+      .scr-meta { grid-column: 2 / 3; }
+      .scr-runtime, .scr-cta { grid-column: 1 / -1; }
+      .intermission { padding: 60px 22px; }
+      .marks { grid-template-columns: 1fr; gap: 48px; padding: 60px 22px; }
+      .palette { grid-template-columns: 1fr 1fr; }
+      .scope { padding: 60px 22px; }
+      .scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .scope-head .label { grid-column: 1 / -1; }
+      .scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .scope-row .out { text-align: left; }
+      .end { padding: 80px 22px 60px; }
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .foot .ri, .foot .ce { text-align: center; }
+      .rail { grid-template-columns: 1fr 1fr; padding: 12px 16px; }
+      .rail .end { display: none; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .ticker-track { animation: none; }
+      body::before { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       FF RAIL
+  ==================================================================== -->
+  <header class="rail">
+    <span><span class="rec">REC</span><b>FrameFlow</b> · Reel · CTBDH</span>
+    <span class="center">CTBDH · THE REEL</span>
+    <span class="end">Toronto · <b>2025</b></span>
+  </header>
+
+  <!-- =================================================================
+       OPENER
+  ==================================================================== -->
+  <section class="opener">
+    <p class="opener-eyebrow">Reel <span class="dot">·</span> Toronto <span class="dot">·</span> MMXXV</p>
+    <p class="opener-pres">FrameFlow Studio Presents</p>
+    <img class="opener-mark" src="../../../public/portfolio/ctbdh/logo/ctbdh-mark.png" alt="CTBDH mark">
+    <h1 class="opener-title">A Programme<br>of <b>Ten Stories.</b></h1>
+    <p class="opener-sub">Filmed for <em>Canada Türkiye Business Development Hub</em> — a network of Turkish-Canadian businesses, told one screening at a time.</p>
+
+    <dl class="opener-meta">
+      <div><dt>Screenings</dt><dd>10</dd></div>
+      <div><dt>Members</dt><dd>10</dd></div>
+      <div><dt>Sectors</dt><dd>06</dd></div>
+      <div><dt>Format</dt><dd>16:9</dd></div>
+    </dl>
+    <span class="opener-cue">Begin</span>
+  </section>
+
+  <!-- =================================================================
+       TICKER — bilingual
+  ==================================================================== -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Canada · Türkiye · Toronto · Concord · Network · Stories · Films · Trade</span>
+      <span>Kanada · Türkiye · İş Geliştirme · Hikâye · Şebeke · Ticaret · Toronto</span>
+      <span>Canada · Türkiye · Toronto · Concord · Network · Stories · Films · Trade</span>
+      <span>Kanada · Türkiye · İş Geliştirme · Hikâye · Şebeke · Ticaret · Toronto</span>
+      <span>Canada · Türkiye · Toronto · Concord · Network · Stories · Films · Trade</span>
+      <span>Kanada · Türkiye · İş Geliştirme · Hikâye · Şebeke · Ticaret · Toronto</span>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="intro reveal">
+    <p class="label">A note on the network</p>
+    <h2>Ten businesses, one <b>shared story.</b></h2>
+    <p>The Canada Türkiye Business Development Hub is a network of Turkish-Canadian small and medium enterprises — founders who built their companies in Toronto, Concord and across the GTA, and who lend each other capital, contacts, and confidence.</p>
+    <p>FrameFlow filmed <strong>ten of them</strong>, one screening at a time. What follows is the programme — runtimes, sectors, and synopses for each story we filed.</p>
+  </section>
+
+  <!-- =================================================================
+       PROGRAMME HEAD
+  ==================================================================== -->
+  <div class="programme-head reveal">
+    <span class="label">01 / Programme</span>
+    <h3>The <b>screenings,</b> in order.</h3>
+    <span class="count"><b>10</b> films · 16:9 · ~24 min total</span>
+  </div>
+
+  <!-- =================================================================
+       PROGRAMME — 10 screenings
+  ==================================================================== -->
+  <section class="programme">
+
+    <article class="screening reveal">
+      <span class="scr-num">S.01</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 01</span>
+        <img src="../../../public/portfolio/ctbdh/members/asd-laminat.png" alt="ASD Laminat">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">ASD Laminat</h4>
+        <p class="sector">Surfaces · Manufacturing</p>
+        <p class="syn">A laminate workshop with a workshop's discipline — the family business that started in Bursa and now ships sheets across the GTA. Filmed on the line, where the colour samples are still chosen by hand.</p>
+      </div>
+      <p class="scr-runtime">2:34<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.02</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 02</span>
+        <img src="../../../public/portfolio/ctbdh/members/atlas-food-beverage.png" alt="Atlas Food &amp; Beverage" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Atlas Food &amp; Beverage</h4>
+        <p class="sector">Food &amp; Drink · Distribution</p>
+        <p class="syn">Distribution that opens a kitchen door. Mehmet Gedik on what it takes to put Anatolian flavours on Canadian shelves — sourcing, customs, and the long phone calls home.</p>
+      </div>
+      <p class="scr-runtime">2:48<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.03</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 03</span>
+        <img src="../../../public/portfolio/ctbdh/members/aydin-cpa.png" alt="Aydin CPA" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Aydin CPA</h4>
+        <p class="sector">Accounting · Professional Services</p>
+        <p class="syn">A CPA practice that takes founders from first invoice to first audit. A morning at the firm — calls in two languages, a wall of HST returns, and the founder's daughter at the desk by the door.</p>
+      </div>
+      <p class="scr-runtime">2:12<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.04</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 04</span>
+        <img src="../../../public/portfolio/ctbdh/members/bookkeeping-bizz.png" alt="Bookkeeping Bizz" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Bookkeeping Bizz</h4>
+        <p class="sector">Bookkeeping · Small Business</p>
+        <p class="syn">Books for everyone who didn't open a business to do their own books. Cloud-first, plain-spoken, monthly — a practice built around the founders who finally want to know their numbers.</p>
+      </div>
+      <p class="scr-runtime">2:18<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.05</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 05</span>
+        <img src="../../../public/portfolio/ctbdh/members/grp-rugs.png" alt="GRP Rugs" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">GRP Rugs</h4>
+        <p class="sector">Home · Retail</p>
+        <p class="syn">A rug warehouse the size of a city block. Rolls stacked by colour, fibre, knots-per-inch — and a buyer who picks up the phone to Gaziantep before lunch and Toronto after.</p>
+      </div>
+      <p class="scr-runtime">2:42<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       INTERMISSION
+  ==================================================================== -->
+  <section class="intermission reveal">
+    <p class="label">— Intermission —</p>
+    <p>A network is the sum of its <em>introductions.</em> Five more screenings to come.</p>
+  </section>
+
+  <!-- =================================================================
+       PROGRAMME — second half
+  ==================================================================== -->
+  <section class="programme">
+
+    <article class="screening reveal">
+      <span class="scr-num">S.06</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 06</span>
+        <img src="../../../public/portfolio/ctbdh/members/jc-professional.png" alt="JC Professional" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">JC Professional Co.</h4>
+        <p class="sector">Tax &amp; Advisory · Professional Services</p>
+        <p class="syn">A multi-disciplinary practice for founders who are also husbands, wives, parents and immigrants. Tax, audit, advisory, and the long conversations that come before any of them.</p>
+      </div>
+      <p class="scr-runtime">2:24<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.07</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 07</span>
+        <img src="../../../public/portfolio/ctbdh/members/neo-project-consulting.png" alt="NEO Project Consulting" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">NEO Project Consulting</h4>
+        <p class="sector">Consulting · Construction</p>
+        <p class="syn">Project management for new builds and reno gut-jobs. Site visits between Mississauga and Markham; site drawings that translate three trades into one schedule.</p>
+      </div>
+      <p class="scr-runtime">2:36<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.08</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 08</span>
+        <img src="../../../public/portfolio/ctbdh/members/northern-pathways.png" alt="Northern Pathways" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Northern Pathways Immigration</h4>
+        <p class="sector">Immigration · Consulting</p>
+        <p class="syn">A regulated immigration practice run by people who arrived themselves. Express Entry, study permits, the slow files — and the small celebrations on the day a PR card lands in the mailbox.</p>
+      </div>
+      <p class="scr-runtime">2:54<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.09</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 09</span>
+        <img src="../../../public/portfolio/ctbdh/members/sapphirus.png" alt="Sapphirus">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Sapphirus</h4>
+        <p class="sector">Lifestyle · Brand</p>
+        <p class="syn">A small brand with a sharp mark — and a founder who built it between Istanbul and Toronto. We filmed the workshop, the model, and the moment the line is finally hung in store.</p>
+      </div>
+      <p class="scr-runtime">2:08<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+
+    <article class="screening reveal">
+      <span class="scr-num">S.10</span>
+      <div class="scr-poster">
+        <span class="scr-tag">FF · 10</span>
+        <img src="../../../public/portfolio/ctbdh/members/urla-fine-foods.png" alt="Urla Fine Foods" style="filter: none;">
+        <span class="play" aria-hidden>▶</span>
+      </div>
+      <div class="scr-meta">
+        <h4 class="name">Urla Fine Foods</h4>
+        <p class="sector">Food &amp; Drink · Specialty</p>
+        <p class="syn">An Aegean larder in the GTA — olive oil, pepper paste, sun-dried tomato, and a founder who still calls the village every Sunday. Filmed in the warehouse that smells, faintly, of summer.</p>
+      </div>
+      <p class="scr-runtime">2:46<small>Runtime</small></p>
+      <a href="#" class="scr-cta">Watch <span class="arr">→</span></a>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       MARKS — palette + type
+  ==================================================================== -->
+  <section class="marks reveal">
+    <div>
+      <h3>Palette · two flags, one colour</h3>
+      <div class="palette">
+        <div class="pchip black">
+          <span class="role">Surface · 60%</span>
+          <div>
+            <p class="name">Stage Black</p>
+            <p class="hex">#0A0A0A</p>
+          </div>
+        </div>
+        <div class="pchip red">
+          <span class="role">Primary · 25%</span>
+          <div>
+            <p class="name">CTBDH Red</p>
+            <p class="hex">#B91D1D</p>
+          </div>
+        </div>
+        <div class="pchip bone">
+          <span class="role">Body · 12%</span>
+          <div>
+            <p class="name">Bone</p>
+            <p class="hex">#F4F1EA</p>
+          </div>
+        </div>
+        <div class="pchip gray">
+          <span class="role">Tonal · 3%</span>
+          <div>
+            <p class="name">Char</p>
+            <p class="hex">#1C1C1C</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · Inter + JetBrains Mono</h3>
+      <div class="type-stack">
+        <div class="trow">
+          <p class="label">Display · 200</p>
+          <p class="specimen h">Aa Bb · 0123</p>
+        </div>
+        <div class="trow">
+          <p class="label">Subhead · 500</p>
+          <p class="specimen m">Ten businesses, one shared story.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Body · 300</p>
+          <p class="specimen b">A network is the sum of its introductions. Five more screenings to come.</p>
+        </div>
+        <div class="trow">
+          <p class="label">Mono Label · 500</p>
+          <p class="specimen l">Toronto · Concord · MMXXV</p>
+        </div>
+        <div class="trow">
+          <p class="label">Accent · CTBDH Red</p>
+          <p class="specimen r">Türkiye × Canada</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <div class="scope-head">
+      <span class="label">02 / Scope</span>
+      <h3>What we made for <b>CTBDH.</b></h3>
+      <span class="count">02 services</span>
+    </div>
+    <div class="scope-row">
+      <span class="num">01.</span>
+      <span class="name">Logo &amp; Identity</span>
+      <p class="desc">A red-on-black mark for the network — the lower-case ct ligature, drawn so the C and T share a single curve, plus a wordmark in two languages and a complete brand kit for member businesses to flag their CTBDH membership.</p>
+      <p class="out"><b>1</b>identity system</p>
+    </div>
+    <div class="scope-row">
+      <span class="num">02.</span>
+      <span class="name">Videography</span>
+      <p class="desc">Ten commercial films — one for each member business. On location at workshops, warehouses, offices and shops across the GTA. 16:9 master delivered with 1:1 and 9:16 cut-downs for social.</p>
+      <p class="out"><b>10</b>films · 16:9</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end reveal">
+    <p class="label">— End of programme —</p>
+    <h3>Add the <b>next story.</b></h3>
+    <p>If you run a business with a story worth filming — or you'd like to host the next screening night — we'd like to hear from you.</p>
+    <a class="cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2025</span>
+    <span class="ce">Reel · CTBDH</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <script>
+    /* reveal */
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

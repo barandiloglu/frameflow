@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Console (FrameFlow / Prototype 02)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 02 — "The Console" (product-led case study)
+
+       The calculators ARE the work. The page reads like a product page
+       for the toolkit FrameFlow built — dark panels, live calculator
+       with score readouts, FSWP eligibility checker, real Express
+       Entry draws table, multilingual toggle, PDF export. Stripe /
+       Linear / Figma product-page energy applied to a regulatory
+       brand. Restrained type, generous numerals.
+    ==================================================================== */
+
+    :root {
+      --bg:        #ffffff;
+      --bg-2:      #fafafa;
+      --bg-3:      #f4f4f1;
+      --bg-dark:   #14151a;
+      --bg-darker: #0c0d11;
+      --rule:      #e7e5e0;
+      --rule-2:    #d4d2cd;
+      --rule-d:    rgba(255,255,255,0.10);
+      --ink:       #1a1a1a;
+      --ink-2:     #2c2b2b;
+      --ink-3:     #4a4946;
+      --ink-4:     #8c8a85;
+      --ink-5:     #b8b6b1;
+      --on-dark:   #f4f4f1;
+      --on-dark-2: rgba(244,244,241,0.65);
+      --on-dark-3: rgba(244,244,241,0.35);
+      --red:       #b92025;
+      --red-d:     #7d1416;
+      --red-l:     #f6e3e4;
+      --red-on-d:  #e85a5e;
+      --green:     #2e7d4f;
+      --amber:     #c98a1a;
+
+      --display:   "Montserrat", system-ui, sans-serif;
+      --mono:      "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); color: var(--ink); }
+    body {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* =============== TOP RAIL =============== */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--bg-darker);
+      color: var(--on-dark-2);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red-on-d); font-weight: 600; }
+    .rail .center {
+      text-align: center;
+      letter-spacing: 0.4em;
+      color: var(--on-dark);
+      white-space: nowrap;
+    }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--on-dark); }
+
+    /* status pill */
+    .rail .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: rgba(46, 125, 79, 0.18);
+      color: #6ee0a0;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      margin-left: 10px;
+      border: 1px solid rgba(110,224,160,0.32);
+    }
+    .rail .pill::before {
+      content: "";
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6ee0a0;
+      animation: blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
+
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+      .rail .pill { display: none; }
+    }
+
+    /* ============================================================
+       HERO — product-page style
+    ============================================================ */
+    .hero {
+      background: var(--bg);
+      padding: 72px 48px 60px;
+      position: relative;
+      border-bottom: 1px solid var(--rule);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%;
+      height: 100%;
+      background-image:
+        linear-gradient(to right, transparent 0 1px, var(--rule) 1px 100%),
+        linear-gradient(to bottom, transparent 0 1px, var(--rule) 1px 100%);
+      background-size: 80px 80px;
+      opacity: 0.32;
+      pointer-events: none;
+      mask-image: linear-gradient(to right, transparent, black 30%, black 90%, transparent);
+    }
+    .hero-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 72px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-text { max-width: 56ch; }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 12px;
+      border: 1px solid var(--red);
+      background: var(--red-l);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before { content: "▎"; color: var(--red); }
+    .hero-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(44px, 6.4vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-family: var(--display);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--red);
+    }
+    .hero-deck {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink-3);
+      margin-bottom: 32px;
+    }
+    .hero-deck b { color: var(--ink); font-weight: 600; }
+    .hero-cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: transform 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: var(--red); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--rule-2);
+    }
+    .btn-secondary:hover { border-color: var(--ink); }
+    .btn .arr { transition: transform 0.2s; }
+    .btn:hover .arr { transform: translateX(3px); }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      max-width: 600px;
+    }
+    .hero-stats > div {
+      padding: 18px 14px;
+      border-left: 1px solid var(--rule);
+    }
+    .hero-stats > div:first-child { border-left: 0; padding-left: 0; }
+    .hero-stats dt {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 0.9;
+      margin-bottom: 6px;
+    }
+    .hero-stats dt em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .hero-stats dd {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    /* HERO CONSOLE — the product mockup */
+    .hero-console {
+      position: relative;
+    }
+    .hero-console::before {
+      content: "";
+      position: absolute;
+      inset: -28px -28px -28px -28px;
+      background: linear-gradient(180deg, rgba(185,32,37,0.06), rgba(255,255,255,0));
+      pointer-events: none;
+      z-index: 0;
+    }
+    .console {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-dark);
+      color: var(--on-dark);
+      border: 1px solid var(--bg-darker);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.04),
+        0 24px 60px -24px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+    .console-chrome {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      padding: 12px 16px;
+      align-items: center;
+      background: var(--bg-darker);
+      border-bottom: 1px solid var(--rule-d);
+    }
+    .console-chrome .dots { display: flex; gap: 6px; }
+    .console-chrome .dots span {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: rgba(244,244,241,0.18);
+    }
+    .console-chrome .dots span:first-child { background: var(--red-on-d); }
+    .console-chrome .url {
+      padding: 6px 14px;
+      background: var(--bg-dark);
+      border: 1px solid var(--rule-d);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--on-dark-2);
+    }
+    .console-chrome .url::before { content: "🔒  "; opacity: 0.6; }
+    .console-chrome .lang {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--bg-dark);
+      border: 1px solid var(--rule-d);
+    }
+    .console-chrome .lang span {
+      padding: 3px 8px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--on-dark-3);
+    }
+    .console-chrome .lang span.active { background: var(--red); color: var(--on-dark); }
+
+    /* CRS calculator inner UI */
+    .crs {
+      padding: 28px 32px 32px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 28px;
+    }
+    .crs .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule-d);
+      margin-bottom: 18px;
+    }
+    .crs .panel-head h4 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--on-dark);
+    }
+    .crs .panel-head .step {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red-on-d);
+    }
+    .crs .field {
+      padding: 12px 14px;
+      background: var(--bg-darker);
+      border: 1px solid var(--rule-d);
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 8px;
+      transition: border-color 0.2s;
+    }
+    .crs .field:hover, .crs .field.active {
+      border-color: var(--red-on-d);
+    }
+    .crs .field .key {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--on-dark);
+    }
+    .crs .field .key small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--on-dark-3);
+      margin-top: 3px;
+    }
+    .crs .field .val {
+      padding: 6px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--rule-d);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--on-dark);
+      text-align: center;
+    }
+    .crs .field.active .val {
+      border-color: var(--red-on-d);
+      color: var(--red-on-d);
+    }
+
+    /* tabs */
+    .crs-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--rule-d);
+    }
+    .crs-tabs button {
+      padding: 10px 12px;
+      border: 0;
+      background: transparent;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--on-dark-3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .crs-tabs button.active {
+      color: var(--red-on-d);
+      border-bottom-color: var(--red-on-d);
+    }
+
+    /* score panel */
+    .crs .score {
+      background: var(--bg-darker);
+      border: 1px solid var(--rule-d);
+      padding: 28px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .crs .score .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-on-d);
+    }
+    .crs .score .total {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 96px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--on-dark);
+    }
+    .crs .score .total small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--on-dark-3);
+    }
+    .crs .score .delta {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: #6ee0a0;
+    }
+    .crs .score .delta::before { content: "▲ "; }
+
+    .crs-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .crs-bar {
+      display: grid;
+      grid-template-columns: 110px 1fr 50px;
+      gap: 12px;
+      align-items: center;
+    }
+    .crs-bar .key {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--on-dark-2);
+    }
+    .crs-bar .key b { color: var(--on-dark); font-weight: 600; }
+    .crs-bar .track {
+      height: 5px;
+      background: rgba(244,244,241,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .crs-bar .fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: linear-gradient(to right, var(--red), var(--red-on-d));
+    }
+    .crs-bar .v {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--on-dark);
+      text-align: right;
+    }
+
+    .crs-export {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: var(--red);
+      color: var(--on-dark);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .crs-export:hover { background: var(--red-d); }
+
+    @media (max-width: 1080px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-stats { max-width: none; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 48px 22px 48px; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .hero-stats > div:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); }
+      .hero-stats > div:nth-child(4) { border-top: 1px solid var(--rule); }
+      .crs { grid-template-columns: 1fr; padding: 22px; gap: 22px; }
+    }
+
+    /* ============================================================
+       SHELF — three product cards
+    ============================================================ */
+    .shelf {
+      padding: 100px 48px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .shelf-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 48px;
+    }
+    .shelf-head .label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .shelf-head h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(36px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .shelf-head h2 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .shelf-head .meta {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .shelf-head .meta b { color: var(--ink); }
+
+    .shelf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .product {
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .product:hover { border-color: var(--ink); }
+    .product .sku {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+    .product .num {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .product .num em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .product h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .product h3 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .product p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-3);
+      margin-bottom: 18px;
+    }
+    .product .specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+    }
+    .product .specs > div {
+      padding: 10px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .product .specs > div:nth-child(-n+2) { border-top: 0; }
+    .product .specs > div:nth-child(odd) { padding-right: 12px; }
+    .product .specs > div:nth-child(even) { padding-left: 12px; border-left: 1px solid var(--rule); }
+    .product .specs dt {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 3px;
+    }
+    .product .specs dd {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+
+    @media (max-width: 980px) { .shelf-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .shelf-grid { grid-template-columns: 1fr; } .shelf { padding: 60px 22px; } }
+
+    /* ============================================================
+       PRODUCT II — FSWP eligibility checker
+    ============================================================ */
+    .fswp {
+      background: var(--bg-3);
+      padding: 100px 48px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .fswp-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .fswp-text { max-width: 50ch; }
+    .fswp-text .sku {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .fswp-text h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .fswp-text h3 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .fswp-text p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-3);
+      margin-bottom: 1em;
+    }
+    .fswp-text p strong { color: var(--ink); font-weight: 600; }
+
+    .fswp-mock {
+      background: var(--bg);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 24px 60px -24px rgba(0,0,0,0.18);
+    }
+    .fswp-mock .head {
+      padding: 18px 22px;
+      background: var(--ink);
+      color: var(--on-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .fswp-mock .head .lbl {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-on-d);
+    }
+    .fswp-mock .head h4 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+    }
+    .fswp-mock .head .total {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      color: var(--on-dark);
+    }
+    .fswp-mock .head .total b { color: var(--red-on-d); font-weight: 700; font-size: 18px; }
+
+    .fswp-mock .factors > div {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px 80px;
+      gap: 16px;
+      padding: 14px 22px;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+    .fswp-mock .factors > div:first-child { border-top: 0; }
+    .fswp-mock .factors .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: var(--red);
+    }
+    .fswp-mock .factors .name {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .fswp-mock .factors .name small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--ink-4);
+      margin-top: 2px;
+    }
+    .fswp-mock .factors .max {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .fswp-mock .factors .scored {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-align: right;
+    }
+    .fswp-mock .factors .scored.full { color: var(--red); }
+    .fswp-mock .verdict {
+      padding: 22px;
+      background: var(--bg-3);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+    .fswp-mock .verdict .v-lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+    .fswp-mock .verdict h5 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--green);
+    }
+    .fswp-mock .verdict h5::before { content: "✓ "; color: var(--green); }
+    .fswp-mock .verdict .pdf {
+      padding: 10px 16px;
+      background: var(--ink);
+      color: var(--on-dark);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 980px) {
+      .fswp-inner { grid-template-columns: 1fr; gap: 36px; }
+      .fswp { padding: 60px 22px; }
+    }
+    @media (max-width: 540px) {
+      .fswp-mock .factors > div { grid-template-columns: 60px 1fr 60px; }
+      .fswp-mock .factors .max { display: none; }
+    }
+
+    /* ============================================================
+       PRODUCT III — Latest Draws live feed
+    ============================================================ */
+    .draws {
+      padding: 100px 48px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .draws-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 36px;
+    }
+    .draws-head .label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .draws-head h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(36px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .draws-head h2 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .draws-head .meta {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .draws-head .meta b { color: var(--ink); }
+    .draws-head .meta .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+    }
+    .draws-head .meta .live::before {
+      content: "";
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.6s ease-in-out infinite;
+    }
+
+    .draws-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .draws-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .draws-table thead th {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1.5px solid var(--ink);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .draws-table tbody td {
+      padding: 16px 14px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    .draws-table tbody tr:hover { background: var(--bg-3); }
+    .draws-table .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .draws-table .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--red-l);
+      color: var(--red-d);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+    }
+    .draws-table .pill.cec    { background: #e3eef6; color: #1d4f73; }
+    .draws-table .pill.fr     { background: #efe3f6; color: #511d73; }
+    .draws-table .pill.pnp    { background: #f0f6e3; color: #4f731d; }
+    .draws-table .pill.trades { background: #f6efe3; color: #735c1d; }
+    .draws-table .crs {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .draws-side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .draws-card {
+      padding: 20px;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+    }
+    .draws-card.featured { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+    .draws-card .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .draws-card.featured .lbl { color: var(--red-on-d); }
+    .draws-card .big {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .draws-card.featured .big { color: var(--on-dark); }
+    .draws-card .big small {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      display: block;
+      margin-top: 8px;
+    }
+    .draws-card.featured .big small { color: var(--on-dark-3); }
+    .draws-card p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink-3);
+    }
+    .draws-card.featured p { color: var(--on-dark-2); }
+    .draws-card .sub {
+      margin-top: 14px;
+      padding: 8px 12px;
+      background: var(--red);
+      color: var(--on-dark);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .draws-card .sub:hover { background: var(--red-d); }
+
+    @media (max-width: 980px) {
+      .draws-grid { grid-template-columns: 1fr; }
+      .draws-head { grid-template-columns: 1fr; gap: 12px; }
+      .draws-head .meta { text-align: left; }
+      .draws-table thead { display: none; }
+      .draws-table, .draws-table tbody, .draws-table tr, .draws-table td { display: block; }
+      .draws-table tr { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+      .draws-table td { padding: 4px 0; border-bottom: 0; }
+    }
+    @media (max-width: 640px) { .draws { padding: 60px 22px; } }
+
+    /* ============================================================
+       SOCIAL — turkish handle
+    ============================================================ */
+    .social {
+      background: var(--bg-darker);
+      color: var(--on-dark);
+      padding: 100px 48px;
+    }
+    .social-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .social-text { max-width: 48ch; }
+    .social-text .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-on-d);
+      margin-bottom: 16px;
+    }
+    .social-text h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(32px, 4.4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--on-dark);
+      margin-bottom: 18px;
+    }
+    .social-text h3 em { font-style: italic; color: var(--red-on-d); font-weight: 500; }
+    .social-text p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--on-dark-2);
+      margin-bottom: 1em;
+    }
+    .social-text p b { color: var(--on-dark); font-weight: 600; }
+    .social-text .handle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      margin-top: 14px;
+    }
+    .social-text .handle::before { content: "@"; color: var(--red); }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .social-tile {
+      aspect-ratio: 1 / 1;
+      background: var(--bg-dark);
+      border: 1px solid var(--rule-d);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .social-tile:hover { border-color: var(--red-on-d); transform: translateY(-3px); }
+    .social-tile.brand { background: var(--red); border-color: var(--red); }
+    .social-tile.brand .top, .social-tile.brand .body, .social-tile.brand .foot { color: var(--on-dark); }
+    .social-tile.dark { background: var(--ink); border-color: var(--ink); }
+
+    .social-tile .top {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red-on-d);
+    }
+    .social-tile .body {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--on-dark);
+    }
+    .social-tile .body em { font-style: italic; color: var(--red-on-d); font-weight: 500; }
+    .social-tile .foot {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--on-dark-3);
+    }
+
+    @media (max-width: 980px) {
+      .social-inner { grid-template-columns: 1fr; }
+      .social-grid { grid-template-columns: repeat(3, 1fr); }
+      .social { padding: 60px 22px; }
+    }
+    @media (max-width: 540px) {
+      .social-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ============================================================
+       SCOPE — table
+    ============================================================ */
+    .scope {
+      padding: 100px 48px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .scope h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(36px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .scope h2 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .scope .label {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .scope .deck {
+      max-width: 60ch;
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-3);
+      margin-bottom: 36px;
+    }
+    .scope-rows {
+      border-top: 2px solid var(--ink);
+    }
+    .srow {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 28px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+      transition: background 0.2s;
+    }
+    .srow:hover { background: var(--bg-3); }
+    .srow .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      color: var(--red);
+    }
+    .srow .name {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .srow .desc {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-3);
+    }
+    .srow .out {
+      text-align: right;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .srow .out b {
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    @media (max-width: 880px) {
+      .srow { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
+      .srow .out { text-align: left; }
+      .scope { padding: 60px 22px; }
+    }
+
+    /* ============================================================
+       END
+    ============================================================ */
+    .end {
+      padding: 120px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .end .lbl {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(36px, 5.4vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .end h3 em { font-style: italic; color: var(--red); font-weight: 500; }
+    .end p {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--ink-3);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .end-row {
+      display: inline-flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .foot {
+      padding: 22px 32px;
+      background: var(--bg-darker);
+      color: var(--on-dark-2);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .foot b { color: var(--red-on-d); font-weight: 600; }
+    .foot strong { color: var(--on-dark); font-weight: 600; }
+    .foot .center {
+      text-align: center;
+      color: var(--red-on-d);
+      letter-spacing: 0.4em;
+    }
+    .foot .right { text-align: right; }
+    @media (max-width: 720px) {
+      .foot { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; }
+      .foot .right, .foot .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Console</span>
+    <span class="right">
+      <strong>Live · 12 routes · EN+TR</strong>
+      <span class="pill">Production</span>
+    </span>
+  </header>
+
+  <!-- =================================================================
+       HERO — product page top
+  ==================================================================== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Reel 019 · Web App + Tooling</span>
+        <h1 class="hero-title">
+          A toolkit that turns <em>eligibility math</em><br>
+          into a defensible <em>PDF.</em>
+        </h1>
+        <p class="hero-deck">
+          For <b>Northern Pathways Immigration Consulting</b> we built a
+          three-piece web product: a <b>CRS calculator</b>, an <b>FSWP
+          eligibility checker</b>, and a <b>live Express Entry draws</b>
+          tracker — all multilingual (EN/TR), all current to IRCC&rsquo;s
+          2025 rules, all exporting a one-click PDF a regulated counsel
+          can sign.
+        </p>
+        <div class="hero-cta-row">
+          <a class="btn btn-primary" href="#">Open the calculator <span class="arr">→</span></a>
+          <a class="btn btn-secondary" href="#">View the draws feed</a>
+        </div>
+        <dl class="hero-stats">
+          <div><dt><em>2</em></dt><dd>Calculators</dd></div>
+          <div><dt>156<em>+</em></dt><dd>Draws indexed</dd></div>
+          <div><dt>EN<em>/</em>TR</dt><dd>Both languages</dd></div>
+          <div><dt>1<em>×</em></dt><dd>Click PDF</dd></div>
+        </dl>
+      </div>
+
+      <!-- HERO CONSOLE — live CRS calc -->
+      <div class="hero-console">
+        <article class="console">
+          <header class="console-chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">northernpathways.ca/en/crs-calculator</span>
+            <span class="lang"><span class="active">EN</span><span>TR</span></span>
+          </header>
+
+          <div class="crs">
+            <div>
+              <div class="panel-head">
+                <h4>CRS Calculator · Step 02 / 06</h4>
+                <span class="step">Core / Human Capital</span>
+              </div>
+              <div class="crs-tabs">
+                <button class="active">A · Core</button>
+                <button>B · Spouse</button>
+                <button>C · Skill transfer</button>
+                <button>D · Additional</button>
+              </div>
+              <div class="field active">
+                <span class="key">Age<small>at point of application · 32</small></span>
+                <span class="val">110 / 110</span>
+              </div>
+              <div class="field active">
+                <span class="key">Education<small>Master&rsquo;s degree</small></span>
+                <span class="val">135 / 150</span>
+              </div>
+              <div class="field active">
+                <span class="key">CLB / NCLC<small>English · CLB 9 · all skills</small></span>
+                <span class="val">124 / 136</span>
+              </div>
+              <div class="field active">
+                <span class="key">French · NCLC<small>NCLC 7+ bonus eligible</small></span>
+                <span class="val">25 / 50</span>
+              </div>
+              <div class="field">
+                <span class="key">Canadian work<small>1 year · NOC TEER 0–3</small></span>
+                <span class="val">35 / 80</span>
+              </div>
+              <div class="field">
+                <span class="key">Foreign work<small>3+ years</small></span>
+                <span class="val">25 / 50</span>
+              </div>
+            </div>
+
+            <div class="score">
+              <p class="lbl">Comprehensive Ranking · Your score</p>
+              <p>
+                <span class="total">487<small>CRS / 1200</small></span>
+              </p>
+              <p class="delta">+12 vs. last draw cutoff</p>
+
+              <div class="crs-bars">
+                <div class="crs-bar">
+                  <span class="key">A · <b>Core</b></span>
+                  <span class="track"><span class="fill" style="width: 78%"></span></span>
+                  <span class="v">404</span>
+                </div>
+                <div class="crs-bar">
+                  <span class="key">B · <b>Spouse</b></span>
+                  <span class="track"><span class="fill" style="width: 0%"></span></span>
+                  <span class="v">—</span>
+                </div>
+                <div class="crs-bar">
+                  <span class="key">C · <b>Transfer</b></span>
+                  <span class="track"><span class="fill" style="width: 50%"></span></span>
+                  <span class="v">50</span>
+                </div>
+                <div class="crs-bar">
+                  <span class="key">D · <b>Additional</b></span>
+                  <span class="track"><span class="fill" style="width: 33%"></span></span>
+                  <span class="v">33</span>
+                </div>
+              </div>
+
+              <div class="crs-export">↓ Download PDF report</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SHELF — three product cards summarizing the toolkit
+  ==================================================================== -->
+  <section class="shelf reveal">
+    <header class="shelf-head">
+      <div>
+        <p class="label">Section 01 · The toolkit</p>
+        <h2>Three pieces, <em>one stack.</em></h2>
+      </div>
+      <p class="meta">Production<br><b>Live · since 2025</b></p>
+    </header>
+
+    <div class="shelf-grid">
+      <article class="product">
+        <p class="sku">SKU · CALC.CRS</p>
+        <p class="num">01<em>.</em></p>
+        <h3>CRS <em>Calculator</em></h3>
+        <p>Comprehensive Ranking System estimator for the Express Entry pool. Every section of IRCC&rsquo;s 2025 grid, with bilingual tooltips and a one-click PDF.</p>
+        <dl class="specs">
+          <div><dt>Max</dt><dd>1,200 pts</dd></div>
+          <div><dt>Sections</dt><dd>A · B · C · D</dd></div>
+          <div><dt>Locales</dt><dd>EN / TR</dd></div>
+          <div><dt>Export</dt><dd>PDF</dd></div>
+        </dl>
+      </article>
+
+      <article class="product">
+        <p class="sku">SKU · CALC.FSWP</p>
+        <p class="num">02<em>.</em></p>
+        <h3>FSWP <em>Eligibility</em></h3>
+        <p>The Six Selection Factors used by Federal Skilled Worker — pass/fail at 67/100. Each factor scored, totalled, and surfaced as a verdict.</p>
+        <dl class="specs">
+          <div><dt>Cutoff</dt><dd>67 / 100</dd></div>
+          <div><dt>Factors</dt><dd>06</dd></div>
+          <div><dt>Locales</dt><dd>EN / TR</dd></div>
+          <div><dt>Export</dt><dd>PDF</dd></div>
+        </dl>
+      </article>
+
+      <article class="product">
+        <p class="sku">SKU · FEED.DRAWS</p>
+        <p class="num">03<em>.</em></p>
+        <h3>Latest <em>Draws</em></h3>
+        <p>Every IRCC Express Entry &amp; PNP draw, indexed since 2015. Filterable by programme &amp; category, mirrored on Instagram on draw day.</p>
+        <dl class="specs">
+          <div><dt>Indexed</dt><dd>156+ draws</dd></div>
+          <div><dt>Updated</dt><dd>Weekly</dd></div>
+          <div><dt>Locales</dt><dd>EN / TR</dd></div>
+          <div><dt>Mirrored</dt><dd>Instagram</dd></div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PRODUCT II — FSWP checker (split layout)
+  ==================================================================== -->
+  <section class="fswp reveal">
+    <div class="fswp-inner">
+      <div class="fswp-text">
+        <p class="sku">02 · FSWP Eligibility · Six Selection Factors</p>
+        <h3>Pass/fail at <em>67 of 100,</em> with the math shown.</h3>
+        <p>
+          Federal Skilled Worker Programme eligibility is a binary
+          gate at <strong>67/100</strong>. We built the checker that
+          gets clients there, line by line: <strong>age, education,
+          language, work experience, arranged employment,
+          adaptability</strong>.
+        </p>
+        <p>
+          The result is a single verdict — <strong>eligible</strong>
+          or not — backed by a printable PDF with every factor
+          itemised. Counsel can take it straight into a consult.
+        </p>
+      </div>
+
+      <article class="fswp-mock">
+        <div class="head">
+          <div>
+            <p class="lbl">FSWP · Six Selection Factors</p>
+            <h4>Eligibility check · result</h4>
+          </div>
+          <span class="total">Total · <b>78</b> / 100</span>
+        </div>
+        <div class="factors">
+          <div>
+            <span class="num">F.01</span>
+            <span class="name">Age <small>32</small></span>
+            <span class="max">/ 12 max</span>
+            <span class="scored full">12</span>
+          </div>
+          <div>
+            <span class="num">F.02</span>
+            <span class="name">Education <small>Master&rsquo;s · ECA verified</small></span>
+            <span class="max">/ 25 max</span>
+            <span class="scored">23</span>
+          </div>
+          <div>
+            <span class="num">F.03</span>
+            <span class="name">Language <small>CLB 9 · English</small></span>
+            <span class="max">/ 28 max</span>
+            <span class="scored">24</span>
+          </div>
+          <div>
+            <span class="num">F.04</span>
+            <span class="name">Work experience <small>3+ years · TEER 1</small></span>
+            <span class="max">/ 15 max</span>
+            <span class="scored">11</span>
+          </div>
+          <div>
+            <span class="num">F.05</span>
+            <span class="name">Arranged employment <small>None · removed 2025</small></span>
+            <span class="max">/ 10 max</span>
+            <span class="scored">0</span>
+          </div>
+          <div>
+            <span class="num">F.06</span>
+            <span class="name">Adaptability <small>Spouse language · Canadian work</small></span>
+            <span class="max">/ 10 max</span>
+            <span class="scored">8</span>
+          </div>
+        </div>
+        <div class="verdict">
+          <div>
+            <p class="v-lbl">Verdict · 67/100 cutoff</p>
+            <h5>Eligible · 11 points above cutoff</h5>
+          </div>
+          <span class="pdf">↓ Download PDF</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PRODUCT III — Latest Draws live feed
+  ==================================================================== -->
+  <section class="draws reveal">
+    <header class="draws-head">
+      <div>
+        <p class="label">03 · Live Feed · Latest Draws</p>
+        <h2>Every draw, <em>since 2015.</em></h2>
+      </div>
+      <p class="meta">
+        <span class="live">Live · 02 Apr 2026</span><br>
+        <b>Last update · 14:32 ET</b>
+      </p>
+    </header>
+
+    <div class="draws-grid">
+      <table class="draws-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Programme</th>
+            <th>Category</th>
+            <th>Invitations</th>
+            <th>CRS min.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">347</td>
+            <td>02 Apr 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill">Healthcare</span></td>
+            <td class="num">3,000</td>
+            <td class="crs">504</td>
+          </tr>
+          <tr>
+            <td class="num">346</td>
+            <td>27 Mar 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill fr">French</span></td>
+            <td class="num">7,500</td>
+            <td class="crs">379</td>
+          </tr>
+          <tr>
+            <td class="num">345</td>
+            <td>20 Mar 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill pnp">PNP</span></td>
+            <td class="num">1,275</td>
+            <td class="crs">736</td>
+          </tr>
+          <tr>
+            <td class="num">344</td>
+            <td>13 Mar 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill cec">CEC</span></td>
+            <td class="num">5,500</td>
+            <td class="crs">521</td>
+          </tr>
+          <tr>
+            <td class="num">343</td>
+            <td>06 Mar 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill trades">Trades</span></td>
+            <td class="num">975</td>
+            <td class="crs">421</td>
+          </tr>
+          <tr>
+            <td class="num">342</td>
+            <td>27 Feb 2026</td>
+            <td>Express Entry</td>
+            <td><span class="pill">Healthcare</span></td>
+            <td class="num">4,000</td>
+            <td class="crs">490</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <aside class="draws-side">
+        <article class="draws-card featured">
+          <p class="lbl">Latest · Express Entry</p>
+          <p class="big">504<small>CRS · Healthcare · 02 Apr</small></p>
+          <p>3,000 ITAs issued · the lowest healthcare cutoff since the category-based draws began in summer 2023.</p>
+        </article>
+        <article class="draws-card">
+          <p class="lbl">Subscribe</p>
+          <p style="font-family: var(--display); font-weight: 600; font-size: 18px; color: var(--ink); margin-bottom: 8px;">New-draw alerts<br>by email.</p>
+          <p>The same data, in your inbox, the moment IRCC publishes. Bilingual.</p>
+          <span class="sub">Get alerts →</span>
+        </article>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SOCIAL — Turkish handle
+  ==================================================================== -->
+  <section class="social reveal">
+    <div class="social-inner">
+      <div class="social-text">
+        <p class="lbl">04 · Social · Turkish-language Instagram</p>
+        <h3>Reaching the <em>diaspora</em> in their first language.</h3>
+        <p>
+          Most of Northern Pathways&rsquo; prospective clients arrive
+          through Turkish-language search and word-of-mouth. We run
+          <b>@kanadadayeniyasam</b> (&ldquo;new life in Canada&rdquo;)
+          as the firm&rsquo;s public-facing channel — draw-day
+          summaries, Reels with Burcu, plain-language explainers.
+        </p>
+        <p>
+          Every post is bilingual-aware: it links back to the EN or TR
+          calculator depending on locale, and mirrors the firm&rsquo;s
+          brand voice — <b>professional, empathetic, clear,
+          authoritative.</b>
+        </p>
+        <span class="handle">kanadadayeniyasam · Instagram</span>
+      </div>
+
+      <div class="social-grid">
+        <div class="social-tile brand">
+          <p class="top">04 · 02 Apr</p>
+          <p class="body">CRS <em>504</em><br>Healthcare draw · 3,000 ITA</p>
+          <p class="foot">draw-day card</p>
+        </div>
+        <div class="social-tile">
+          <p class="top">Reel · :42</p>
+          <p class="body"><em>NCLC 7+</em><br>French bonus, açıkladık</p>
+          <p class="foot">explainer · TR</p>
+        </div>
+        <div class="social-tile dark">
+          <p class="top">Carousel</p>
+          <p class="body">Post-Graduation<br>Work Permit, <em>2025.</em></p>
+          <p class="foot">8-slide guide</p>
+        </div>
+        <div class="social-tile">
+          <p class="top">Quote</p>
+          <p class="body"><em>“Yeni</em> bir yaşamın ilk adımı.”</p>
+          <p class="foot">brand line</p>
+        </div>
+        <div class="social-tile">
+          <p class="top">FAQ</p>
+          <p class="body">PNP nedir?<br>Türkçe yanıt.</p>
+          <p class="foot">explainer · TR</p>
+        </div>
+        <div class="social-tile dark">
+          <p class="top">Reel · :28</p>
+          <p class="body">Burcu&rsquo;dan<br><em>10 dakikada</em> CRS.</p>
+          <p class="foot">consult takeover</p>
+        </div>
+        <div class="social-tile brand">
+          <p class="top">Card</p>
+          <p class="body">FSWP<br><em>67/100</em>.</p>
+          <p class="foot">eligibility primer</p>
+        </div>
+        <div class="social-tile">
+          <p class="top">Story</p>
+          <p class="body"><em>RCIC.</em><br>Düzenlenmiş danışman.</p>
+          <p class="foot">credentials</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE
+  ==================================================================== -->
+  <section class="scope reveal">
+    <p class="label">05 · Scope</p>
+    <h2>What we made, <em>line by line.</em></h2>
+    <p class="deck">A multilingual marketing site, a two-piece calculator suite, a draws feed, an SEO programme, and ongoing social — for a regulated immigration practice with a Turkish-speaking diaspora to reach.</p>
+
+    <div class="scope-rows">
+      <div class="srow">
+        <span class="num">01</span>
+        <span class="name">Website Design</span>
+        <p class="desc">Multilingual marketing site (EN/TR) at northernpathways.ca with deep service pages and a single-CTA architecture pointing every page to a calculator or onboarding form.</p>
+        <p class="out"><b>12 routes · EN+TR</b>built &amp; live</p>
+      </div>
+      <div class="srow">
+        <span class="num">02</span>
+        <span class="name">Web Application</span>
+        <p class="desc">CRS &amp; FSWP calculators, onboarding form, processing-fees tables, one-time-payment flow. Bilingual tooltips, in-app PDF export. Rules current to IRCC 2025.</p>
+        <p class="out"><b>2 calculators</b>+ PDF export</p>
+      </div>
+      <div class="srow">
+        <span class="num">03</span>
+        <span class="name">Latest Draws Feed</span>
+        <p class="desc">Live tracker indexing every IRCC Express Entry &amp; PNP draw with invitations, CRS min, programme, and category. Filterable, subscribable.</p>
+        <p class="out"><b>156+ draws</b>updated weekly</p>
+      </div>
+      <div class="srow">
+        <span class="num">04</span>
+        <span class="name">SEO</span>
+        <p class="desc">Technical SEO, two-locale sitemaps, schema markup, content briefs. Both languages indexed for the firm&rsquo;s key Turkish-language and English queries.</p>
+        <p class="out"><b>EN + TR sitemaps</b>shipped &amp; ranking</p>
+      </div>
+      <div class="srow">
+        <span class="num">05</span>
+        <span class="name">Social Media</span>
+        <p class="desc">Ongoing management of <em>@kanadadayeniyasam</em> — Turkish-language Instagram. Draw-day summaries, Reels, consult-day takeovers.</p>
+        <p class="out"><b>@kanadadayeniyasam</b>Instagram · ongoing</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end">
+    <p class="lbl">— Roll the next reel —</p>
+    <h3>Build the <em>tools</em> behind your practice.</h3>
+    <p>If your firm runs on calculators, eligibility checks, and live data feeds, we&rsquo;d be glad to spend a season making them sing.</p>
+    <div class="end-row">
+      <a class="btn btn-primary" href="#">Begin a project <span class="arr">→</span></a>
+      <a class="btn btn-secondary" href="#">View other reels</a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span class="left">Designed by <strong>FrameFlow</strong> · Toronto · 2026</span>
+    <span class="center">Reel <b>019</b> · Northern Pathways</span>
+    <span class="right">All Reels →</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

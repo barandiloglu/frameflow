@@ -1,0 +1,1395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canapy — Reel 011 / The Floor (FrameFlow Prototype)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400;500;600;700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · REEL 011 · CANAPY FURNITURE
+       Prototype 01 — "The Floor" (gallery-led portfolio page)
+
+       This is a FrameFlow portfolio page showcasing the work we made
+       for Canapy. The page adopts Canapy's visual language — pure
+       white, soft black, geometric sans, no accent colour, generous
+       whitespace — without copying their site structure.
+
+       Same featured-page skeleton as Big Bears and Destan:
+         FF rail · hero · intro · identity · gallery · feature ·
+         films · end CTA · footer
+
+       The brand is intentionally achromatic. The photography brings
+       the warmth.
+    ==================================================================== */
+
+    :root {
+      --white:    #ffffff;
+      --paper:    #fafaf8;       /* a hair warm of pure white */
+      --line:     #e5e3df;       /* hairlines */
+      --line-2:   #d5d2cc;
+      --ink:      #111111;       /* soft black */
+      --ink-2:    #5a5750;       /* secondary */
+      --ink-3:    #8c887f;       /* tertiary */
+
+      --type:    "Hanken Grotesk", "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--white); color: var(--ink); overflow-x: hidden; }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL — same role as Big Bears/Destan top bar
+    ============================================================ */
+    .cf-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      gap: 16px;
+      font-weight: 500;
+    }
+    .cf-top-back { color: var(--ink); white-space: nowrap; }
+    .cf-top-back:hover { color: var(--ink-2); }
+    .cf-top-frame {
+      background: var(--ink);
+      color: var(--white);
+      padding: 5px 12px;
+      letter-spacing: 0.24em;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .cf-top-meta { white-space: nowrap; color: var(--ink-2); letter-spacing: 0.32em; }
+    @media (max-width: 640px) {
+      .cf-top { padding: 12px 16px; gap: 12px; font-size: 10px; }
+      .cf-top-meta { display: none; }
+    }
+
+    /* ============================================================
+       HERO — type-led, the wordmark moment
+    ============================================================ */
+    .cf-hero {
+      padding: 140px 48px 100px;
+      max-width: 1480px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cf-hero-eyebrow {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 56px;
+    }
+    .cf-hero-wordmark {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: clamp(72px, 14vw, 220px);
+      letter-spacing: 0.32em;
+      line-height: 1;
+      color: var(--ink);
+      padding-left: 0.32em;     /* optical centring of tracked text */
+      margin-bottom: 36px;
+    }
+    .cf-hero-tag {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(24px, 3vw, 40px);
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      max-width: 22ch;
+      margin: 0 auto 56px;
+    }
+    .cf-hero-tag em { font-style: italic; font-weight: 400; }
+    .cf-hero-scope {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto 64px;
+    }
+    .cf-hero-scope span {
+      padding: 8px 16px;
+      border: 1px solid var(--line-2);
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cf-hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      max-width: 720px;
+      margin: 0 auto;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cf-hero-meta > div {
+      padding: 22px 14px;
+      border-left: 1px solid var(--line);
+    }
+    .cf-hero-meta > div:first-child { border-left: 0; }
+    .cf-hero-meta dt {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .cf-hero-meta dd {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    /* ============================================================
+       INTRO — clean, narrow column
+    ============================================================ */
+    .cf-intro {
+      padding: 100px 32px;
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cf-intro-cap {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .cf-intro h2 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+    .cf-intro h2 b { font-weight: 500; }
+    .cf-intro p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      max-width: 60ch;
+      margin: 0 auto 1em;
+    }
+    .cf-intro p strong { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       IDENTITY — palette + type, like Destan/Big Bears marks block
+    ============================================================ */
+    .cf-marks {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cf-marks h3 {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cf-palette {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .cf-pchip {
+      aspect-ratio: 4 / 3;
+      padding: 18px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cf-pchip.bone { background: var(--white); }
+    .cf-pchip.paper { background: var(--paper); }
+    .cf-pchip.ink { background: var(--ink); color: var(--white); }
+    .cf-pchip.gray { background: #e7e3dc; }
+    .cf-pchip .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+    }
+    .cf-pchip .role {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-pchip.ink .role { color: rgba(255,255,255,0.5); }
+    .cf-pchip .hex {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cf-pchip.ink .hex { color: rgba(255,255,255,0.7); }
+
+    .cf-type-stack { display: flex; flex-direction: column; }
+    .cf-type-row {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+    .cf-type-row:first-child { border-top: 0; padding-top: 0; }
+    .cf-type-row:last-child { border-bottom: 1px solid var(--line); }
+    .cf-type-row .label {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .cf-type-row .specimen.h {
+      font-family: var(--type);
+      font-weight: 200;
+      font-size: 40px;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .cf-type-row .specimen.m {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 24px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .cf-type-row .specimen.b {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .cf-type-row .specimen.l {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .cf-type-row .specimen.w {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 28px;
+      letter-spacing: 0.32em;
+      color: var(--ink);
+      padding-left: 0.32em;
+    }
+
+    /* ============================================================
+       GALLERY — primary content, big clean grid (no decoration)
+    ============================================================ */
+    .cf-gallery {
+      padding: 120px 32px 80px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .cf-gallery-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 40px;
+    }
+    .cf-gallery-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-gallery-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cf-gallery-head h3 b { font-weight: 500; }
+    .cf-gallery-head .count {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-gallery-head .count b { color: var(--ink); font-weight: 500; }
+
+    .cf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 36px 24px;
+    }
+    .cf-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+    }
+    .cf-card .ph {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .cf-card .ph.land { aspect-ratio: 4 / 3; }
+    .cf-card .ph img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .cf-card:hover .ph img,
+    .cf-card:focus-visible .ph img { transform: scale(1.04); }
+    .cf-card:focus-visible {
+      outline: 1px solid var(--ink);
+      outline-offset: 6px;
+    }
+    .cf-card .ph .zoom {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px; height: 32px;
+      background: var(--white);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .cf-card:hover .ph .zoom,
+    .cf-card:focus-visible .ph .zoom { opacity: 1; transform: scale(1); }
+    .cf-card .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-card .meta b { color: var(--ink); font-weight: 500; }
+    .cf-card .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .cf-card .desc {
+      font-family: var(--type);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink-2);
+    }
+
+    /* ============================================================
+       FEATURE — single piece spotlighted
+    ============================================================ */
+    .cf-feature {
+      margin: 80px 0 0;
+      padding: 100px 32px;
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cf-feature-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .cf-feature .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .cf-feature h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .cf-feature h3 b { font-weight: 500; }
+    .cf-feature p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 44ch;
+      margin-bottom: 1em;
+    }
+    .cf-feature p strong { color: var(--ink); font-weight: 500; }
+    .cf-feature dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 28px;
+      max-width: 460px;
+      border-top: 1px solid var(--line-2);
+    }
+    .cf-feature dl > div {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+    .cf-feature dl > div:nth-child(odd) { padding-right: 14px; }
+    .cf-feature dl > div:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--line-2); }
+    .cf-feature dl dt {
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .cf-feature dl dd {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .cf-feature-photo {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .cf-feature-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* ============================================================
+       SCOPE — service rows
+    ============================================================ */
+    .cf-scope {
+      padding: 100px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .cf-scope-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 0;
+    }
+    .cf-scope-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-scope-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cf-scope-head h3 b { font-weight: 500; }
+    .cf-scope-head .total {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-scope-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 2fr 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .cf-scope-row .num {
+      font-family: var(--type);
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-scope-row .name {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .cf-scope-row .desc {
+      font-family: var(--type);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+    .cf-scope-row .out {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+      font-weight: 500;
+    }
+    .cf-scope-row .out b {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================
+       FILMS — six trailers, quiet thumbs
+    ============================================================ */
+    .cf-films {
+      padding: 100px 32px 60px;
+      max-width: 1480px;
+      margin: 0 auto;
+      border-top: 1px solid var(--line);
+    }
+    .cf-films-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: end;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+    .cf-films-head .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-films-head h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(28px, 3.4vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .cf-films-head h3 b { font-weight: 500; }
+    .cf-films-head .count {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-films-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .cf-film {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background: var(--paper);
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+    .cf-film:hover { transform: translateY(-3px); }
+    .cf-film img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .cf-film:hover img { transform: scale(1.04); }
+    .cf-film .play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      transition: transform 0.4s, background 0.4s;
+    }
+    .cf-film:hover .play {
+      transform: translate(-50%, -50%) scale(1.06);
+      background: var(--white);
+    }
+    .cf-film .meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 14px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--type);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+    }
+    .cf-film .meta b {
+      color: var(--white);
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      text-transform: none;
+    }
+
+    /* ============================================================
+       END — closing CTA
+    ============================================================ */
+    .cf-end {
+      padding: 140px 32px 100px;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cf-end .label {
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .cf-end h3 {
+      font-family: var(--type);
+      font-weight: 300;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .cf-end h3 b { font-weight: 500; }
+    .cf-end p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 50ch;
+      margin: 0 auto 36px;
+    }
+    .cf-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 26px;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--type);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      transition: background 0.2s, color 0.2s;
+    }
+    .cf-cta:hover { background: var(--white); color: var(--ink); }
+    .cf-cta .arr { transition: transform 0.2s; }
+    .cf-cta:hover .arr { transform: translateX(3px); }
+
+    /* ============================================================
+       FOOTER — thin, FF identification
+    ============================================================ */
+    .cf-foot {
+      padding: 22px 32px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+    .cf-foot .ce { text-align: center; color: var(--ink); letter-spacing: 0.32em; }
+    .cf-foot .ri { text-align: right; }
+    .cf-foot a { color: inherit; }
+    .cf-foot a:hover { color: var(--ink); }
+    .cf-foot b { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       PHOTO LIGHTBOX — same pattern as Big Bears/Destan, in Canapy clothes
+    ============================================================ */
+    .cf-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(17, 17, 17, 0.92);
+      animation: cf-fade 0.22s ease-out;
+    }
+    @keyframes cf-fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .cf-modal[hidden] { display: none; }
+
+    .cf-modal-stage {
+      position: relative;
+      width: min(880px, 92vw);
+      height: min(92vh, 1080px);
+      max-height: 92vh;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      animation: cf-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes cf-pop {
+      from { transform: scale(0.96); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .cf-modal-bar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      font-family: var(--type);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+    .cf-modal-bar.top { border-bottom: 1px solid var(--line); justify-content: space-between; }
+    .cf-modal-bar.bot {
+      border-top: 1px solid var(--line);
+      justify-content: center;
+      letter-spacing: -0.005em;
+      text-transform: none;
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 16px;
+    }
+    .cf-modal-counter b { color: var(--ink); font-weight: 500; }
+    .cf-modal-brand {
+      letter-spacing: 0.32em;
+      color: var(--ink);
+    }
+    .cf-modal-close {
+      width: 32px; height: 32px;
+      background: var(--ink);
+      color: var(--white);
+      border: 0;
+      cursor: pointer;
+      font-family: var(--type);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .cf-modal-close:hover { background: var(--ink-2); }
+    .cf-modal-image-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
+      position: relative;
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .cf-modal-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+    .cf-modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      cursor: pointer;
+      font-family: var(--type);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .cf-modal-nav:hover {
+      transform: translateY(-50%) scale(1.06);
+    }
+    .cf-modal-nav.prev { left: 32px; }
+    .cf-modal-nav.next { right: 32px; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1080px) {
+      .cf-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 18px; }
+      .cf-films-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 880px) {
+      .cf-hero { padding: 80px 22px 60px; }
+      .cf-hero-eyebrow { margin-bottom: 36px; }
+      .cf-hero-meta { grid-template-columns: 1fr 1fr; }
+      .cf-hero-meta > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+      .cf-hero-meta > div:nth-child(4) { border-top: 1px solid var(--line); }
+      .cf-intro { padding: 60px 22px; }
+      .cf-marks { padding: 60px 22px; grid-template-columns: 1fr; gap: 48px; }
+      .cf-palette { grid-template-columns: 1fr 1fr; }
+      .cf-gallery { padding: 60px 22px 40px; }
+      .cf-gallery-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cf-gallery-head .label { grid-column: 1 / -1; }
+      .cf-feature { padding: 60px 22px; margin-top: 40px; }
+      .cf-feature-inner { grid-template-columns: 1fr; gap: 32px; }
+      .cf-feature-photo { aspect-ratio: 4 / 5; }
+      .cf-scope { padding: 60px 22px; }
+      .cf-scope-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cf-scope-head .label { grid-column: 1 / -1; }
+      .cf-scope-row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .cf-scope-row .out { text-align: left; }
+      .cf-films { padding: 60px 22px 40px; }
+      .cf-films-head { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .cf-films-head .label { grid-column: 1 / -1; }
+      .cf-end { padding: 80px 22px 60px; }
+      .cf-foot { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+      .cf-foot .ri, .cf-foot .ce { text-align: center; }
+      .cf-modal { padding: 16px; }
+      .cf-modal-nav { width: 44px; height: 44px; font-size: 16px; }
+      .cf-modal-nav.prev { left: 8px; }
+      .cf-modal-nav.next { right: 8px; }
+      .cf-modal-brand { display: none; }
+    }
+    @media (max-width: 600px) {
+      .cf-grid { grid-template-columns: 1fr; }
+      .cf-films-grid { grid-template-columns: 1fr; }
+      .cf-palette { grid-template-columns: 1fr; }
+    }
+
+    /* reveal */
+    .cf-reveal { opacity: 0; transform: translateY(16px); transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .cf-reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .cf-reveal { opacity: 1; transform: none; transition: none; }
+      .cf-card .ph img, .cf-film img { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================================
+       FF RAIL
+  ==================================================================== -->
+  <header class="cf-top">
+    <a href="../" class="cf-top-back">← Portfolio</a>
+    <span class="cf-top-frame">★ #011 ★</span>
+    <span class="cf-top-meta">Canapy · Toronto · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       HERO — type-led wordmark moment
+  ==================================================================== -->
+  <section class="cf-hero">
+    <p class="cf-hero-eyebrow">FrameFlow · Reel 011 · Spring MMXXVI</p>
+    <h1 class="cf-hero-wordmark">CANAPY</h1>
+    <p class="cf-hero-tag">Sculpted for spaces that <em>breathe.</em></p>
+    <div class="cf-hero-scope">
+      <span>Photography</span>
+      <span>Videography</span>
+      <span>Social Media</span>
+      <span>Ad Management</span>
+    </div>
+    <dl class="cf-hero-meta">
+      <div><dt>Plates</dt><dd>13</dd></div>
+      <div><dt>Films</dt><dd>06</dd></div>
+      <div><dt>Shoots</dt><dd>04</dd></div>
+      <div><dt>Year</dt><dd>2026</dd></div>
+    </dl>
+  </section>
+
+  <!-- =================================================================
+       INTRO
+  ==================================================================== -->
+  <section class="cf-intro cf-reveal">
+    <p class="cf-intro-cap">A note on the work</p>
+    <h2>A season for <b>Canapy Furniture</b> — Toronto's contract-grade studio on Davenport Road.</h2>
+    <p>We were brought on for the long story. Four shoots in the Davenport Showroom and one private home in the Annex. Photography, films, social, and the small bright work of ads.</p>
+    <p>The Canapy brief was a sentence: <strong>photograph the room honestly.</strong> Daylight only — no fill, no flash. Four hundred and twelve frames came back; thirteen were kept.</p>
+  </section>
+
+  <!-- =================================================================
+       MARKS — palette + type
+  ==================================================================== -->
+  <section class="cf-marks cf-reveal">
+    <div>
+      <h3>Palette · Achromatic</h3>
+      <div class="cf-palette">
+        <div class="cf-pchip bone">
+          <span class="role">Surface · 60%</span>
+          <div>
+            <p class="name">Bone</p>
+            <p class="hex">#FFFFFF</p>
+          </div>
+        </div>
+        <div class="cf-pchip paper">
+          <span class="role">Tonal · 20%</span>
+          <div>
+            <p class="name">Paper</p>
+            <p class="hex">#FAFAF8</p>
+          </div>
+        </div>
+        <div class="cf-pchip gray">
+          <span class="role">Hairline · 5%</span>
+          <div>
+            <p class="name">Stone</p>
+            <p class="hex">#E5E3DF</p>
+          </div>
+        </div>
+        <div class="cf-pchip ink">
+          <span class="role">Ink · 15%</span>
+          <div>
+            <p class="name">Charcoal</p>
+            <p class="hex">#111111</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Typeset · Hanken Grotesk</h3>
+      <div class="cf-type-stack">
+        <div class="cf-type-row">
+          <p class="label">Wordmark</p>
+          <p class="specimen w">CANAPY</p>
+        </div>
+        <div class="cf-type-row">
+          <p class="label">Display · 200</p>
+          <p class="specimen h">Aa Bb · 0123</p>
+        </div>
+        <div class="cf-type-row">
+          <p class="label">Subhead · 500</p>
+          <p class="specimen m">Sculpted for spaces that breathe.</p>
+        </div>
+        <div class="cf-type-row">
+          <p class="label">Body · 400</p>
+          <p class="specimen b">Daylight only — no fill, no flash. Four hundred and twelve frames came back; thirteen were kept.</p>
+        </div>
+        <div class="cf-type-row">
+          <p class="label">Label · 500 · 0.32em</p>
+          <p class="specimen l">Davenport · Toronto · MMXXVI</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       GALLERY — clean grid, the centerpiece
+  ==================================================================== -->
+  <section class="cf-gallery cf-reveal">
+    <div class="cf-gallery-head">
+      <span class="label">01 / Plates</span>
+      <h3>From the <b>showroom floor.</b></h3>
+      <span class="count"><b>13</b> kept · 412 made</span>
+    </div>
+    <div class="cf-grid" id="cf-grid">
+      <button class="cf-card" data-idx="0">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/01-cane-chair-backlit.jpg" alt="Cane lounge backlit at 09:14 against the south wall."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.01</b><span>09:14</span></div>
+        <p class="name">Cane Lounge — backlit</p>
+        <p class="desc">Beech frame, hand-caned back, bouclé seat. Showroom, S-facing wall.</p>
+      </button>
+      <button class="cf-card" data-idx="1">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/02-cane-weave-detail.jpg" alt="Hand-caned chair back, viennese weave detail."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.02</b><span>10:42</span></div>
+        <p class="name">Viennese Cane — detail</p>
+        <p class="desc">Hand-laid pattern on a beech frame, photographed at f/2.0.</p>
+      </button>
+      <button class="cf-card" data-idx="2">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/03-cane-frame-light.jpg" alt="Cane and beech frame caught in early light."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.03</b><span>06:14</span></div>
+        <p class="name">First Light — frame</p>
+        <p class="desc">A horizontal stripe of dawn rests on the rattan back.</p>
+      </button>
+      <button class="cf-card" data-idx="3">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/04-wood-arm-cream-cushion.jpg" alt="Wood arm with cream bouclé cushion."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.04</b><span>11:08</span></div>
+        <p class="name">Beech Arm — cream</p>
+        <p class="desc">Beech, oiled twice. Cushion in undyed wool bouclé.</p>
+      </button>
+      <button class="cf-card" data-idx="4">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/05-frame-cushion-detail.jpg" alt="Frame and cushion detail."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.05</b><span>11:24</span></div>
+        <p class="name">Frame &amp; cushion</p>
+        <p class="desc">A single edge of frame holds the colour; the cushion stays out of the way.</p>
+      </button>
+      <button class="cf-card" data-idx="5">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/06-arm-boucle-detail.jpg" alt="Bouclé cushion detail."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.06</b><span>11:36</span></div>
+        <p class="name">Bouclé — cushion</p>
+        <p class="desc">Half a millimetre of air between an arm and a cushion.</p>
+      </button>
+      <button class="cf-card" data-idx="6">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/07-cane-corner-sunlit.jpg" alt="Sunlit cane corner."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.07</b><span>12:02</span></div>
+        <p class="name">Cane Corner — sun</p>
+        <p class="desc">Late-morning sun at the back of a chair, before the room moves.</p>
+      </button>
+      <button class="cf-card" data-idx="7">
+        <div class="ph land"><img src="../../../public/portfolio/canapy-furniture/photos/08-showroom-davenport.jpg" alt="The Davenport showroom with vertical timber slats."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.08</b><span>13:18</span></div>
+        <p class="name">Showroom — Davenport</p>
+        <p class="desc">Vertical timber slats, the wordmark in cream, a bouclé sofa on the floor.</p>
+      </button>
+      <button class="cf-card" data-idx="8">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/09-living-room-reading.jpg" alt="Reading on the bouclé sectional."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.09</b><span>13:46</span></div>
+        <p class="name">Living Room — reading</p>
+        <p class="desc">A bouclé sectional and a window grid that returns at the same hour.</p>
+      </button>
+      <button class="cf-card" data-idx="9">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/10-tufted-headboard.jpg" alt="Tufted saddle leather headboard."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.10</b><span>14:32</span></div>
+        <p class="name">Saddle Headboard — tufted</p>
+        <p class="desc">Saddle leather, eight-button hand-set tufting, edges hand-piped.</p>
+      </button>
+      <button class="cf-card" data-idx="10">
+        <div class="ph land"><img src="../../../public/portfolio/canapy-furniture/photos/11-vessel-topdown.jpg" alt="Glazed vessel from above on walnut."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.11</b><span>15:14</span></div>
+        <p class="name">Vessel — from above</p>
+        <p class="desc">A glazed vessel on walnut, photographed straight down.</p>
+      </button>
+      <button class="cf-card" data-idx="11">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/12-sectional-window-grid.jpg" alt="Bouclé sectional with window grid."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.12</b><span>14:32</span></div>
+        <p class="name">Sectional — window grid</p>
+        <p class="desc">Undyed wool, a small dracaena, a window-grid shadow that returns daily.</p>
+      </button>
+      <button class="cf-card" data-idx="12">
+        <div class="ph"><img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt="Walnut arch dining table."><span class="zoom">↗</span></div>
+        <div class="meta"><b>P.13</b><span>16:48</span></div>
+        <p class="name">Walnut Arch — table</p>
+        <p class="desc">Book-matched top, arched legs, photographed under a paper pendant.</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FEATURE — single piece highlighted
+  ==================================================================== -->
+  <section class="cf-feature cf-reveal">
+    <div class="cf-feature-inner">
+      <div>
+        <p class="label">02 / Feature</p>
+        <h3>The <b>Walnut Arch.</b></h3>
+        <p>A dining table cut in walnut, the arched legs holding the underside of a paper lantern. Loaded lightly: a vessel, a closed monograph, the corner of a cane chair to remember the room.</p>
+        <p><strong>Book-matched.</strong> The grain reads as a single continuous wave from end to end if you stand at the head; from the side, it is two halves of a question.</p>
+        <dl>
+          <div><dt>Top</dt><dd>Walnut, book-matched</dd></div>
+          <div><dt>Base</dt><dd>Walnut arch panels</dd></div>
+          <div><dt>Length</dt><dd>2,200 mm</dd></div>
+          <div><dt>Weight</dt><dd>94 kg</dd></div>
+        </dl>
+      </div>
+      <div class="cf-feature-photo">
+        <img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt="Walnut arch table, photographed at golden hour.">
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SCOPE — service rows
+  ==================================================================== -->
+  <section class="cf-scope cf-reveal">
+    <div class="cf-scope-head">
+      <span class="label">03 / Scope</span>
+      <h3>What we made for <b>Canapy.</b></h3>
+      <span class="total">04 services</span>
+    </div>
+    <div class="cf-scope-row">
+      <span class="num">01.</span>
+      <span class="name">Photography</span>
+      <p class="desc">Four shoots in the Davenport Showroom and one private home. Daylight only — no fill, no flash. Stills delivered with cutlines written.</p>
+      <p class="out"><b>13</b>stills</p>
+    </div>
+    <div class="cf-scope-row">
+      <span class="num">02.</span>
+      <span class="name">Videography</span>
+      <p class="desc">Quiet handheld films cut in the same edit as the stills — no music, the room as the soundtrack. 9:16 native; 1:1 cut-downs supplied.</p>
+      <p class="out"><b>06</b>trailers</p>
+    </div>
+    <div class="cf-scope-row">
+      <span class="num">03.</span>
+      <span class="name">Social Media</span>
+      <p class="desc">Calendar planned monthly with the studio. Reels and carousels in a single voice. Audience: trade and design-aware homeowners.</p>
+      <p class="out"><b>Q1–Q3</b>planned</p>
+    </div>
+    <div class="cf-scope-row">
+      <span class="num">04.</span>
+      <span class="name">Ad Management</span>
+      <p class="desc">Paid placements built from the same shoots. Meta &amp; Google sized to the room, routed through the Trade landing pages.</p>
+      <p class="out"><b>Meta · Google</b></p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FILMS
+  ==================================================================== -->
+  <section class="cf-films cf-reveal">
+    <div class="cf-films-head">
+      <span class="label">04 / Films</span>
+      <h3>Six trailers, <b>cut quietly.</b></h3>
+      <span class="count">9:16 · 1:1</span>
+    </div>
+    <div class="cf-films-grid">
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/03-cane-frame-light.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>The Showroom, slow</b><span>0:18</span></div>
+      </figure>
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/12-sectional-window-grid.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Bouclé in window light</b><span>0:09</span></div>
+      </figure>
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/02-cane-weave-detail.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Cane, hand-laid</b><span>0:15</span></div>
+      </figure>
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Walnut Arch, set</b><span>0:22</span></div>
+      </figure>
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/10-tufted-headboard.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Saddle leather, dusk</b><span>0:11</span></div>
+      </figure>
+      <figure class="cf-film">
+        <img src="../../../public/portfolio/canapy-furniture/photos/09-living-room-reading.jpg" alt="">
+        <span class="play">▶</span>
+        <div class="meta"><b>Living, reading</b><span>0:14</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="cf-end cf-reveal">
+    <p class="label">Roll the next reel</p>
+    <h3>Set the next <b>room.</b></h3>
+    <p>If your space holds light worth waiting for, we would like to spend a season in it. Brand, photography, films, social, and the small bright work of advertising.</p>
+    <a class="cf-cta" href="#">Begin a project <span class="arr">→</span></a>
+  </section>
+
+  <footer class="cf-foot">
+    <span>Designed by <b>FrameFlow</b> · Toronto · 2026</span>
+    <span class="ce">Reel 011 · CANAPY</span>
+    <span class="ri"><a href="../">All Reels →</a></span>
+  </footer>
+
+  <!-- =================================================================
+       PHOTO LIGHTBOX
+  ==================================================================== -->
+  <div class="cf-modal" id="cf-modal" hidden role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button class="cf-modal-nav prev" id="cf-prev" aria-label="Previous photo">←</button>
+    <div class="cf-modal-stage">
+      <div class="cf-modal-bar top">
+        <span class="cf-modal-counter">★ Frame <b id="cf-modal-num">01</b> / 13</span>
+        <span class="cf-modal-brand">CANAPY · DAILIES</span>
+        <button class="cf-modal-close" id="cf-close" aria-label="Close">×</button>
+      </div>
+      <div class="cf-modal-image-wrap">
+        <img id="cf-modal-img" src="" alt="">
+      </div>
+      <div class="cf-modal-bar bot">
+        <span id="cf-modal-cap">Plate caption</span>
+      </div>
+    </div>
+    <button class="cf-modal-nav next" id="cf-next" aria-label="Next photo">→</button>
+  </div>
+
+  <script>
+    /* gather photo data from DOM (avoid duplicate hand-rolled list) */
+    (() => {
+      const cards = Array.from(document.querySelectorAll(".cf-card"));
+      const photos = cards.map((c) => ({
+        src: c.querySelector("img").getAttribute("src"),
+        alt: c.querySelector("img").getAttribute("alt"),
+        cap: c.querySelector(".name").textContent.trim(),
+      }));
+      const total = photos.length;
+
+      const modal = document.getElementById("cf-modal");
+      const img   = document.getElementById("cf-modal-img");
+      const num   = document.getElementById("cf-modal-num");
+      const cap   = document.getElementById("cf-modal-cap");
+      let i = -1;
+
+      function render(n) {
+        i = (n + total) % total;
+        const p = photos[i];
+        img.src = p.src;
+        img.alt = p.alt;
+        num.textContent = String(i + 1).padStart(2, "0");
+        cap.textContent = p.cap;
+      }
+      function open(n) {
+        render(n);
+        modal.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+      function close() {
+        modal.hidden = true;
+        document.body.style.overflow = "";
+      }
+      function next() { render(i + 1); }
+      function prev() { render(i - 1); }
+
+      cards.forEach((c, idx) => {
+        c.addEventListener("click", () => open(idx));
+      });
+      document.getElementById("cf-close").addEventListener("click", close);
+      document.getElementById("cf-prev").addEventListener("click", prev);
+      document.getElementById("cf-next").addEventListener("click", next);
+      modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+      window.addEventListener("keydown", (e) => {
+        if (modal.hidden) return;
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "ArrowRight") next();
+      });
+    })();
+
+    /* reveal */
+    (() => {
+      const els = document.querySelectorAll(".cf-reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in")); return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Big Bears — Quiet Catalog · FrameFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg:        #fafaf5;
+      --paper:     #f4f3eb;
+      --ink:       #1a1814;
+      --ink-60:    rgba(26, 24, 20, 0.60);
+      --ink-40:    rgba(26, 24, 20, 0.40);
+      --ink-20:    rgba(26, 24, 20, 0.20);
+      --ink-10:    rgba(26, 24, 20, 0.10);
+      --accent:    #f3a805;   /* Bear Yellow — used as hairlines only */
+
+      --display:   "Cormorant Garamond", "Times New Roman", serif;
+      --body:      "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono:      "JetBrains Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ======================================================== */
+    /*  HEADER — minimal fold-out                              */
+    /* ======================================================== */
+    .head {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: baseline;
+      padding: 24px 60px;
+      border-bottom: 1px solid var(--ink-20);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+    }
+    .head .center { text-align: center; }
+    .head .right { text-align: right; }
+    .head .institution {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-transform: none;
+      font-weight: 500;
+    }
+
+    /* ======================================================== */
+    /*  TITLE PAGE                                              */
+    /* ======================================================== */
+    .title-page {
+      padding: 200px 60px 160px;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: center;
+    }
+    .title-page-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 60vh;
+    }
+    .title-page .meta-top {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 8px 24px;
+    }
+    .title-page .meta-top span:nth-child(odd) { color: var(--ink-40); }
+    .title-page .title {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(56px, 6.4vw, 112px);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 14ch;
+      margin: 60px 0;
+    }
+    .title-page .subtitle {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(20px, 1.8vw, 26px);
+      line-height: 1.4;
+      color: var(--ink-60);
+      max-width: 36ch;
+      letter-spacing: -0.005em;
+    }
+    .title-page .colophon-prelim {
+      margin-top: auto;
+      padding-top: 60px;
+      border-top: 1px solid var(--ink-20);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .title-page-right {
+      display: grid;
+      place-items: center;
+    }
+    .title-page-right img {
+      width: clamp(300px, 28vw, 460px);
+      height: auto;
+      filter: grayscale(0.05) contrast(1.05);
+    }
+
+    /* ======================================================== */
+    /*  SECTION HEADER                                          */
+    /* ======================================================== */
+    .section-head {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 100px 60px 40px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: baseline;
+      border-top: 1px solid var(--ink-20);
+    }
+    .section-head .number {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-40);
+    }
+    .section-head .number b {
+      display: block;
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 80px;
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-transform: none;
+      margin-top: 4px;
+    }
+    .section-head .title-text {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 24ch;
+    }
+
+    /* ======================================================== */
+    /*  TEXT BLOCK                                              */
+    /* ======================================================== */
+    .essay {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 60px 80px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+    }
+    .essay .body {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink);
+      max-width: 60ch;
+    }
+    .essay .body p + p { margin-top: 1.2em; }
+    .essay .body strong { font-weight: 500; }
+    .essay .body em { font-style: italic; color: var(--ink-60); }
+
+    /* ======================================================== */
+    /*  PLATE — single image with caption                      */
+    /* ======================================================== */
+    .plate {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 60px 60px 100px;
+    }
+    .plate-frame {
+      background: var(--paper);
+      padding: 60px;
+      display: grid;
+      place-items: center;
+      min-height: 50vh;
+    }
+    .plate-frame img {
+      max-width: 100%;
+      max-height: 60vh;
+      width: auto;
+      height: auto;
+    }
+    .plate-caption {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 40px;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--accent);
+    }
+    .plate-caption .roman {
+      color: var(--ink);
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+    }
+    .plate-caption .name {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      text-align: center;
+    }
+    .plate-caption .meta { text-align: right; }
+
+    /* ======================================================== */
+    /*  PALETTE PLATE                                           */
+    /* ======================================================== */
+    .palette-plate {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 60px 60px 100px;
+    }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      background: var(--paper);
+      padding: 60px;
+    }
+    .palette-grid .swatch-cell {
+      aspect-ratio: 3 / 4;
+      display: flex;
+      flex-direction: column;
+    }
+    .palette-grid .swatch-color {
+      flex: 1;
+      border: 1px solid var(--ink-20);
+    }
+    .palette-grid .swatch-meta {
+      padding-top: 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+    }
+    .palette-grid .swatch-meta b {
+      display: block;
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-transform: none;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* ======================================================== */
+    /*  TYPE PLATE                                              */
+    /* ======================================================== */
+    .type-plate {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 60px 60px 100px;
+    }
+    .type-grid {
+      background: var(--paper);
+      padding: 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+    .type-grid .role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      margin-bottom: 6px;
+    }
+    .type-grid .face {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-40);
+      margin-bottom: 32px;
+    }
+    .type-grid .display-show {
+      font-family: "Lilita One", sans-serif;
+      font-size: clamp(80px, 9vw, 144px);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .type-grid .body-show {
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .type-grid .specimen-set {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 16px;
+      color: var(--ink-60);
+      letter-spacing: 0.02em;
+    }
+
+    /* ======================================================== */
+    /*  CONTACT GRID — strict 4-col                            */
+    /* ======================================================== */
+    .contact-plates {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 60px 100px;
+    }
+    .contact-plates h3 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .contact-grid figure {
+      position: relative;
+    }
+    .contact-grid img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      filter: contrast(1.02);
+    }
+    .contact-grid figcaption {
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--ink-20);
+      display: flex;
+      justify-content: space-between;
+    }
+    .contact-grid figcaption b {
+      color: var(--ink);
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      font-weight: 400;
+    }
+
+    /* ======================================================== */
+    /*  MENU PLATES — three                                    */
+    /* ======================================================== */
+    .menu-plates {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 60px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+    .menu-plates figure {
+      background: var(--paper);
+      padding: 24px;
+    }
+    .menu-plates img {
+      width: 100%;
+      height: auto;
+      filter: contrast(1.02);
+    }
+    .menu-plates figcaption {
+      margin-top: 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--accent);
+    }
+    .menu-plates figcaption b {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    /* ======================================================== */
+    /*  WRAPPER PLATE                                          */
+    /* ======================================================== */
+    .wrapper-plate {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 60px 100px;
+    }
+    .wrapper-plate img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: cover;
+      object-position: center;
+    }
+    .wrapper-plate-caption {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 40px;
+      align-items: start;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--accent);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+    }
+    .wrapper-plate-caption .name {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      font-weight: 400;
+      text-align: center;
+    }
+    .wrapper-plate-caption .specs {
+      text-align: right;
+      line-height: 1.7;
+    }
+    .wrapper-plate-caption .specs b {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    /* ======================================================== */
+    /*  COLOPHON                                                */
+    /* ======================================================== */
+    .colophon {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 120px 60px 160px;
+      text-align: center;
+      border-top: 1px solid var(--ink-20);
+    }
+    .colophon .mark {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      margin-bottom: 36px;
+    }
+    .colophon h2 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .colophon p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-60);
+      margin-bottom: 36px;
+      max-width: 50ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .colophon a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+    }
+    .colophon a:hover { background: var(--ink); color: var(--bg); }
+
+    .footer-line {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 24px 60px;
+      border-top: 1px solid var(--ink-20);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--ink-40);
+    }
+
+    @media (max-width: 1080px) {
+      .head, .title-page, .section-head, .essay,
+      .plate, .palette-plate, .type-plate,
+      .contact-plates, .menu-plates, .wrapper-plate, .footer-line {
+        padding-left: 28px; padding-right: 28px;
+      }
+      .head { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .head .right { text-align: center; }
+      .title-page { grid-template-columns: 1fr; gap: 60px; padding-top: 100px; padding-bottom: 100px; }
+      .section-head, .essay { grid-template-columns: 1fr; gap: 24px; }
+      .palette-grid { grid-template-columns: 1fr 1fr; }
+      .type-grid { grid-template-columns: 1fr; gap: 36px; }
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .menu-plates { grid-template-columns: 1fr; }
+      .wrapper-plate-caption { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+      .wrapper-plate-caption .name, .wrapper-plate-caption .specs { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="head">
+  <a class="left" href="../../../">← Portfolio</a>
+  <div class="center">
+    <span class="institution">FrameFlow</span> · Toronto · 2024
+  </div>
+  <div class="right">No. 005</div>
+</header>
+
+<!-- ======================================================== -->
+<!--  TITLE PAGE                                              -->
+<!-- ======================================================== -->
+<section class="title-page">
+  <div class="title-page-left">
+    <div class="meta-top">
+      <span>Project</span><span>No. 005</span>
+      <span>Client</span><span>Big Bears Baked Potato</span>
+      <span>City</span><span>Toronto, Ontario</span>
+      <span>Year</span><span>MMXXIV</span>
+      <span>Disciplines</span><span>Brand · Print · Photography</span>
+    </div>
+    <h1 class="title">Big Bears<br/>Baked Potato</h1>
+    <p class="subtitle">A complete brand build for a single-product Toronto counter — mascot logo, typographic packaging, full menu system, and food photography.</p>
+    <div class="colophon-prelim">
+      <span>Plate I — XV</span>
+      <span>FrameFlow Studio</span>
+    </div>
+  </div>
+  <div class="title-page-right">
+    <img src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="Big Bears Baked Potato logo" />
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!--  I — ESSAY                                              -->
+<!-- ======================================================== -->
+<section class="section-head">
+  <div class="number">Part one<b>I.</b></div>
+  <p class="title-text">A spud with a personality.</p>
+</section>
+<section class="essay">
+  <div></div>
+  <div class="body">
+    <p>Big Bears arrived with a single product — the loaded baked potato — and a question: how do you make a humble starch feel like a destination? The answer turned out to be a mascot, four colors, two typefaces, and one extraordinarily loud wrapper.</p>
+    <p>The bear earned the shades. The wordmark earned the size. The wrapper turned every ingredient on the menu into a typographic pattern that sells the brand from a block away. <em>Then we shot the food.</em></p>
+    <p>What follows is a record of fifteen plates: the mark in primary form, the four-color palette, two typefaces, twelve photographic stills from the line, three menu spreads, and the wrapper at full bleed. <strong>The work, in order.</strong></p>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!--  II — PLATE I — THE MARK                                 -->
+<!-- ======================================================== -->
+<section class="section-head">
+  <div class="number">Part two<b>II.</b></div>
+  <p class="title-text">Identity</p>
+</section>
+
+<section class="plate">
+  <div class="plate-frame">
+    <img src="../../../public/portfolio/big-bears/logo/big-bears-primary.png" alt="" />
+  </div>
+  <div class="plate-caption">
+    <div class="roman">Plate I</div>
+    <div class="name">Primary mark</div>
+    <div class="meta">2024 · Vector</div>
+  </div>
+</section>
+
+<!-- PLATE II — PALETTE -->
+<section class="palette-plate">
+  <div class="palette-grid">
+    <div class="swatch-cell">
+      <div class="swatch-color" style="background: #f3a805;"></div>
+      <div class="swatch-meta">
+        Primary 60%<b>Bear Yellow</b>#F3A805
+      </div>
+    </div>
+    <div class="swatch-cell">
+      <div class="swatch-color" style="background: #b73f13;"></div>
+      <div class="swatch-meta">
+        Secondary 25%<b>Burnt Orange</b>#B73F13
+      </div>
+    </div>
+    <div class="swatch-cell">
+      <div class="swatch-color" style="background: #922700;"></div>
+      <div class="swatch-meta">
+        Accent 10%<b>Deep Red</b>#922700
+      </div>
+    </div>
+    <div class="swatch-cell">
+      <div class="swatch-color" style="background: #fffff3;"></div>
+      <div class="swatch-meta">
+        Surface 5%<b>Cream</b>#FFFFF3
+      </div>
+    </div>
+  </div>
+  <div class="plate-caption">
+    <div class="roman">Plate II</div>
+    <div class="name">Four-color palette</div>
+    <div class="meta">CMYK + RGB</div>
+  </div>
+</section>
+
+<!-- PLATE III — TYPE -->
+<section class="type-plate">
+  <div class="type-grid">
+    <div>
+      <p class="role">Display</p>
+      <p class="face">Lilita One · 400</p>
+      <p class="display-show">Aa</p>
+      <p class="specimen-set">Aa Bb Cc Dd Ee Ff Gg &amp; 0123</p>
+    </div>
+    <div>
+      <p class="role">Body</p>
+      <p class="face">Inter · 300 / 400 / 500</p>
+      <p class="body-show">A potato is a small private rebellion against the cold.</p>
+      <p class="specimen-set">Set in three weights — 300, 400, 500 — across all printed and digital surfaces.</p>
+    </div>
+  </div>
+  <div class="plate-caption">
+    <div class="roman">Plate III</div>
+    <div class="name">Type system</div>
+    <div class="meta">Display + Body</div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!--  III — PHOTOGRAPHY                                       -->
+<!-- ======================================================== -->
+<section class="section-head">
+  <div class="number">Part three<b>III.</b></div>
+  <p class="title-text">Photography, in twelve plates.</p>
+</section>
+<section class="contact-plates">
+  <div class="contact-grid">
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/01-toppings-bar-wide.jpg" alt="" />
+      <figcaption>Plate IV<b>INT. Toppings — Wide</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/02-staff-service.jpg" alt="" />
+      <figcaption>Plate V<b>INT. Counter — Service</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/03-toppings-detail.jpg" alt="" />
+      <figcaption>Plate VI<b>INT. Toppings — Detail</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/04-build-corn.jpg" alt="" />
+      <figcaption>Plate VII<b>CU. Build — Scoop</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/05-build-pickle.jpg" alt="" />
+      <figcaption>Plate VIII<b>CU. Build — Pickle</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/06-bowl-pulled.jpg" alt="" />
+      <figcaption>Plate IX<b>CU. Bowl — Pulled</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/07-counter-trio.jpg" alt="" />
+      <figcaption>Plate X<b>INT. Counter — Trio</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/08-bowl-cabbage.jpg" alt="" />
+      <figcaption>Plate XI<b>CU. Bowl — Cabbage</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/09-bowl-vegan.jpg" alt="" />
+      <figcaption>Plate XII<b>CU. Bowl — Vegan</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/10-bowl-beans.jpg" alt="" />
+      <figcaption>Plate XIII<b>CU. Bowl — Beans</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/11-pass-chili.jpg" alt="" />
+      <figcaption>Plate XIV<b>INT. Pass — Chili</b></figcaption>
+    </figure>
+    <figure>
+      <img src="../../../public/portfolio/big-bears/photos/12-takeout-sidewalk.jpg" alt="" />
+      <figcaption>Plate XV<b>POV. First Bite</b></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!--  IV — MENU                                               -->
+<!-- ======================================================== -->
+<section class="section-head">
+  <div class="number">Part four<b>IV.</b></div>
+  <p class="title-text">The menu, in three spreads.</p>
+</section>
+<section class="menu-plates">
+  <figure>
+    <img src="../../../public/portfolio/big-bears/menu/menu-01.png" alt="Menu spread 01" />
+    <figcaption>Plate XVI · Spread 01<b>Signatures</b></figcaption>
+  </figure>
+  <figure>
+    <img src="../../../public/portfolio/big-bears/menu/menu-02.png" alt="Menu spread 02" />
+    <figcaption>Plate XVII · Spread 02<b>Sides &amp; drinks</b></figcaption>
+  </figure>
+  <figure>
+    <img src="../../../public/portfolio/big-bears/menu/menu-03.png" alt="Menu spread 03" />
+    <figcaption>Plate XVIII · Spread 03<b>International</b></figcaption>
+  </figure>
+</section>
+
+<!-- ======================================================== -->
+<!--  V — WRAPPER                                             -->
+<!-- ======================================================== -->
+<section class="section-head">
+  <div class="number">Part five<b>V.</b></div>
+  <p class="title-text">The wrapper, full bleed.</p>
+</section>
+<section class="wrapper-plate">
+  <img src="../../../public/portfolio/big-bears/wrapper/wrapper-front.png" alt="Big Bears wrapper print" />
+  <div class="wrapper-plate-caption">
+    <div class="roman">Plate XIX</div>
+    <div class="name">Take-away wrapper · Print pattern</div>
+    <div class="specs">
+      Stock<b>Kraft 60gsm</b><br/>
+      Ink<b>Bear Yellow</b><br/>
+      Format<b>320 × 320 mm</b>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!--  COLOPHON                                                -->
+<!-- ======================================================== -->
+<section class="colophon">
+  <p class="mark">Colophon · No. 005</p>
+  <h2>Designed in Toronto, 2024.<br/>Set in <em>Cormorant</em>, Inter, and Lilita One.</h2>
+  <p>This catalog represents the complete brand record for Big Bears Baked Potato — every plate, in order, exactly as delivered. Reproductions courtesy of FrameFlow Studio.</p>
+  <a href="#">Commission a project</a>
+</section>
+
+<div class="footer-line">
+  <span>FrameFlow · est. 2022</span>
+  <span>End of catalog</span>
+</div>
+
+</body>
+</html>

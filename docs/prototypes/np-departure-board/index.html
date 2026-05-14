@@ -1,0 +1,2543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Departure Board (FrameFlow / Prototype 09)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 09 — "The Departure Board"
+
+       The conceit: an immigration consultancy is, structurally, an
+       airline. People arrive at a terminal, get a boarding pass,
+       wait at a gate for their flight (a draw), and depart to a
+       new country. So we render the engagement as a working
+       international airport. Pentagram-Heathrow signage precision.
+       Otl Aicher-Frankfurt clarity. Solari split-flap displays.
+
+       Locked typography (Montserrat) at airport-signage scale. The
+       only colour with permission to move is RED, used for
+       "BOARDING NOW" status and almost nothing else. The whole
+       prototype reads as a working terminal, not a brochure.
+    ==================================================================== */
+
+    :root {
+      --paper:    #ffffff;
+      --paper-2:  #f9f9f9;
+      --paper-3:  #f1efe9;
+      --paper-4:  #ece6d8;
+      --rule:     #e7e5e0;
+      --rule-2:   #d4d2cd;
+      --ink:      #2c2b2b;
+      --ink-2:    #4a4946;
+      --ink-3:    #757370;
+      --ink-4:    #a8a6a1;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      /* board-specific (warmer charcoal for the Solari display + amber-on-board) */
+      --board-bg:    #14130f;     /* old terminal black */
+      --board-bg-2:  #1c1b16;
+      --board-cell:  #1a1814;
+      --board-fg:    #f4f0e6;     /* aged-cream digit color */
+      --board-amber: #e8c66a;     /* the warm amber found on real Solari boards */
+      --board-rule:  rgba(244, 240, 230, 0.10);
+      --board-red:   #ff5e63;     /* a brighter red for "BOARDING" — readable on dark */
+
+      --type:     "Montserrat", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       FF RAIL — terminal master strip
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 700; }
+    .rail .center { text-align: center; letter-spacing: 0.4em; color: var(--paper); }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       SIGN BAR — the airport-style terminal sign
+    ============================================================ */
+    .sign-bar {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 16px 48px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      border-bottom: 4px solid var(--red);
+    }
+    .sign-bar .ico-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .sign-bar .ico {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+    .sign-bar .ico.red { background: var(--red); border-color: var(--red); }
+    .sign-bar .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(18px, 2.4vw, 28px);
+      letter-spacing: 0.16em;
+      line-height: 1;
+    }
+    .sign-bar .center small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.55);
+      margin-top: 4px;
+    }
+    .sign-bar .clock {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      font-family: var(--type);
+      font-weight: 800;
+    }
+    .sign-bar .clock .time {
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      color: var(--board-amber);
+    }
+    .sign-bar .clock .date {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    @media (max-width: 720px) {
+      .sign-bar { padding: 14px 22px; grid-template-columns: 1fr; gap: 14px; text-align: center; }
+      .sign-bar .ico-cluster, .sign-bar .clock { justify-content: center; align-items: center; }
+    }
+
+    /* ============================================================
+       TERMINAL HEADER
+    ============================================================ */
+    .terminal {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 72px 48px 56px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .terminal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+      gap: 56px;
+      align-items: end;
+    }
+    .terminal-titling { min-width: 0; }
+    .terminal-eyebrow {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .terminal-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 56px; height: 1.5px;
+      background: var(--red);
+    }
+    .terminal-title {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(48px, 7vw, 108px);
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      margin-bottom: 14px;
+      overflow-wrap: break-word;
+    }
+    .terminal-title em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .terminal-subtitle {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 56ch;
+    }
+
+    /* The right-hand "departure manifest" — like a flight info card */
+    .manifest {
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+      border: 1.5px solid var(--ink);
+      background: var(--paper-2);
+    }
+    .manifest-head {
+      padding: 12px 16px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .manifest-head .pip {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--board-red);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+    .manifest-head .live-tag {
+      color: var(--board-red);
+      font-weight: 800;
+    }
+    .manifest dl > div {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 16px;
+      padding: 10px 16px;
+      border-top: 1px dashed var(--rule);
+      align-items: baseline;
+    }
+    .manifest dl > div:first-child { border-top: 0; }
+    .manifest dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .manifest dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      text-align: right;
+    }
+    .manifest dd em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+    .manifest .seal {
+      padding: 12px 16px;
+      background: var(--paper-3);
+      border-top: 1.5px solid var(--ink);
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .manifest .seal b { color: var(--red); }
+
+    @media (max-width: 980px) {
+      .terminal { padding: 56px 22px 40px; }
+      .terminal-grid { grid-template-columns: 1fr; gap: 36px; }
+      .manifest { max-width: none; }
+    }
+
+    /* ============================================================
+       THE BOARD — Solari-style flight information display
+    ============================================================ */
+    .board-wrap {
+      max-width: 1480px;
+      margin: 56px auto;
+      padding: 0 48px;
+    }
+    .board {
+      background: var(--board-bg);
+      color: var(--board-fg);
+      border: 1.5px solid var(--ink);
+      box-shadow:
+        0 1px 0 rgba(0,0,0,0.04),
+        0 32px 80px -32px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+    }
+    /* warm glow at top edge — like backlit board */
+    .board::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,198,106,0.55), transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
+    /* faint scanlines like a real LED display */
+    .board::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.18) 2px 3px);
+      opacity: 0.45;
+      mix-blend-mode: multiply;
+      z-index: 4;
+    }
+    .board-head {
+      padding: 18px 24px;
+      background: var(--board-bg-2);
+      border-bottom: 1px solid var(--board-rule);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      position: relative;
+      z-index: 6;
+    }
+    .board-head .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--board-fg);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .board-head .lbl::before {
+      content: "▸";
+      color: var(--board-red);
+      font-size: 14px;
+    }
+    .board-head .lbl span { color: var(--board-amber); }
+    .board-head .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.32em;
+      color: var(--board-fg);
+    }
+    .board-head .center b { color: var(--board-red); font-weight: 800; }
+    .board-head .right {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.6);
+    }
+    .board-head .right b { color: var(--board-fg); font-weight: 800; }
+
+    .board-cols {
+      display: grid;
+      grid-template-columns: 90px 1.4fr 1.6fr 80px 110px 100px 130px;
+      gap: 0;
+      padding: 12px 24px;
+      background: var(--board-bg-2);
+      border-bottom: 1px solid var(--board-rule);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.55);
+      position: relative;
+      z-index: 6;
+    }
+    .board-row {
+      display: grid;
+      grid-template-columns: 90px 1.4fr 1.6fr 80px 110px 100px 130px;
+      gap: 0;
+      padding: 18px 24px;
+      align-items: center;
+      border-bottom: 1px solid var(--board-rule);
+      position: relative;
+      z-index: 6;
+    }
+    .board-row:last-child { border-bottom: 0; }
+    .board-row .cell {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      color: var(--board-amber);
+      line-height: 1;
+    }
+    .board-row .cell.code {
+      color: var(--board-fg);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+    .board-row .cell.dest {
+      color: var(--board-fg);
+      letter-spacing: 0.02em;
+      font-size: 18px;
+    }
+    .board-row .cell.dest small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.55);
+      margin-top: 5px;
+    }
+    .board-row .cell.cat {
+      color: var(--board-amber);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .board-row .cell.cat small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.55);
+      margin-top: 5px;
+    }
+    .board-row .cell.gate {
+      color: var(--board-fg);
+      font-size: 18px;
+      letter-spacing: 0.06em;
+    }
+    .board-row .cell.eq {
+      color: var(--board-amber);
+      font-size: 13px;
+      letter-spacing: 0.18em;
+    }
+    .board-row .cell.time {
+      color: var(--board-fg);
+      font-size: 22px;
+      letter-spacing: 0.04em;
+    }
+    .board-row .cell.status {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      text-align: center;
+      width: fit-content;
+    }
+    .board-row .cell.status.boarding {
+      background: var(--board-red);
+      color: var(--board-bg);
+      animation: blink 1.6s ease-in-out infinite;
+    }
+    .board-row .cell.status.ontime { color: var(--board-amber); }
+    .board-row .cell.status.delayed { color: rgba(244, 240, 230, 0.5); }
+    .board-row .cell.status.departed { color: rgba(244, 240, 230, 0.32); text-decoration: line-through; }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.65; }
+    }
+
+    /* split-flap reveal — entire page-load animation runs once */
+    @keyframes flap-in {
+      0%   { transform: rotateX(-90deg); opacity: 0; }
+      40%  { transform: rotateX(15deg); opacity: 1; }
+      70%  { transform: rotateX(-5deg); }
+      100% { transform: rotateX(0); opacity: 1; }
+    }
+    .board-row .cell {
+      transform-origin: top center;
+      backface-visibility: hidden;
+      animation: flap-in 0.55s cubic-bezier(0.5, 0.05, 0.4, 1.0) both;
+    }
+    .board-row:nth-child(1) .cell { animation-delay: 0.10s; }
+    .board-row:nth-child(2) .cell { animation-delay: 0.30s; }
+    .board-row:nth-child(3) .cell { animation-delay: 0.50s; }
+    .board-row:nth-child(4) .cell { animation-delay: 0.70s; }
+    .board-row:nth-child(5) .cell { animation-delay: 0.90s; }
+    .board-row:nth-child(6) .cell { animation-delay: 1.10s; }
+    .board-row:nth-child(7) .cell { animation-delay: 1.30s; }
+    /* slight per-cell stagger inside a row for the mechanical effect */
+    .board-row .cell:nth-child(2) { animation-delay: calc(var(--row-delay, 0s) + 0.02s); }
+    .board-row .cell:nth-child(3) { animation-delay: calc(var(--row-delay, 0s) + 0.04s); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .board-row .cell { animation: none; }
+    }
+
+    .board-foot {
+      padding: 12px 24px;
+      background: var(--board-bg-2);
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 24px;
+      align-items: center;
+      border-top: 1px solid var(--board-rule);
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.55);
+      position: relative;
+      z-index: 6;
+    }
+    .board-foot b { color: var(--board-amber); font-weight: 800; }
+    .board-foot .legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .board-foot .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .board-foot .legend .swatch {
+      width: 8px; height: 8px;
+    }
+    .board-foot .legend .swatch.boarding { background: var(--board-red); }
+    .board-foot .legend .swatch.ontime { background: var(--board-amber); }
+    .board-foot .legend .swatch.departed { background: rgba(244, 240, 230, 0.32); }
+
+    @media (max-width: 1080px) {
+      .board-cols, .board-row {
+        grid-template-columns: 70px 1fr 90px 90px 110px;
+      }
+      .board-cols .h-cat, .board-cols .h-eq,
+      .board-row .cell.cat, .board-row .cell.eq { display: none; }
+    }
+    @media (max-width: 720px) {
+      .board-wrap { padding: 0 22px; }
+      .board-cols, .board-row { padding: 12px; grid-template-columns: 60px 1fr 80px 90px; }
+      .board-cols .h-gate, .board-row .cell.gate { display: none; }
+      .board-row .cell { font-size: 16px; }
+      .board-row .cell.dest { font-size: 14px; }
+      .board-foot { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    /* ============================================================
+       SECTION HEADER — used to introduce each section
+    ============================================================ */
+    .sect-bar {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 96px 48px 28px;
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      gap: 28px;
+      align-items: end;
+      border-bottom: 2px solid var(--ink);
+    }
+    .sect-bar .gate {
+      width: 56px; height: 56px;
+      border: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+    .sect-bar .gate.red { background: var(--red); border-color: var(--red); color: var(--paper); }
+    .sect-bar .lbl-stack { padding-bottom: 6px; }
+    .sect-bar .lbl-stack .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .sect-bar .lbl-stack .gate-label {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .sect-bar h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(28px, 4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      padding-bottom: 6px;
+    }
+    .sect-bar h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .sect-bar .meta {
+      text-align: right;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      padding-bottom: 6px;
+    }
+    .sect-bar .meta b { color: var(--ink); font-weight: 800; }
+    @media (max-width: 720px) {
+      .sect-bar { padding: 56px 22px 22px; grid-template-columns: auto 1fr; gap: 14px; }
+      .sect-bar .lbl-stack { grid-column: 1 / -1; }
+      .sect-bar .meta { grid-column: 1 / -1; text-align: left; }
+    }
+
+    /* ============================================================
+       BOARDING PASSES — services as airline tickets
+    ============================================================ */
+    .gates {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 48px 80px;
+    }
+    .pass-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .pass {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) 1px minmax(140px, 0.7fr);
+      align-items: stretch;
+      box-shadow: 0 16px 40px -20px rgba(0,0,0,0.18);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pass:hover {
+      transform: translateY(-4px) rotate(-0.3deg);
+      box-shadow: 0 24px 56px -24px rgba(0,0,0,0.28);
+    }
+    /* perforated separator between body and stub */
+    .pass .perf {
+      background-image:
+        linear-gradient(to bottom,
+          var(--paper) 0 6px,
+          var(--ink) 6px 10px,
+          var(--paper) 10px 16px);
+      background-size: 1px 16px;
+      background-repeat: repeat-y;
+      width: 1px;
+      position: relative;
+    }
+    /* notch holes punched on the perf line */
+    .pass::before, .pass::after {
+      content: "";
+      position: absolute;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--paper-2);
+      border: 1.5px solid var(--ink);
+      z-index: 4;
+    }
+    .pass::before {
+      top: -8px;
+      /* position is overridden per pass via inline style if needed */
+    }
+    .pass::after {
+      bottom: -8px;
+    }
+    /* default notch positions (will be overridden when needed). The
+       perforation runs at ~ 1.4fr / (1.4 + 0.7) = 67% from the left. */
+    .pass::before, .pass::after { left: calc(67% - 7px); }
+
+    .pass .body {
+      padding: 22px 24px 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .pass .body .head {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      gap: 16px;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .pass .body .head .airline {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .pass .body .head .pipe {
+      width: 1px;
+      height: 16px;
+      background: var(--rule);
+    }
+    .pass .body .head .flt {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+    }
+    .pass .body .head .ticket-no {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: right;
+    }
+    .pass .body .head .ticket-no b { color: var(--ink); font-weight: 800; }
+
+    .pass .body .route {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: end;
+      padding-top: 8px;
+    }
+    .pass .body .route .iata {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .pass .body .route .iata small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+    .pass .body .route .arr {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--red);
+      line-height: 0.85;
+      padding-bottom: 6px;
+    }
+    .pass .body .route .iata.dest small { color: var(--red); }
+
+    .pass .body .meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+    }
+    .pass .body .meta > div {
+      padding-right: 14px;
+      border-right: 1px solid var(--rule);
+    }
+    .pass .body .meta > div:last-child { border-right: 0; padding-right: 0; }
+    .pass .body .meta dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 4px;
+    }
+    .pass .body .meta dd {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .pass .body .meta dd em { font-style: italic; font-weight: 500; color: var(--red); }
+
+    .pass .body .pax {
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .pass .body .pax .ico {
+      width: 56px;
+      height: 56px;
+      background: var(--paper-3);
+      border: 1px solid var(--rule);
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pass .body .pax .ico img { width: 100%; height: 100%; object-fit: contain; }
+    .pass .body .pax .name {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pass .body .pax .name em { font-style: italic; font-weight: 500; color: var(--red); }
+    .pass .body .pax .desc {
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink-3);
+    }
+
+    .pass .body .barcode {
+      margin-top: 8px;
+      height: 32px;
+      background-image:
+        linear-gradient(to right,
+          var(--ink) 0 1px, transparent 1px 3px,
+          var(--ink) 3px 4px, transparent 4px 7px,
+          var(--ink) 7px 9px, transparent 9px 11px,
+          var(--ink) 11px 12px, transparent 12px 16px,
+          var(--ink) 16px 18px, transparent 18px 20px,
+          var(--ink) 20px 22px, transparent 22px 25px,
+          var(--ink) 25px 27px, transparent 27px 30px,
+          var(--ink) 30px 31px);
+      background-size: 31px 100%;
+      background-repeat: repeat-x;
+    }
+
+    /* the stub */
+    .pass .stub {
+      padding: 18px 18px 20px;
+      background: var(--paper-2);
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 14px;
+    }
+    .pass .stub .stub-head {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .pass .stub .gate-no {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(48px, 6vw, 72px);
+      line-height: 0.82;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .pass .stub .gate-no small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+    .pass .stub .zone {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 6px 10px;
+      background: var(--paper-3);
+      border: 1px solid var(--rule);
+      width: fit-content;
+    }
+    .pass .stub .crs {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      align-self: end;
+    }
+    .pass .stub .crs b { color: var(--red); font-weight: 800; }
+    .pass .stub .seq {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .pass .stub .seq b { color: var(--ink); }
+
+    @media (max-width: 880px) {
+      .gates { padding: 22px 22px 56px; }
+      .pass-row { grid-template-columns: 1fr; gap: 18px; }
+      .pass { grid-template-columns: 1fr; }
+      .pass .perf { display: none; }
+      .pass::before, .pass::after { display: none; }
+      .pass .stub { border-top: 1px dashed var(--rule); }
+    }
+
+    /* ============================================================
+       CAPTAIN / CREW — Burcu's airline ID card
+    ============================================================ */
+    .crew {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .crew-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 56px;
+      align-items: center;
+    }
+    .crew-text { min-width: 0; }
+    .crew-text h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .crew-text h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .crew-text p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 1em;
+    }
+    .crew-text p strong { font-weight: 700; color: var(--ink); }
+    .crew-text p em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red);
+    }
+
+    /* ID Card */
+    .id-card {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 24px 56px -24px rgba(0,0,0,0.28);
+      transform: rotate(-1.5deg);
+      transition: transform 0.4s;
+    }
+    .id-card:hover { transform: rotate(0deg); }
+    .id-head {
+      padding: 12px 16px;
+      background: var(--ink);
+      color: var(--paper);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .id-head .stripe {
+      width: 28px;
+      height: 4px;
+      background: var(--red);
+    }
+    .id-head .center {
+      text-align: center;
+      font-weight: 800;
+    }
+    .id-head .right {
+      color: var(--red);
+      font-weight: 800;
+    }
+    .id-photo {
+      width: 100%;
+      aspect-ratio: 1 / 1.05;
+      overflow: hidden;
+      background: var(--paper-3);
+      border-bottom: 4px solid var(--red);
+    }
+    .id-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .id-body {
+      padding: 14px 16px 16px;
+    }
+    .id-body .name-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .id-body .name-row h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1.05;
+    }
+    .id-body .name-row .rank {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .id-body dl {
+      margin-top: 10px;
+    }
+    .id-body dl > div {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 10px;
+      padding: 6px 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .id-body dl > div:first-child { border-top: 0; }
+    .id-body dt {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .id-body dd {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .id-foot {
+      padding: 8px 16px 12px;
+      background: var(--paper-3);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .id-foot b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .crew { padding: 0 22px 56px; }
+      .crew-grid { grid-template-columns: 1fr; gap: 36px; }
+      .id-card { transform: none; }
+    }
+
+    /* ============================================================
+       FLIGHT CALCULATOR — CRS as a flight calculator
+    ============================================================ */
+    .calc-zone {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .calc-frame {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      box-shadow: 0 24px 56px -24px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    .calc-bar {
+      padding: 16px 24px;
+      background: var(--ink);
+      color: var(--paper);
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 24px;
+      align-items: center;
+      border-bottom: 4px solid var(--red);
+    }
+    .calc-bar .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .calc-bar .lbl span { color: var(--red); }
+    .calc-bar .center {
+      text-align: center;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+    }
+    .calc-bar .center b { color: var(--board-amber); }
+    .calc-bar .pip {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--board-red);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    .calc-bar .right {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .calc-body {
+      padding: 28px 32px 32px;
+      background: var(--paper);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 28px;
+    }
+    .calc-body .form { display: flex; flex-direction: column; gap: 8px; }
+    .calc-body .form .head {
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 8px;
+    }
+    .calc-body .form .head .ant {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .calc-body .form .head h4 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .calc-body .form .head p {
+      font-family: var(--type);
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--ink-3);
+      margin-top: 6px;
+      line-height: 1.55;
+    }
+    .calc-body .row {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 14px;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+    }
+    .calc-body .row.on { border-color: var(--red); }
+    .calc-body .row .k {
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .calc-body .row .k small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 9px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+    .calc-body .row .v {
+      padding: 5px 8px;
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .calc-body .row.on .v { color: var(--red); border-color: var(--red); }
+
+    /* Right side: the "manifest" — flight-indicator style readout */
+    .calc-body .indicator {
+      background: var(--board-bg);
+      color: var(--board-fg);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    .calc-body .indicator::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.18) 2px 3px);
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+    }
+    .calc-body .indicator .lbl {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--board-red);
+      position: relative;
+      z-index: 2;
+    }
+    .calc-body .indicator .total {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 88px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--board-amber);
+      position: relative;
+      z-index: 2;
+    }
+    .calc-body .indicator .total small {
+      display: block; margin-top: 6px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(244, 240, 230, 0.55);
+    }
+    .calc-body .indicator dl {
+      border-top: 1px solid var(--board-rule);
+      padding-top: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    .calc-body .indicator dl > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--board-rule);
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 11px;
+      color: rgba(244, 240, 230, 0.75);
+    }
+    .calc-body .indicator dl > div b { color: var(--board-amber); font-weight: 800; }
+    .calc-body .indicator .confirm {
+      margin-top: auto;
+      padding: 11px 14px;
+      background: var(--red);
+      color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    @media (max-width: 720px) { .calc-body { grid-template-columns: 1fr; padding: 22px; gap: 20px; } }
+
+    /* ============================================================
+       INFLIGHT MAGAZINE — placeholder Instagram tiles
+    ============================================================ */
+    .magazine {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .magazine-frame {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1.5px solid var(--ink);
+      padding: 36px 40px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .magazine-frame::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--red) 0% 30%, transparent 30% 70%, var(--red) 70% 100%);
+    }
+    .magazine-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      margin-bottom: 24px;
+    }
+    .magazine-head .vol {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+    .magazine-head .vol b { color: var(--red); }
+    .magazine-head h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(20px, 2.4vw, 32px);
+      letter-spacing: -0.015em;
+      color: var(--paper);
+    }
+    .magazine-head h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .magazine-head .meta {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      text-align: right;
+    }
+    .magazine-head .meta b { color: var(--paper); font-weight: 800; }
+
+    .magazine-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .mag-tile {
+      aspect-ratio: 1;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .mag-tile:hover { transform: translateY(-3px); border-color: var(--red); }
+    .mag-tile.red { background: var(--red); }
+    .mag-tile.dark { background: #232220; }
+    .mag-tile.cream { background: var(--paper-3); }
+    .mag-tile .tag {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .mag-tile.red .tag, .mag-tile.dark .tag { color: rgba(255,255,255,0.7); }
+    .mag-tile .body {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .mag-tile .body em { font-style: italic; font-weight: 500; color: var(--red); }
+    .mag-tile.red .body { color: var(--paper); }
+    .mag-tile.red .body em { color: var(--paper); }
+    .mag-tile.dark .body { color: var(--paper); }
+    .mag-tile.dark .body em { color: var(--red); }
+    .mag-tile .foot {
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .mag-tile.red .foot, .mag-tile.dark .foot { color: rgba(255,255,255,0.45); }
+
+    /* placeholder strikethrough hint */
+    .mag-tile.placeholder::after {
+      content: "PLACEHOLDER";
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      padding: 2px 5px;
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 6px;
+      letter-spacing: 0.24em;
+      color: var(--ink-3);
+      background: rgba(255,255,255,0.6);
+    }
+    .mag-tile.red.placeholder::after { background: rgba(255,255,255,0.92); color: var(--red); }
+    .mag-tile.dark.placeholder::after { background: rgba(255,255,255,0.18); color: var(--paper); }
+
+    .magazine-foot {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255,255,255,0.32);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .magazine-foot b { color: var(--red); font-weight: 800; }
+
+    @media (max-width: 880px) {
+      .magazine { padding: 0 22px 56px; }
+      .magazine-frame { padding: 24px 22px 28px; }
+      .magazine-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 540px) { .magazine-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ============================================================
+       BAGGAGE CLAIM — the website mockup, framed as connecting
+       documentation
+    ============================================================ */
+    .baggage {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+    .frame {
+      background: var(--paper);
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .frame .chrome {
+      background: var(--paper-2);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .lang span {
+      padding: 3px 8px;
+      font-family: var(--type);
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .lang span.on { background: var(--red); color: var(--paper); }
+
+    /* faithful site mock (compact) */
+    .site-mock { background: var(--paper); }
+    .site-mock .nav-row {
+      padding: 14px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 22px;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-mock .nav-row .brand { display: flex; align-items: center; gap: 10px; }
+    .site-mock .nav-row .brand img { width: 30px; height: 30px; object-fit: contain; }
+    .site-mock .nav-row .brand .wm {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .site-mock .nav-row .brand .wm small {
+      display: block;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-top: 3px;
+    }
+    .site-mock .nav-row .menu {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      font-family: var(--type);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .site-mock .nav-row .menu .on { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 4px; }
+    .site-mock .nav-row .right { display: flex; align-items: center; gap: 10px; }
+    .site-mock .nav-row .lt {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: var(--paper-2); border: 1px solid var(--rule);
+    }
+    .site-mock .nav-row .lt span {
+      padding: 4px 8px;
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      color: var(--ink-4);
+    }
+    .site-mock .nav-row .lt .on { background: var(--ink); color: var(--paper); }
+    .site-mock .nav-row .book {
+      padding: 8px 14px;
+      background: var(--red); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    @media (max-width: 880px) { .site-mock .nav-row .menu { display: none; } }
+
+    .site-mock .hero-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: 32px;
+      align-items: center;
+      padding: 36px 36px 32px;
+      background: var(--paper-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-mock .hero-row .text { min-width: 0; }
+    .site-mock .hero-row .eb {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .site-mock .hero-row h2 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .site-mock .hero-row h2 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .site-mock .hero-row p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 13px;
+      line-height: 1.65; color: var(--ink-2);
+      max-width: 50ch; margin-bottom: 14px;
+    }
+    .site-mock .hero-row p b { font-weight: 700; color: var(--ink); }
+    .site-mock .hero-row .ctas { display: flex; gap: 8px; }
+    .site-mock .hero-row .ctas a {
+      padding: 8px 14px;
+      font-family: var(--type);
+      font-weight: 800; font-size: 9px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .site-mock .hero-row .ctas .p { background: var(--red); color: var(--paper); }
+    .site-mock .hero-row .ctas .s { border: 1px solid var(--ink); color: var(--ink); }
+    .site-mock .hero-row .photo {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 8px 8px 12px;
+      max-width: 200px;
+    }
+    .site-mock .hero-row .photo .ph {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .site-mock .hero-row .photo .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .site-mock .hero-row .photo .who {
+      padding-top: 8px;
+      border-top: 2px solid var(--red);
+      margin-top: 8px;
+    }
+    .site-mock .hero-row .photo .who h4 {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      color: var(--ink);
+    }
+    .site-mock .hero-row .photo .who p {
+      font-family: var(--type);
+      font-weight: 600; font-size: 7px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red);
+      margin: 2px 0 0;
+      line-height: 1.4;
+    }
+    @media (max-width: 720px) {
+      .site-mock .hero-row { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+    }
+
+    .site-mock .ff-foot {
+      background: var(--paper-2);
+      padding: 18px 36px;
+      border-top: 4px solid var(--red);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px; align-items: center;
+    }
+    .site-mock .ff-foot .left {
+      font-family: var(--type);
+      font-weight: 500; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .site-mock .ff-foot .credit {
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .site-mock .ff-foot .credit b { color: var(--red); font-weight: 800; }
+    @media (max-width: 720px) {
+      .site-mock .ff-foot { padding: 16px 22px; grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    /* ============================================================
+       END / FINAL CALL
+    ============================================================ */
+    .final {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 80px 48px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: end;
+      border-top: 1px solid var(--rule);
+    }
+    .final-cta { min-width: 0; }
+    .final-cta .ant {
+      font-family: var(--type);
+      font-weight: 700; font-size: 11px;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .final-cta h3 {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .final-cta h3 em { font-style: italic; font-weight: 500; color: var(--red); }
+    .final-cta p {
+      font-family: var(--type);
+      font-weight: 400; font-size: 16px;
+      line-height: 1.7; color: var(--ink-2);
+      max-width: 48ch; margin-bottom: 28px;
+    }
+    .final-cta .cta {
+      display: inline-flex;
+      align-items: center; gap: 10px;
+      padding: 14px 24px;
+      background: var(--ink); color: var(--paper);
+      font-family: var(--type);
+      font-weight: 800; font-size: 11px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .final-cta .cta:hover { background: var(--red); }
+    .final-callsign {
+      align-self: stretch;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      border: 1.5px solid var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .final-callsign::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--red);
+    }
+    .final-callsign .ant {
+      font-family: var(--type);
+      font-weight: 800; font-size: 9px;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--red);
+    }
+    .final-callsign .big {
+      font-family: var(--type);
+      font-weight: 800;
+      font-size: clamp(48px, 6.4vw, 88px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+    }
+    .final-callsign .big em { font-style: italic; font-weight: 500; color: var(--board-amber); }
+    .final-callsign p {
+      font-family: var(--type);
+      font-weight: 500; font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.78);
+    }
+    .final-callsign p b { color: var(--paper); font-weight: 700; }
+    .final-callsign .by {
+      font-family: var(--type);
+      font-weight: 700; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+    }
+    .final-callsign .by b { color: var(--red); font-weight: 800; }
+    @media (max-width: 880px) {
+      .final { padding: 56px 22px; grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    /* ============================================================
+       COLOPHON
+    ============================================================ */
+    .colophon {
+      padding: 22px 32px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.65);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--type);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .colophon strong { color: var(--paper); font-weight: 700; }
+    .colophon b { color: var(--red); font-weight: 800; }
+    .colophon .center { text-align: center; color: var(--red); letter-spacing: 0.4em; }
+    .colophon .right { text-align: right; }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 6px; text-align: center; padding: 22px; font-size: 9px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Departure Board</span>
+    <span class="right">Terminal <b>I</b> · CYYZ → CAN</span>
+  </header>
+
+  <!-- =================================================================
+       SIGN BAR — terminal master strip
+  ==================================================================== -->
+  <div class="sign-bar">
+    <div class="ico-cluster">
+      <span class="ico red">NP</span>
+      <span>Terminal <b style="color: var(--red);">·</b> 01</span>
+    </div>
+    <div class="center">
+      Northern Pathways
+      <small>Toronto YYZ <span style="color: var(--red);">→</span> Canada</small>
+    </div>
+    <div class="clock">
+      <span class="time">14:32</span>
+      <span class="date">02 APR 2026 ET</span>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       TERMINAL HEADER
+  ==================================================================== -->
+  <section class="terminal">
+    <div class="terminal-grid">
+      <div class="terminal-titling">
+        <p class="terminal-eyebrow">Reel 019 · Northern Pathways · Terminal Edition</p>
+        <h1 class="terminal-title">Departures, <em>plotted as flights.</em></h1>
+        <p class="terminal-subtitle">
+          We rendered the engagement as an international terminal &mdash;
+          IRCC draws on the Solari board, services as boarding passes,
+          the calculator at the gate, the captain on the ID card. Read
+          the page like signage.
+        </p>
+      </div>
+
+      <aside class="manifest">
+        <div class="manifest-head">
+          <span class="pip"></span>
+          <span class="live-tag">Live</span>
+          <span>Manifest · 02 Apr 26</span>
+        </div>
+        <dl>
+          <div><dt>Carrier</dt><dd>NP <em>· Northern Pathways</em></dd></div>
+          <div><dt>Hub</dt><dd>YYZ · Toronto</dd></div>
+          <div><dt>Captain</dt><dd>Burcu Akyol</dd></div>
+          <div><dt>Licence</dt><dd>RCIC-IRB · CICC</dd></div>
+          <div><dt>Routes</dt><dd>05 · daily</dd></div>
+          <div><dt>Languages</dt><dd>EN <em>·</em> TR</dd></div>
+        </dl>
+        <p class="seal">Cleared for departure <b>·</b> 2026</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       THE BOARD — Solari split-flap display
+  ==================================================================== -->
+  <section class="board-wrap reveal">
+    <article class="board" aria-label="Express Entry departure board">
+      <header class="board-head">
+        <span class="lbl">Departures <span>·</span> Express Entry</span>
+        <span class="center">FLT INFO DISPLAY <b>·</b> IRCC · 02 APR 2026</span>
+        <span class="right">Last update <b>14:32 ET</b></span>
+      </header>
+
+      <div class="board-cols">
+        <span>Flt no.</span>
+        <span>Programme</span>
+        <span>Destination</span>
+        <span class="h-gate">Gate</span>
+        <span class="h-cat">Category</span>
+        <span class="h-eq">Equip.</span>
+        <span>Status</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.15s;">
+        <span class="cell code">NP347</span>
+        <span class="cell dest">Express Entry<small>02 Apr 14:32 · 3,000 ITAs</small></span>
+        <span class="cell dest">CAN <span style="color: var(--board-red); font-weight: 800;">→</span> PR<small>perm. residence</small></span>
+        <span class="cell gate">B12</span>
+        <span class="cell cat">Healthcare<small>min. CRS 504</small></span>
+        <span class="cell eq">CRS-504</span>
+        <span class="cell status boarding">Boarding</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.30s;">
+        <span class="cell code">NP346</span>
+        <span class="cell dest">Express Entry<small>27 Mar · 7,500 ITAs</small></span>
+        <span class="cell dest">FRA <span style="color: var(--board-amber); font-weight: 800;">→</span> CAN<small>franco channel</small></span>
+        <span class="cell gate">A04</span>
+        <span class="cell cat">French<small>NCLC 7+</small></span>
+        <span class="cell eq">CRS-379</span>
+        <span class="cell status ontime">On time</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.45s;">
+        <span class="cell code">NP345</span>
+        <span class="cell dest">Express Entry<small>20 Mar · 1,275 ITAs</small></span>
+        <span class="cell dest">PNP <span style="color: var(--board-amber); font-weight: 800;">→</span> CAN<small>provincial nom.</small></span>
+        <span class="cell gate">C09</span>
+        <span class="cell cat">Provincial<small>nominee</small></span>
+        <span class="cell eq">CRS-736</span>
+        <span class="cell status ontime">On time</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.60s;">
+        <span class="cell code">NP344</span>
+        <span class="cell dest">Express Entry<small>13 Mar · 5,500 ITAs</small></span>
+        <span class="cell dest">CEC <span style="color: var(--board-amber); font-weight: 800;">→</span> CAN<small>can. exp. class</small></span>
+        <span class="cell gate">B07</span>
+        <span class="cell cat">CEC<small>1y CDN work</small></span>
+        <span class="cell eq">CRS-521</span>
+        <span class="cell status departed">Departed</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.75s;">
+        <span class="cell code">NP343</span>
+        <span class="cell dest">Express Entry<small>06 Mar · 975 ITAs</small></span>
+        <span class="cell dest">TRD <span style="color: var(--board-amber); font-weight: 800;">→</span> CAN<small>trades stream</small></span>
+        <span class="cell gate">A11</span>
+        <span class="cell cat">Trades<small>NOC 7</small></span>
+        <span class="cell eq">CRS-421</span>
+        <span class="cell status departed">Departed</span>
+      </div>
+
+      <div class="board-row" style="--row-delay: 0.90s;">
+        <span class="cell code">NP342</span>
+        <span class="cell dest">Express Entry<small>27 Feb · 4,000 ITAs</small></span>
+        <span class="cell dest">CAN <span style="color: var(--board-amber); font-weight: 800;">→</span> PR<small>perm. residence</small></span>
+        <span class="cell gate">B14</span>
+        <span class="cell cat">Healthcare<small>min. CRS 490</small></span>
+        <span class="cell eq">CRS-490</span>
+        <span class="cell status departed">Departed</span>
+      </div>
+
+      <footer class="board-foot">
+        <span>Indexed <b>156+</b> departures · IRCC · since 2015</span>
+        <span class="legend">
+          <span><span class="swatch boarding"></span>Boarding</span>
+          <span><span class="swatch ontime"></span>On time</span>
+          <span><span class="swatch departed"></span>Departed</span>
+        </span>
+        <span>Mirrored to <b>@kanadadayeniyasam</b> on draw day</span>
+      </footer>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       GATE B — BOARDING PASSES (services)
+  ==================================================================== -->
+  <header class="sect-bar reveal">
+    <span class="gate">B</span>
+    <span class="lbl-stack">
+      <p class="ant">— Gate B · Boarding Passes —</p>
+      <p class="gate-label">Services · 5 daily routes</p>
+    </span>
+    <h2>Five <em>routes,</em> one carrier.</h2>
+    <p class="meta">Issued daily<br><b>RCIC · counsel of record</b></p>
+  </header>
+
+  <section class="gates reveal">
+    <div class="pass-row">
+      <!-- Pass 01 -->
+      <article class="pass">
+        <div class="body">
+          <header class="head">
+            <span class="airline">NP <span style="color: var(--ink);">·</span> Northern Pathways</span>
+            <span class="pipe"></span>
+            <span class="flt">FLT NP-104</span>
+            <span class="ticket-no">Ticket <b>NP/EE/0104</b></span>
+          </header>
+          <div class="route">
+            <p class="iata">YYZ<small>Toronto · ON</small></p>
+            <p class="arr">→</p>
+            <p class="iata dest">PR<small>permanent residence</small></p>
+          </div>
+          <dl class="meta">
+            <div><dt>Departing</dt><dd>14:32 <em>ET</em></dd></div>
+            <div><dt>Date</dt><dd>02APR26</dd></div>
+            <div><dt>Class</dt><dd>EE / FSWP</dd></div>
+            <div><dt>Pgm</dt><dd>Economic</dd></div>
+          </dl>
+          <div class="pax">
+            <span class="ico"><img src="../../../public/portfolio/northern-pathways/services/cec.png" alt=""></span>
+            <div>
+              <p class="name">Economic <em>Immigration</em></p>
+              <p class="desc">Express Entry · FSWP · CEC · Provincial Nominee streams.</p>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+        <div class="perf"></div>
+        <aside class="stub">
+          <p class="stub-head">Boarding pass</p>
+          <p class="gate-no">B12<small>Gate</small></p>
+          <p class="zone">Zone 01</p>
+          <p class="crs">CRS <b>≥ 504</b></p>
+          <p class="seq">Seq <b>· 0001</b></p>
+        </aside>
+      </article>
+
+      <!-- Pass 02 -->
+      <article class="pass">
+        <div class="body">
+          <header class="head">
+            <span class="airline">NP <span style="color: var(--ink);">·</span> Northern Pathways</span>
+            <span class="pipe"></span>
+            <span class="flt">FLT NP-247</span>
+            <span class="ticket-no">Ticket <b>NP/FAM/0247</b></span>
+          </header>
+          <div class="route">
+            <p class="iata">YYZ<small>Toronto · ON</small></p>
+            <p class="arr">→</p>
+            <p class="iata dest">FAM<small>family class</small></p>
+          </div>
+          <dl class="meta">
+            <div><dt>Departing</dt><dd>09:00 <em>ET</em></dd></div>
+            <div><dt>Date</dt><dd>weekly</dd></div>
+            <div><dt>Class</dt><dd>Sponsorship</dd></div>
+            <div><dt>Pgm</dt><dd>Family</dd></div>
+          </dl>
+          <div class="pax">
+            <span class="ico"><img src="../../../public/portfolio/northern-pathways/services/spousal-sponsorship.png" alt=""></span>
+            <div>
+              <p class="name">Family <em>Sponsorship</em></p>
+              <p class="desc">Spousal · common-law partner · parents and grandparents.</p>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+        <div class="perf"></div>
+        <aside class="stub">
+          <p class="stub-head">Boarding pass</p>
+          <p class="gate-no">A04<small>Gate</small></p>
+          <p class="zone">Zone 02</p>
+          <p class="crs">Lock-in <b>· spousal</b></p>
+          <p class="seq">Seq <b>· 0247</b></p>
+        </aside>
+      </article>
+
+      <!-- Pass 03 -->
+      <article class="pass">
+        <div class="body">
+          <header class="head">
+            <span class="airline">NP <span style="color: var(--ink);">·</span> Northern Pathways</span>
+            <span class="pipe"></span>
+            <span class="flt">FLT NP-315</span>
+            <span class="ticket-no">Ticket <b>NP/TMP/0315</b></span>
+          </header>
+          <div class="route">
+            <p class="iata">YYZ<small>Toronto · ON</small></p>
+            <p class="arr">→</p>
+            <p class="iata dest">TMP<small>temp. residence</small></p>
+          </div>
+          <dl class="meta">
+            <div><dt>Departing</dt><dd>11:15 <em>ET</em></dd></div>
+            <div><dt>Date</dt><dd>weekly</dd></div>
+            <div><dt>Class</dt><dd>Visitor</dd></div>
+            <div><dt>Pgm</dt><dd>Study / Work</dd></div>
+          </dl>
+          <div class="pax">
+            <span class="ico"><img src="../../../public/portfolio/northern-pathways/services/study-permit.png" alt=""></span>
+            <div>
+              <p class="name">Temporary <em>Residence</em></p>
+              <p class="desc">Visitor records · study permits · work permits · renewals.</p>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+        <div class="perf"></div>
+        <aside class="stub">
+          <p class="stub-head">Boarding pass</p>
+          <p class="gate-no">C09<small>Gate</small></p>
+          <p class="zone">Zone 03</p>
+          <p class="crs">Permit <b>· timed</b></p>
+          <p class="seq">Seq <b>· 0315</b></p>
+        </aside>
+      </article>
+
+      <!-- Pass 04 -->
+      <article class="pass">
+        <div class="body">
+          <header class="head">
+            <span class="airline">NP <span style="color: var(--ink);">·</span> Northern Pathways</span>
+            <span class="pipe"></span>
+            <span class="flt">FLT NP-512</span>
+            <span class="ticket-no">Ticket <b>NP/PRC/0512</b></span>
+          </header>
+          <div class="route">
+            <p class="iata">YYZ<small>Toronto · ON</small></p>
+            <p class="arr">→</p>
+            <p class="iata dest">PRC<small>renewal · PRTD</small></p>
+          </div>
+          <dl class="meta">
+            <div><dt>Departing</dt><dd>13:00 <em>ET</em></dd></div>
+            <div><dt>Date</dt><dd>weekly</dd></div>
+            <div><dt>Class</dt><dd>PR Card</dd></div>
+            <div><dt>Pgm</dt><dd>Renewal</dd></div>
+          </dl>
+          <div class="pax">
+            <span class="ico"><img src="../../../public/portfolio/northern-pathways/services/pr-card.png" alt=""></span>
+            <div>
+              <p class="name">PR Card &amp; <em>PRTD</em></p>
+              <p class="desc">PR card renewal and PR Travel Documents from outside Canada.</p>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+        <div class="perf"></div>
+        <aside class="stub">
+          <p class="stub-head">Boarding pass</p>
+          <p class="gate-no">B07<small>Gate</small></p>
+          <p class="zone">Zone 04</p>
+          <p class="crs">Travel doc <b>· issued</b></p>
+          <p class="seq">Seq <b>· 0512</b></p>
+        </aside>
+      </article>
+
+      <!-- Pass 05 (full width on its row by inheriting grid layout) -->
+      <article class="pass">
+        <div class="body">
+          <header class="head">
+            <span class="airline">NP <span style="color: var(--ink);">·</span> Northern Pathways</span>
+            <span class="pipe"></span>
+            <span class="flt">FLT NP-888</span>
+            <span class="ticket-no">Ticket <b>NP/CTZ/0888</b></span>
+          </header>
+          <div class="route">
+            <p class="iata">YYZ<small>Toronto · ON</small></p>
+            <p class="arr">→</p>
+            <p class="iata dest">CIT<small>citizenship · final</small></p>
+          </div>
+          <dl class="meta">
+            <div><dt>Departing</dt><dd>16:45 <em>ET</em></dd></div>
+            <div><dt>Date</dt><dd>weekly</dd></div>
+            <div><dt>Class</dt><dd>Citizenship</dd></div>
+            <div><dt>Pgm</dt><dd>Naturalisation</dd></div>
+          </dl>
+          <div class="pax">
+            <span class="ico"><img src="../../../public/portfolio/northern-pathways/services/citizenship.png" alt=""></span>
+            <div>
+              <p class="name">Citizenship <em>Application</em></p>
+              <p class="desc">Canadian citizenship applications &amp; residency calculations.</p>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+        <div class="perf"></div>
+        <aside class="stub">
+          <p class="stub-head">Boarding pass</p>
+          <p class="gate-no">A11<small>Gate</small></p>
+          <p class="zone">Zone 05</p>
+          <p class="crs">Final <b>· citizen</b></p>
+          <p class="seq">Seq <b>· 0888</b></p>
+        </aside>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       GATE C — CAPTAIN / CREW
+  ==================================================================== -->
+  <header class="sect-bar reveal">
+    <span class="gate red">C</span>
+    <span class="lbl-stack">
+      <p class="ant">— Gate C · Captain &amp; Crew —</p>
+      <p class="gate-label">Cockpit · counsel of record</p>
+    </span>
+    <h2>The captain <em>flies the route.</em></h2>
+    <p class="meta">RCIC-IRB<br><b>Licensed since 2019</b></p>
+  </header>
+
+  <section class="crew reveal">
+    <div class="crew-grid">
+      <div class="crew-text">
+        <h2>Burcu Akyol &mdash; <em>RCIC-IRB,</em> Captain.</h2>
+        <p>
+          Every flight is captained by <strong>Burcu Akyol</strong>,
+          Regulated Canadian Immigration Consultant in good standing
+          with the College of Immigration and Citizenship Consultants.
+          <em>Adjunct professor at Queen&rsquo;s.</em> CAPIC Board
+          Member.
+        </p>
+        <p>
+          The cockpit holds the licence; the manifest holds the
+          counsel of record signature; the pre-flight check is the
+          firm&rsquo;s onboarding form. Nothing leaves the gate
+          without it.
+        </p>
+      </div>
+
+      <aside class="id-card">
+        <header class="id-head">
+          <span class="stripe"></span>
+          <span class="center">Northern Pathways</span>
+          <span class="right">CAPT</span>
+        </header>
+        <div class="id-photo">
+          <img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol">
+        </div>
+        <div class="id-body">
+          <div class="name-row">
+            <h4>Burcu Akyol</h4>
+            <span class="rank">Capt.</span>
+          </div>
+          <dl>
+            <div><dt>Licence</dt><dd>RCIC-IRB</dd></div>
+            <div><dt>College</dt><dd>CICC · in good standing</dd></div>
+            <div><dt>Board</dt><dd>CAPIC · member</dd></div>
+            <div><dt>Faculty</dt><dd>Queen&rsquo;s · adjunct</dd></div>
+            <div><dt>Hours</dt><dd>Since 2019</dd></div>
+          </dl>
+        </div>
+        <footer class="id-foot">
+          <span>ID <b>·</b> NP-CAPT-001</span>
+          <span>Toronto <b>·</b> YYZ</span>
+        </footer>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       GATE D — FLIGHT CALCULATOR
+  ==================================================================== -->
+  <header class="sect-bar reveal">
+    <span class="gate">D</span>
+    <span class="lbl-stack">
+      <p class="ant">— Gate D · Flight Calculator —</p>
+      <p class="gate-label">CRS · pre-flight check</p>
+    </span>
+    <h2>Calculate the <em>flight</em> before you board.</h2>
+    <p class="meta">15 fields · 6 categories<br><b>Bilingual · PDF manifest</b></p>
+  </header>
+
+  <section class="calc-zone reveal">
+    <article class="calc-frame">
+      <header class="calc-bar">
+        <span class="lbl">CRS Calculator <span>·</span> Step 02 / 06</span>
+        <span class="center">FLT NP-487 <b>·</b> CRS PRE-FLIGHT</span>
+        <span class="pip"></span>
+        <span class="right">EN <b style="color: var(--red);">/</b> TR</span>
+      </header>
+      <div class="calc-body">
+        <div class="form">
+          <header class="head">
+            <p class="ant">CRS Score Calculator · Pre-flight check</p>
+            <h4>Core / Human Capital</h4>
+            <p>Calculate your Comprehensive Ranking System score for Express Entry. Complete the sections below to see your estimated flight clearance.</p>
+          </header>
+          <div class="row on">
+            <span class="k">Age <small>at point of application · 32 years</small></span>
+            <span class="v">110 / 110</span>
+          </div>
+          <div class="row on">
+            <span class="k">Education <small>Master&rsquo;s degree · ECA verified</small></span>
+            <span class="v">135 / 150</span>
+          </div>
+          <div class="row on">
+            <span class="k">CLB · English <small>CLB 9 · all four skills</small></span>
+            <span class="v">124 / 136</span>
+          </div>
+          <div class="row on">
+            <span class="k">French · NCLC <small>NCLC 7+ bonus eligible</small></span>
+            <span class="v">25 / 50</span>
+          </div>
+          <div class="row">
+            <span class="k">Canadian work <small>1 year · NOC TEER 0–3</small></span>
+            <span class="v">35 / 80</span>
+          </div>
+          <div class="row">
+            <span class="k">Foreign work <small>3+ years · skilled, paid</small></span>
+            <span class="v">25 / 50</span>
+          </div>
+        </div>
+        <aside class="indicator">
+          <p class="lbl">Flight Indicator · CRS</p>
+          <p class="total">487<small>CRS / 1200</small></p>
+          <dl>
+            <div><span>A · Core</span><b>404</b></div>
+            <div><span>B · Spouse</span><b>—</b></div>
+            <div><span>C · Transfer</span><b>50</b></div>
+            <div><span>D · Additional</span><b>33</b></div>
+          </dl>
+          <span class="confirm">Confirm itinerary · ↓ PDF manifest</span>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       GATE E — INFLIGHT MAGAZINE  (placeholder Instagram tiles)
+  ==================================================================== -->
+  <header class="sect-bar reveal">
+    <span class="gate">E</span>
+    <span class="lbl-stack">
+      <p class="ant">— Gate E · Inflight Magazine —</p>
+      <p class="gate-label">@kanadadayeniyasam · entertainment guide</p>
+    </span>
+    <h2>The <em>inflight</em> programme.</h2>
+    <p class="meta">Volume <b>I</b> · Issue 248<br><b>Real posts to follow</b></p>
+  </header>
+
+  <section class="magazine reveal">
+    <article class="magazine-frame">
+      <header class="magazine-head">
+        <span class="vol">VOL <b>I</b> · Issue 248 · 2026</span>
+        <h3><em>Yeni</em> bir yaşam &mdash; the inflight magazine.</h3>
+        <span class="meta">
+          @kanadadayeniyasam<br>
+          <b>14.2k followers</b>
+        </span>
+      </header>
+
+      <div class="magazine-grid">
+        <div class="mag-tile red placeholder">
+          <span class="tag">Draw 347</span>
+          <span class="body">CRS <em>504</em></span>
+          <span class="foot">healthcare · 02 Apr</span>
+        </div>
+        <div class="mag-tile placeholder">
+          <span class="tag">FAQ · primer</span>
+          <span class="body">FSWP <em>67/100</em></span>
+          <span class="foot">en · primer</span>
+        </div>
+        <div class="mag-tile dark placeholder">
+          <span class="tag">Reel · :42</span>
+          <span class="body">NCLC <em>7+</em></span>
+          <span class="foot">tr · explainer</span>
+        </div>
+        <div class="mag-tile cream placeholder">
+          <span class="tag">Carousel · 8</span>
+          <span class="body">PNP <em>nedir?</em></span>
+          <span class="foot">tr · primer</span>
+        </div>
+        <div class="mag-tile placeholder">
+          <span class="tag">Quote · brand</span>
+          <span class="body">Treat <em>individuals,</em></span>
+          <span class="foot">brand voice</span>
+        </div>
+        <div class="mag-tile red placeholder">
+          <span class="tag">Tool · CRS</span>
+          <span class="body">CRS <em>Calc</em></span>
+          <span class="foot">link bio</span>
+        </div>
+        <div class="mag-tile dark placeholder">
+          <span class="tag">Reel · :28</span>
+          <span class="body">10 dk <em>CRS</em></span>
+          <span class="foot">tr · consult</span>
+        </div>
+        <div class="mag-tile cream placeholder">
+          <span class="tag">Story · highlight</span>
+          <span class="body"><em>RCIC.</em></span>
+          <span class="foot">tr · primer</span>
+        </div>
+        <div class="mag-tile red placeholder">
+          <span class="tag">Draw 346</span>
+          <span class="body">CRS <em>379</em></span>
+          <span class="foot">french · 27 Mar</span>
+        </div>
+        <div class="mag-tile placeholder">
+          <span class="tag">Tip · explainer</span>
+          <span class="body">CLB <em>9+</em></span>
+          <span class="foot">en · primer</span>
+        </div>
+        <div class="mag-tile dark placeholder">
+          <span class="tag">Reel · :22</span>
+          <span class="body">Onboarding <em>form</em></span>
+          <span class="foot">en · walkthrough</span>
+        </div>
+        <div class="mag-tile cream placeholder">
+          <span class="tag">Quote · TR</span>
+          <span class="body"><em>Şeffaflık,</em> standart.</span>
+          <span class="foot">brand line</span>
+        </div>
+      </div>
+
+      <footer class="magazine-foot">
+        <span><b>↘</b> Tiles to be replaced with real <b>@kanadadayeniyasam</b> posts when supplied.</span>
+        <span>Mirror to draw board <b>·</b> draw day · 248 posts</span>
+      </footer>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       GATE F — BAGGAGE CLAIM (the website mockup)
+  ==================================================================== -->
+  <header class="sect-bar reveal">
+    <span class="gate">F</span>
+    <span class="lbl-stack">
+      <p class="ant">— Gate F · Connecting Documentation —</p>
+      <p class="gate-label">northernpathways.ca · 12 routes</p>
+    </span>
+    <h2>The site, <em>at the gate.</em></h2>
+    <p class="meta">EN+TR · 12 routes<br><b>Live · since 2026</b></p>
+  </header>
+
+  <section class="baggage reveal">
+    <article class="frame">
+      <header class="chrome">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="url">northernpathways.ca/en</span>
+        <span class="lang"><span class="on">EN</span><span>TR</span></span>
+      </header>
+      <div class="site-mock">
+        <nav class="nav-row">
+          <span class="brand">
+            <img src="../../../public/portfolio/northern-pathways/logo/np-mark.png" alt="">
+            <span class="wm">NORTHERN PATHWAYS<small>IMMIGRATION CONSULTING</small></span>
+          </span>
+          <nav class="menu">
+            <span class="on">Home</span>
+            <span>Our Team</span>
+            <span>Fees</span>
+            <span>Events</span>
+            <span>Blog</span>
+          </nav>
+          <div class="right">
+            <span class="lt"><span class="on">EN</span><span>TR</span></span>
+            <span class="book">Book a Consultation</span>
+          </div>
+        </nav>
+
+        <div class="hero-row">
+          <div class="text">
+            <p class="eb">Northern Pathways · RCIC-IRB</p>
+            <h2>Guiding your <em>Canadian immigration journey</em> with clarity.</h2>
+            <p>Welcome to Northern Pathways &mdash; led by <b>Burcu Akyol</b>, Regulated Canadian Immigration Consultant. Eligibility assessments, strategic guidance, and legal representation for permanent residency, study permits, and family sponsorship.</p>
+            <div class="ctas">
+              <a class="p">Book a Consultation</a>
+              <a class="s">Explore Services</a>
+            </div>
+          </div>
+          <aside class="photo">
+            <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol"></div>
+            <div class="who"><h4>Burcu Akyol</h4><p>RCIC-IRB · Principal</p></div>
+          </aside>
+        </div>
+
+        <footer class="ff-foot">
+          <span class="left">© 2026 Northern Pathways Immigration Consulting · All Rights Reserved.</span>
+          <span class="credit">Design &amp; development by <b>Frame Flow</b></span>
+        </footer>
+      </div>
+    </article>
+  </section>
+
+  <!-- =================================================================
+       FINAL CALL — closing
+  ==================================================================== -->
+  <section class="final reveal">
+    <div class="final-cta">
+      <p class="ant">— Final boarding call —</p>
+      <h3>Set the next <em>route.</em></h3>
+      <p>If your firm holds a record worth boarding, we&rsquo;d be glad to publish the next departure schedule. Same locked palette, same locked typeface, brought to a new terminal.</p>
+      <a class="cta">Begin a project →</a>
+    </div>
+
+    <aside class="final-callsign">
+      <span class="ant">Final call · NP / FF</span>
+      <p class="big">Roll for <em>departure.</em></p>
+      <p>The captain holds the manifest. The terminal holds the gate. <b>The flight is on time.</b></p>
+      <p class="by">Designed by <b>Frame Flow</b> <span style="opacity: 0.5;">·</span> Toronto · 2026</p>
+    </aside>
+  </section>
+
+  <!-- =================================================================
+       COLOPHON
+  ==================================================================== -->
+  <footer class="colophon">
+    <span>Set in <strong>Montserrat</strong> · 300–900 · 2026</span>
+    <span class="center">Reel <b>019</b> · Departure Board</span>
+    <span class="right">Filed by <strong>FrameFlow</strong></span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

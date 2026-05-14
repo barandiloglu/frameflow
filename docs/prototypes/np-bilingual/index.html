@@ -1,0 +1,1632 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northern Pathways — The Bilingual Edition (FrameFlow / Prototype 03)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>
+    /* ====================================================================
+       FRAMEFLOW · NORTHERN PATHWAYS IMMIGRATION
+       Prototype 03 — "The Bilingual Edition"
+
+       Broadsheet front-page layout split English / Turkish — the
+       diaspora angle made literal. Newspaper masthead, datelined,
+       multi-column, drop caps, a hairline rule between EN and TR
+       columns. Same locked palette as the brand sheet (red on
+       newsprint cream). The work is presented in news-of-record
+       form: dispatches, exhibits, market data (the draws), op-ed
+       (the brand voice), social column, sport (the calculators).
+    ==================================================================== */
+
+    :root {
+      --paper:    #fbf8f1;        /* newsprint cream */
+      --paper-2:  #f4f0e6;
+      --paper-3:  #ece6d8;
+      --rule:     #d4cfc0;
+      --rule-2:   #b6b1a0;
+      --ink:      #1a1818;
+      --ink-2:    #2c2b2b;
+      --ink-3:    #4a4844;
+      --ink-4:    #8c887f;
+      --red:      #b92025;
+      --red-d:    #7d1416;
+      --red-l:    #f6e3e4;
+
+      --display:  "Playfair Display", Georgia, serif;
+      --sans:     "Montserrat", system-ui, sans-serif;
+      --mono:     "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--paper); color: var(--ink); }
+    body {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* newsprint paper texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      opacity: 0.04;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       FF RAIL
+    ============================================================ */
+    .rail {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 32px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .rail b { color: var(--red); font-weight: 600; }
+    .rail .center {
+      text-align: center;
+      letter-spacing: 0.4em;
+      white-space: nowrap;
+      color: #f4f0e6;
+    }
+    .rail .right { text-align: right; }
+    .rail .right b { color: var(--paper); }
+    @media (max-width: 720px) {
+      .rail { grid-template-columns: 1fr; gap: 4px; text-align: center; padding: 12px 16px; font-size: 9px; }
+      .rail .right, .rail .left { text-align: center; }
+    }
+
+    /* ============================================================
+       MASTHEAD — newspaper top block
+    ============================================================ */
+    .masthead {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 36px 48px 24px;
+      border-bottom: 4px double var(--ink);
+    }
+    .masthead-flag {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 32px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 18px;
+    }
+    .flag-left {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+    .flag-left b { color: var(--red); font-weight: 700; }
+    .flag-left small { display: block; color: var(--ink-4); font-weight: 500; margin-top: 4px; }
+
+    .flag-mark {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 30px;
+      color: var(--red);
+      letter-spacing: -0.04em;
+    }
+
+    .flag-right {
+      text-align: right;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+    .flag-right b { color: var(--ink); }
+
+    .masthead-title {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(64px, 11vw, 168px);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .masthead-title em {
+      font-style: italic;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .masthead-sub {
+      text-align: center;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding: 10px 0 0;
+      border-top: 1px solid var(--rule);
+    }
+    .masthead-sub i { color: var(--red); font-style: normal; }
+    @media (max-width: 880px) {
+      .masthead { padding: 24px 22px 18px; }
+      .masthead-flag { grid-template-columns: 1fr; gap: 12px; text-align: center; }
+      .flag-right, .flag-left { text-align: center; }
+      .flag-mark { margin: 0 auto; }
+      .masthead-sub { letter-spacing: 0.3em; font-size: 9px; }
+    }
+
+    /* ============================================================
+       FRONT PAGE — three-column splash
+    ============================================================ */
+    .front {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 48px 60px;
+      border-bottom: 1px solid var(--ink);
+    }
+    .front-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1px 1.4fr 1px 0.9fr;
+      gap: 32px;
+    }
+    .front-grid .vline {
+      background: var(--rule);
+      width: 1px;
+    }
+
+    .col-meta { padding-right: 8px; }
+    .col-meta .kicker {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--ink);
+      margin-bottom: 14px;
+    }
+    .col-meta .lede-h {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .col-meta .lede-h em { font-style: italic; color: var(--red); }
+    .col-meta p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+    }
+    .col-meta dl {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--rule);
+    }
+    .col-meta dl > div {
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .col-meta dl > div:last-child { border-bottom: 0; }
+    .col-meta dt {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .col-meta dd {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+
+    /* CENTRE COLUMN — splash story */
+    .col-splash .kicker {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--ink);
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .col-splash .kicker .by {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      color: var(--ink-4);
+      letter-spacing: 0.24em;
+    }
+    .col-splash h1 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(48px, 6.4vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .col-splash h1 em { font-style: italic; color: var(--red); font-weight: 700; }
+    .col-splash .deck {
+      font-family: var(--display);
+      font-weight: 500;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.3;
+      color: var(--ink-2);
+      max-width: 32ch;
+      margin-bottom: 22px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .col-splash .body {
+      column-count: 2;
+      column-gap: 24px;
+      column-rule: 1px solid var(--rule);
+    }
+    .col-splash .body p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 0.95em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .col-splash .body p:first-child::first-letter {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 0.85;
+      float: left;
+      padding: 4px 8px 0 0;
+      color: var(--red);
+    }
+    .col-splash .body p strong { font-weight: 600; color: var(--ink); }
+    .col-splash .body p em {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--red-d);
+    }
+
+    /* RIGHT COLUMN — Turkish dispatch + market box */
+    .col-tr .stamp {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 6px 12px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .col-tr .stamp::before { content: "TR"; color: var(--red); font-weight: 700; }
+
+    .col-tr h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .col-tr h2 em { font-style: italic; color: var(--red); }
+    .col-tr .deck-tr {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--ink-2);
+      margin-bottom: 14px;
+    }
+    .col-tr p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ink-3);
+      margin-bottom: 0.85em;
+    }
+    .col-tr p strong { color: var(--ink); font-weight: 600; }
+
+    .draw-box {
+      margin-top: 22px;
+      padding: 18px;
+      background: var(--paper-3);
+      border: 1px solid var(--rule-2);
+    }
+    .draw-box .lbl {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .draw-box .big {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 56px;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .draw-box .big small {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      display: block;
+      margin-top: 6px;
+    }
+    .draw-box p {
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    @media (max-width: 980px) {
+      .front { padding: 22px 22px 36px; }
+      .front-grid { grid-template-columns: 1fr; gap: 28px; }
+      .front-grid .vline { display: none; }
+      .col-splash .body { column-count: 1; }
+    }
+
+    /* ============================================================
+       SECTION HEAD (running)
+    ============================================================ */
+    .section {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 64px 48px;
+    }
+    .sect-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+      border-bottom: 4px double var(--ink);
+      margin-bottom: 36px;
+    }
+    .sect-head .left {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .sect-head .center {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      flex: 1;
+      text-align: center;
+    }
+    .sect-head .center em { font-style: italic; color: var(--red); font-weight: 700; }
+    .sect-head .right {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .sect-head .right b { color: var(--ink); }
+    @media (max-width: 720px) {
+      .section { padding: 40px 22px; }
+      .sect-head .center { text-align: left; flex: 1 0 100%; }
+    }
+
+    /* ============================================================
+       SECTION B — DUAL DISPATCH (EN ⇄ TR)
+    ============================================================ */
+    .dual {
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      gap: 32px;
+    }
+    .dual .vline { background: var(--ink); width: 2px; }
+
+    .dispatch h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(24px, 3vw, 32px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .dispatch h3 em { font-style: italic; color: var(--red); }
+    .dispatch .lede {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--ink-2);
+      margin-bottom: 18px;
+    }
+    .dispatch .body p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink-2);
+      margin-bottom: 0.9em;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .dispatch .body p:first-of-type::first-letter {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 44px;
+      line-height: 0.85;
+      float: left;
+      padding: 3px 8px 0 0;
+      color: var(--red);
+    }
+    .dispatch .body p strong { font-weight: 600; color: var(--ink); }
+    .dispatch .body p em {
+      font-family: var(--display);
+      font-style: italic;
+      color: var(--red-d);
+    }
+
+    .dispatch .stamp {
+      display: inline-block;
+      padding: 4px 10px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--paper);
+      margin-bottom: 16px;
+    }
+    .dispatch .stamp.tr { background: var(--red); }
+
+    .dispatch .by {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .dispatch .by b { color: var(--ink); }
+    @media (max-width: 880px) {
+      .dual { grid-template-columns: 1fr; gap: 28px; }
+      .dual .vline { display: none; }
+    }
+
+    /* ============================================================
+       SECTION C — EXHIBITS (browser mockups + calculator)
+    ============================================================ */
+    .frame {
+      background: #ffffff;
+      border: 1px solid var(--rule-2);
+      box-shadow: 0 24px 56px -28px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    .frame .chrome {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      padding: 10px 14px;
+      align-items: center;
+      background: var(--paper-3);
+      border-bottom: 1px solid var(--rule);
+    }
+    .frame .chrome .dots { display: flex; gap: 5px; }
+    .frame .chrome .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rule-2);
+    }
+    .frame .chrome .dots span:first-child { background: var(--red); }
+    .frame .chrome .url {
+      padding: 5px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .frame .chrome .url::before { content: "🔒  "; }
+    .frame .chrome .lang {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    .frame .chrome .lang span {
+      padding: 3px 8px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      color: var(--ink-4);
+    }
+    .frame .chrome .lang span.active { background: var(--red); color: var(--paper); }
+
+    .triple {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .triple .card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .triple .card .frame { flex: 1; display: flex; flex-direction: column; }
+    .triple .card .body { flex: 1; padding: 18px 20px; background: #ffffff; }
+    .triple .card .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .triple .card .label-row .num {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+      color: var(--red);
+      line-height: 0.85;
+    }
+    .triple .card .label-row .lbl {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      text-align: right;
+    }
+    .triple .card h4 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+    .triple .card h4 em { font-style: italic; color: var(--red); }
+    .triple .card p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink-3);
+    }
+
+    /* mini browser-mockup body for triple */
+    .mini {
+      padding: 18px;
+      background: #ffffff;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mini .h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .mini .h2 em { font-style: italic; color: var(--red); }
+    .mini .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 8px;
+      background: var(--paper-2);
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+    .mini .row b { color: var(--red); font-weight: 700; }
+    .mini .total {
+      margin-top: auto;
+      padding: 14px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      text-align: center;
+    }
+    .mini .total small {
+      display: block;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 6px;
+    }
+
+    .mini.fswp .verdict {
+      margin-top: auto;
+      padding: 12px 14px;
+      background: #d8eadd;
+      border: 1px solid #6ec98c;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 13px;
+      color: #2e7d4f;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+    .mini.fswp .verdict::before { content: "✓ "; }
+
+    .mini.draws .row {
+      align-items: center;
+    }
+    .mini.draws .pill {
+      padding: 2px 8px;
+      background: var(--red-l);
+      color: var(--red-d);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+    }
+    .mini.draws .crs {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    @media (max-width: 980px) { .triple { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       SECTION D — OP-ED (brand voice)
+    ============================================================ */
+    .oped {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 72px 48px;
+    }
+    .oped-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .oped-text { padding-top: 12px; }
+    .oped-text .head {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      margin-bottom: 22px;
+    }
+    .oped-text h2 {
+      font-family: var(--display);
+      font-weight: 500;
+      font-style: italic;
+      font-size: clamp(36px, 5.4vw, 64px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--paper);
+      margin-bottom: 24px;
+    }
+    .oped-text h2 b { color: var(--red); font-style: normal; font-weight: 700; }
+    .oped-text p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(251,248,241,0.78);
+      margin-bottom: 1em;
+    }
+    .oped-text p strong { color: var(--paper); font-weight: 600; }
+    .oped-text .sig {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(251,248,241,0.5);
+    }
+    .oped-text .sig b { color: var(--paper); }
+
+    .oped-card {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 24px 22px 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 12px 12px 0 var(--red);
+    }
+    .oped-card .head-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 14px;
+    }
+    .oped-card .head-row .ph {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--paper-3);
+    }
+    .oped-card .head-row .ph img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.3); }
+    .oped-card .head-row .who h4 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    .oped-card .head-row .who p {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 2px;
+    }
+    .oped-card dl > div {
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--rule);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .oped-card dl > div:last-child { border-bottom: 0; }
+    .oped-card dt {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .oped-card dd {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+    }
+    @media (max-width: 880px) {
+      .oped-inner { grid-template-columns: 1fr; gap: 36px; }
+      .oped { padding: 48px 22px; }
+    }
+
+    /* ============================================================
+       SECTION E — SOCIAL COLUMN (Turkish handle)
+    ============================================================ */
+    .social {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 64px 48px;
+    }
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .tile {
+      aspect-ratio: 1 / 1;
+      padding: 14px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .tile:hover { transform: translateY(-3px); border-color: var(--ink); }
+    .tile.red { background: var(--red); border-color: var(--red); }
+    .tile.red .top, .tile.red .body, .tile.red .foot { color: var(--paper); }
+    .tile.dark { background: var(--ink); border-color: var(--ink); }
+    .tile.dark .top { color: var(--red); }
+    .tile.dark .body, .tile.dark .foot { color: var(--paper); }
+    .tile .top {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .tile .body {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .tile .body em { font-style: italic; color: var(--red); }
+    .tile.red .body em, .tile.dark .body em { color: var(--paper); }
+    .tile .foot {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--ink-4);
+    }
+    @media (max-width: 720px) { .social-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 480px) { .social-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ============================================================
+       SECTION F — MARKET PAGE (palette + scope as listings)
+    ============================================================ */
+    .market {
+      background: var(--paper-2);
+      border-top: 4px double var(--ink);
+      border-bottom: 4px double var(--ink);
+      padding: 64px 48px;
+    }
+    .market-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .market-grid h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 18px;
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .chip {
+      aspect-ratio: 4 / 3;
+      padding: 14px;
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .chip.red   { background: var(--red); color: var(--paper); }
+    .chip.white { background: #ffffff; }
+    .chip.cream { background: var(--paper-3); }
+    .chip.ink   { background: var(--ink); color: var(--paper); }
+    .chip .role {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .chip .name {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+    .chip .hex {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      opacity: 0.78;
+      margin-top: 3px;
+    }
+
+    .market-listings table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .market-listings th {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--ink);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+    .market-listings td {
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--ink-2);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .market-listings tr:last-child td { border-bottom: 0; }
+    .market-listings .num {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      width: 50px;
+    }
+    .market-listings .name {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      width: 200px;
+    }
+    .market-listings .out {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--red);
+      text-align: right;
+      white-space: nowrap;
+      width: 130px;
+    }
+    @media (max-width: 880px) {
+      .market { padding: 40px 22px; }
+      .market-inner { grid-template-columns: 1fr; gap: 32px; }
+      .market-listings thead { display: none; }
+      .market-listings, .market-listings tbody, .market-listings tr, .market-listings td { display: block; }
+      .market-listings tr { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+      .market-listings td { padding: 4px 0; border-bottom: 0; width: auto; }
+      .market-listings .out { text-align: left; }
+    }
+
+    /* ============================================================
+       END / CLASSIFIEDS
+    ============================================================ */
+    .end {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      text-align: center;
+    }
+    .end .lbl {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 22px;
+    }
+    .end h3 {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .end h3 b { font-style: normal; font-weight: 700; color: var(--red); }
+    .end p {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--ink-3);
+      max-width: 50ch;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .cta:hover { background: var(--red); }
+
+    .colophon {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 48px;
+      border-top: 4px double var(--ink);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: center;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .colophon strong { color: var(--ink); font-weight: 600; }
+    .colophon .center {
+      text-align: center;
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 17px;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      text-transform: none;
+      border-top: 1px solid var(--ink);
+      padding-top: 8px;
+      min-width: 240px;
+    }
+    .colophon .right { text-align: right; }
+    .colophon b { color: var(--red); }
+    @media (max-width: 720px) {
+      .colophon { grid-template-columns: 1fr; gap: 12px; text-align: center; padding: 24px 22px; }
+      .colophon .right, .colophon .center { text-align: center; }
+    }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="rail">
+    <span class="left">FrameFlow · Reel <b>019</b></span>
+    <span class="center">Northern Pathways · The Bilingual Edition</span>
+    <span class="right">Vol. <b>I</b> · No. 019 · 2026</span>
+  </header>
+
+  <!-- =================================================================
+       MASTHEAD
+  ==================================================================== -->
+  <header class="masthead">
+    <div class="masthead-flag">
+      <p class="flag-left">
+        Bilingual edition<br>
+        <small>EN ⇄ TR · Türkçe-İngilizce</small>
+      </p>
+      <span class="flag-mark">N<span style="color: var(--ink);">P</span></span>
+      <p class="flag-right">
+        <b>Vol. I</b> · No. 019<br>
+        <small>2 Apr 2026 · Toronto, ON</small>
+      </p>
+    </div>
+    <h1 class="masthead-title">The <em>Northern</em> Edition</h1>
+    <p class="masthead-sub">Reel · 019 <i>·</i> Northern Pathways Immigration Consulting <i>·</i> A FrameFlow Filing</p>
+  </header>
+
+  <!-- =================================================================
+       FRONT PAGE — three-column splash
+  ==================================================================== -->
+  <section class="front">
+    <div class="front-grid">
+      <!-- LEFT: meta column -->
+      <aside class="col-meta">
+        <p class="kicker">Counsel of record</p>
+        <h4 class="lede-h">A regulated practice, <em>led by</em> an RCIC.</h4>
+        <p>Northern Pathways is led by Burcu Akyol &mdash; Regulated Canadian Immigration Consultant in good standing with the College of ICC, adjunct professor at Queen&rsquo;s, CAPIC Board Member.</p>
+        <p>Most of the firm&rsquo;s prospective clients arrive through the Turkish-speaking diaspora. We needed to keep the warmth of word-of-mouth and the authority a regulator requires.</p>
+        <dl>
+          <div><dt>Engaged</dt><dd>Spring 2025</dd></div>
+          <div><dt>Site live</dt><dd>Apr 2026</dd></div>
+          <div><dt>Locales</dt><dd>EN · TR</dd></div>
+          <div><dt>Status</dt><dd style="color: var(--red);">● Live · ongoing</dd></div>
+        </dl>
+      </aside>
+
+      <span class="vline"></span>
+
+      <!-- CENTRE: splash story -->
+      <article class="col-splash">
+        <p class="kicker">Front Page · The Story <span class="by">Filed by FrameFlow</span></p>
+        <h1>Guiding a journey<br>in <em>two</em> languages.</h1>
+        <p class="deck">A multilingual website, a calculator suite, a live draws feed, and a Turkish-language Instagram for the Canada-bound diaspora.</p>
+        <div class="body">
+          <p>FrameFlow was retained by <strong>Northern Pathways Immigration Consulting</strong> to ship three things: a marketing site that reads as well in Turkish as it does in English, a pair of regulatory-grade calculators (CRS and FSWP) the firm could put a counsel&rsquo;s name to, and a live tracker indexing every IRCC Express Entry draw since 2015.</p>
+
+          <p>The brief was short. A regulated immigration practice cannot afford to be loose with numbers, and most of its prospective clients land on the site through Turkish-language search and word-of-mouth. The work had to feel <em>institutional</em> in both registers without losing the warmth that brings people to the door.</p>
+
+          <p>The site, at <strong>northernpathways.ca</strong>, runs at <strong>/en</strong> and <strong>/tr</strong> with first-class language detection. The home view holds the firm&rsquo;s tagline in italic serif &mdash; <em>guiding your journey with clarity</em> &mdash; and every other line is set in Montserrat, the locked typeface.</p>
+
+          <p>The CRS calculator follows IRCC&rsquo;s 2025 grid, including the recent <em>removal</em> of arranged-employment points and the return of category-based draws. The FSWP eligibility checker is a binary gate at <strong>67/100</strong>; both finish on a one-click PDF that a regulated counsel can sign.</p>
+        </div>
+      </article>
+
+      <span class="vline"></span>
+
+      <!-- RIGHT: TR dispatch + market box -->
+      <aside class="col-tr">
+        <span class="stamp">— Dispatch from the diaspora —</span>
+        <h2>Türkçe&rsquo;de <em>aynı</em> yayın.</h2>
+        <p class="deck-tr">İki dilli bir yayın. İki dil, tek ses, tek standart.</p>
+        <p>Northern Pathways&rsquo;ın çoğu müşterisi Türkçe arama yoluyla geliyor. <strong>@kanadadayeniyasam</strong> Instagram hesabı bu nedenle var: çekiliş günü özetleri, Reel&rsquo;ler, açıklamalar.</p>
+        <p>Ana sayfanın <em>aynı</em> tasarımı, <em>aynı</em> yapı, <em>aynı</em> hesap makineleri Türkçe&rsquo;de de yayında. RCIC mührü, başvuru formu ve PDF çıktısı &mdash; hepsi iki dilli.</p>
+
+        <article class="draw-box">
+          <p class="lbl">Latest draw · 02 Apr 2026</p>
+          <p class="big">504<small>CRS · Healthcare · 3,000 ITA</small></p>
+          <p>Lowest healthcare cutoff since the category-based draws began in summer 2023.</p>
+        </article>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION B — DUAL DISPATCH (EN ⇄ TR)
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="left">§ B · The matter</span>
+      <span class="center">A bilingual <em>brief.</em></span>
+      <span class="right"><b>EN ⇄ TR</b> · Side by side</span>
+    </header>
+
+    <div class="dual">
+      <article class="dispatch">
+        <span class="stamp">English · The brief</span>
+        <h3>What we were <em>retained for.</em></h3>
+        <p class="lede">A regulated immigration consultancy needed to be findable, bookable, and trustworthy &mdash; in two languages.</p>
+        <div class="body">
+          <p>FrameFlow was retained by Northern Pathways for three things: the marketing site at <strong>northernpathways.ca</strong>, the in-house <em>web application</em> (CRS calculator, FSWP eligibility checker, processing fees, onboarding form, one-time payment), and a live Express Entry draws feed.</p>
+          <p>Each tool earns its keep at the same standard the firm holds itself to as a <strong>Regulated Canadian Immigration Consultant</strong>: numbers verified to IRCC&rsquo;s 2025 rules, language reviewed by a native speaker, and each calculator finishing on a one-click PDF the firm could sign.</p>
+        </div>
+        <p class="by"><b>Filed by</b> · FrameFlow Studio · Toronto · Apr 2026</p>
+      </article>
+
+      <span class="vline"></span>
+
+      <article class="dispatch">
+        <span class="stamp tr">Türkçe · Dosya</span>
+        <h3>Bizden istenen <em>üç şey.</em></h3>
+        <p class="lede">Düzenlenmiş bir göçmenlik danışmanlığının hem güven verici hem ulaşılabilir olması gerekiyordu &mdash; üstelik iki dilde.</p>
+        <div class="body">
+          <p>FrameFlow, Northern Pathways için üç işi üstlendi: <strong>northernpathways.ca</strong>&rsquo;daki tanıtım sitesi, dahili <em>web uygulaması</em> (CRS ve FSWP hesaplayıcıları, başvuru formu, ödeme akışı) ve canlı Express Entry çekiliş takibi.</p>
+          <p>Her araç, firmanın kendi adına imzalamaktan çekinmeyeceği bir standartta inşa edildi: <strong>IRCC&rsquo;nin 2025 kuralları</strong>, ana dilde dil incelemesi, ve her hesaplayıcı için tek tıkla PDF çıktısı.</p>
+        </div>
+        <p class="by"><b>Yayın</b> · FrameFlow Stüdyosu · Toronto · Nisan 2026</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION C — EXHIBITS (work)
+  ==================================================================== -->
+  <section class="section reveal">
+    <header class="sect-head">
+      <span class="left">§ C · The work</span>
+      <span class="center">Three <em>exhibits</em> from the field.</span>
+      <span class="right"><b>03</b> · Tools live</span>
+    </header>
+
+    <div class="triple">
+      <!-- 01 · CRS Calculator -->
+      <article class="card">
+        <div class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">/en/crs-calculator</span>
+            <span class="lang"><span class="active">EN</span><span>TR</span></span>
+          </header>
+          <div class="mini">
+            <p class="h2">CRS · <em>Comprehensive</em> Ranking</p>
+            <div class="row"><span>Age · 32</span><b>110</b></div>
+            <div class="row"><span>Master&rsquo;s</span><b>135</b></div>
+            <div class="row"><span>CLB 9</span><b>124</b></div>
+            <div class="row"><span>Canadian work · 1y</span><b>35</b></div>
+            <div class="total">487<small>CRS / 1200</small></div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="label-row">
+            <span class="num">01</span>
+            <span class="lbl">Web application</span>
+          </div>
+          <h4>CRS <em>Calculator.</em></h4>
+          <p>The Comprehensive Ranking System estimator for the Express Entry pool. Every section of IRCC&rsquo;s 2025 grid, bilingual tooltips, one-click PDF.</p>
+        </div>
+      </article>
+
+      <!-- 02 · FSWP -->
+      <article class="card">
+        <div class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">/en/fswp-calculator</span>
+            <span class="lang"><span class="active">EN</span><span>TR</span></span>
+          </header>
+          <div class="mini fswp">
+            <p class="h2">FSWP · <em>67/100</em> cutoff</p>
+            <div class="row"><span>F.01 Age</span><b>12 / 12</b></div>
+            <div class="row"><span>F.02 Education</span><b>23 / 25</b></div>
+            <div class="row"><span>F.03 Language</span><b>24 / 28</b></div>
+            <div class="row"><span>F.04 Experience</span><b>11 / 15</b></div>
+            <div class="row"><span>F.06 Adaptability</span><b>8 / 10</b></div>
+            <p class="verdict">Eligible · 78 / 100</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="label-row">
+            <span class="num">02</span>
+            <span class="lbl">Web application</span>
+          </div>
+          <h4>FSWP <em>Eligibility.</em></h4>
+          <p>The Federal Skilled Worker Six Selection Factors. Pass/fail at 67/100, with the math itemised line-by-line and the result PDF-ready.</p>
+        </div>
+      </article>
+
+      <!-- 03 · Latest Draws -->
+      <article class="card">
+        <div class="frame">
+          <header class="chrome">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="url">/en/events</span>
+            <span class="lang"><span class="active">EN</span><span>TR</span></span>
+          </header>
+          <div class="mini draws">
+            <p class="h2">Latest <em>Draws</em></p>
+            <div class="row"><span>#347 · 02 Apr</span><span class="pill">Healthcare</span><span class="crs">504</span></div>
+            <div class="row"><span>#346 · 27 Mar</span><span class="pill">French</span><span class="crs">379</span></div>
+            <div class="row"><span>#345 · 20 Mar</span><span class="pill">PNP</span><span class="crs">736</span></div>
+            <div class="row"><span>#344 · 13 Mar</span><span class="pill">CEC</span><span class="crs">521</span></div>
+            <div class="row"><span>#343 · 06 Mar</span><span class="pill">Trades</span><span class="crs">421</span></div>
+            <div class="total" style="background: var(--red);">156<small>+ draws indexed</small></div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="label-row">
+            <span class="num">03</span>
+            <span class="lbl">Live data feed</span>
+          </div>
+          <h4>Latest <em>Draws.</em></h4>
+          <p>Every IRCC Express Entry &amp; PNP draw, indexed since 2015. Filterable by programme &amp; category, mirrored to Instagram on draw day.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION D — OP-ED  (Burcu / brand voice)
+  ==================================================================== -->
+  <section class="oped reveal">
+    <div class="oped-inner">
+      <article class="oped-text">
+        <p class="head">§ D · Op-Ed · Voice of counsel</p>
+        <h2>
+          Treat clients as <b>individuals,</b><br>
+          not <em>case numbers.</em>
+        </h2>
+        <p>The voice of the firm is not the voice of a regulator &mdash; it&rsquo;s the voice of a counsel. Plain language. Realistic expectations. Transparency about fees. The kind of ethical guidance the College of ICC actually asks of an RCIC, written down.</p>
+        <p>FrameFlow set the typeset to match. <strong>Italic serif for the tagline; sans for the document; mono for marginalia.</strong> The same voice in English and Turkish. The same warmth in both.</p>
+        <p class="sig">
+          <span><b>—</b> The brand voice</span>
+          <span><b>Northern Pathways</b> · 2026</span>
+        </p>
+      </article>
+
+      <aside class="oped-card">
+        <div class="head-row">
+          <div class="ph"><img src="../../../public/portfolio/northern-pathways/people/burcu-akyol.jpg" alt="Burcu Akyol, RCIC"></div>
+          <div class="who">
+            <h4>Burcu Akyol</h4>
+            <p>RCIC-IRB · Principal</p>
+          </div>
+        </div>
+        <dl>
+          <div><dt>College</dt><dd>RCIC-IRB · ICC</dd></div>
+          <div><dt>Board</dt><dd>CAPIC · Member</dd></div>
+          <div><dt>University</dt><dd>Queen&rsquo;s · Adjunct</dd></div>
+          <div><dt>Practice</dt><dd>Toronto, ON</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION E — SOCIAL COLUMN (Turkish handle)
+  ==================================================================== -->
+  <section class="social reveal">
+    <header class="sect-head">
+      <span class="left">§ E · Social column</span>
+      <span class="center"><em>Yeni</em> bir yaşam, dispatched.</span>
+      <span class="right"><b>@kanadadayeniyasam</b></span>
+    </header>
+
+    <div class="social-grid">
+      <div class="tile red">
+        <p class="top">04 · 02 Apr</p>
+        <p class="body">CRS <em>504</em><br>Healthcare</p>
+        <p class="foot">draw card</p>
+      </div>
+      <div class="tile">
+        <p class="top">Reel · :42</p>
+        <p class="body"><em>NCLC 7+</em><br>Fransızca bonusu</p>
+        <p class="foot">tr · explainer</p>
+      </div>
+      <div class="tile dark">
+        <p class="top">Carousel</p>
+        <p class="body">Post-Grad<br><em>Work Permit</em></p>
+        <p class="foot">8-slide</p>
+      </div>
+      <div class="tile">
+        <p class="top">Quote</p>
+        <p class="body"><em>“Yeni</em> bir yaşamın ilk adımı.”</p>
+        <p class="foot">brand line</p>
+      </div>
+      <div class="tile">
+        <p class="top">FAQ</p>
+        <p class="body">PNP <em>nedir?</em></p>
+        <p class="foot">tr · primer</p>
+      </div>
+      <div class="tile dark">
+        <p class="top">Reel · :28</p>
+        <p class="body">Burcu&rsquo;dan<br><em>10 dk</em> CRS</p>
+        <p class="foot">tr · consult</p>
+      </div>
+      <div class="tile red">
+        <p class="top">Card</p>
+        <p class="body">FSWP<br><em>67/100</em></p>
+        <p class="foot">en · primer</p>
+      </div>
+      <div class="tile">
+        <p class="top">Story</p>
+        <p class="body"><em>RCIC.</em><br>Düzenlenmiş.</p>
+        <p class="foot">credentials</p>
+      </div>
+      <div class="tile">
+        <p class="top">Tip</p>
+        <p class="body">CLB <em>9</em>+<br>French bonus</p>
+        <p class="foot">en · primer</p>
+      </div>
+      <div class="tile dark">
+        <p class="top">Reel · :22</p>
+        <p class="body">Onboarding<br><em>form</em>.</p>
+        <p class="foot">en · walkthrough</p>
+      </div>
+      <div class="tile">
+        <p class="top">Quote</p>
+        <p class="body"><em>Clarity</em><br>over scripts.</p>
+        <p class="foot">brand line</p>
+      </div>
+      <div class="tile red">
+        <p class="top">06 · 06 Mar</p>
+        <p class="body">CRS <em>421</em><br>Trades</p>
+        <p class="foot">draw card</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       SECTION F — MARKET PAGE (palette + scope)
+  ==================================================================== -->
+  <section class="market reveal">
+    <div class="market-inner">
+      <div class="market-grid">
+        <h3>Palette &amp; Type</h3>
+        <div class="palette">
+          <div class="chip red">
+            <span class="role">Primary · 12%</span>
+            <div><p class="name">Maple Red</p><p class="hex">#B92025</p></div>
+          </div>
+          <div class="chip white">
+            <span class="role">Surface · 60%</span>
+            <div><p class="name">White</p><p class="hex">#FFFFFF</p></div>
+          </div>
+          <div class="chip cream">
+            <span class="role">Tonal · 18%</span>
+            <div><p class="name">Off-white</p><p class="hex">#F9F9F9</p></div>
+          </div>
+          <div class="chip ink">
+            <span class="role">Ink · 10%</span>
+            <div><p class="name">Charcoal</p><p class="hex">#2C2B2B</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="market-listings">
+        <h3>Scope · what we filed</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Service</th>
+              <th>Description</th>
+              <th>Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">01</td>
+              <td class="name">Website Design</td>
+              <td>Multilingual marketing site (EN/TR) at northernpathways.ca with deep service pages, single-CTA architecture, language detection.</td>
+              <td class="out">12 routes · EN+TR</td>
+            </tr>
+            <tr>
+              <td class="num">02</td>
+              <td class="name">Web Application</td>
+              <td>CRS &amp; FSWP calculators, onboarding form, processing fees, one-time payment. Bilingual tooltips, in-app PDF export.</td>
+              <td class="out">2 calcs · 1 PDF</td>
+            </tr>
+            <tr>
+              <td class="num">03</td>
+              <td class="name">Latest Draws Feed</td>
+              <td>Live tracker indexing every IRCC EE &amp; PNP draw with invitations, CRS, programme, category. Filterable, subscribable.</td>
+              <td class="out">156+ draws</td>
+            </tr>
+            <tr>
+              <td class="num">04</td>
+              <td class="name">SEO</td>
+              <td>Two-locale sitemaps, schema markup, content briefs. Both languages indexed for the firm&rsquo;s key Turkish &amp; English queries.</td>
+              <td class="out">EN + TR</td>
+            </tr>
+            <tr>
+              <td class="num">05</td>
+              <td class="name">Social Media</td>
+              <td>Ongoing management of <em>@kanadadayeniyasam</em>. Draw-day summaries, Reels, consult-day takeovers, plain-language explainers.</td>
+              <td class="out">Instagram · ongoing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       END
+  ==================================================================== -->
+  <section class="end">
+    <p class="lbl">— Final edition —</p>
+    <h3>
+      Set the next <b>edition</b><br>
+      with FrameFlow.
+    </h3>
+    <p>
+      We bring restraint, precision, and bilingual craft to regulated
+      professional services. If your firm has a record worth keeping
+      &mdash; in any language &mdash; we&rsquo;d be glad to file it.
+    </p>
+    <a class="cta" href="#">Begin a project →</a>
+  </section>
+
+  <footer class="colophon">
+    <span>Filed by · <strong>FrameFlow</strong> · Toronto · MMXXVI</span>
+    <span class="center">FrameFlow ✕ Northern Pathways</span>
+    <span class="right">Reel <b>019</b> · Bilingual Edition</span>
+  </footer>
+
+  <script>
+    (() => {
+      const els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>
