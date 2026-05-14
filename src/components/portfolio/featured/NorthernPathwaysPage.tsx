@@ -673,6 +673,15 @@ export function NorthernPathwaysPage({ client }: Props) {
         {/* HERO ----------------------------------------------- */}
         <section className="np-hero">
           <div className="np-hero-inner">
+            <div className="np-hero-logo">
+              <Image
+                src="/portfolio/northern-pathways/logo/np-primary.png"
+                alt="Northern Pathways Immigration Consulting"
+                width={700}
+                height={400}
+                priority
+              />
+            </div>
             <p className="np-hero-meta">
               <span className="e">Case Study · {frameNumber}</span>
               <span className="sep">/</span>
@@ -1511,6 +1520,19 @@ export function NorthernPathwaysPage({ client }: Props) {
         .np-hero-inner {
           max-width: var(--max);
           margin: 0 auto;
+        }
+        .np-hero-logo {
+          margin-bottom: clamp(40px, 5vw, 64px);
+          padding-bottom: clamp(32px, 4vw, 48px);
+          border-bottom: 1px solid var(--ink-5);
+        }
+        .np-hero-logo :global(img) {
+          display: block;
+          width: auto;
+          height: clamp(72px, 9vw, 112px);
+          max-width: 100%;
+          object-fit: contain;
+          object-position: left center;
         }
         .np-hero-meta {
           display: flex;
