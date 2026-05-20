@@ -226,121 +226,189 @@ function Website() {
 function Crs() {
   return (
     <div className="np-crs">
-      <header className="np-crs-head">
-        <span className="step">02 / 06</span>
-        <span className="crumb">
-          Section <b>B · Human Capital</b>
-        </span>
-        <span className="progress">
-          <span className="on" />
-          <span className="on" />
-          <span />
-          <span />
-          <span />
-          <span />
-        </span>
-        <span className="save">
-          Auto-saved <b>14:32</b>
-        </span>
-      </header>
+      <div className="calc-stage" data-anim="on">
+        {/* FORM VIEW ------------------------------------------ */}
+        <div className="view form">
+          <div className="form-grid">
+            <aside className="calc-sidebar">
+              <h4>Assessment Factors</h4>
+              <ul>
+                <li className="blue"   data-step="1"><span className="ic">👤</span><span className="nm">Age</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="pink"   data-step="2"><span className="ic">💍</span><span className="nm">Marital Status</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="red"    data-step="3"><span className="ic">🎓</span><span className="nm">Education</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="blue"   data-step="4"><span className="ic">🗣️</span><span className="nm">Language Proficiency</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="green"  data-step="5"><span className="ic">💼</span><span className="nm">Work Experience</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="purple" data-step="6"><span className="ic">⭐</span><span className="nm">Additional Factors</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+              </ul>
+            </aside>
 
-      <div className="np-crs-body">
-        <div className="np-crs-form">
-          <header className="head">
-            <p className="lbl">Section B · Core / Human Capital</p>
-            <h4>Tell us about your background</h4>
-            <p>
-              Each field maps to an IRCC selection criterion. Hover for the
-              source spec.
+            <main className="calc-panel">
+              {/* Pane 1 · Age */}
+              <div className="pane p1">
+                <div className="head"><span className="av blue">👤</span><h2>Age</h2></div>
+                <label>How old are you? <span className="req">*</span></label>
+                <div className="select s1"><span className="placeholder">Select</span><span className="picked">32 years old</span></div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 2 · Marital Status */}
+              <div className="pane p2">
+                <div className="head"><span className="av pink">💍</span><h2>Marital Status</h2></div>
+                <label>Are you married or in a common-law relationship? <span className="req">*</span></label>
+                <div className="select s2"><span className="placeholder">Select</span><span className="picked">Married — spouse not accompanying</span></div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 3 · Education */}
+              <div className="pane p3">
+                <div className="head"><span className="av red">🎓</span><h2>Education</h2></div>
+                <label>What is your highest level of education? <span className="req">*</span></label>
+                <div className="select s3"><span className="placeholder">Select</span><span className="picked">Master&rsquo;s degree — ECA verified</span></div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 4 · Language Proficiency */}
+              <div className="pane p4">
+                <div className="head"><span className="av blue">🗣️</span><h2>Language Proficiency</h2></div>
+                <div className="info-card blue"><b>First official language (English)</b> — CLB across all four skills.</div>
+                <div className="row">
+                  <div>
+                    <label>Speaking</label>
+                    <div className="select s4a"><span className="placeholder">Select</span><span className="picked">CLB 9</span></div>
+                  </div>
+                  <div>
+                    <label>Listening</label>
+                    <div className="select s4b"><span className="placeholder">Select</span><span className="picked">CLB 9</span></div>
+                  </div>
+                  <div>
+                    <label>Reading</label>
+                    <div className="select s4c"><span className="placeholder">Select</span><span className="picked">CLB 9</span></div>
+                  </div>
+                  <div>
+                    <label>Writing</label>
+                    <div className="select s4d"><span className="placeholder">Select</span><span className="picked">CLB 9</span></div>
+                  </div>
+                </div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 5 · Work Experience */}
+              <div className="pane p5">
+                <div className="head"><span className="av green">💼</span><h2>Work Experience</h2></div>
+                <label>Foreign work experience (NOC TEER 0–3) <span className="req">*</span></label>
+                <div className="select s5a"><span className="placeholder">Select</span><span className="picked">3+ years — skilled, paid</span></div>
+                <label>Canadian work experience</label>
+                <div className="select s5b"><span className="placeholder">Select</span><span className="picked">1 year — full-time</span></div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 6 · Additional Factors */}
+              <div className="pane p6">
+                <div className="head"><span className="av purple">⭐</span><h2>Additional Factors</h2></div>
+                <label>Provincial nomination</label>
+                <div className="select s6a"><span className="placeholder">Select</span><span className="picked">None</span></div>
+                <label>Study in Canada</label>
+                <div className="select s6b"><span className="placeholder">Select</span><span className="picked">1–2 year credential</span></div>
+                <div className="pane-foot"><span className="btn-next">Calculate →</span></div>
+              </div>
+            </main>
+          </div>
+
+          {/* CTA + progress */}
+          <div className="calc-cta-wrap">
+            <span className="calc-cta"><span className="ic">🖩</span> Calculate My CRS Score →</span>
+            <p className="calc-progress">
+              Form progress:{" "}
+              <span className="pct">
+                <span className="v" data-v="0">0%</span>
+                <span className="v" data-v="13">13%</span>
+                <span className="v" data-v="27">27%</span>
+                <span className="v" data-v="40">40%</span>
+                <span className="v" data-v="60">60%</span>
+                <span className="v" data-v="75">75%</span>
+                <span className="v" data-v="100">100%</span>
+              </span>
             </p>
-          </header>
-          <div className="field on">
-            <span className="k">
-              Age
-              <small>32 years · at point of application</small>
-            </span>
-            <span className="v">110 / 110</span>
-          </div>
-          <div className="field on">
-            <span className="k">
-              Education
-              <small>Master&rsquo;s degree · ECA verified</small>
-            </span>
-            <span className="v">135 / 150</span>
-          </div>
-          <div className="field on">
-            <span className="k">
-              English · CLB
-              <small>CLB 9 across all four skills</small>
-            </span>
-            <span className="v">124 / 136</span>
-          </div>
-          <div className="field on">
-            <span className="k">
-              French · NCLC
-              <small>NCLC 7+ · bonus path eligible</small>
-            </span>
-            <span className="v">25 / 50</span>
-          </div>
-          <div className="field">
-            <span className="k">
-              Canadian work
-              <small>1 year · NOC TEER 0–3</small>
-            </span>
-            <span className="v">35 / 80</span>
-          </div>
-          <div className="field">
-            <span className="k">
-              Foreign work
-              <small>3+ years · skilled, paid</small>
-            </span>
-            <span className="v">25 / 50</span>
+            <div className="calc-progress-bar"><span /></div>
           </div>
         </div>
 
-        <aside className="np-crs-readout">
-          <article className="np-crs-score">
-            <p className="lbl">Your CRS score</p>
-            <p className="num">
-              487<small>of 1,200 maximum</small>
-            </p>
-            <div className="bar">
-              <span />
+        {/* RESULTS VIEW ---------------------------------------- */}
+        <div className="view results">
+          <div className="results-card">
+            <div className="results-head">
+              <h2>Your CRS Score</h2>
+              <p>Comprehensive Ranking System Score Breakdown</p>
             </div>
-            <p className="delta">
-              <span>This week&rsquo;s cutoff</span>
-              <span>
-                <b>539 · Healthcare</b>
-              </span>
-            </p>
-          </article>
+            <div className="results-score">
+              <div className="score-circle">
+                <div><div className="num">524</div><div className="lbl">Points</div></div>
+              </div>
+              <p className="results-total">Total CRS Score</p>
+            </div>
+            <div className="results-grid-wrap">
+              <p className="grid-head">Score Breakdown</p>
+              <div className="results-grid">
 
-          <article className="np-crs-section">
-            <p className="lbl">Breakdown by section</p>
-            <dl>
-              <div>
-                <dt>A · Core / Human Capital</dt>
-                <dd>404</dd>
-              </div>
-              <div>
-                <dt>B · Spouse Factors</dt>
-                <dd>—</dd>
-              </div>
-              <div>
-                <dt>C · Skill Transferability</dt>
-                <dd>50</dd>
-              </div>
-              <div>
-                <dt>D · Additional Points</dt>
-                <dd>
-                  33 <em>(FR)</em>
-                </dd>
-              </div>
-            </dl>
-          </article>
+                <article className="c-core">
+                  <div className="top"><h5>Core / Human capital factors</h5><span className="score">421</span></div>
+                  <ul>
+                    <li>Age = 110</li>
+                    <li>Level of education = 135</li>
+                    <li>Official Languages = 136</li>
+                    <li className="indent">· First Official Language = 136</li>
+                    <li className="indent">· Second Official Language = 0</li>
+                    <li>Canadian work experience = 40</li>
+                    <li className="subtotal">Subtotal — Core / Human capital factors = 421</li>
+                  </ul>
+                </article>
 
-          <p className="np-crs-cta">↓ Download signed PDF</p>
-        </aside>
+                <article className="c-spouse">
+                  <div className="top"><h5>Spouse factors</h5><span className="score">0</span></div>
+                  <ul>
+                    <li>Level of education = 0</li>
+                    <li>First Official Languages = 0</li>
+                    <li>Canadian work experience = 0</li>
+                    <li className="subtotal">Subtotal — Spouse factors = 0</li>
+                  </ul>
+                </article>
+
+                <article className="c-trans">
+                  <div className="top"><h5>Skill transferability factors</h5><span className="score">88</span></div>
+                  <ul>
+                    <li><b>Education (max 50)</b></li>
+                    <li className="indent">A) Language &amp; education = 50</li>
+                    <li className="indent">B) Canadian exp &amp; education = 25</li>
+                    <li className="indent italic">Subtotal = 50</li>
+                    <li><b>Foreign work experience (max 50)</b></li>
+                    <li className="indent">A) Language &amp; foreign exp = 25</li>
+                    <li className="indent">B) Canadian &amp; foreign exp = 13</li>
+                    <li className="indent italic">Subtotal = 38</li>
+                    <li>Certificate of qualification = 0</li>
+                    <li className="subtotal italic">Subtotal — Skill transferability = 88</li>
+                  </ul>
+                </article>
+
+                <article className="c-add">
+                  <div className="top"><h5>Additional points (max 600)</h5><span className="score">15</span></div>
+                  <ul>
+                    <li>Provincial nomination = 0</li>
+                    <li>Study in Canada = 15</li>
+                    <li>Sibling in Canada = 0</li>
+                    <li>French-language skills = 0</li>
+                    <li className="subtotal">Subtotal — Additional points = 15</li>
+                  </ul>
+                </article>
+
+              </div>
+            </div>
+            <div className="results-foot">
+              <button type="button" className="btn ghost">Hide Results</button>
+              <button type="button" className="btn red">Calculate New Score →</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
@@ -349,257 +417,353 @@ function Crs() {
 function Fswp() {
   return (
     <div className="np-fswp">
-      <header className="np-fswp-head">
-        <div>
-          <p className="lbl">Tool · Six Selection Factors</p>
-          <h4>FSWP Eligibility Checker</h4>
-        </div>
-        <span className="verdict">
-          Result <b>Eligible</b>
-        </span>
-      </header>
+      <div className="calc-stage" data-anim="on">
+        {/* FORM VIEW ------------------------------------------ */}
+        <div className="view form">
+          <div className="form-grid">
+            <aside className="calc-sidebar">
+              <h4>Assessment Factors</h4>
+              <ul>
+                <li className="blue"   data-step="1"><span className="ic">🗣️</span><span className="nm">Language Skills</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="green"  data-step="2"><span className="ic">🎓</span><span className="nm">Education</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="orange" data-step="3"><span className="ic">💼</span><span className="nm">Skilled Work</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="pink"   data-step="4"><span className="ic">👤</span><span className="nm">Age</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="purple" data-step="5"><span className="ic">🏢</span><span className="nm">Arranged Employment</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+                <li className="yellow" data-step="6"><span className="ic">⭐</span><span className="nm">Adaptability</span><span className="ind"><span className="spin" /><span className="check">✓</span></span></li>
+              </ul>
+            </aside>
 
-      <div className="np-fswp-grid">
-        <div className="np-fswp-factors">
-          {[
-            {
-              on: true,
-              name: "Language proficiency",
-              detail: "CLB 9 across reading, writing, speaking, listening",
-              max: "Max 28",
-              got: "24",
-            },
-            {
-              on: true,
-              name: "Education",
-              detail: "Master’s · ECA verified",
-              max: "Max 25",
-              got: "23",
-            },
-            {
-              on: true,
-              name: "Work experience",
-              detail: "3+ years · NOC TEER 0–3",
-              max: "Max 15",
-              got: "11",
-            },
-            {
-              on: true,
-              name: "Age",
-              detail: "32 years",
-              max: "Max 12",
-              got: "12",
-            },
-            {
-              on: false,
-              name: "Arranged employment",
-              detail: "not declared",
-              max: "Max 10",
-              got: "0",
-            },
-            {
-              on: true,
-              name: "Adaptability",
-              detail: "Spouse CLB 4+ · prior study",
-              max: "Max 10",
-              got: "3",
-            },
-          ].map((f) => (
-            <article
-              key={f.name}
-              className={`np-fswp-factor${f.on ? " on" : ""}`}
-            >
-              <span className="pip" />
-              <span className="name">
-                {f.name}
-                <small>{f.detail}</small>
+            <main className="calc-panel">
+              {/* Pane 1 · Language Proficiency */}
+              <div className="pane p1">
+                <div className="head"><span className="av blue">🗣️</span><h2>Language Proficiency</h2></div>
+
+                <div className="alert">
+                  <span className="ai">!</span>
+                  <div><b>Important Notice</b><br />Warning: Below CLB 7 — Not eligible to apply</div>
+                </div>
+
+                <div className="dual-test">
+                  <div className="test-card blue">
+                    <h6><span className="num">1</span>Language Test — 1</h6>
+                    <p className="hint">Which language test have you taken, or do you plan to take?<span className="req">&nbsp;*</span></p>
+                    <div className="select fs1"><span className="placeholder">Select test</span><span className="picked">CELPIP-G</span></div>
+                    <p className="scores-head">Language scores below</p>
+                    <div className="skill-grid">
+                      <div>
+                        <label>Listening *</label>
+                        <div className="select fs1a"><span className="placeholder">Select</span><span className="picked">10-12 (CLB 10)</span></div>
+                      </div>
+                      <div>
+                        <label>Speaking *</label>
+                        <div className="select fs1b"><span className="placeholder">Select</span><span className="picked">10-12 (CLB 10)</span></div>
+                      </div>
+                      <div>
+                        <label>Reading *</label>
+                        <div className="select fs1c"><span className="placeholder">Select</span><span className="picked">10-12 (CLB 10)</span></div>
+                      </div>
+                      <div>
+                        <label>Writing *</label>
+                        <div className="select fs1d"><span className="placeholder">Select</span><span className="picked">10-12 (CLB 10)</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="test-card green">
+                    <h6><span className="num">2</span>Language Test — 2</h6>
+                    <p className="hint">
+                      Use this option only if you want to include a second language
+                      test (English or French). If you do not plan to include one, you
+                      may leave this section blank.
+                    </p>
+                    <div className="select fs1e"><span className="placeholder">Select</span><span className="picked">None or not applicable</span></div>
+                  </div>
+                </div>
+
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 2 · Education */}
+              <div className="pane p2">
+                <div className="head"><span className="av green">🎓</span><h2>Education</h2></div>
+                <label>What is your highest level of education? <span className="req">*</span></label>
+                <div className="select fs2"><span className="placeholder">Select</span><span className="picked">Master&rsquo;s degree</span></div>
+                <div className="info-card green">
+                  <b>Per IRCC grid.</b> Doctorate = 25 · Master&rsquo;s or professional degree = 23 ·
+                  two or more credentials (one 3+ years) = 22 · bachelor = 21.
+                </div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 3 · Skilled Work */}
+              <div className="pane p3">
+                <div className="head"><span className="av orange">💼</span><h2>Skilled Work Experience</h2></div>
+                <label>How many years of skilled work experience do you have? <span className="req">*</span></label>
+                <div className="select fs3"><span className="placeholder">Select</span><span className="picked">2–3 years</span></div>
+                <div className="info-card orange">
+                  <b>NOC TEER 0, 1, 2 or 3 only.</b> Continuous paid work in the last
+                  ten years. Maximum 15 points at 6+ years; 1 year = 9 points.
+                </div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 4 · Age */}
+              <div className="pane p4">
+                <div className="head"><span className="av pink">👤</span><h2>Age</h2></div>
+                <label>What is your age? <span className="req">*</span></label>
+                <div className="select fs4"><span className="placeholder">Select</span><span className="picked">18–35 years</span></div>
+                <div className="info-card pink">
+                  <b>Peak window.</b> 18–35 awards the full 12 points; one point drops
+                  for each year from 36 onward, reaching 0 at age 47+.
+                </div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 5 · Arranged Employment */}
+              <div className="pane p5">
+                <div className="head"><span className="av purple">🏢</span><h2>Arranged Employment</h2></div>
+                <label>Do you have a valid job offer from a Canadian employer? <span className="req">*</span></label>
+                <div className="select fs5"><span className="placeholder">Select</span><span className="picked">No</span></div>
+                <div className="info-card purple">
+                  <b>Requires a positive LMIA</b>, or an LMIA-exempt offer that meets
+                  IRCC&rsquo;s employer compliance criteria. All-or-nothing: <b>0 or 10</b>.
+                </div>
+                <div className="pane-foot"><span className="btn-next">Next →</span></div>
+              </div>
+
+              {/* Pane 6 · Adaptability */}
+              <div className="pane p6">
+                <div className="head"><span className="av yellow">⭐</span><h2>Adaptability</h2></div>
+                <label>Select all factors that apply — cap of 10 points total:</label>
+                <div className="check-list">
+                  <div className="ck-item" data-c="1">
+                    <span className="box">✓</span>
+                    <span className="lbl">Previous Canadian study (1+ years)</span>
+                    <span className="pts">+5</span>
+                  </div>
+                  <div className="ck-item" data-c="2">
+                    <span className="box">✓</span>
+                    <span className="lbl">Previous Canadian work (1+ years)</span>
+                    <span className="pts">+10</span>
+                  </div>
+                  <div className="ck-item" data-c="3">
+                    <span className="box">✓</span>
+                    <span className="lbl">Relatives in Canada (citizen or PR)</span>
+                    <span className="pts">+5</span>
+                  </div>
+                </div>
+                <div className="info-card yellow">
+                  <b>Cap at 10.</b> Stack as many factors as apply — the total still
+                  won&rsquo;t exceed 10 points toward your FSWP score.
+                </div>
+                <div className="pane-foot"><span className="btn-next">Calculate →</span></div>
+              </div>
+            </main>
+          </div>
+
+          <div className="calc-cta-wrap">
+            <span className="calc-cta"><span className="ic">🖩</span> Calculate FSWP Score →</span>
+            <p className="calc-progress">
+              Form progress:{" "}
+              <span className="pct">
+                <span className="v" data-v="0">0%</span>
+                <span className="v" data-v="13">13%</span>
+                <span className="v" data-v="27">27%</span>
+                <span className="v" data-v="40">40%</span>
+                <span className="v" data-v="60">60%</span>
+                <span className="v" data-v="75">75%</span>
+                <span className="v" data-v="100">100%</span>
               </span>
-              <span className="max">{f.max}</span>
-              <span className="got">{f.got}</span>
-            </article>
-          ))}
+            </p>
+            <div className="calc-progress-bar"><span /></div>
+          </div>
         </div>
 
-        <aside className="np-fswp-readout">
-          <article className="np-fswp-meter">
-            <p className="lbl">Total · 6 factors</p>
-            <p className="num">
-              73<em>/100</em>
-              <small>67 to qualify · ELIGIBLE</small>
-            </p>
-            <div className="ruler">
-              <span className="track" />
-              <span className="fill" />
-              <span className="marker" />
-              <span className="dot" />
+        {/* RESULTS VIEW ---------------------------------------- */}
+        <div className="view results">
+          <div className="results-card">
+            <div className="results-head">
+              <h2>Your FSWP Score Results</h2>
+              <p>Federal Skilled Worker Program Score Breakdown</p>
             </div>
-          </article>
+            <div className="results-score">
+              <div className="score-circle">
+                <div><div className="num">78</div><div className="lbl">Points</div></div>
+              </div>
+              <p className="results-total">Total FSWP Score</p>
+            </div>
+            <div className="results-grid-wrap">
+              <div className="note-eligibility">
+                <b>Note:</b> To be eligible for the Federal Skilled Worker Program, you
+                must score at least <b>67 points</b> and meet all program requirements.
+              </div>
+              <p className="grid-head">Score Breakdown</p>
+              <div className="results-grid-fswp">
 
-          <article className="np-fswp-pass">
-            <span className="ic">✓</span>
-            <span className="t">
-              You qualify under FSWP.
-              <small>Next: see your CRS score and the latest draws</small>
-            </span>
-          </article>
-        </aside>
+                <article className="t-lang">
+                  <span className="lbl">Language skills<small>(maximum 28 points)</small></span>
+                  <span className="num">24</span>
+                </article>
+
+                <article className="t-adapt">
+                  <span className="lbl">Adaptability<small>(maximum 10 points)</small></span>
+                  <span className="num">10</span>
+                </article>
+
+                <article className="t-edu">
+                  <span className="lbl">Education<small>(maximum 25 points)</small></span>
+                  <span className="num">23</span>
+                </article>
+
+                <article className="t-emp">
+                  <span className="lbl">Arranged employment in Canada<small>(maximum 10 points)</small></span>
+                  <span className="num">0</span>
+                </article>
+
+                <article className="t-work">
+                  <span className="lbl">Skilled work experience<small>(maximum 15 points)</small></span>
+                  <span className="num">9</span>
+                </article>
+
+                <article className="t-age">
+                  <span className="lbl">Age<small>(maximum 12 points)</small></span>
+                  <span className="num">12</span>
+                </article>
+
+              </div>
+            </div>
+            <div className="results-foot">
+              <button type="button" className="btn ghost">Hide Results</button>
+              <button type="button" className="btn red">Calculate New Score →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 function Draws() {
+  const rows: ReadonlyArray<{
+    id: string;
+    date: string;
+    type: string;
+    cls: string;
+    inv: string;
+    cut: string;
+    trendDir: "down" | "up";
+    trendPct: string;
+  }> = [
+    { id: "#411", date: "May 11, 2026",   type: "Provincial Nominee Program",      cls: "p-pnp",    inv: "380",   cut: "798", trendDir: "down", trendPct: "3%"  },
+    { id: "#414", date: "April 29, 2026", type: "French Language proficiency (Version 2)", cls: "p-fr", inv: "4,000", cut: "400", trendDir: "down", trendPct: "16%" },
+    { id: "#418", date: "April 28, 2026", type: "Canadian Experience Class",       cls: "p-cec",    inv: "2,000", cut: "514", trendDir: "down", trendPct: "2%"  },
+    { id: "#412", date: "April 27, 2026", type: "Provincial Nominee Program",      cls: "p-pnp",    inv: "473",   cut: "795", trendDir: "down", trendPct: "4%"  },
+    { id: "#411", date: "April 15, 2026", type: "French Language proficiency (Version 2)", cls: "p-fr", inv: "4,000", cut: "429", trendDir: "up",   trendPct: "7%"  },
+    { id: "#428", date: "April 14, 2026", type: "Canadian Experience Class",       cls: "p-cec",    inv: "2,000", cut: "515", trendDir: "down", trendPct: "3%"  },
+    { id: "#409", date: "April 13, 2026", type: "Provincial Nominee Program",      cls: "p-pnp",    inv: "324",   cut: "786", trendDir: "down", trendPct: "4%"  },
+    { id: "#408", date: "April 2, 2026",  type: "Trades Occupations, 2026 Version 2", cls: "p-tr", inv: "3,000", cut: "477", trendDir: "down", trendPct: "7%"  },
+    { id: "#487", date: "March 31, 2026", type: "Canadian Experience Class",       cls: "p-cec",    inv: "2,250", cut: "509", trendDir: "down", trendPct: "4%"  },
+    { id: "#486", date: "March 30, 2026", type: "Provincial Nominee Program",      cls: "p-pnp",    inv: "356",   cut: "802", trendDir: "up",   trendPct: "1%"  },
+  ];
+
+  const chips: ReadonlyArray<{ name: string; count: number; on?: boolean }> = [
+    { name: "All Draws", count: 350, on: true },
+    { name: "General",   count: 59  },
+    { name: "PNP",       count: 97  },
+    { name: "CEC",       count: 26  },
+    { name: "French",    count: 40  },
+    { name: "Healthcare",count: 14  },
+    { name: "Trade",     count: 9   },
+    { name: "Other",     count: 15  },
+    { name: "Transport", count: 2   },
+    { name: "Education", count: 3   },
+    { name: "FSW",       count: 32  },
+  ];
+
   return (
-    <>
-      <header className="np-draws-head">
-        <div className="name">
-          <h4>IRCC Draws Tracker</h4>
-          <p>
-            156 <b>indexed</b> · since 15 Jun 2015
-          </p>
+    <div className="np-draws">
+      <header className="dr-banner">
+        <div className="dr-banner-l">
+          <span className="dr-bi">📅</span>
+          <div className="dr-banner-t">
+            <h4>Latest Express Entry Draws</h4>
+            <p>Real-time draw information</p>
+          </div>
         </div>
-        <span className="filter on">All draws</span>
-        <span className="filter">Healthcare</span>
-        <span className="filter">PNP</span>
+        <span className="dr-banner-r" aria-hidden="true">×</span>
       </header>
 
-      <section className="np-draws-spark">
-        <header className="top">
-          <p className="lbl">
-            — Cutoff trend
-            <b>last 12 months · all streams</b>
-          </p>
-          <p className="legend">
-            <span>
-              <span className="ms" />
-              General
+      <div className="dr-toolbar">
+        <p className="dr-toolbar-lbl">Filter by Type</p>
+        <div className="dr-chips">
+          {chips.map((c) => (
+            <span key={c.name} className={`dr-chip${c.on ? " on" : ""}`}>
+              {c.name} <em>{c.count}</em>
             </span>
-            <span>
-              <span className="mc" />
-              Category-based
-            </span>
-          </p>
-        </header>
-        <svg
-          viewBox="0 0 1000 90"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="np-rg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#b92025" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#b92025" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <line
-            x1="0"
-            y1="22"
-            x2="1000"
-            y2="22"
-            stroke="#2c2b2b22"
-            strokeDasharray="2 4"
-          />
-          <line
-            x1="0"
-            y1="56"
-            x2="1000"
-            y2="56"
-            stroke="#2c2b2b22"
-            strokeDasharray="2 4"
-          />
-          <path
-            d="M0,55 L83,46 L166,40 L250,52 L333,38 L416,32 L500,28 L583,42 L666,30 L750,22 L833,34 L916,26 L1000,20 L1000,90 L0,90 Z"
-            fill="url(#np-rg)"
-          />
-          <path
-            d="M0,55 L83,46 L166,40 L250,52 L333,38 L416,32 L500,28 L583,42 L666,30 L750,22 L833,34 L916,26 L1000,20"
-            fill="none"
-            stroke="#b92025"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M0,72 L83,68 L166,62 L250,58 L333,64 L416,52 L500,46 L583,40 L666,52 L750,44 L833,38 L916,46 L1000,38"
-            fill="none"
-            stroke="#2c2b2b"
-            strokeWidth="1.5"
-            strokeDasharray="5 4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="1000" cy="20" r="4" fill="#b92025" />
-          <circle cx="1000" cy="38" r="3" fill="#2c2b2b" />
-        </svg>
-        <div className="scale">
-          {[
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-          ].map((m) => (
-            <span key={m}>{m}</span>
           ))}
         </div>
-      </section>
+        <div className="dr-view">
+          <span className="dr-vw on">⊞ LEDGER</span>
+          <span className="dr-vw">📈 TRENDS</span>
+        </div>
+      </div>
 
-      <table className="np-draws-table">
-        <thead>
-          <tr>
-            <th>Draw</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th className="r">Invitations</th>
-            <th className="r">Cutoff</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            { id: "#347", date: "06 May 2026", cat: "Healthcare", catCls: "r", inv: "3,000", cut: "510", red: true },
-            { id: "#346", date: "02 May 2026", cat: "General",    catCls: "",  inv: "3,500", cut: "528", red: false },
-            { id: "#345", date: "28 Apr 2026", cat: "PNP",        catCls: "k", inv: "1,232", cut: "736", red: false },
-            { id: "#344", date: "23 Apr 2026", cat: "French",     catCls: "r", inv: "2,500", cut: "421", red: true },
-            { id: "#343", date: "16 Apr 2026", cat: "General",    catCls: "",  inv: "3,711", cut: "521", red: false },
-            { id: "#342", date: "09 Apr 2026", cat: "Trades",     catCls: "r", inv: "1,500", cut: "435", red: true },
-            { id: "#341", date: "02 Apr 2026", cat: "Healthcare", catCls: "r", inv: "3,500", cut: "504", red: true },
-            { id: "#340", date: "26 Mar 2026", cat: "PNP",        catCls: "k", inv: "1,015", cut: "733", red: false },
-          ].map((row) => (
-            <tr key={row.id}>
-              <td><span className="draw-id">{row.id}</span></td>
-              <td>{row.date}</td>
-              <td>
-                <span className={`pillc${row.catCls ? ` ${row.catCls}` : ""}`}>
-                  {row.cat}
-                </span>
-              </td>
-              <td className="r"><span className="num">{row.inv}</span></td>
-              <td className="r">
-                <span className={`num${row.red ? " red" : ""}`}>{row.cut}</span>
-              </td>
+      <div className="dr-pag">
+        <span className="dr-pag-prev">‹ Previous</span>
+        <span className="dr-pag-page">Page <b>1</b> of 17</span>
+        <span className="dr-pag-next">Next ›</span>
+        <span className="dr-pag-info">Showing <b>10</b> of <b>156</b> draws</span>
+      </div>
+
+      <div className="dr-table-wrap">
+        <table className="dr-table">
+          <thead>
+            <tr>
+              <th>Round #</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th className="r">Invitations</th>
+              <th className="r">CRS Score</th>
+              <th className="r">Trend</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={`${row.id}-${i}`}>
+                <td><span className="dr-id">{row.id}</span></td>
+                <td className="dim">{row.date}</td>
+                <td>
+                  <span className={`dr-pill ${row.cls}`}>{row.type}</span>
+                </td>
+                <td className="r dim">
+                  <span className="dr-inv">
+                    <span className="eye" aria-hidden="true">⊙</span>
+                    {row.inv}
+                  </span>
+                </td>
+                <td className="r">
+                  <span className="dr-score">
+                    <span className="arr" aria-hidden="true">↘</span>
+                    {row.cut}
+                  </span>
+                </td>
+                <td className="r">
+                  <span className={`dr-trend ${row.trendDir}`}>
+                    {row.trendDir === "down" ? "+ " : "− "}
+                    {row.trendPct} {row.trendDir}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <footer className="np-draws-foot">
-        <span>
-          Showing <b>8 of 156</b> draws ·{" "}
-          <em>auto-mirrored to @kanadadayeniyasam</em>
-        </span>
-        <span>
-          Next refresh in <b>02:42</b>
-        </span>
+      <footer className="dr-foot">
+        <span>Stay updated with the latest immigration draws.</span>
+        <button type="button" className="dr-refresh">↻ Refresh</button>
       </footer>
-    </>
+    </div>
   );
 }
 
@@ -1458,7 +1622,7 @@ export function NorthernPathwaysPage({ client }: Props) {
           --on-dark-3: rgba(255, 255, 255, 0.32);
           --on-dark-4: rgba(255, 255, 255, 0.14);
           --type:  "Montserrat", system-ui, sans-serif;
-          --max:   1320px;
+          --max:   1480px;
           --pad-x: clamp(20px, 5vw, 56px);
 
           background: var(--white);
@@ -2434,739 +2598,1445 @@ export function NorthernPathwaysPage({ client }: Props) {
           font-weight: 800;
         }
 
-        /* CRS CALCULATOR */
-        .np-crs { padding: 28px 28px 30px; }
-        .np-crs-head {
-          display: grid;
-          grid-template-columns: auto auto 1fr auto;
-          gap: 16px;
-          align-items: baseline;
-          padding-bottom: 14px;
-          border-bottom: 1px solid var(--ink-5);
-          margin-bottom: 22px;
-        }
-        .np-crs-head .step {
-          padding: 4px 10px;
-          background: var(--red);
-          color: var(--white);
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          border-radius: 3px;
-        }
-        .np-crs-head .crumb {
-          font-family: var(--type);
-          font-weight: 600;
-          font-size: 10px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink-3);
-        }
-        .np-crs-head .crumb b { color: var(--ink); font-weight: 800; }
-        .np-crs-head .progress {
-          display: flex;
-          gap: 4px;
-          align-items: center;
-        }
-        .np-crs-head .progress span {
-          width: 22px;
-          height: 4px;
-          background: var(--ink-5);
-          border-radius: 2px;
-        }
-        .np-crs-head .progress span.on { background: var(--red); }
-        .np-crs-head .save {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink-3);
-        }
-        .np-crs-head .save b { color: var(--ink); }
-        .np-crs-body {
-          display: grid;
-          grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-          gap: 22px;
-        }
-        .np-crs-form {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-        }
-        .np-crs-form .head {
-          padding: 8px 0 12px;
-          border-bottom: 1px solid var(--ink-5);
-        }
-        .np-crs-form .head .lbl {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-          margin-bottom: 4px;
-        }
-        .np-crs-form .head h4 {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 17px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-        }
-        .np-crs-form .head p {
-          font-family: var(--type);
-          font-weight: 500;
-          font-size: 11px;
-          color: var(--ink-3);
-          margin-top: 4px;
-        }
-        .np-crs-form .field {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 14px;
-          align-items: center;
-          padding: 10px 14px;
-          border: 1px solid var(--ink-5);
-          border-radius: 4px;
-          background: var(--white);
-        }
-        .np-crs-form .field.on {
-          border-color: var(--red);
-          box-shadow: 0 0 0 3px rgba(185, 32, 37, 0.08);
-        }
-        .np-crs-form .field .k {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 12px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-        }
-        .np-crs-form .field .k small {
-          display: block;
-          font-family: var(--type);
-          font-weight: 500;
-          font-size: 10px;
-          color: var(--ink-3);
-          margin-top: 3px;
-        }
-        .np-crs-form .field .v {
-          padding: 5px 10px;
-          background: var(--paper);
-          border: 1px solid var(--ink-5);
-          border-radius: 3px;
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 12px;
-          color: var(--ink);
-          min-width: 86px;
-          text-align: center;
-        }
-        .np-crs-form .field.on .v {
-          background: var(--white);
-          color: var(--red);
-          border-color: var(--red);
-        }
-        .np-crs-readout {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-        }
-        .np-crs-score {
-          padding: 22px 22px 24px;
-          background: var(--ink);
-          color: var(--white);
-          border-radius: 4px;
-          position: relative;
-          overflow: hidden;
-        }
-        .np-crs-score .lbl {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-          margin-bottom: 12px;
-        }
-        .np-crs-score .num {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 86px;
-          line-height: 0.85;
-          letter-spacing: -0.05em;
-          color: var(--white);
-        }
-        .np-crs-score .num small {
-          display: block;
-          margin-top: 8px;
-          font-family: var(--type);
-          font-weight: 600;
-          font-size: 10px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--on-dark-2);
-        }
-        .np-crs-score .bar {
-          margin-top: 16px;
-          height: 6px;
-          background: var(--on-dark-4);
-          border-radius: 3px;
-          overflow: hidden;
-        }
-        .np-crs-score .bar > span {
-          display: block;
-          height: 100%;
-          width: 40.6%;
-          background: var(--red);
-        }
-        .np-crs-score .delta {
-          margin-top: 12px;
-          display: flex;
-          justify-content: space-between;
-          gap: 12px;
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--on-dark-3);
-        }
-        .np-crs-score .delta b { color: var(--white); font-weight: 800; }
-        .np-crs-section {
-          padding: 14px 16px;
-          background: var(--paper);
-          border: 1px solid var(--ink-5);
-          border-radius: 4px;
-        }
-        .np-crs-section .lbl {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-          margin-bottom: 10px;
-        }
-        .np-crs-section dl > div {
-          display: flex;
-          justify-content: space-between;
-          gap: 10px;
-          padding: 5px 0;
-          border-top: 1px dashed var(--ink-5);
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 11px;
-          color: var(--ink-1);
-        }
-        .np-crs-section dl > div:first-child { border-top: 0; }
-        .np-crs-section dl dt { color: var(--ink-2); font-weight: 600; }
-        .np-crs-section dl dd { color: var(--red); font-weight: 800; }
-        .np-crs-section dl dd em {
-          font-style: italic;
-          color: var(--red);
-          font-weight: 700;
-        }
-        .np-crs-cta {
-          padding: 12px 14px;
-          background: var(--red);
-          color: var(--white);
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 11px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          text-align: center;
-          border-radius: 4px;
-        }
-        @media (max-width: 880px) {
-          .np-crs { padding: 20px; }
-          .np-crs-body { grid-template-columns: 1fr; }
-          .np-crs-head { grid-template-columns: auto auto 1fr; }
-          .np-crs-head .save { display: none; }
-          .np-crs-score .num { font-size: 64px; }
-        }
+        /* ╭───────────────────────────────────────────────╮
+           │ CRS + FSWP TOOL SHOWCASES — animated mockups │
+           ╰───────────────────────────────────────────────╯
+           Both calculators share the same calc-shell layout;
+           palette, sidebar colours, and section content differ. */
 
-        /* FSWP CHECKER */
-        .np-fswp { padding: 28px 28px 30px; }
-        .np-fswp-head {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 16px;
-          padding-bottom: 14px;
-          border-bottom: 1px solid var(--ink-5);
-          margin-bottom: 22px;
-          align-items: center;
-        }
-        .np-fswp-head h4 {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 17px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-          margin-bottom: 4px;
-        }
-        .np-fswp-head .lbl {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-        }
-        .np-fswp-head .verdict {
-          padding: 6px 14px;
-          border-radius: 3px;
-          background: var(--ink);
-          color: var(--white);
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 10px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-        }
-        .np-fswp-head .verdict b { color: var(--red); margin-left: 6px; }
-        .np-fswp-grid {
-          display: grid;
-          grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-          gap: 22px;
-        }
-        .np-fswp-factors {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .np-fswp-factor {
-          padding: 12px 14px;
-          border: 1px solid var(--ink-5);
-          border-radius: 4px;
-          background: var(--white);
-          display: grid;
-          grid-template-columns: 22px 1fr auto auto;
-          gap: 12px;
-          align-items: center;
-        }
-        .np-fswp-factor.on { border-color: var(--red); }
-        .np-fswp-factor .pip {
-          width: 18px;
-          height: 18px;
-          border: 2px solid var(--ink-4);
-          border-radius: 50%;
+        .np-crs, .np-fswp {
+          /* duration of one demo loop (sidebar pulse, form fill, results) */
+          --duration: 24s;
+
+          /* breakdown / pane color bands — faithful to live tool */
+          --blue-50:   #eff6ff; --blue-100:  #dbeafe; --blue-200:  #bfdbfe;
+          --blue-600:  #2563eb; --blue-700:  #1d4ed8; --blue-800:  #1e40af;
+          --pink-50:   #fdf2f8; --pink-100:  #fce7f3; --pink-200:  #fbcfe8;
+          --pink-600:  #db2777; --pink-700:  #be185d; --pink-800:  #9d174d;
+          --green-50:  #f0fdf4; --green-100: #dcfce7; --green-200: #bbf7d0;
+          --green-600: #16a34a; --green-700: #15803d; --green-800: #166534;
+          --purple-50: #faf5ff; --purple-100:#f3e8ff; --purple-200:#e9d5ff;
+          --purple-600:#9333ea; --purple-700:#7e22ce; --purple-800:#6b21a8;
+          --yellow-50: #fefce8; --yellow-100:#fef9c3; --yellow-200:#fef08a;
+          --yellow-300:#fde047; --yellow-600:#ca8a04; --yellow-700:#a16207; --yellow-800:#854d0e;
+          --orange-50: #fff7ed; --orange-100:#ffedd5; --orange-200:#fed7aa;
+          --orange-600:#ea580c; --orange-700:#c2410c; --orange-800:#9a3412;
+          --rose-50:   #fff1f2; --rose-100:  #ffe4e6; --rose-200:  #fecdd3;
+          --rose-600:  #e11d48; --rose-800:  #9f1239;
+          --red-d:     #8e1318;
+          --red-100:   #fde8e9;
+          --inkc-2:    #4a4847;
+          --inkc-3:    #807c79;
+          --inkc-4:    #b7b3af;
+          --inkc-5:    #e2dfdc;
+
           position: relative;
+          padding: clamp(20px, 3vw, 32px);
+          background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, var(--red-100) 100%);
+          overflow: hidden;
         }
-        .np-fswp-factor.on .pip { border-color: var(--red); }
-        .np-fswp-factor.on .pip::after {
+        .np-crs::before, .np-fswp::before {
           content: "";
           position: absolute;
-          inset: 3px;
-          background: var(--red);
-          border-radius: 50%;
-        }
-        .np-fswp-factor .name {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 12px;
-          color: var(--ink);
-        }
-        .np-fswp-factor .name small {
-          display: block;
-          font-family: var(--type);
-          font-weight: 500;
-          font-size: 10px;
-          color: var(--ink-3);
-          margin-top: 2px;
-        }
-        .np-fswp-factor .max {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink-3);
-        }
-        .np-fswp-factor .got {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 13px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-          min-width: 38px;
-          text-align: right;
-        }
-        .np-fswp-factor.on .got { color: var(--red); }
-        .np-fswp-readout {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-        }
-        .np-fswp-meter {
-          padding: 22px 22px 24px;
-          background: var(--paper);
-          border: 1px solid var(--ink-5);
-          border-radius: 4px;
-        }
-        .np-fswp-meter .lbl {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-          margin-bottom: 12px;
-        }
-        .np-fswp-meter .num {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 72px;
-          line-height: 0.85;
-          letter-spacing: -0.05em;
-          color: var(--ink);
-        }
-        .np-fswp-meter .num em {
-          font-family: var(--type);
-          font-style: italic;
-          font-weight: 500;
-          color: var(--red);
-        }
-        .np-fswp-meter .num small {
-          display: block;
-          margin-top: 8px;
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 10px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--ink-3);
-        }
-        .np-fswp-meter .ruler {
-          margin-top: 16px;
-          position: relative;
-          height: 28px;
-        }
-        .np-fswp-meter .ruler .track {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          right: 0;
-          transform: translateY(-50%);
-          height: 4px;
-          background: var(--ink-5);
-          border-radius: 2px;
-        }
-        .np-fswp-meter .ruler .fill {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          height: 4px;
-          width: 73%;
-          background: var(--red);
-          border-radius: 2px;
-        }
-        .np-fswp-meter .ruler .marker {
-          position: absolute;
-          top: 50%;
-          left: 67%;
-          transform: translate(-50%, -50%);
-          width: 2px;
-          height: 16px;
-          background: var(--ink);
-        }
-        .np-fswp-meter .ruler .marker::after {
-          content: "67 · pass mark";
-          position: absolute;
-          top: 18px;
-          left: 50%;
-          transform: translateX(-50%);
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 8px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink);
-          white-space: nowrap;
-        }
-        .np-fswp-meter .ruler .dot {
-          position: absolute;
-          top: 50%;
-          left: 73%;
-          width: 14px;
-          height: 14px;
-          transform: translate(-50%, -50%);
-          background: var(--red);
-          border: 3px solid var(--white);
-          box-shadow: 0 0 0 1px var(--red);
-          border-radius: 50%;
-        }
-        .np-fswp-pass {
-          padding: 12px 14px;
-          background: var(--ink);
-          color: var(--white);
-          border-radius: 4px;
-          display: grid;
-          grid-template-columns: auto 1fr;
-          gap: 14px;
-          align-items: center;
-        }
-        .np-fswp-pass .ic {
-          width: 28px;
-          height: 28px;
-          background: var(--red);
-          color: var(--white);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 4px;
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 14px;
-        }
-        .np-fswp-pass .t {
-          font-family: var(--type);
-          font-weight: 700;
-          font-size: 12px;
-          letter-spacing: -0.005em;
-          color: var(--white);
-        }
-        .np-fswp-pass .t small {
-          display: block;
-          font-family: var(--type);
-          font-weight: 500;
-          font-size: 10px;
-          color: var(--on-dark-2);
-          margin-top: 3px;
-        }
-        @media (max-width: 880px) {
-          .np-fswp { padding: 20px; }
-          .np-fswp-grid { grid-template-columns: 1fr; }
-          .np-fswp-meter .num { font-size: 56px; }
+          inset: 0;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse 600px 220px at 90% 10%, rgba(185, 32, 37, 0.06), transparent 60%),
+            radial-gradient(ellipse 500px 200px at 10% 90%, rgba(185, 32, 37, 0.04), transparent 60%);
         }
 
-        /* DRAWS TRACKER */
-        .np-draws-head {
-          padding: 22px 28px;
-          border-bottom: 1px solid var(--ink-5);
+        .np-crs .calc-stage,
+        .np-fswp .calc-stage {
+          position: relative;
+        }
+        /* reserve enough height for the tallest view (form OR results) so the
+           absolutely-positioned results card never overflows the parent's
+           overflow:hidden gradient clip */
+        .np-crs  .calc-stage { min-height: 640px; }
+        .np-fswp .calc-stage { min-height: 720px; }
+        .np-crs .view,
+        .np-fswp .view {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.6s ease;
+        }
+        .np-crs .view.form,
+        .np-fswp .view.form { position: relative; opacity: 1; }
+        .np-crs .view.results,
+        .np-fswp .view.results { opacity: 0; }
+        .np-crs .calc-stage[data-anim="on"] .view.form,
+        .np-fswp .calc-stage[data-anim="on"] .view.form     { animation: showForm    var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .view.results,
+        .np-fswp .calc-stage[data-anim="on"] .view.results  { animation: showResults var(--duration) linear infinite; }
+        @keyframes showForm {
+          0%, 75%   { opacity: 1; }
+          78%, 95%  { opacity: 0; }
+          98%, 100% { opacity: 1; }
+        }
+        @keyframes showResults {
+          0%, 75%   { opacity: 0; transform: translateY(8px); }
+          78%, 95%  { opacity: 1; transform: translateY(0); }
+          98%, 100% { opacity: 0; transform: translateY(8px); }
+        }
+
+        .np-crs .form-grid,
+        .np-fswp .form-grid {
           display: grid;
-          grid-template-columns: 1fr auto auto auto;
+          grid-template-columns: 240px minmax(0, 1fr);
           gap: 18px;
-          align-items: center;
         }
-        .np-draws-head .name h4 {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 17px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-          margin-bottom: 3px;
+
+        /* SIDEBAR ----------------------------------------- */
+        .np-crs .calc-sidebar,
+        .np-fswp .calc-sidebar {
+          background: var(--white);
+          border: 1px solid var(--inkc-5);
+          border-radius: 14px;
+          padding: 14px 12px;
+          box-shadow: 0 1px 0 #fff inset;
         }
-        .np-draws-head .name p {
-          font-family: var(--type);
-          font-weight: 600;
-          font-size: 10px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink-3);
-        }
-        .np-draws-head .name p b { color: var(--red); font-weight: 800; }
-        .np-draws-head .filter {
-          padding: 7px 12px;
-          background: var(--paper);
-          border: 1px solid var(--ink-5);
-          border-radius: 3px;
+        .np-crs .calc-sidebar h4,
+        .np-fswp .calc-sidebar h4 {
           font-family: var(--type);
           font-weight: 700;
-          font-size: 10px;
-          letter-spacing: 0.14em;
-          color: var(--ink-1);
+          font-size: 13px;
+          color: var(--ink);
+          margin: 2px 4px 12px;
+          letter-spacing: -0.01em;
         }
-        .np-draws-head .filter.on {
-          background: var(--red);
-          color: var(--white);
-          border-color: var(--red);
+        .np-crs .calc-sidebar ul,
+        .np-fswp .calc-sidebar ul {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          padding: 0;
+          margin: 0;
         }
-        .np-draws-spark {
-          padding: 18px 28px 22px;
-          border-bottom: 1px solid var(--ink-5);
-          background: var(--paper);
+        .np-crs .calc-sidebar li,
+        .np-fswp .calc-sidebar li {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 10px 11px;
+          border-radius: 9px;
+          background: #f6f6f6;
+          border: 1px solid transparent;
+          font-family: var(--type);
+          font-size: 12px;
+          font-weight: 500;
+          color: var(--ink);
+          transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .np-draws-spark .top {
+        .np-crs .calc-sidebar li .ic,
+        .np-fswp .calc-sidebar li .ic {
+          width: 20px; height: 20px;
+          display: grid; place-items: center;
+          flex-shrink: 0;
+          font-size: 12px;
+        }
+        .np-crs .calc-sidebar li .nm,
+        .np-fswp .calc-sidebar li .nm {
+          flex: 1;
+          min-width: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .np-crs .calc-sidebar li .ind,
+        .np-fswp .calc-sidebar li .ind {
+          position: relative;
+          width: 14px; height: 14px;
+          flex-shrink: 0;
+        }
+        .np-crs .calc-sidebar li .ind .spin,
+        .np-fswp .calc-sidebar li .ind .spin {
+          position: absolute;
+          inset: 0;
+          border: 2px solid #f59e0b;
+          border-top-color: transparent;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          opacity: 1;
+        }
+        .np-crs .calc-sidebar li .ind .check,
+        .np-fswp .calc-sidebar li .ind .check {
+          position: absolute;
+          inset: 0;
           display: grid;
-          grid-template-columns: 1fr auto;
+          place-items: center;
+          color: #10b981;
+          font-size: 11px;
+          font-weight: 800;
+          line-height: 1;
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        .np-crs .calc-sidebar li.active .ind .spin,
+        .np-fswp .calc-sidebar li.active .ind .spin   { border-color: #fde68a; border-top-color: transparent; }
+        .np-crs .calc-sidebar li.active .ind .check,
+        .np-fswp .calc-sidebar li.active .ind .check  { color: #86efac; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .np-crs .calc-sidebar li.active,
+        .np-fswp .calc-sidebar li.active {
+          color: #fff;
+          box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.35);
+          border-width: 2px;
+        }
+        .np-crs .calc-sidebar li.blue.active,
+        .np-fswp .calc-sidebar li.blue.active   { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));     border-color: #3b82f6; }
+        .np-crs .calc-sidebar li.pink.active,
+        .np-fswp .calc-sidebar li.pink.active   { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));     border-color: #f472b6; }
+        .np-crs .calc-sidebar li.red.active,
+        .np-fswp .calc-sidebar li.red.active    { background: linear-gradient(90deg, var(--red), var(--red-d));              border-color: #ef4444; }
+        .np-crs .calc-sidebar li.green.active,
+        .np-fswp .calc-sidebar li.green.active  { background: linear-gradient(90deg, var(--green-600), var(--green-700));   border-color: #4ade80; }
+        .np-crs .calc-sidebar li.purple.active,
+        .np-fswp .calc-sidebar li.purple.active { background: linear-gradient(90deg, var(--purple-600), var(--purple-700)); border-color: #c084fc; }
+        .np-crs .calc-sidebar li.orange.active,
+        .np-fswp .calc-sidebar li.orange.active { background: linear-gradient(90deg, var(--orange-600), var(--orange-700)); border-color: #fb923c; }
+        .np-fswp .calc-sidebar li.yellow.active { background: linear-gradient(90deg, var(--yellow-600), var(--yellow-700)); border-color: #facc15; }
+
+        /* CRS sidebar windows (a1..a6) */
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] { animation: a1 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] { animation: a2 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] { animation: a3 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] { animation: a4 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] { animation: a5 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] { animation: a6 var(--duration) linear infinite; }
+        @keyframes a1 {
+          0%,   11% { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));   color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          12%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes a2 {
+          0%,   11% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          12%, 23%  { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));   color: #fff; border-color: #f472b6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          24%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes a3 {
+          0%,   23% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          24%, 35%  { background: linear-gradient(90deg, var(--red), var(--red-d));         color: #fff; border-color: #ef4444; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          36%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes a4 {
+          0%,   35% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          36%, 47%  { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));   color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          48%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes a5 {
+          0%,   47% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          48%, 59%  { background: linear-gradient(90deg, var(--green-600), var(--green-700)); color: #fff; border-color: #4ade80; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          60%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes a6 {
+          0%,   59% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          60%, 72%  { background: linear-gradient(90deg, var(--purple-600), var(--purple-700)); color: #fff; border-color: #c084fc; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          73%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+
+        /* FSWP sidebar windows (fa1..fa6) — different palette per step */
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] { animation: fa1 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] { animation: fa2 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] { animation: fa3 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] { animation: fa4 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] { animation: fa5 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] { animation: fa6 var(--duration) linear infinite; }
+        @keyframes fa1 {
+          0%,   11% { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));     color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          12%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes fa2 {
+          0%,   11% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          12%, 23%  { background: linear-gradient(90deg, var(--green-600), var(--green-700));   color: #fff; border-color: #4ade80; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          24%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes fa3 {
+          0%,   23% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          24%, 35%  { background: linear-gradient(90deg, var(--orange-600), var(--orange-700)); color: #fff; border-color: #fb923c; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          36%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes fa4 {
+          0%,   35% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          36%, 47%  { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));     color: #fff; border-color: #f472b6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          48%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes fa5 {
+          0%,   47% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          48%, 59%  { background: linear-gradient(90deg, var(--purple-600), var(--purple-700)); color: #fff; border-color: #c084fc; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          60%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+        @keyframes fa6 {
+          0%,   59% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+          60%, 72%  { background: linear-gradient(90deg, var(--yellow-600), var(--yellow-700)); color: #fff; border-color: #facc15; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+          73%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+        }
+
+        /* sidebar indicator state-swap (spinner opacity + check fade-in) */
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .spin  { animation: spin 0.8s linear infinite, sp1 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .spin  { animation: spin 0.8s linear infinite, sp2 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .spin  { animation: spin 0.8s linear infinite, sp3 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .spin  { animation: spin 0.8s linear infinite, sp4 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .spin  { animation: spin 0.8s linear infinite, sp5 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .spin,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .spin  { animation: spin 0.8s linear infinite, sp6 var(--duration) linear infinite; }
+
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .check { animation: ck1 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .check { animation: ck2 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .check { animation: ck3 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .check { animation: ck4 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .check { animation: ck5 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .check,
+        .np-fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .check { animation: ck6 var(--duration) linear infinite; }
+
+        @keyframes sp1 { 0%, 10% { opacity: 1; } 11%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes sp2 { 0%, 22% { opacity: 1; } 23%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes sp3 { 0%, 34% { opacity: 1; } 35%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes sp4 { 0%, 46% { opacity: 1; } 47%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes sp5 { 0%, 58% { opacity: 1; } 59%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes sp6 { 0%, 71% { opacity: 1; } 72%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+        @keyframes ck1 {
+          0%,   10% { opacity: 0; transform: scale(0.5); }
+          11%,  13% { opacity: 1; transform: scale(1.25); }
+          14%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes ck2 {
+          0%,   22% { opacity: 0; transform: scale(0.5); }
+          23%,  25% { opacity: 1; transform: scale(1.25); }
+          26%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes ck3 {
+          0%,   34% { opacity: 0; transform: scale(0.5); }
+          35%,  37% { opacity: 1; transform: scale(1.25); }
+          38%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes ck4 {
+          0%,   46% { opacity: 0; transform: scale(0.5); }
+          47%,  49% { opacity: 1; transform: scale(1.25); }
+          50%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes ck5 {
+          0%,   58% { opacity: 0; transform: scale(0.5); }
+          59%,  61% { opacity: 1; transform: scale(1.25); }
+          62%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+        @keyframes ck6 {
+          0%,   71% { opacity: 0; transform: scale(0.5); }
+          72%,  74% { opacity: 1; transform: scale(1.25); }
+          75%,  94% { opacity: 1; transform: scale(1); }
+          95%, 100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* MAIN PANEL + PANES ------------------------------ */
+        .np-crs .calc-panel,
+        .np-fswp .calc-panel {
+          background: var(--white);
+          border: 1px solid var(--inkc-5);
+          border-radius: 14px;
+          padding: 24px 24px 16px;
+          min-height: 440px;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
+        .np-fswp .calc-panel { min-height: 520px; }
+        .np-crs .calc-panel .pane,
+        .np-fswp .calc-panel .pane {
+          position: absolute;
+          inset: 24px 24px 16px;
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        .np-crs .calc-panel .pane h2,
+        .np-fswp .calc-panel .pane h2 {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 19px;
+          color: var(--ink);
+          letter-spacing: -0.01em;
+        }
+        .np-crs .calc-panel .pane .head,
+        .np-fswp .calc-panel .pane .head {
+          display: flex;
+          align-items: center;
           gap: 12px;
-          margin-bottom: 12px;
-          align-items: baseline;
+          margin-bottom: 20px;
         }
-        .np-draws-spark .top .lbl {
+        .np-crs .calc-panel .pane .head .av,
+        .np-fswp .calc-panel .pane .head .av {
+          width: 30px; height: 30px;
+          border-radius: 50%;
+          display: grid; place-items: center;
+          color: #fff;
+          font-size: 13px;
+          flex-shrink: 0;
+        }
+        .np-crs .av.blue,   .np-fswp .av.blue   { background: linear-gradient(135deg, var(--blue-600), var(--blue-700)); }
+        .np-crs .av.pink,   .np-fswp .av.pink   { background: linear-gradient(135deg, var(--pink-600), var(--pink-700)); }
+        .np-crs .av.red,    .np-fswp .av.red    { background: linear-gradient(135deg, var(--red), var(--red-d)); }
+        .np-crs .av.green,  .np-fswp .av.green  { background: linear-gradient(135deg, var(--green-600), var(--green-700)); }
+        .np-crs .av.purple, .np-fswp .av.purple { background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); }
+        .np-crs .av.orange, .np-fswp .av.orange { background: linear-gradient(135deg, var(--orange-600), var(--orange-700)); }
+        .np-crs .av.yellow, .np-fswp .av.yellow { background: linear-gradient(135deg, var(--yellow-600), var(--yellow-700)); }
+
+        .np-crs .calc-panel label,
+        .np-fswp .calc-panel label {
+          display: block;
           font-family: var(--type);
-          font-weight: 700;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-        }
-        .np-draws-spark .top .lbl b {
-          color: var(--ink);
-          font-weight: 800;
-          margin-left: 8px;
-        }
-        .np-draws-spark .top .legend {
-          display: flex;
-          gap: 14px;
-          font-family: var(--type);
+          font-size: 12.5px;
           font-weight: 600;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: var(--ink-3);
+          color: var(--ink);
+          margin-bottom: 8px;
         }
-        .np-draws-spark .top .legend span {
+        .np-crs .calc-panel label .req,
+        .np-fswp .calc-panel label .req,
+        .np-crs .calc-panel .req,
+        .np-fswp .calc-panel .req { color: var(--red); }
+
+        .np-crs .calc-panel .select,
+        .np-fswp .calc-panel .select {
+          width: 100%;
+          height: 42px;
+          background: #fff;
+          border: 1px solid var(--inkc-4);
+          border-radius: 8px;
+          padding: 0 14px;
+          font-family: var(--type);
+          font-size: 13px;
+          color: var(--inkc-3);
           display: flex;
           align-items: center;
-          gap: 6px;
+          justify-content: space-between;
+          margin-bottom: 14px;
+          transition: border-color 0.3s ease, color 0.3s ease;
+          position: relative;
         }
-        .np-draws-spark .top .legend .ms {
-          display: inline-block;
-          width: 18px;
-          height: 2px;
-          background: var(--red);
+        .np-crs .calc-panel .select::after,
+        .np-fswp .calc-panel .select::after {
+          content: "▾";
+          color: var(--inkc-3);
+          font-size: 11px;
         }
-        .np-draws-spark .top .legend .mc {
-          display: inline-block;
-          width: 18px;
-          height: 2px;
-          background: var(--ink);
-        }
-        .np-draws-spark svg {
-          width: 100%;
-          height: 90px;
-          display: block;
-        }
-        .np-draws-spark .scale {
+        .np-crs .calc-panel .row,
+        .np-fswp .calc-panel .row {
           display: grid;
-          grid-template-columns: repeat(13, 1fr);
-          gap: 0;
-          margin-top: 4px;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
         }
-        .np-draws-spark .scale span {
+
+        .np-crs .calc-panel .info-card,
+        .np-fswp .calc-panel .info-card {
+          border-radius: 10px;
+          padding: 12px 14px;
+          border-left: 4px solid;
+          margin-bottom: 12px;
+          font-family: var(--type);
+          font-size: 12px;
+          color: var(--inkc-2);
+          line-height: 1.5;
+        }
+        .np-crs .calc-panel .info-card.blue,
+        .np-fswp .calc-panel .info-card.blue   { background: linear-gradient(90deg, var(--blue-50), var(--blue-100));   border-color: var(--blue-600); }
+        .np-fswp .calc-panel .info-card.green  { background: linear-gradient(90deg, var(--green-50), var(--green-100)); border-color: var(--green-600); }
+        .np-fswp .calc-panel .info-card.pink   { background: linear-gradient(90deg, var(--pink-50), var(--pink-100));   border-color: var(--pink-600); }
+        .np-fswp .calc-panel .info-card.yellow { background: linear-gradient(90deg, var(--yellow-50), var(--yellow-100)); border-color: var(--yellow-600); }
+        .np-fswp .calc-panel .info-card.orange { background: linear-gradient(90deg, var(--orange-50), var(--orange-100)); border-color: var(--orange-600); }
+        .np-fswp .calc-panel .info-card.purple { background: linear-gradient(90deg, var(--purple-50), var(--purple-100)); border-color: var(--purple-600); }
+        .np-crs .calc-panel .info-card b,
+        .np-fswp .calc-panel .info-card b { color: var(--ink); }
+
+        /* pane visibility windows */
+        .np-crs .calc-stage[data-anim="on"] .pane.p1,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p1 { animation: pa1 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .pane.p2,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p2 { animation: pa2 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .pane.p3,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p3 { animation: pa3 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .pane.p4,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p4 { animation: pa4 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .pane.p5,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p5 { animation: pa5 var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .pane.p6,
+        .np-fswp .calc-stage[data-anim="on"] .pane.p6 { animation: pa6 var(--duration) linear infinite; }
+        @keyframes pa1 { 0%, 10% { opacity: 1; transform: translateY(0); } 11%, 100% { opacity: 0; transform: translateY(-6px); } }
+        @keyframes pa2 { 0%, 11% { opacity: 0; transform: translateY(6px); } 12%, 22% { opacity: 1; transform: translateY(0); } 23%, 100% { opacity: 0; transform: translateY(-6px); } }
+        @keyframes pa3 { 0%, 23% { opacity: 0; transform: translateY(6px); } 24%, 34% { opacity: 1; transform: translateY(0); } 35%, 100% { opacity: 0; transform: translateY(-6px); } }
+        @keyframes pa4 { 0%, 35% { opacity: 0; transform: translateY(6px); } 36%, 46% { opacity: 1; transform: translateY(0); } 47%, 100% { opacity: 0; transform: translateY(-6px); } }
+        @keyframes pa5 { 0%, 47% { opacity: 0; transform: translateY(6px); } 48%, 58% { opacity: 1; transform: translateY(0); } 59%, 100% { opacity: 0; transform: translateY(-6px); } }
+        @keyframes pa6 { 0%, 59% { opacity: 0; transform: translateY(6px); } 60%, 71% { opacity: 1; transform: translateY(0); } 72%, 100% { opacity: 0; transform: translateY(-6px); } }
+
+        /* CRS select fill (s1..s6b) */
+        .np-crs .calc-panel .select.s1  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-crs .calc-panel .select.s2  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-crs .calc-panel .select.s3  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-crs .calc-panel .select.s4a { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+        .np-crs .calc-panel .select.s4b { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-crs .calc-panel .select.s4c { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+        .np-crs .calc-panel .select.s4d { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+        .np-crs .calc-panel .select.s5a { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+        .np-crs .calc-panel .select.s5b { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+        .np-crs .calc-panel .select.s6a { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+        .np-crs .calc-panel .select.s6b { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+        @keyframes fillSelect {
+          0%,  2%    { color: var(--inkc-3); border-color: var(--inkc-4); }
+          3%,  94%   { color: var(--ink); border-color: var(--inkc-3); }
+          95%, 100%  { color: var(--inkc-3); border-color: var(--inkc-4); }
+        }
+
+        .np-crs .calc-panel .select .placeholder,
+        .np-crs .calc-panel .select .picked,
+        .np-fswp .calc-panel .select .placeholder,
+        .np-fswp .calc-panel .select .picked {
+          transition: opacity 0.3s ease;
+        }
+        .np-crs .calc-panel .select .picked,
+        .np-fswp .calc-panel .select .picked { opacity: 0; position: absolute; }
+
+        /* CRS placeholder/picked swap */
+        .np-crs .calc-panel .select.s1 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-crs .calc-panel .select.s1 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-crs .calc-panel .select.s2 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-crs .calc-panel .select.s2 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-crs .calc-panel .select.s3 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-crs .calc-panel .select.s3 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-crs .calc-panel .select.s4a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+        .np-crs .calc-panel .select.s4a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+        .np-crs .calc-panel .select.s4b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-crs .calc-panel .select.s4b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-crs .calc-panel .select.s4c .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+        .np-crs .calc-panel .select.s4c .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+        .np-crs .calc-panel .select.s4d .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+        .np-crs .calc-panel .select.s4d .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+        .np-crs .calc-panel .select.s5a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+        .np-crs .calc-panel .select.s5a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+        .np-crs .calc-panel .select.s5b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+        .np-crs .calc-panel .select.s5b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+        .np-crs .calc-panel .select.s6a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+        .np-crs .calc-panel .select.s6a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+        .np-crs .calc-panel .select.s6b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+        .np-crs .calc-panel .select.s6b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+        @keyframes hidePlaceholder {
+          0%,   2%   { opacity: 1; }
+          3%,  94%   { opacity: 0; }
+          95%, 100%  { opacity: 1; }
+        }
+        @keyframes showPicked {
+          0%,   2%   { opacity: 0; transform: translateY(2px); }
+          3%,  94%   { opacity: 1; transform: translateY(0); }
+          95%, 100%  { opacity: 0; transform: translateY(2px); }
+        }
+
+        /* pane footer "Next →" -------------------------- */
+        .np-crs .calc-panel .pane-foot,
+        .np-fswp .calc-panel .pane-foot {
+          position: absolute;
+          left: 0; right: 0; bottom: 0;
+          padding-top: 16px;
+          border-top: 1px solid var(--inkc-5);
+          display: flex;
+          justify-content: flex-end;
+        }
+        .np-crs .calc-panel .btn-next,
+        .np-fswp .calc-panel .btn-next {
+          background: linear-gradient(90deg, var(--red), var(--red-d));
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 9px 18px;
           font-family: var(--type);
           font-weight: 600;
-          font-size: 8px;
-          letter-spacing: 0.14em;
-          color: var(--ink-3);
+          font-size: 12.5px;
+          letter-spacing: 0.01em;
+          box-shadow: 0 6px 12px -6px rgba(185, 32, 37, 0.6);
+        }
+
+        /* CTA + progress ------------------------------- */
+        .np-crs .calc-cta-wrap,
+        .np-fswp .calc-cta-wrap {
+          margin-top: 20px;
           text-align: center;
         }
-        .np-draws-table {
+        .np-crs .calc-cta,
+        .np-fswp .calc-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 11px 22px;
+          background: var(--inkc-4);
+          color: #fff;
+          border: none;
+          border-radius: 10px;
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 13.5px;
+          letter-spacing: 0.01em;
+          box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.2);
+          transition: background 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .np-crs .calc-stage[data-anim="on"] .calc-cta,
+        .np-fswp .calc-stage[data-anim="on"] .calc-cta { animation: ctaActivate var(--duration) linear infinite; }
+        @keyframes ctaActivate {
+          0%,   72% { background: #b7b3af; box-shadow: 0 8px 16px -8px rgba(0,0,0,0.2); }
+          73%,  75% { background: linear-gradient(90deg, var(--red), var(--red-d)); transform: scale(1.06); box-shadow: 0 12px 24px -8px rgba(185,32,37,0.55); }
+          76%, 100% { background: linear-gradient(90deg, var(--red), var(--red-d)); transform: scale(1); box-shadow: 0 8px 16px -8px rgba(185,32,37,0.4); }
+        }
+        .np-crs .calc-cta .ic,
+        .np-fswp .calc-cta .ic { font-size: 13px; }
+
+        .np-crs .calc-progress,
+        .np-fswp .calc-progress {
+          margin-top: 10px;
+          font-family: var(--type);
+          font-size: 11px;
+          font-weight: 500;
+          color: var(--inkc-3);
+          letter-spacing: 0.01em;
+        }
+        .np-crs .calc-progress .pct,
+        .np-fswp .calc-progress .pct {
+          /* inline-grid stacks all .v in one cell — container keeps real
+             intrinsic height so it baseline-aligns with "Form progress:" */
+          display: inline-grid;
+          grid-template: auto / auto;
+          vertical-align: baseline;
+          color: var(--red);
+          font-weight: 700;
+        }
+        .np-crs .calc-progress .pct .v,
+        .np-fswp .calc-progress .pct .v {
+          grid-column: 1;
+          grid-row: 1;
+          opacity: 0;
+        }
+        .np-crs .calc-progress .pct .v:first-child,
+        .np-fswp .calc-progress .pct .v:first-child { opacity: 1; }
+
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="0"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="0"]   { animation: pctV0   var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="13"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="13"]  { animation: pctV13  var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="27"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="27"]  { animation: pctV27  var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="40"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="40"]  { animation: pctV40  var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="60"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="60"]  { animation: pctV60  var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="75"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="75"]  { animation: pctV75  var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="100"],
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="100"] { animation: pctV100 var(--duration) linear infinite; }
+        @keyframes pctV0   { 0%, 9%   { opacity: 1; } 10%, 100% { opacity: 0; } }
+        @keyframes pctV13  { 0%, 9%   { opacity: 0; } 10%, 21%  { opacity: 1; } 22%, 100% { opacity: 0; } }
+        @keyframes pctV27  { 0%, 21%  { opacity: 0; } 22%, 33%  { opacity: 1; } 34%, 100% { opacity: 0; } }
+        @keyframes pctV40  { 0%, 33%  { opacity: 0; } 34%, 45%  { opacity: 1; } 46%, 100% { opacity: 0; } }
+        @keyframes pctV60  { 0%, 45%  { opacity: 0; } 46%, 57%  { opacity: 1; } 58%, 100% { opacity: 0; } }
+        @keyframes pctV75  { 0%, 57%  { opacity: 0; } 58%, 69%  { opacity: 1; } 70%, 100% { opacity: 0; } }
+        @keyframes pctV100 { 0%, 69%  { opacity: 0; } 70%, 100% { opacity: 1; } }
+
+        .np-crs .calc-progress-bar,
+        .np-fswp .calc-progress-bar {
+          margin: 8px auto 0;
+          height: 4px;
+          background: #ebe9e7;
+          border-radius: 4px;
+          overflow: hidden;
+          max-width: 320px;
+        }
+        .np-crs .calc-progress-bar > span,
+        .np-fswp .calc-progress-bar > span {
+          display: block;
+          height: 100%;
+          background: linear-gradient(90deg, var(--red), var(--red-d));
+          width: 0%;
+          border-radius: 4px;
+        }
+        .np-crs .calc-stage[data-anim="on"] .calc-progress-bar > span,
+        .np-fswp .calc-stage[data-anim="on"] .calc-progress-bar > span { animation: fillProgress var(--duration) linear infinite; }
+        @keyframes fillProgress {
+          0%   { width: 0%; }
+          10%  { width: 13%; }
+          22%  { width: 27%; }
+          34%  { width: 40%; }
+          46%  { width: 60%; }
+          58%  { width: 75%; }
+          70%  { width: 100%; }
+          75%, 100% { width: 100%; }
+        }
+
+        /* RESULTS CARD --------------------------------- */
+        .np-crs .results-card,
+        .np-fswp .results-card {
+          background: var(--white);
+          border: 1px solid var(--inkc-5);
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 24px 48px -32px rgba(0,0,0,0.25);
+        }
+        .np-crs .results-head,
+        .np-fswp .results-head {
+          background: linear-gradient(90deg, var(--red), var(--red-d));
+          padding: 26px 30px;
+          color: #fff;
+          text-align: center;
+        }
+        .np-crs .results-head h2,
+        .np-fswp .results-head h2 {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 24px;
+          margin-bottom: 5px;
+          letter-spacing: -0.01em;
+        }
+        .np-crs .results-head p,
+        .np-fswp .results-head p {
+          color: rgba(255,255,255,0.85);
+          font-family: var(--type);
+          font-size: 12.5px;
+        }
+        .np-crs .results-score {
+          padding: 32px 24px 28px;
+          text-align: center;
+          background: linear-gradient(135deg, var(--blue-50), #e8eefc);
+        }
+        .np-fswp .results-score {
+          padding: 32px 24px 28px;
+          text-align: center;
+          background: linear-gradient(135deg, #fffbeb, #fef9c3);
+        }
+        .np-crs .score-circle,
+        .np-fswp .score-circle {
+          width: 120px;
+          height: 120px;
+          margin: 0 auto 16px;
+          background: linear-gradient(135deg, var(--red), var(--red-d));
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          color: #fff;
+          box-shadow: 0 24px 32px -16px rgba(185, 32, 37, 0.55);
+          position: relative;
+        }
+        .np-crs .score-circle::before,
+        .np-fswp .score-circle::before {
+          content: "";
+          position: absolute;
+          inset: -8px;
+          border-radius: 50%;
+          border: 1.5px dashed rgba(185, 32, 37, 0.25);
+        }
+        .np-crs .score-circle .num,
+        .np-fswp .score-circle .num {
+          font-family: var(--type);
+          font-weight: 800;
+          font-size: 36px;
+          line-height: 1;
+          letter-spacing: -0.02em;
+        }
+        .np-crs .score-circle .lbl,
+        .np-fswp .score-circle .lbl {
+          font-family: var(--type);
+          font-size: 10.5px;
+          opacity: 0.9;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-top: 2px;
+        }
+        .np-crs .calc-stage[data-anim="on"] .score-circle,
+        .np-fswp .calc-stage[data-anim="on"] .score-circle { animation: scoreIn var(--duration) linear infinite; }
+        @keyframes scoreIn {
+          0%, 75%   { opacity: 0; transform: scale(0.7); }
+          78%, 95%  { opacity: 1; transform: scale(1); }
+          96%, 100% { opacity: 0; transform: scale(0.95); }
+        }
+        .np-crs .results-total,
+        .np-fswp .results-total {
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 17px;
+          color: var(--ink);
+        }
+        .np-crs .results-grid-wrap,
+        .np-fswp .results-grid-wrap {
+          padding: 22px 22px 16px;
+        }
+        .np-crs .results-grid-wrap .grid-head,
+        .np-fswp .results-grid-wrap .grid-head {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 13.5px;
+          margin-bottom: 12px;
+          color: var(--ink);
+        }
+
+        /* CRS results: 4-tile grid */
+        .np-crs .results-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 10px;
+        }
+        .np-crs .results-grid > article {
+          border: 1px solid;
+          border-radius: 10px;
+          padding: 12px;
+          font-family: var(--type);
+          font-size: 11px;
+          line-height: 1.5;
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        .np-crs .calc-stage[data-anim="on"] .results-grid > article { animation: cardIn var(--duration) linear infinite; }
+        .np-crs .calc-stage[data-anim="on"] .results-grid > article:nth-child(1) { animation-delay: calc(var(--duration) * 0.5/100); }
+        .np-crs .calc-stage[data-anim="on"] .results-grid > article:nth-child(2) { animation-delay: calc(var(--duration) * 1.5/100); }
+        .np-crs .calc-stage[data-anim="on"] .results-grid > article:nth-child(3) { animation-delay: calc(var(--duration) * 2.5/100); }
+        .np-crs .calc-stage[data-anim="on"] .results-grid > article:nth-child(4) { animation-delay: calc(var(--duration) * 3.5/100); }
+        @keyframes cardIn {
+          0%, 76%   { opacity: 0; transform: translateY(8px); }
+          79%, 96%  { opacity: 1; transform: translateY(0); }
+          97%, 100% { opacity: 0; transform: translateY(0); }
+        }
+        .np-crs .results-grid article .top {
+          display: flex; justify-content: space-between; align-items: baseline;
+          margin-bottom: 6px;
+        }
+        .np-crs .results-grid article h5 {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 12px;
+          line-height: 1.25;
+          max-width: 70%;
+        }
+        .np-crs .results-grid article .score {
+          font-family: var(--type);
+          font-weight: 800;
+          font-size: 20px;
+          letter-spacing: -0.02em;
+        }
+        .np-crs .results-grid article ul {
+          list-style: none; display: flex; flex-direction: column; gap: 2px;
+          padding: 0; margin: 0;
+        }
+        .np-crs .results-grid article ul li.indent { padding-left: 10px; }
+        .np-crs .results-grid article ul li.subtotal { font-weight: 700; padding-top: 4px; margin-top: 4px; border-top: 1px solid currentColor; opacity: 0.8; }
+        .np-crs .results-grid article ul li.italic { font-style: italic; }
+        .np-crs .results-grid article.c-core   { background: var(--blue-50);   border-color: var(--blue-200);   color: var(--blue-700); }
+        .np-crs .results-grid article.c-core   h5 { color: var(--blue-800); }
+        .np-crs .results-grid article.c-core   .score { color: var(--blue-600); }
+        .np-crs .results-grid article.c-spouse { background: var(--pink-50);   border-color: var(--pink-200);   color: var(--pink-700); }
+        .np-crs .results-grid article.c-spouse h5 { color: var(--pink-800); }
+        .np-crs .results-grid article.c-spouse .score { color: var(--pink-600); }
+        .np-crs .results-grid article.c-trans  { background: var(--green-50);  border-color: var(--green-200);  color: var(--green-700); }
+        .np-crs .results-grid article.c-trans  h5 { color: var(--green-800); }
+        .np-crs .results-grid article.c-trans  .score { color: var(--green-600); }
+        .np-crs .results-grid article.c-add    { background: var(--purple-50); border-color: var(--purple-200); color: var(--purple-700); }
+        .np-crs .results-grid article.c-add    h5 { color: var(--purple-800); }
+        .np-crs .results-grid article.c-add    .score { color: var(--purple-600); }
+
+        /* FSWP "Important Notice" red banner */
+        .np-fswp .alert {
+          display: flex; align-items: flex-start; gap: 10px;
+          padding: 10px 14px;
+          background: linear-gradient(90deg, #fef2f2, #fee2e2);
+          border: 1px solid #fecaca;
+          border-radius: 8px;
+          margin-bottom: 14px;
+          font-family: var(--type);
+          font-size: 12px;
+          color: #991b1b;
+          line-height: 1.45;
+        }
+        .np-fswp .alert .ai {
+          width: 18px; height: 18px;
+          border-radius: 50%;
+          background: #dc2626;
+          color: #fff;
+          display: grid; place-items: center;
+          font-weight: 800;
+          font-size: 11px;
+          flex-shrink: 0;
+          margin-top: 1px;
+        }
+        .np-fswp .alert b { color: #7f1d1d; font-weight: 700; }
+
+        /* FSWP dual test-card layout */
+        .np-fswp .dual-test {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+        .np-fswp .test-card {
+          border-radius: 10px;
+          padding: 12px 12px 10px;
+          border: 1px solid;
+        }
+        .np-fswp .test-card.blue  { background: linear-gradient(180deg, var(--blue-50), #fbfdff);  border-color: var(--blue-200); }
+        .np-fswp .test-card.green { background: linear-gradient(180deg, var(--green-50), #fcfffd); border-color: var(--green-200); }
+        .np-fswp .test-card h6 {
+          display: flex; align-items: center; gap: 7px;
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 12px;
+          margin-bottom: 6px;
+          letter-spacing: -0.005em;
+        }
+        .np-fswp .test-card .num {
+          display: inline-grid; place-items: center;
+          width: 18px; height: 18px;
+          border-radius: 50%;
+          color: #fff; font-size: 10px; font-weight: 800;
+          flex-shrink: 0;
+        }
+        .np-fswp .test-card.blue  h6 { color: var(--blue-800); }
+        .np-fswp .test-card.blue  .num { background: var(--blue-600); }
+        .np-fswp .test-card.green h6 { color: var(--green-800); }
+        .np-fswp .test-card.green .num { background: var(--green-600); }
+        .np-fswp .test-card .hint {
+          font-family: var(--type);
+          font-size: 10.5px;
+          color: var(--inkc-3);
+          line-height: 1.5;
+          margin-bottom: 8px;
+        }
+        .np-fswp .test-card .scores-head {
+          font-family: var(--type);
+          font-size: 10.5px;
+          color: var(--blue-700);
+          font-weight: 700;
+          text-decoration: underline;
+          margin: 4px 0 6px;
+        }
+        .np-fswp .test-card label { font-size: 11px; margin-bottom: 4px; font-weight: 600; }
+        .np-fswp .test-card .select {
+          height: 32px;
+          font-size: 11.5px;
+          padding: 0 9px;
+          margin-bottom: 6px;
+        }
+        .np-fswp .skill-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px;
+        }
+        .np-fswp .skill-grid .select { margin-bottom: 0; }
+
+        /* FSWP select fill timing (fs1..fs5 + fs1a..fs1d) */
+        .np-fswp .calc-panel .select.fs1  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-fswp .calc-panel .select.fs1a { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  4/100); }
+        .np-fswp .calc-panel .select.fs1b { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  5/100); }
+        .np-fswp .calc-panel .select.fs1c { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  6/100); }
+        .np-fswp .calc-panel .select.fs1d { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) *  7/100); }
+        .np-fswp .calc-panel .select.fs1e { color: var(--ink); border-color: var(--inkc-3); }
+        .np-fswp .calc-panel .select.fs2  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-fswp .calc-panel .select.fs3  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-fswp .calc-panel .select.fs4  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-fswp .calc-panel .select.fs5  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+
+        .np-fswp .calc-panel .select.fs1  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-fswp .calc-panel .select.fs1  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  2/100); }
+        .np-fswp .calc-panel .select.fs1a .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  4/100); }
+        .np-fswp .calc-panel .select.fs1a .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  4/100); }
+        .np-fswp .calc-panel .select.fs1b .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  5/100); }
+        .np-fswp .calc-panel .select.fs1b .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  5/100); }
+        .np-fswp .calc-panel .select.fs1c .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  6/100); }
+        .np-fswp .calc-panel .select.fs1c .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  6/100); }
+        .np-fswp .calc-panel .select.fs1d .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) *  7/100); }
+        .np-fswp .calc-panel .select.fs1d .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) *  7/100); }
+        .np-fswp .calc-panel .select.fs1e .placeholder { opacity: 0; }
+        .np-fswp .calc-panel .select.fs1e .picked      { opacity: 1; position: relative; }
+        .np-fswp .calc-panel .select.fs2  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-fswp .calc-panel .select.fs2  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+        .np-fswp .calc-panel .select.fs3  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-fswp .calc-panel .select.fs3  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+        .np-fswp .calc-panel .select.fs4  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-fswp .calc-panel .select.fs4  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+        .np-fswp .calc-panel .select.fs5  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+        .np-fswp .calc-panel .select.fs5  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+
+        /* FSWP adaptability checklist */
+        .np-fswp .check-list {
+          display: flex; flex-direction: column; gap: 8px;
+          margin-bottom: 14px;
+        }
+        .np-fswp .ck-item {
+          display: flex; align-items: center; gap: 12px;
+          padding: 11px 13px;
+          border: 1px solid var(--inkc-5);
+          border-radius: 9px;
+          background: #fafafa;
+          font-family: var(--type);
+          font-size: 12.5px;
+          color: var(--ink);
+          transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .np-fswp .ck-item .box {
+          width: 18px; height: 18px;
+          border: 1.5px solid var(--inkc-4);
+          border-radius: 4px;
+          background: #fff;
+          display: grid; place-items: center;
+          color: transparent;
+          font-size: 11px;
+          font-weight: 800;
+          line-height: 1;
+          flex-shrink: 0;
+          transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .np-fswp .ck-item .lbl { flex: 1; }
+        .np-fswp .ck-item .pts {
+          font-family: var(--type);
+          font-size: 10.5px;
+          font-weight: 700;
+          color: var(--yellow-700);
+          background: rgba(202, 138, 4, 0.12);
+          padding: 3px 9px;
+          border-radius: 6px;
+          flex-shrink: 0;
+        }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="1"]      { animation: ckRow1 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="2"]      { animation: ckRow2 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="3"]      { animation: ckRow3 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="1"] .box { animation: ckBox1 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="2"] .box { animation: ckBox2 var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .ck-item[data-c="3"] .box { animation: ckBox3 var(--duration) linear infinite; }
+        @keyframes ckRow1 { 0%, 62% { background: #fafafa; border-color: var(--inkc-5); } 63%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); } }
+        @keyframes ckRow2 { 0%, 64% { background: #fafafa; border-color: var(--inkc-5); } 65%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); } }
+        @keyframes ckRow3 { 0%, 66% { background: #fafafa; border-color: var(--inkc-5); } 67%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); } }
+        @keyframes ckBox1 { 0%, 62% { background: #fff; border-color: var(--inkc-4); color: transparent; } 63%, 100% { background: var(--yellow-600); border-color: var(--yellow-600); color: #fff; } }
+        @keyframes ckBox2 { 0%, 64% { background: #fff; border-color: var(--inkc-4); color: transparent; } 65%, 100% { background: var(--yellow-600); border-color: var(--yellow-600); color: #fff; } }
+        @keyframes ckBox3 { 0%, 66% { background: #fff; border-color: var(--inkc-4); color: transparent; } 67%, 100% { background: var(--yellow-600); border-color: var(--yellow-600); color: #fff; } }
+
+        /* FSWP results: eligibility note + 6-tile grid */
+        .np-fswp .note-eligibility {
+          background: linear-gradient(90deg, var(--yellow-50), #fffbeb);
+          border: 1px solid var(--yellow-200);
+          border-left: 4px solid var(--yellow-600);
+          border-radius: 8px;
+          padding: 11px 16px;
+          margin: 0 0 16px;
+          font-family: var(--type);
+          font-size: 11.5px;
+          color: #713f12;
+          line-height: 1.55;
+        }
+        .np-fswp .note-eligibility b { color: #422006; font-weight: 700; }
+        .np-fswp .results-grid-fswp {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-top: 4px;
+        }
+        .np-fswp .results-grid-fswp > article {
+          border: 1px solid;
+          border-radius: 10px;
+          padding: 14px 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        .np-fswp .results-grid-fswp .lbl {
+          font-family: var(--type);
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1.35;
+          max-width: 70%;
+        }
+        .np-fswp .results-grid-fswp .lbl small {
+          display: block;
+          font-weight: 500;
+          opacity: 0.78;
+          font-size: 10.5px;
+          margin-top: 2px;
+        }
+        .np-fswp .results-grid-fswp .num {
+          font-family: var(--type);
+          font-size: 28px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1;
+        }
+        .np-fswp .results-grid-fswp article.t-lang  { background: var(--green-50);  border-color: var(--green-200);  color: var(--green-800); }
+        .np-fswp .results-grid-fswp article.t-lang  .num { color: var(--green-600); }
+        .np-fswp .results-grid-fswp article.t-adapt { background: var(--purple-50); border-color: var(--purple-200); color: var(--purple-800); }
+        .np-fswp .results-grid-fswp article.t-adapt .num { color: var(--purple-600); }
+        .np-fswp .results-grid-fswp article.t-edu   { background: var(--blue-50);   border-color: var(--blue-200);   color: var(--blue-800); }
+        .np-fswp .results-grid-fswp article.t-edu   .num { color: var(--blue-600); }
+        .np-fswp .results-grid-fswp article.t-emp   { background: var(--rose-50);   border-color: var(--rose-200);   color: var(--rose-800); }
+        .np-fswp .results-grid-fswp article.t-emp   .num { color: var(--rose-600); }
+        .np-fswp .results-grid-fswp article.t-work  { background: var(--orange-50); border-color: var(--orange-200); color: var(--orange-800); }
+        .np-fswp .results-grid-fswp article.t-work  .num { color: var(--orange-600); }
+        .np-fswp .results-grid-fswp article.t-age   { background: var(--pink-50);   border-color: var(--pink-200);   color: var(--pink-800); }
+        .np-fswp .results-grid-fswp article.t-age   .num { color: var(--pink-600); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article { animation: cardIn var(--duration) linear infinite; }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(1) { animation-delay: calc(var(--duration) * 0.4/100); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(2) { animation-delay: calc(var(--duration) * 1.0/100); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(3) { animation-delay: calc(var(--duration) * 1.6/100); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(4) { animation-delay: calc(var(--duration) * 2.2/100); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(5) { animation-delay: calc(var(--duration) * 2.8/100); }
+        .np-fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(6) { animation-delay: calc(var(--duration) * 3.4/100); }
+
+        .np-crs .results-foot,
+        .np-fswp .results-foot {
+          background: #f6f6f6;
+          border-top: 1px solid var(--inkc-5);
+          padding: 16px 22px;
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+        }
+        .np-crs .results-foot .btn,
+        .np-fswp .results-foot .btn {
+          padding: 9px 18px;
+          border-radius: 8px;
+          font-family: var(--type);
+          font-size: 12.5px;
+          font-weight: 600;
+          border: none;
+          cursor: default;
+        }
+        .np-crs .results-foot .btn.ghost,
+        .np-fswp .results-foot .btn.ghost { background: #4a4847; color: #fff; }
+        .np-crs .results-foot .btn.red,
+        .np-fswp .results-foot .btn.red   { background: linear-gradient(90deg, var(--red), var(--red-d)); color: #fff; }
+
+        @media (max-width: 880px) {
+          .np-crs, .np-fswp { padding: 20px; }
+          .np-crs .form-grid, .np-fswp .form-grid { grid-template-columns: 1fr; }
+          .np-crs .calc-panel { min-height: 400px; }
+          .np-fswp .calc-panel { min-height: 640px; }
+          .np-fswp .dual-test { grid-template-columns: 1fr; }
+          .np-crs .results-grid { grid-template-columns: 1fr; }
+          .np-fswp .results-grid-fswp { grid-template-columns: 1fr; }
+          .np-crs .score-circle, .np-fswp .score-circle { width: 96px; height: 96px; }
+          .np-crs .score-circle .num, .np-fswp .score-circle .num { font-size: 30px; }
+        }
+
+        /* ╭───────────────────────────────────────────────╮
+           │ DRAWS TRACKER — faithful to live design       │
+           ╰───────────────────────────────────────────────╯ */
+        .np-draws {
+          background: #f8f8f8;
+        }
+
+        /* red banner header */
+        .np-draws .dr-banner {
+          background: linear-gradient(90deg, var(--red), var(--red-d, #8e1318));
+          color: #fff;
+          padding: 16px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+        }
+        .np-draws .dr-banner-l {
+          display: flex; align-items: center; gap: 12px;
+        }
+        .np-draws .dr-bi {
+          width: 30px; height: 30px;
+          display: grid; place-items: center;
+          background: rgba(255,255,255,0.18);
+          border-radius: 7px;
+          font-size: 15px;
+        }
+        .np-draws .dr-banner-t h4 {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 1.2;
+          letter-spacing: -0.005em;
+          color: #fff;
+          margin-bottom: 1px;
+        }
+        .np-draws .dr-banner-t p {
+          font-family: var(--type);
+          font-weight: 500;
+          font-size: 11.5px;
+          color: rgba(255,255,255,0.78);
+        }
+        .np-draws .dr-banner-r {
+          color: rgba(255,255,255,0.72);
+          font-size: 22px;
+          line-height: 1;
+          width: 28px; height: 28px;
+          display: grid; place-items: center;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.10);
+        }
+
+        /* toolbar with filter chips + view toggle */
+        .np-draws .dr-toolbar {
+          background: #fff;
+          border-bottom: 1px solid var(--ink-5);
+          padding: 14px 24px 12px;
+          display: grid;
+          grid-template-columns: auto minmax(0, 1fr) auto;
+          gap: 14px;
+          align-items: center;
+        }
+        .np-draws .dr-toolbar-lbl {
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 9.5px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--ink-3);
+          white-space: nowrap;
+        }
+        .np-draws .dr-chips {
+          display: flex;
+          gap: 6px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          mask-image: linear-gradient(90deg, #000 0%, #000 92%, transparent 100%);
+          -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 92%, transparent 100%);
+        }
+        .np-draws .dr-chips::-webkit-scrollbar { display: none; }
+        .np-draws .dr-chip {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 5px 10px;
+          background: #f3f3f3;
+          border: 1px solid #e5e5e5;
+          border-radius: 999px;
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 11px;
+          letter-spacing: 0.005em;
+          color: var(--ink-2);
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .np-draws .dr-chip em {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 9.5px;
+          color: var(--ink-3);
+          background: #fff;
+          border-radius: 999px;
+          padding: 1px 6px;
+        }
+        .np-draws .dr-chip.on {
+          background: var(--ink);
+          color: #fff;
+          border-color: var(--ink);
+        }
+        .np-draws .dr-chip.on em {
+          color: #fff;
+          background: rgba(255,255,255,0.18);
+        }
+        .np-draws .dr-view {
+          display: inline-flex;
+          gap: 4px;
+          padding: 3px;
+          background: #f3f3f3;
+          border: 1px solid #e5e5e5;
+          border-radius: 6px;
+        }
+        .np-draws .dr-vw {
+          padding: 4px 10px;
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 9.5px;
+          letter-spacing: 0.14em;
+          color: var(--ink-3);
+          border-radius: 4px;
+          white-space: nowrap;
+        }
+        .np-draws .dr-vw.on {
+          background: #fff;
+          color: var(--red);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* pagination row */
+        .np-draws .dr-pag {
+          background: #fff;
+          border-bottom: 1px solid var(--ink-5);
+          padding: 10px 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 11.5px;
+          color: var(--ink-3);
+        }
+        .np-draws .dr-pag-prev,
+        .np-draws .dr-pag-next {
+          padding: 4px 9px;
+          border: 1px solid var(--ink-5);
+          border-radius: 4px;
+          color: var(--ink-2);
+          background: #fafafa;
+        }
+        .np-draws .dr-pag-prev { opacity: 0.5; }
+        .np-draws .dr-pag-page {
+          color: var(--ink-2);
+        }
+        .np-draws .dr-pag-page b { color: var(--ink); font-weight: 800; }
+        .np-draws .dr-pag-info {
+          margin-left: auto;
+          font-size: 10.5px;
+          letter-spacing: 0.04em;
+          color: var(--ink-3);
+        }
+        .np-draws .dr-pag-info b { color: var(--ink); font-weight: 800; }
+
+        /* table */
+        .np-draws .dr-table-wrap {
+          background: #fff;
+        }
+        .np-draws .dr-table {
           width: 100%;
           border-collapse: collapse;
         }
-        .np-draws-table thead th {
-          padding: 12px 18px;
+        .np-draws .dr-table thead th {
+          padding: 11px 18px;
           text-align: left;
-          background: var(--white);
-          border-bottom: 1.5px solid var(--ink);
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: var(--red);
-          vertical-align: middle;
-        }
-        .np-draws-table thead th.r { text-align: right; }
-        .np-draws-table tbody td {
-          padding: 14px 18px;
-          border-bottom: 1px solid var(--ink-5);
-          font-family: var(--type);
-          font-weight: 600;
-          font-size: 13px;
-          color: var(--ink-1);
-          vertical-align: middle;
-        }
-        .np-draws-table tbody td.r { text-align: right; }
-        .np-draws-table tbody tr:hover { background: var(--paper); }
-        .np-draws-table .draw-id {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 12px;
-          letter-spacing: 0.04em;
-          color: var(--ink);
-        }
-        .np-draws-table .pillc {
-          display: inline-block;
-          padding: 3px 8px;
-          border-radius: 3px;
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 9px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          background: var(--paper);
-          color: var(--ink);
-          border: 1px solid var(--ink-5);
-        }
-        .np-draws-table .pillc.r {
-          background: var(--red);
-          color: var(--white);
-          border-color: var(--red);
-        }
-        .np-draws-table .pillc.k {
-          background: var(--ink);
-          color: var(--white);
-          border-color: var(--ink);
-        }
-        .np-draws-table .num {
-          font-family: var(--type);
-          font-weight: 800;
-          font-size: 14px;
-          letter-spacing: -0.005em;
-          color: var(--ink);
-        }
-        .np-draws-table .num.red { color: var(--red); }
-        .np-draws-foot {
-          padding: 16px 28px;
-          background: var(--paper);
-          border-top: 1px solid var(--ink-5);
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 14px;
-          align-items: center;
           font-family: var(--type);
           font-weight: 700;
           font-size: 10px;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
           color: var(--ink-3);
+          background: #fafafa;
+          border-bottom: 1px solid var(--ink-5);
+          white-space: nowrap;
         }
-        .np-draws-foot b { color: var(--ink); font-weight: 800; }
-        .np-draws-foot em {
-          font-style: italic;
-          font-weight: 500;
+        .np-draws .dr-table thead th.r { text-align: right; }
+        .np-draws .dr-table tbody td {
+          padding: 11px 18px;
+          border-bottom: 1px solid var(--ink-5);
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 12.5px;
+          color: var(--ink);
+          vertical-align: middle;
+        }
+        .np-draws .dr-table tbody td.r { text-align: right; }
+        .np-draws .dr-table tbody td.dim { color: var(--ink-3); font-weight: 500; }
+        .np-draws .dr-table tbody tr:last-child td { border-bottom: 0; }
+        .np-draws .dr-table tbody tr:hover { background: #fafafa; }
+
+        .np-draws .dr-id {
+          font-family: var(--type);
+          font-weight: 800;
+          font-size: 12.5px;
           color: var(--red);
-          letter-spacing: 0.04em;
-          text-transform: none;
+          letter-spacing: 0.01em;
         }
+        .np-draws .dr-pill {
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 10.5px;
+          letter-spacing: 0;
+          border: 1px solid transparent;
+          white-space: nowrap;
+        }
+        /* per-category pill colors */
+        .np-draws .dr-pill.p-pnp { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+        .np-draws .dr-pill.p-cec { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+        .np-draws .dr-pill.p-fr  { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+        .np-draws .dr-pill.p-tr  { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+        .np-draws .dr-pill.p-gen { background: #f3f4f6; color: #374151; border-color: #e5e7eb; }
+        .np-draws .dr-pill.p-hc  { background: #fdf2f8; color: #9d174d; border-color: #fbcfe8; }
+
+        .np-draws .dr-inv {
+          display: inline-flex; align-items: center; gap: 5px;
+          font-family: var(--type);
+          font-weight: 600;
+          font-size: 12.5px;
+          color: var(--ink-2);
+        }
+        .np-draws .dr-inv .eye { color: var(--ink-4); font-size: 12px; }
+
+        .np-draws .dr-score {
+          display: inline-flex; align-items: center; gap: 4px;
+          font-family: var(--type);
+          font-weight: 800;
+          font-size: 14px;
+          color: var(--red);
+          letter-spacing: -0.005em;
+        }
+        .np-draws .dr-score .arr { font-size: 12px; }
+
+        .np-draws .dr-trend {
+          display: inline-flex; align-items: center;
+          padding: 3px 9px;
+          border-radius: 999px;
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 10.5px;
+          letter-spacing: 0.005em;
+          white-space: nowrap;
+        }
+        .np-draws .dr-trend.down { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .np-draws .dr-trend.up   { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+        /* footer */
+        .np-draws .dr-foot {
+          padding: 12px 24px;
+          background: #fff;
+          border-top: 1px solid var(--ink-5);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          font-family: var(--type);
+          font-weight: 500;
+          font-size: 11px;
+          color: var(--ink-3);
+        }
+        .np-draws .dr-refresh {
+          padding: 7px 14px;
+          background: linear-gradient(90deg, var(--red), var(--red-d, #8e1318));
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          font-family: var(--type);
+          font-weight: 700;
+          font-size: 11px;
+          letter-spacing: 0.01em;
+          display: inline-flex; align-items: center; gap: 6px;
+          cursor: default;
+        }
+
         @media (max-width: 880px) {
-          .np-draws-head {
+          .np-draws .dr-banner { padding: 14px 18px; }
+          .np-draws .dr-toolbar {
             grid-template-columns: 1fr;
-            padding: 18px;
+            padding: 12px 18px;
             gap: 10px;
           }
-          .np-draws-head .filter { display: inline-block; }
-          .np-draws-spark { padding: 16px 18px 20px; }
-          .np-draws-table thead { display: none; }
-          .np-draws-table tbody td {
-            padding: 12px 18px;
-            font-size: 12px;
-          }
-          .np-draws-table tbody tr {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 14px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--ink-5);
-          }
-          .np-draws-table tbody td { border-bottom: 0; padding: 0 18px; }
+          .np-draws .dr-pag { padding: 10px 18px; flex-wrap: wrap; gap: 8px; }
+          .np-draws .dr-pag-info { width: 100%; margin-left: 0; }
+          .np-draws .dr-table thead th { padding: 10px 14px; font-size: 9px; }
+          .np-draws .dr-table tbody td { padding: 10px 14px; font-size: 11.5px; }
+          .np-draws .dr-foot { padding: 12px 18px; flex-direction: column; align-items: stretch; }
         }
 
         /* BILINGUAL */
