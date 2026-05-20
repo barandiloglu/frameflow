@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NP · CRS Calculator showcase (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap"
+/>
+<style>
+  :root{
+    --ink:    #2c2b2b;
+    --ink-2:  #4a4847;
+    --ink-3:  #807c79;
+    --ink-4:  #b7b3af;
+    --ink-5:  #e2dfdc;
+    --paper:  #f9f9f9;
+    --white:  #ffffff;
+    --red:    #b92025;
+    --red-d:  #8e1318;
+    --red-100:#fde8e9;
+
+    /* breakdown card colors (faithful to live tool) */
+    --blue-50:  #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-800: #1e40af;
+
+    --pink-50:  #fdf2f8;
+    --pink-100: #fce7f3;
+    --pink-200: #fbcfe8;
+    --pink-600: #db2777;
+    --pink-700: #be185d;
+    --pink-800: #9d174d;
+
+    --green-50:  #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+
+    --purple-50:  #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-600: #9333ea;
+    --purple-700: #7e22ce;
+    --purple-800: #6b21a8;
+
+    --type: "Montserrat", system-ui, -apple-system, sans-serif;
+
+    --duration: 24s;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--type);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ╭──────────────────────────────────────────────╮
+     │ CONTEXT STRIPS (above / below the showcase) │
+     ╰──────────────────────────────────────────────╯ */
+  .context-pre, .context-post {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 56px 48px;
+    border-top: 1px solid var(--ink-5);
+    border-bottom: 1px solid var(--ink-5);
+    font-family: var(--type);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: center;
+  }
+  .context-pre .e, .context-post .e { color: var(--red); }
+
+  /* ╭───────────────────────────────╮
+     │ SHOWCASE (the new section)   │
+     ╰───────────────────────────────╯ */
+  .showcase {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 120px 48px;
+    border-bottom: 1px solid var(--ink-5);
+  }
+  .showcase-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: end;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--ink-5);
+    margin-bottom: 56px;
+  }
+  .showcase-head .lead .plate {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .showcase-head .lead .plate::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;
+    height: 1.5px;
+    background: var(--red);
+    margin-right: 10px;
+    margin-bottom: 3px;
+  }
+  .showcase-head .lead h3 {
+    font-weight: 800;
+    font-size: clamp(32px, 4.4vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+  .showcase-head .lead h3 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--red);
+  }
+  .showcase-head .body p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    max-width: 56ch;
+    margin-bottom: 16px;
+  }
+  .showcase-head .body p:last-child { margin-bottom: 0; }
+  .showcase-head .body strong { font-weight: 700; color: var(--ink); }
+
+  /* ╭────────────────────────────────────────────╮
+     │ CALCULATOR FRAME — the actual tool shell  │
+     ╰────────────────────────────────────────────╯ */
+  .calc-shell {
+    position: relative;
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, var(--red-100) 100%);
+    border: 1px solid var(--ink-5);
+    border-radius: 18px;
+    padding: clamp(28px, 4vw, 56px);
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 #fff inset,
+      0 40px 60px -40px rgba(44, 43, 43, 0.18);
+  }
+  .calc-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 600px 220px at 90% 10%, rgba(185, 32, 37, 0.06), transparent 60%),
+      radial-gradient(ellipse 500px 200px at 10% 90%, rgba(185, 32, 37, 0.04), transparent 60%);
+  }
+  .calc-rail {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .calc-rail .l { color: var(--red); }
+  .calc-rail .r .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 8px;
+    animation: pulseRed 1.4s ease-in-out infinite;
+  }
+  @keyframes pulseRed {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  /* ╭─────────────────────────────╮
+     │ VIEW STAGE (form / results) │
+     ╰─────────────────────────────╯ */
+  .calc-stage {
+    position: relative;
+  }
+  .view {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .view.form    { position: relative; opacity: 1; }
+  .view.results { opacity: 0; }
+  /* loop animation flips the two */
+  .calc-stage[data-anim="on"] .view.form    { animation: showForm    var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .view.results { animation: showResults var(--duration) linear infinite; }
+  @keyframes showForm {
+    0%, 75%   { opacity: 1; }
+    78%, 95%  { opacity: 0; }
+    98%, 100% { opacity: 1; }
+  }
+  @keyframes showResults {
+    0%, 75%   { opacity: 0; transform: translateY(8px); }
+    78%, 95%  { opacity: 1; transform: translateY(0); }
+    98%, 100% { opacity: 0; transform: translateY(8px); }
+  }
+
+  /* ╭───────────────────────╮
+     │ FORM VIEW             │
+     ╰───────────────────────╯ */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+  }
+  /* SIDEBAR -------------------------------------------- */
+  .calc-sidebar {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: 14px;
+    padding: 18px 14px;
+    box-shadow: 0 1px 0 #fff inset;
+  }
+  .calc-sidebar h4 {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    margin: 4px 4px 14px;
+    letter-spacing: -0.01em;
+  }
+  .calc-sidebar ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .calc-sidebar li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    background: #f6f6f6;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .calc-sidebar li .ic {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .calc-sidebar li .nm { flex: 1; white-space: nowrap; }
+
+  /* status indicator (spinner / check) — matches live tool */
+  .calc-sidebar li .ind {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .calc-sidebar li .ind .spin {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #f59e0b;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    opacity: 1;
+  }
+  .calc-sidebar li .ind .check {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #10b981;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  /* on the currently-active row, brighten both indicators for contrast on the gradient */
+  .calc-sidebar li.active .ind .spin  { border-color: #fde68a; border-top-color: transparent; }
+  .calc-sidebar li.active .ind .check { color: #86efac; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* color-by-section when active */
+  .calc-sidebar li.active {
+    color: #fff;
+    box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35);
+    border-width: 2px;
+  }
+  .calc-sidebar li.blue.active   { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));   border-color: #3b82f6; }
+  .calc-sidebar li.pink.active   { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));   border-color: #f472b6; }
+  .calc-sidebar li.red.active    { background: linear-gradient(90deg, var(--red),      var(--red-d));      border-color: #ef4444; }
+  .calc-sidebar li.green.active  { background: linear-gradient(90deg, var(--green-600), var(--green-700)); border-color: #4ade80; }
+  .calc-sidebar li.purple.active { background: linear-gradient(90deg, var(--purple-600), var(--purple-700));border-color: #c084fc; }
+  .calc-sidebar li.orange.active { background: linear-gradient(90deg, #ea580c, #c2410c); border-color: #fb923c; }
+
+  /* Each li has its own keyframe that paints it "active" during its window.
+     No delays — windows are baked into the keyframe percentages to guarantee
+     alignment with the matching pane. */
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] { animation: a1 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] { animation: a2 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] { animation: a3 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] { animation: a4 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] { animation: a5 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] { animation: a6 var(--duration) linear infinite; }
+
+  /* generic helper: each ai keyframe paints the row "active" for one slot */
+  @keyframes a1 {
+    0%,   11%  { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));   color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    12%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes a2 {
+    0%,   11%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    12%, 23%  { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));   color: #fff; border-color: #f472b6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    24%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes a3 {
+    0%,   23%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    24%, 35%  { background: linear-gradient(90deg, var(--red), var(--red-d)); color: #fff; border-color: #ef4444; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    36%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes a4 {
+    0%,   35%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    36%, 47%  { background: linear-gradient(90deg, var(--blue-600), var(--blue-700)); color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    48%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes a5 {
+    0%,   47%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    48%, 59%  { background: linear-gradient(90deg, var(--green-600), var(--green-700)); color: #fff; border-color: #4ade80; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    60%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes a6 {
+    0%,   59%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    60%, 72%  { background: linear-gradient(90deg, var(--purple-600), var(--purple-700)); color: #fff; border-color: #c084fc; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    73%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+
+  /* ─── Status indicator state-swap (spinner → check) per section ───
+     The spinner already rotates continuously via the `spin` keyframe.
+     A second animation toggles its opacity, and the matching check fades in. */
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .spin  { animation: spin 0.8s linear infinite, sp1 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .spin  { animation: spin 0.8s linear infinite, sp2 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .spin  { animation: spin 0.8s linear infinite, sp3 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .spin  { animation: spin 0.8s linear infinite, sp4 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .spin  { animation: spin 0.8s linear infinite, sp5 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .spin  { animation: spin 0.8s linear infinite, sp6 var(--duration) linear infinite; }
+
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] .check { animation: ck1 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] .check { animation: ck2 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] .check { animation: ck3 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] .check { animation: ck4 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] .check { animation: ck5 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] .check { animation: ck6 var(--duration) linear infinite; }
+
+  /* sp_ : opacity 1 while pending, 0 once complete. Resets at cycle end. */
+  @keyframes sp1 { 0%, 10%  { opacity: 1; } 11%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes sp2 { 0%, 22%  { opacity: 1; } 23%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes sp3 { 0%, 34%  { opacity: 1; } 35%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes sp4 { 0%, 46%  { opacity: 1; } 47%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes sp5 { 0%, 58%  { opacity: 1; } 59%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes sp6 { 0%, 71%  { opacity: 1; } 72%, 94% { opacity: 0; } 95%, 100% { opacity: 1; } }
+
+  /* ck_ : invisible while pending, then a brief overshoot bounce, then settled. */
+  @keyframes ck1 {
+    0%,   10% { opacity: 0; transform: scale(0.5); }
+    11%, 13% { opacity: 1; transform: scale(1.25); }
+    14%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+  @keyframes ck2 {
+    0%,   22% { opacity: 0; transform: scale(0.5); }
+    23%, 25% { opacity: 1; transform: scale(1.25); }
+    26%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+  @keyframes ck3 {
+    0%,   34% { opacity: 0; transform: scale(0.5); }
+    35%, 37% { opacity: 1; transform: scale(1.25); }
+    38%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+  @keyframes ck4 {
+    0%,   46% { opacity: 0; transform: scale(0.5); }
+    47%, 49% { opacity: 1; transform: scale(1.25); }
+    50%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+  @keyframes ck5 {
+    0%,   58% { opacity: 0; transform: scale(0.5); }
+    59%, 61% { opacity: 1; transform: scale(1.25); }
+    62%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+  @keyframes ck6 {
+    0%,   71% { opacity: 0; transform: scale(0.5); }
+    72%, 74% { opacity: 1; transform: scale(1.25); }
+    75%, 94% { opacity: 1; transform: scale(1); }
+    95%, 100%{ opacity: 0; transform: scale(0.5); }
+  }
+
+  /* MAIN PANEL ---------------------------------------- */
+  .calc-panel {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: 14px;
+    padding: 28px 28px 18px;
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .calc-panel .pane {
+    position: absolute;
+    inset: 28px 28px 18px;
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .calc-panel .pane h2 {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .calc-panel .pane .head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .calc-panel .pane .head .av {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .av.blue   { background: linear-gradient(135deg, var(--blue-600), var(--blue-700)); }
+  .av.pink   { background: linear-gradient(135deg, var(--pink-600), var(--pink-700)); }
+  .av.red    { background: linear-gradient(135deg, var(--red), var(--red-d)); }
+  .av.green  { background: linear-gradient(135deg, var(--green-600), var(--green-700)); }
+  .av.purple { background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); }
+
+  .calc-panel label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .calc-panel label .req,
+  .calc-panel .req { color: var(--red); }
+  .calc-panel .select {
+    width: 100%;
+    height: 44px;
+    background: #fff;
+    border: 1px solid var(--ink-4);
+    border-radius: 8px;
+    padding: 0 14px;
+    font-family: var(--type);
+    font-size: 13px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    transition: border-color 0.3s ease, color 0.3s ease;
+    position: relative;
+  }
+  .calc-panel .select::after {
+    content: "▾";
+    color: var(--ink-3);
+    font-size: 11px;
+  }
+  .calc-panel .select.filled { color: var(--ink); border-color: var(--ink-3); }
+
+  /* two-column form rows */
+  .calc-panel .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* highlighted info card (faithful to live tool blue/green panels) */
+  .calc-panel .info-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 4px solid;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .calc-panel .info-card.blue  { background: linear-gradient(90deg, var(--blue-50), var(--blue-100));  border-color: var(--blue-600); }
+  .calc-panel .info-card.green { background: linear-gradient(90deg, var(--green-50), var(--green-100)); border-color: var(--green-600); }
+  .calc-panel .info-card b { color: var(--ink); }
+
+  /* Pane visibility windows — one keyframe per pane, no delays.
+     Each window matches the corresponding sidebar a1..a6 keyframe exactly. */
+  .calc-stage[data-anim="on"] .pane.p1 { animation: pa1 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .pane.p2 { animation: pa2 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .pane.p3 { animation: pa3 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .pane.p4 { animation: pa4 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .pane.p5 { animation: pa5 var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .pane.p6 { animation: pa6 var(--duration) linear infinite; }
+
+  @keyframes pa1 {
+    0%, 10%  { opacity: 1; transform: translateY(0); }
+    11%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes pa2 {
+    0%, 11%  { opacity: 0; transform: translateY(6px); }
+    12%, 22% { opacity: 1; transform: translateY(0); }
+    23%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes pa3 {
+    0%, 23%  { opacity: 0; transform: translateY(6px); }
+    24%, 34% { opacity: 1; transform: translateY(0); }
+    35%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes pa4 {
+    0%, 35%  { opacity: 0; transform: translateY(6px); }
+    36%, 46% { opacity: 1; transform: translateY(0); }
+    47%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes pa5 {
+    0%, 47%  { opacity: 0; transform: translateY(6px); }
+    48%, 58% { opacity: 1; transform: translateY(0); }
+    59%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes pa6 {
+    0%, 59%  { opacity: 0; transform: translateY(6px); }
+    60%, 71% { opacity: 1; transform: translateY(0); }
+    72%, 100%{ opacity: 0; transform: translateY(-6px); }
+  }
+
+  /* select fill within a pane — delayed slightly after pane appears */
+  .calc-panel .select.s1 { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .calc-panel .select.s2 { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .calc-panel .select.s3 { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .calc-panel .select.s4a{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+  .calc-panel .select.s4b{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .calc-panel .select.s4c{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+  .calc-panel .select.s4d{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+  .calc-panel .select.s5a{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+  .calc-panel .select.s5b{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+  .calc-panel .select.s6a{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+  .calc-panel .select.s6b{ animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+  @keyframes fillSelect {
+    0%,   2%   { color: var(--ink-3); border-color: var(--ink-4); }
+    3%,  94%   { color: var(--ink); border-color: var(--ink-3); }
+    95%, 100%  { color: var(--ink-3); border-color: var(--ink-4); }
+  }
+
+  /* placeholder vs filled text swap */
+  .calc-panel .select .placeholder,
+  .calc-panel .select .picked {
+    transition: opacity 0.3s ease;
+  }
+  .calc-panel .select .picked { opacity: 0; position: absolute; }
+  /* When the select reaches the filled portion of its keyframe, fade in the picked text. */
+  .calc-panel .select.s1 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .calc-panel .select.s1 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .calc-panel .select.s2 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .calc-panel .select.s2 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .calc-panel .select.s3 .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .calc-panel .select.s3 .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .calc-panel .select.s4a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+  .calc-panel .select.s4a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 37/100); }
+  .calc-panel .select.s4b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .calc-panel .select.s4b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .calc-panel .select.s4c .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+  .calc-panel .select.s4c .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 39/100); }
+  .calc-panel .select.s4d .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+  .calc-panel .select.s4d .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 40/100); }
+  .calc-panel .select.s5a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+  .calc-panel .select.s5a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+  .calc-panel .select.s5b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+  .calc-panel .select.s5b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 52/100); }
+  .calc-panel .select.s6a .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+  .calc-panel .select.s6a .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 62/100); }
+  .calc-panel .select.s6b .placeholder{ animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+  .calc-panel .select.s6b .picked     { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 64/100); }
+  @keyframes hidePlaceholder {
+    0%,   2%   { opacity: 1; }
+    3%,  94%   { opacity: 0; }
+    95%, 100%  { opacity: 1; }
+  }
+  @keyframes showPicked {
+    0%,   2%   { opacity: 0; transform: translateY(2px); }
+    3%,  94%   { opacity: 1; transform: translateY(0); }
+    95%, 100%  { opacity: 0; transform: translateY(2px); }
+  }
+
+  /* Footer in panel: Next button -------------- */
+  .calc-panel .pane-foot {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--ink-5);
+    display: flex;
+    justify-content: flex-end;
+  }
+  .calc-panel .btn-next {
+    background: linear-gradient(90deg, var(--red), var(--red-d));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: var(--type);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    box-shadow: 0 6px 12px -6px rgba(185, 32, 37, 0.6);
+  }
+
+  /* CALCULATE CTA + PROGRESS ------------------- */
+  .calc-cta-wrap {
+    margin-top: 22px;
+    text-align: center;
+  }
+  .calc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: #b7b3af;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--type);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.2);
+    transition: background 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+  }
+  .calc-stage[data-anim="on"] .calc-cta { animation: ctaActivate var(--duration) linear infinite; }
+  @keyframes ctaActivate {
+    0%,   72%  { background: #b7b3af; box-shadow: 0 8px 16px -8px rgba(0,0,0,0.2); }
+    73%, 75%  { background: linear-gradient(90deg, var(--red), var(--red-d)); transform: scale(1.06); box-shadow: 0 12px 24px -8px rgba(185,32,37,0.55); }
+    76%, 100% { background: linear-gradient(90deg, var(--red), var(--red-d)); transform: scale(1); box-shadow: 0 8px 16px -8px rgba(185,32,37,0.4); }
+  }
+  .calc-cta .ic { font-size: 14px; }
+  .calc-progress {
+    margin-top: 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-3);
+    letter-spacing: 0.01em;
+  }
+  .calc-progress .pct {
+    /* inline-grid stacks all .v in one cell — container keeps real
+       intrinsic height so it baseline-aligns with "Form progress:" */
+    display: inline-grid;
+    grid-template: auto / auto;
+    vertical-align: baseline;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .calc-progress .pct .v {
+    grid-column: 1;
+    grid-row: 1;
+    opacity: 0;
+  }
+  /* default (no animation): show the first span so it's not blank */
+  .calc-progress .pct .v:first-child { opacity: 1; }
+
+  /* each span gets its own visibility window — windows match fillProgress */
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="0"]   { animation: pctV0   var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="13"]  { animation: pctV13  var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="27"]  { animation: pctV27  var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="40"]  { animation: pctV40  var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="60"]  { animation: pctV60  var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="75"]  { animation: pctV75  var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .calc-progress .pct .v[data-v="100"] { animation: pctV100 var(--duration) linear infinite; }
+
+  @keyframes pctV0   { 0%, 9%   { opacity: 1; } 10%, 100% { opacity: 0; } }
+  @keyframes pctV13  { 0%, 9%   { opacity: 0; } 10%, 21%  { opacity: 1; } 22%, 100% { opacity: 0; } }
+  @keyframes pctV27  { 0%, 21%  { opacity: 0; } 22%, 33%  { opacity: 1; } 34%, 100% { opacity: 0; } }
+  @keyframes pctV40  { 0%, 33%  { opacity: 0; } 34%, 45%  { opacity: 1; } 46%, 100% { opacity: 0; } }
+  @keyframes pctV60  { 0%, 45%  { opacity: 0; } 46%, 57%  { opacity: 1; } 58%, 100% { opacity: 0; } }
+  @keyframes pctV75  { 0%, 57%  { opacity: 0; } 58%, 69%  { opacity: 1; } 70%, 100% { opacity: 0; } }
+  @keyframes pctV100 { 0%, 69%  { opacity: 0; } 70%, 100% { opacity: 1; } }
+  .calc-progress-bar {
+    margin-top: 8px;
+    height: 4px;
+    background: #ebe9e7;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .calc-progress-bar > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--red-d));
+    width: 0%;
+    border-radius: 4px;
+  }
+  .calc-stage[data-anim="on"] .calc-progress-bar > span { animation: fillProgress var(--duration) linear infinite; }
+  @keyframes fillProgress {
+    0%   { width: 0%; }
+    10%  { width: 13%; }
+    22%  { width: 27%; }
+    34%  { width: 40%; }
+    46%  { width: 60%; }
+    58%  { width: 75%; }
+    70%  { width: 100%; }
+    75%, 100% { width: 100%; }
+  }
+
+  /* ╭───────────────────────╮
+     │ RESULTS VIEW           │
+     ╰───────────────────────╯ */
+  .results-card {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 48px -32px rgba(0,0,0,0.25);
+  }
+  .results-head {
+    background: linear-gradient(90deg, var(--red), var(--red-d));
+    padding: 28px 32px;
+    color: #fff;
+    text-align: center;
+  }
+  .results-head h2 {
+    font-weight: 700;
+    font-size: 26px;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .results-head p {
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+  }
+  .results-score {
+    padding: 36px 24px 32px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--blue-50), #e8eefc);
+  }
+  .score-circle {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 18px;
+    background: linear-gradient(135deg, var(--red), var(--red-d));
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 24px 32px -16px rgba(185, 32, 37, 0.55);
+    position: relative;
+  }
+  .score-circle::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(185, 32, 37, 0.25);
+  }
+  .score-circle .num {
+    font-weight: 800;
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .score-circle .lbl {
+    font-size: 11px;
+    opacity: 0.9;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .calc-stage[data-anim="on"] .score-circle { animation: scoreIn var(--duration) linear infinite; }
+  @keyframes scoreIn {
+    0%, 75%   { opacity: 0; transform: scale(0.7); }
+    78%, 95%  { opacity: 1; transform: scale(1); }
+    96%, 100% { opacity: 0; transform: scale(0.95); }
+  }
+  .results-total {
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .results-grid-wrap {
+    padding: 24px 24px 18px;
+  }
+  .results-grid-wrap .grid-head {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .results-grid > article {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .calc-stage[data-anim="on"] .results-grid > article { animation: cardIn var(--duration) linear infinite; }
+  .calc-stage[data-anim="on"] .results-grid > article:nth-child(1) { animation-delay: calc(var(--duration) * 0.5/100); }
+  .calc-stage[data-anim="on"] .results-grid > article:nth-child(2) { animation-delay: calc(var(--duration) * 1.5/100); }
+  .calc-stage[data-anim="on"] .results-grid > article:nth-child(3) { animation-delay: calc(var(--duration) * 2.5/100); }
+  .calc-stage[data-anim="on"] .results-grid > article:nth-child(4) { animation-delay: calc(var(--duration) * 3.5/100); }
+  @keyframes cardIn {
+    0%, 76%   { opacity: 0; transform: translateY(8px); }
+    79%, 96%  { opacity: 1; transform: translateY(0); }
+    97%, 100% { opacity: 0; transform: translateY(0); }
+  }
+  .results-grid article .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .results-grid article h5 {
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.25;
+    max-width: 70%;
+  }
+  .results-grid article .score {
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .results-grid article ul { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .results-grid article ul li.indent { padding-left: 10px; }
+  .results-grid article ul li.subtotal { font-weight: 700; padding-top: 4px; margin-top: 4px; border-top: 1px solid currentColor; opacity: 0.8; }
+  .results-grid article ul li.italic { font-style: italic; }
+
+  .results-grid article.c-core { background: var(--blue-50);  border-color: var(--blue-200);  color: var(--blue-700); }
+  .results-grid article.c-core   h5 { color: var(--blue-800); }
+  .results-grid article.c-core   .score { color: var(--blue-600); }
+  .results-grid article.c-spouse { background: var(--pink-50);  border-color: var(--pink-200);  color: var(--pink-700); }
+  .results-grid article.c-spouse h5 { color: var(--pink-800); }
+  .results-grid article.c-spouse .score { color: var(--pink-600); }
+  .results-grid article.c-trans { background: var(--green-50); border-color: var(--green-200); color: var(--green-700); }
+  .results-grid article.c-trans h5 { color: var(--green-800); }
+  .results-grid article.c-trans .score { color: var(--green-600); }
+  .results-grid article.c-add { background: var(--purple-50); border-color: var(--purple-200); color: var(--purple-700); }
+  .results-grid article.c-add h5 { color: var(--purple-800); }
+  .results-grid article.c-add .score { color: var(--purple-600); }
+
+  .results-foot {
+    background: #f6f6f6;
+    border-top: 1px solid var(--ink-5);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .results-foot .btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: var(--type);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+  }
+  .results-foot .btn.ghost { background: #4a4847; color: #fff; }
+  .results-foot .btn.red   { background: linear-gradient(90deg, var(--red), var(--red-d)); color: #fff; }
+
+  .showcase-cap {
+    margin-top: 28px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .showcase-cap b { color: var(--red); }
+
+  /* ╭───────────────────────────────────────────────────╮
+     │ FSWP SHOWCASE · the second tool — section IV.01   │
+     ╰───────────────────────────────────────────────────╯ */
+
+  /* extra color bands needed for FSWP sections */
+  :root {
+    --yellow-50:  #fefce8;
+    --yellow-100: #fef9c3;
+    --yellow-200: #fef08a;
+    --yellow-300: #fde047;
+    --yellow-600: #ca8a04;
+    --yellow-700: #a16207;
+    --yellow-800: #854d0e;
+
+    --orange-50:  #fff7ed;
+    --orange-100: #ffedd5;
+    --orange-200: #fed7aa;
+    --orange-300: #fdba74;
+    --orange-600: #ea580c;
+    --orange-700: #c2410c;
+    --orange-800: #9a3412;
+
+    --rose-50:   #fff1f2;
+    --rose-100:  #ffe4e6;
+    --rose-200:  #fecdd3;
+    --rose-600:  #e11d48;
+    --rose-800:  #9f1239;
+  }
+
+  /* sidebar active state for steps that need new colors */
+  .calc-sidebar li.yellow.active {
+    background: linear-gradient(90deg, var(--yellow-600), var(--yellow-700));
+    border-color: #facc15;
+  }
+
+  /* extra avatar variants */
+  .av.orange { background: linear-gradient(135deg, var(--orange-600), var(--orange-700)); }
+  .av.yellow { background: linear-gradient(135deg, var(--yellow-600), var(--yellow-700)); }
+
+  /* extra info-card variants used in FSWP panes */
+  .calc-panel .info-card.pink   { background: linear-gradient(90deg, var(--pink-50), var(--pink-100));      border-color: var(--pink-600); }
+  .calc-panel .info-card.yellow { background: linear-gradient(90deg, var(--yellow-50), var(--yellow-100));  border-color: var(--yellow-600); }
+  .calc-panel .info-card.orange { background: linear-gradient(90deg, var(--orange-50), var(--orange-100)); border-color: var(--orange-600); }
+  .calc-panel .info-card.purple { background: linear-gradient(90deg, var(--purple-50), var(--purple-100)); border-color: var(--purple-600); }
+
+  /* sidebar active-state per FSWP step (overrides generic a1..a6 by specificity) */
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="1"] { animation: fa1 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="2"] { animation: fa2 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="3"] { animation: fa3 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="4"] { animation: fa4 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="5"] { animation: fa5 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .calc-sidebar li[data-step="6"] { animation: fa6 var(--duration) linear infinite; }
+
+  @keyframes fa1 {
+    0%,   11%  { background: linear-gradient(90deg, var(--blue-600), var(--blue-700));     color: #fff; border-color: #3b82f6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    12%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes fa2 {
+    0%,   11%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    12%, 23%  { background: linear-gradient(90deg, var(--green-600), var(--green-700));   color: #fff; border-color: #4ade80; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    24%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes fa3 {
+    0%,   23%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    24%, 35%  { background: linear-gradient(90deg, var(--orange-600), var(--orange-700)); color: #fff; border-color: #fb923c; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    36%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes fa4 {
+    0%,   35%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    36%, 47%  { background: linear-gradient(90deg, var(--pink-600), var(--pink-700));     color: #fff; border-color: #f472b6; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    48%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes fa5 {
+    0%,   47%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    48%, 59%  { background: linear-gradient(90deg, var(--purple-600), var(--purple-700)); color: #fff; border-color: #c084fc; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    60%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+  @keyframes fa6 {
+    0%,   59%  { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+    60%, 72%  { background: linear-gradient(90deg, var(--yellow-600), var(--yellow-700)); color: #fff; border-color: #facc15; box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35); }
+    73%, 100% { background: #f6f6f6; color: var(--ink); border-color: transparent; box-shadow: none; }
+  }
+
+  /* "Important Notice" red alert banner (CLB threshold warning) */
+  .fswp .alert {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, #fef2f2, #fee2e2);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #991b1b;
+    line-height: 1.45;
+  }
+  .fswp .alert .ai {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #dc2626;
+    color: #fff;
+    display: grid; place-items: center;
+    font-weight: 800;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .fswp .alert b { color: #7f1d1d; font-weight: 700; }
+
+  /* Two side-by-side test cards (Language Test 1 + Language Test 2) */
+  .fswp .dual-test {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .fswp .test-card {
+    border-radius: 10px;
+    padding: 12px 12px 10px;
+    border: 1px solid;
+  }
+  .fswp .test-card.blue  { background: linear-gradient(180deg, var(--blue-50), #fbfdff);   border-color: var(--blue-200); }
+  .fswp .test-card.green { background: linear-gradient(180deg, var(--green-50), #fcfffd);  border-color: var(--green-200); }
+  .fswp .test-card h6 {
+    display: flex; align-items: center; gap: 7px;
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 6px;
+    letter-spacing: -0.005em;
+  }
+  .fswp .test-card .num {
+    display: inline-grid; place-items: center;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    color: #fff; font-size: 10px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .fswp .test-card.blue  h6 { color: var(--blue-800); }
+  .fswp .test-card.blue  .num { background: var(--blue-600); }
+  .fswp .test-card.green h6 { color: var(--green-800); }
+  .fswp .test-card.green .num { background: var(--green-600); }
+  .fswp .test-card .hint { font-size: 10.5px; color: var(--ink-3); line-height: 1.5; margin-bottom: 8px; }
+  .fswp .test-card .scores-head { font-size: 10.5px; color: var(--blue-700); font-weight: 700; text-decoration: underline; margin: 4px 0 6px; }
+  .fswp .test-card label { font-size: 11px; margin-bottom: 4px; font-weight: 600; }
+  .fswp .test-card .select {
+    height: 32px;
+    font-size: 11.5px;
+    padding: 0 9px;
+    margin-bottom: 6px;
+  }
+  /* 4-skill 2x2 grid inside language card */
+  .fswp .skill-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .fswp .skill-grid .select { margin-bottom: 0; }
+
+  /* Multi-select checkbox list (Adaptability) */
+  .fswp .check-list {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .fswp .ck-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 13px;
+    border: 1px solid var(--ink-5);
+    border-radius: 9px;
+    background: #fafafa;
+    font-size: 12.5px;
+    color: var(--ink);
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .fswp .ck-item .box {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink-4);
+    border-radius: 4px;
+    background: #fff;
+    display: grid; place-items: center;
+    color: transparent;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  .fswp .ck-item .lbl { flex: 1; }
+  .fswp .ck-item .pts {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--yellow-700);
+    background: rgba(202, 138, 4, 0.12);
+    padding: 3px 9px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  /* per-checkbox activation — timing baked into each keyframe so the wrap snap
+     (100% → 0%) happens during the results view, when pane 6 isn't visible */
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="1"]      { animation: ckRow1 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="2"]      { animation: ckRow2 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="3"]      { animation: ckRow3 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="1"] .box { animation: ckBox1 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="2"] .box { animation: ckBox2 var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .ck-item[data-c="3"] .box { animation: ckBox3 var(--duration) linear infinite; }
+  @keyframes ckRow1 {
+    0%, 62%   { background: #fafafa;          border-color: var(--ink-5); }
+    63%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); }
+  }
+  @keyframes ckRow2 {
+    0%, 64%   { background: #fafafa;          border-color: var(--ink-5); }
+    65%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); }
+  }
+  @keyframes ckRow3 {
+    0%, 66%   { background: #fafafa;          border-color: var(--ink-5); }
+    67%, 100% { background: var(--yellow-50); border-color: var(--yellow-300); }
+  }
+  @keyframes ckBox1 {
+    0%, 62%   { background: #fff;             border-color: var(--ink-4);     color: transparent; }
+    63%, 100% { background: var(--yellow-600);border-color: var(--yellow-600);color: #fff; }
+  }
+  @keyframes ckBox2 {
+    0%, 64%   { background: #fff;             border-color: var(--ink-4);     color: transparent; }
+    65%, 100% { background: var(--yellow-600);border-color: var(--yellow-600);color: #fff; }
+  }
+  @keyframes ckBox3 {
+    0%, 66%   { background: #fff;             border-color: var(--ink-4);     color: transparent; }
+    67%, 100% { background: var(--yellow-600);border-color: var(--yellow-600);color: #fff; }
+  }
+
+  /* FSWP-specific select fill timing (matches each pane's visibility window) */
+  .fswp .calc-panel .select.fs1   { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .fswp .calc-panel .select.fs1a  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 4/100); }
+  .fswp .calc-panel .select.fs1b  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 5/100); }
+  .fswp .calc-panel .select.fs1c  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 6/100); }
+  .fswp .calc-panel .select.fs1d  { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 7/100); }
+  .fswp .calc-panel .select.fs1e  { color: var(--ink); border-color: var(--ink-3); } /* "None or not applicable" pre-filled */
+  .fswp .calc-panel .select.fs2   { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .fswp .calc-panel .select.fs3   { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .fswp .calc-panel .select.fs4   { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .fswp .calc-panel .select.fs5   { animation: fillSelect var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+
+  /* matching placeholder/picked swap for FSWP selects */
+  .fswp .calc-panel .select.fs1  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .fswp .calc-panel .select.fs1  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 2/100); }
+  .fswp .calc-panel .select.fs1a .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 4/100); }
+  .fswp .calc-panel .select.fs1a .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 4/100); }
+  .fswp .calc-panel .select.fs1b .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 5/100); }
+  .fswp .calc-panel .select.fs1b .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 5/100); }
+  .fswp .calc-panel .select.fs1c .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 6/100); }
+  .fswp .calc-panel .select.fs1c .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 6/100); }
+  .fswp .calc-panel .select.fs1d .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 7/100); }
+  .fswp .calc-panel .select.fs1d .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 7/100); }
+  /* fs1e is pre-filled; no animation needed — show picked text from frame zero */
+  .fswp .calc-panel .select.fs1e .placeholder { opacity: 0; }
+  .fswp .calc-panel .select.fs1e .picked      { opacity: 1; position: relative; }
+  .fswp .calc-panel .select.fs2  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .fswp .calc-panel .select.fs2  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 14/100); }
+  .fswp .calc-panel .select.fs3  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .fswp .calc-panel .select.fs3  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 26/100); }
+  .fswp .calc-panel .select.fs4  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .fswp .calc-panel .select.fs4  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 38/100); }
+  .fswp .calc-panel .select.fs5  .placeholder { animation: hidePlaceholder var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+  .fswp .calc-panel .select.fs5  .picked      { animation: showPicked      var(--duration) linear infinite; animation-delay: calc(var(--duration) * 50/100); }
+
+  /* FSWP results — 6-tile grid */
+  .fswp .results-grid-fswp {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .fswp .results-grid-fswp > article {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .fswp .results-grid-fswp .lbl    { font-size: 12px; font-weight: 600; line-height: 1.35; max-width: 70%; }
+  .fswp .results-grid-fswp .lbl small { display: block; font-weight: 500; opacity: 0.78; font-size: 10.5px; margin-top: 2px; }
+  .fswp .results-grid-fswp .num    { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+
+  .fswp .results-grid-fswp article.t-lang  { background: var(--green-50);  border-color: var(--green-200);  color: var(--green-800); }
+  .fswp .results-grid-fswp article.t-lang  .num { color: var(--green-600); }
+  .fswp .results-grid-fswp article.t-adapt { background: var(--purple-50); border-color: var(--purple-200); color: var(--purple-800); }
+  .fswp .results-grid-fswp article.t-adapt .num { color: var(--purple-600); }
+  .fswp .results-grid-fswp article.t-edu   { background: var(--blue-50);   border-color: var(--blue-200);   color: var(--blue-800); }
+  .fswp .results-grid-fswp article.t-edu   .num { color: var(--blue-600); }
+  .fswp .results-grid-fswp article.t-emp   { background: var(--rose-50);   border-color: var(--rose-200);   color: var(--rose-800); }
+  .fswp .results-grid-fswp article.t-emp   .num { color: var(--rose-600); }
+  .fswp .results-grid-fswp article.t-work  { background: var(--orange-50); border-color: var(--orange-200); color: var(--orange-800); }
+  .fswp .results-grid-fswp article.t-work  .num { color: var(--orange-600); }
+  .fswp .results-grid-fswp article.t-age   { background: var(--pink-50);   border-color: var(--pink-200);   color: var(--pink-800); }
+  .fswp .results-grid-fswp article.t-age   .num { color: var(--pink-600); }
+
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article { animation: cardIn var(--duration) linear infinite; }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(1) { animation-delay: calc(var(--duration) * 0.4/100); }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(2) { animation-delay: calc(var(--duration) * 1.0/100); }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(3) { animation-delay: calc(var(--duration) * 1.6/100); }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(4) { animation-delay: calc(var(--duration) * 2.2/100); }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(5) { animation-delay: calc(var(--duration) * 2.8/100); }
+  .fswp .calc-stage[data-anim="on"] .results-grid-fswp > article:nth-child(6) { animation-delay: calc(var(--duration) * 3.4/100); }
+
+  /* eligibility note above the breakdown */
+  .fswp .note-eligibility {
+    background: linear-gradient(90deg, var(--yellow-50), #fffbeb);
+    border: 1px solid var(--yellow-200);
+    border-left: 4px solid var(--yellow-600);
+    border-radius: 8px;
+    padding: 11px 16px;
+    margin: 0 0 16px;
+    font-size: 11.5px;
+    color: #713f12;
+    line-height: 1.55;
+  }
+  .fswp .note-eligibility b { color: #422006; font-weight: 700; }
+
+  /* the FSWP results gradient on the score area should tint yellow (eligibility), not blue */
+  .fswp .results-score {
+    background: linear-gradient(135deg, #fffbeb, #fef9c3);
+  }
+
+  /* FSWP pane 1 needs more vertical room for the two test cards side-by-side */
+  .fswp .calc-panel { min-height: 520px; }
+
+  /* responsive ------------------------------------- */
+  @media (max-width: 920px) {
+    .showcase { padding: 64px 20px; }
+    .showcase-head { grid-template-columns: 1fr; gap: 18px; padding-bottom: 32px; margin-bottom: 32px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .calc-panel { min-height: 380px; }
+    .results-grid { grid-template-columns: 1fr; }
+    .fswp .calc-panel { min-height: 640px; }
+    .fswp .dual-test { grid-template-columns: 1fr; }
+    .fswp .results-grid-fswp { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONTEXT ABOVE -->
+<div class="context-pre">
+  · End of <span class="e">section II</span> · The website rebuild ·
+</div>
+
+<!-- ─────────────────────────────────────────────
+     CALCULATOR SHOWCASE · the new section
+     ───────────────────────────────────────────── -->
+<section class="showcase">
+
+  <header class="showcase-head">
+    <div class="lead">
+      <p class="plate">Plate № III.01 · The CRS calculator</p>
+      <h3>
+        One screen. <em>Six sections.</em> Six hundred points.
+      </h3>
+    </div>
+    <div class="body">
+      <p>
+        The first of three custom tools we built into the rebuild. A faithful
+        port of IRCC&rsquo;s Comprehensive Ranking System grid — every field
+        below maps to a published selection criterion. <strong>Watch it run.</strong>
+      </p>
+      <p>
+        Live at <strong>northernpathways.ca/crs-calculator</strong>. The animation
+        below cycles a real applicant&rsquo;s file through all six sections, then
+        renders the score and the colour-coded breakdown the way the live tool does.
+      </p>
+    </div>
+  </header>
+
+  <div class="calc-shell">
+    <div class="calc-rail">
+      <span class="l">● &nbsp; Live tool · /crs-calculator</span>
+      <span class="r"><span class="dot"></span>Recording &middot; loop 24s &middot; real values</span>
+    </div>
+
+    <div class="calc-stage" data-anim="on">
+
+      <!-- ╭───────────────╮
+           │ FORM VIEW     │
+           ╰───────────────╯ -->
+      <div class="view form">
+        <div class="form-grid">
+
+          <!-- SIDEBAR -->
+          <aside class="calc-sidebar">
+            <h4>Assessment Factors</h4>
+            <ul>
+              <li class="blue"   data-step="1"><span class="ic">👤</span><span class="nm">Age</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="pink"   data-step="2"><span class="ic">💍</span><span class="nm">Marital Status</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="red"    data-step="3"><span class="ic">🎓</span><span class="nm">Education</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="blue"   data-step="4"><span class="ic">🗣️</span><span class="nm">Language Proficiency</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="green"  data-step="5"><span class="ic">💼</span><span class="nm">Work Experience</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="purple" data-step="6"><span class="ic">⭐</span><span class="nm">Additional Factors</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+            </ul>
+          </aside>
+
+          <!-- MAIN PANEL — panes cycle through 1..6 -->
+          <main class="calc-panel">
+
+            <!-- Pane 1 · Age -->
+            <div class="pane p1">
+              <div class="head"><span class="av blue">👤</span><h2>Age</h2></div>
+              <label>How old are you? <span class="req">*</span></label>
+              <div class="select s1"><span class="placeholder">Select</span><span class="picked">32 years old</span></div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 2 · Marital Status -->
+            <div class="pane p2">
+              <div class="head"><span class="av pink">💍</span><h2>Marital Status</h2></div>
+              <label>Are you married or in a common-law relationship? <span class="req">*</span></label>
+              <div class="select s2"><span class="placeholder">Select</span><span class="picked">Married — spouse not accompanying</span></div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 3 · Education -->
+            <div class="pane p3">
+              <div class="head"><span class="av red">🎓</span><h2>Education</h2></div>
+              <label>What is your highest level of education? <span class="req">*</span></label>
+              <div class="select s3"><span class="placeholder">Select</span><span class="picked">Master&rsquo;s degree — ECA verified</span></div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 4 · Language Proficiency -->
+            <div class="pane p4">
+              <div class="head"><span class="av blue">🗣️</span><h2>Language Proficiency</h2></div>
+              <div class="info-card blue"><b>First official language (English)</b> — CLB across all four skills.</div>
+              <div class="row">
+                <div>
+                  <label>Speaking</label>
+                  <div class="select s4a"><span class="placeholder">Select</span><span class="picked">CLB 9</span></div>
+                </div>
+                <div>
+                  <label>Listening</label>
+                  <div class="select s4b"><span class="placeholder">Select</span><span class="picked">CLB 9</span></div>
+                </div>
+                <div>
+                  <label>Reading</label>
+                  <div class="select s4c"><span class="placeholder">Select</span><span class="picked">CLB 9</span></div>
+                </div>
+                <div>
+                  <label>Writing</label>
+                  <div class="select s4d"><span class="placeholder">Select</span><span class="picked">CLB 9</span></div>
+                </div>
+              </div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 5 · Work Experience -->
+            <div class="pane p5">
+              <div class="head"><span class="av green">💼</span><h2>Work Experience</h2></div>
+              <label>Foreign work experience (NOC TEER 0–3) <span class="req">*</span></label>
+              <div class="select s5a"><span class="placeholder">Select</span><span class="picked">3+ years — skilled, paid</span></div>
+              <label>Canadian work experience</label>
+              <div class="select s5b"><span class="placeholder">Select</span><span class="picked">1 year — full-time</span></div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 6 · Additional Factors -->
+            <div class="pane p6">
+              <div class="head"><span class="av purple">⭐</span><h2>Additional Factors</h2></div>
+              <label>Provincial nomination</label>
+              <div class="select s6a"><span class="placeholder">Select</span><span class="picked">None</span></div>
+              <label>Study in Canada</label>
+              <div class="select s6b"><span class="placeholder">Select</span><span class="picked">1–2 year credential</span></div>
+              <div class="pane-foot"><span class="btn-next">Calculate →</span></div>
+            </div>
+
+          </main>
+        </div>
+
+        <!-- CTA + progress -->
+        <div class="calc-cta-wrap">
+          <span class="calc-cta"><span class="ic">🖩</span> Calculate My CRS Score →</span>
+          <p class="calc-progress">
+            Form progress:
+            <span class="pct">
+              <span class="v" data-v="0">0%</span>
+              <span class="v" data-v="13">13%</span>
+              <span class="v" data-v="27">27%</span>
+              <span class="v" data-v="40">40%</span>
+              <span class="v" data-v="60">60%</span>
+              <span class="v" data-v="75">75%</span>
+              <span class="v" data-v="100">100%</span>
+            </span>
+          </p>
+          <div class="calc-progress-bar"><span></span></div>
+        </div>
+      </div>
+
+      <!-- ╭───────────────╮
+           │ RESULTS VIEW  │
+           ╰───────────────╯ -->
+      <div class="view results">
+        <div class="results-card">
+          <div class="results-head">
+            <h2>Your CRS Score</h2>
+            <p>Comprehensive Ranking System Score Breakdown</p>
+          </div>
+          <div class="results-score">
+            <div class="score-circle">
+              <div><div class="num">524</div><div class="lbl">Points</div></div>
+            </div>
+            <p class="results-total">Total CRS Score</p>
+          </div>
+          <div class="results-grid-wrap">
+            <p class="grid-head">Score Breakdown</p>
+            <div class="results-grid">
+
+              <article class="c-core">
+                <div class="top"><h5>Core / Human capital factors</h5><span class="score">421</span></div>
+                <ul>
+                  <li>Age = 110</li>
+                  <li>Level of education = 135</li>
+                  <li>Official Languages = 136</li>
+                  <li class="indent">· First Official Language = 136</li>
+                  <li class="indent">· Second Official Language = 0</li>
+                  <li>Canadian work experience = 40</li>
+                  <li class="subtotal">Subtotal — Core / Human capital factors = 421</li>
+                </ul>
+              </article>
+
+              <article class="c-spouse">
+                <div class="top"><h5>Spouse factors</h5><span class="score">0</span></div>
+                <ul>
+                  <li>Level of education = 0</li>
+                  <li>First Official Languages = 0</li>
+                  <li>Canadian work experience = 0</li>
+                  <li class="subtotal">Subtotal — Spouse factors = 0</li>
+                </ul>
+              </article>
+
+              <article class="c-trans">
+                <div class="top"><h5>Skill transferability factors</h5><span class="score">88</span></div>
+                <ul>
+                  <li><b>Education (max 50)</b></li>
+                  <li class="indent">A) Language &amp; education = 50</li>
+                  <li class="indent">B) Canadian exp &amp; education = 25</li>
+                  <li class="indent italic">Subtotal = 50</li>
+                  <li><b>Foreign work experience (max 50)</b></li>
+                  <li class="indent">A) Language &amp; foreign exp = 25</li>
+                  <li class="indent">B) Canadian &amp; foreign exp = 13</li>
+                  <li class="indent italic">Subtotal = 38</li>
+                  <li>Certificate of qualification = 0</li>
+                  <li class="subtotal italic">Subtotal — Skill transferability = 88</li>
+                </ul>
+              </article>
+
+              <article class="c-add">
+                <div class="top"><h5>Additional points (max 600)</h5><span class="score">15</span></div>
+                <ul>
+                  <li>Provincial nomination = 0</li>
+                  <li>Study in Canada = 15</li>
+                  <li>Sibling in Canada = 0</li>
+                  <li>French-language skills = 0</li>
+                  <li class="subtotal">Subtotal — Additional points = 15</li>
+                </ul>
+              </article>
+
+            </div>
+          </div>
+          <div class="results-foot">
+            <button class="btn ghost">Hide Results</button>
+            <button class="btn red">Calculate New Score →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="showcase-cap">
+    fig. iii — the live tool, cycling all six sections. <b>real values, real grid.</b>
+  </p>
+
+</section>
+
+<!-- CONTEXT BELOW -->
+<div class="context-post">
+  Begin <span class="e">section IV</span> · The Six Selection Factors checker ·
+</div>
+
+<!-- ─────────────────────────────────────────────
+     FSWP SHOWCASE · the second tool · section IV
+     ───────────────────────────────────────────── -->
+<section class="showcase fswp">
+
+  <header class="showcase-head">
+    <div class="lead">
+      <p class="plate">Plate № IV.01 · The FSWP checker</p>
+      <h3>
+        One hundred points. <em>Six selection factors.</em> Pass <em>67</em>.
+      </h3>
+    </div>
+    <div class="body">
+      <p>
+        The second eligibility tool we shipped: a faithful port of IRCC&rsquo;s
+        Six Selection Factors grid for the Federal Skilled Worker Program.
+        <strong>Pass threshold: 67 / 100.</strong>
+      </p>
+      <p>
+        Live at <strong>northernpathways.ca/fswp-calculator</strong>. The same
+        applicant cycles through every factor &mdash; language, education,
+        skilled work, age, arranged employment, adaptability &mdash; then renders
+        the score against the IRCC pass line.
+      </p>
+    </div>
+  </header>
+
+  <div class="calc-shell">
+    <div class="calc-rail">
+      <span class="l">● &nbsp; Live tool · /fswp-calculator</span>
+      <span class="r"><span class="dot"></span>Recording &middot; loop 24s &middot; same applicant</span>
+    </div>
+
+    <div class="calc-stage" data-anim="on">
+
+      <!-- ╭───────────────╮
+           │ FORM VIEW     │
+           ╰───────────────╯ -->
+      <div class="view form">
+        <div class="form-grid">
+
+          <!-- SIDEBAR -->
+          <aside class="calc-sidebar">
+            <h4>Assessment Factors</h4>
+            <ul>
+              <li class="blue"   data-step="1"><span class="ic">🗣️</span><span class="nm">Language Skills</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="green"  data-step="2"><span class="ic">🎓</span><span class="nm">Education</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="orange" data-step="3"><span class="ic">💼</span><span class="nm">Skilled Work</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="pink"   data-step="4"><span class="ic">👤</span><span class="nm">Age</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="purple" data-step="5"><span class="ic">🏢</span><span class="nm">Arranged Employment</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+              <li class="yellow" data-step="6"><span class="ic">⭐</span><span class="nm">Adaptability</span><span class="ind"><span class="spin"></span><span class="check">✓</span></span></li>
+            </ul>
+          </aside>
+
+          <!-- MAIN PANEL -->
+          <main class="calc-panel">
+
+            <!-- Pane 1 · Language Proficiency -->
+            <div class="pane p1">
+              <div class="head"><span class="av blue">🗣️</span><h2>Language Proficiency</h2></div>
+
+              <div class="alert">
+                <span class="ai">!</span>
+                <div><b>Important Notice</b><br/>Warning: Below CLB 7 &mdash; Not eligible to apply</div>
+              </div>
+
+              <div class="dual-test">
+                <div class="test-card blue">
+                  <h6><span class="num">1</span>Language Test &mdash; 1</h6>
+                  <p class="hint">Which language test have you taken, or do you plan to take?<span class="req">&nbsp;*</span></p>
+                  <div class="select fs1"><span class="placeholder">Select test</span><span class="picked">CELPIP-G</span></div>
+                  <p class="scores-head">Language scores below</p>
+                  <div class="skill-grid">
+                    <div>
+                      <label>Listening *</label>
+                      <div class="select fs1a"><span class="placeholder">Select</span><span class="picked">10-12 (CLB 10)</span></div>
+                    </div>
+                    <div>
+                      <label>Speaking *</label>
+                      <div class="select fs1b"><span class="placeholder">Select</span><span class="picked">10-12 (CLB 10)</span></div>
+                    </div>
+                    <div>
+                      <label>Reading *</label>
+                      <div class="select fs1c"><span class="placeholder">Select</span><span class="picked">10-12 (CLB 10)</span></div>
+                    </div>
+                    <div>
+                      <label>Writing *</label>
+                      <div class="select fs1d"><span class="placeholder">Select</span><span class="picked">10-12 (CLB 10)</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="test-card green">
+                  <h6><span class="num">2</span>Language Test &mdash; 2</h6>
+                  <p class="hint">
+                    Use this option only if you want to include a second language test
+                    (English or French). If you do not plan to include one, you may
+                    leave this section blank.
+                  </p>
+                  <div class="select fs1e"><span class="placeholder">Select</span><span class="picked">None or not applicable</span></div>
+                </div>
+              </div>
+
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 2 · Education -->
+            <div class="pane p2">
+              <div class="head"><span class="av green">🎓</span><h2>Education</h2></div>
+              <label>What is your highest level of education? <span class="req">*</span></label>
+              <div class="select fs2"><span class="placeholder">Select</span><span class="picked">Master&rsquo;s degree</span></div>
+              <div class="info-card green">
+                <b>Per IRCC grid.</b> Doctorate = 25 · Master&rsquo;s or professional degree = 23 ·
+                two or more credentials (one 3+ years) = 22 · bachelor = 21.
+              </div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 3 · Skilled Work Experience -->
+            <div class="pane p3">
+              <div class="head"><span class="av orange">💼</span><h2>Skilled Work Experience</h2></div>
+              <label>How many years of skilled work experience do you have? <span class="req">*</span></label>
+              <div class="select fs3"><span class="placeholder">Select</span><span class="picked">2&ndash;3 years</span></div>
+              <div class="info-card orange">
+                <b>NOC TEER 0, 1, 2 or 3 only.</b> Continuous paid work in the last ten years.
+                Maximum 15 points at 6+ years; 1 year = 9 points.
+              </div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 4 · Age -->
+            <div class="pane p4">
+              <div class="head"><span class="av pink">👤</span><h2>Age</h2></div>
+              <label>What is your age? <span class="req">*</span></label>
+              <div class="select fs4"><span class="placeholder">Select</span><span class="picked">18&ndash;35 years</span></div>
+              <div class="info-card pink">
+                <b>Peak window.</b> 18&ndash;35 awards the full 12 points; one point drops for
+                each year from 36 onward, reaching 0 at age 47+.
+              </div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 5 · Arranged Employment -->
+            <div class="pane p5">
+              <div class="head"><span class="av purple">🏢</span><h2>Arranged Employment</h2></div>
+              <label>Do you have a valid job offer from a Canadian employer? <span class="req">*</span></label>
+              <div class="select fs5"><span class="placeholder">Select</span><span class="picked">No</span></div>
+              <div class="info-card purple">
+                <b>Requires a positive LMIA</b>, or an LMIA-exempt offer that meets IRCC&rsquo;s
+                employer compliance criteria. All-or-nothing: <b>0 or 10</b>.
+              </div>
+              <div class="pane-foot"><span class="btn-next">Next →</span></div>
+            </div>
+
+            <!-- Pane 6 · Adaptability -->
+            <div class="pane p6">
+              <div class="head"><span class="av yellow">⭐</span><h2>Adaptability</h2></div>
+              <label>Select all factors that apply &mdash; cap of 10 points total:</label>
+              <div class="check-list">
+                <div class="ck-item" data-c="1">
+                  <span class="box">✓</span>
+                  <span class="lbl">Previous Canadian study (1+ years)</span>
+                  <span class="pts">+5</span>
+                </div>
+                <div class="ck-item" data-c="2">
+                  <span class="box">✓</span>
+                  <span class="lbl">Previous Canadian work (1+ years)</span>
+                  <span class="pts">+10</span>
+                </div>
+                <div class="ck-item" data-c="3">
+                  <span class="box">✓</span>
+                  <span class="lbl">Relatives in Canada (citizen or PR)</span>
+                  <span class="pts">+5</span>
+                </div>
+              </div>
+              <div class="info-card yellow">
+                <b>Cap at 10.</b> Stack as many factors as apply &mdash; the total still
+                won&rsquo;t exceed 10 points toward your FSWP score.
+              </div>
+              <div class="pane-foot"><span class="btn-next">Calculate →</span></div>
+            </div>
+
+          </main>
+        </div>
+
+        <!-- CTA + progress -->
+        <div class="calc-cta-wrap">
+          <span class="calc-cta"><span class="ic">🖩</span> Calculate FSWP Score →</span>
+          <p class="calc-progress">
+            Form progress:
+            <span class="pct">
+              <span class="v" data-v="0">0%</span>
+              <span class="v" data-v="13">13%</span>
+              <span class="v" data-v="27">27%</span>
+              <span class="v" data-v="40">40%</span>
+              <span class="v" data-v="60">60%</span>
+              <span class="v" data-v="75">75%</span>
+              <span class="v" data-v="100">100%</span>
+            </span>
+          </p>
+          <div class="calc-progress-bar"><span></span></div>
+        </div>
+      </div>
+
+      <!-- ╭───────────────╮
+           │ RESULTS VIEW  │
+           ╰───────────────╯ -->
+      <div class="view results">
+        <div class="results-card">
+          <div class="results-head">
+            <h2>Your FSWP Score Results</h2>
+            <p>Federal Skilled Worker Program Score Breakdown</p>
+          </div>
+          <div class="results-score">
+            <div class="score-circle">
+              <div><div class="num">78</div><div class="lbl">Points</div></div>
+            </div>
+            <p class="results-total">Total FSWP Score</p>
+          </div>
+          <div class="results-grid-wrap">
+            <div class="note-eligibility">
+              <b>Note:</b> To be eligible for the Federal Skilled Worker Program, you must
+              score at least <b>67 points</b> and meet all program requirements.
+            </div>
+            <p class="grid-head">Score Breakdown</p>
+            <div class="results-grid-fswp">
+
+              <article class="t-lang">
+                <span class="lbl">Language skills<small>(maximum 28 points)</small></span>
+                <span class="num">24</span>
+              </article>
+
+              <article class="t-adapt">
+                <span class="lbl">Adaptability<small>(maximum 10 points)</small></span>
+                <span class="num">10</span>
+              </article>
+
+              <article class="t-edu">
+                <span class="lbl">Education<small>(maximum 25 points)</small></span>
+                <span class="num">23</span>
+              </article>
+
+              <article class="t-emp">
+                <span class="lbl">Arranged employment in Canada<small>(maximum 10 points)</small></span>
+                <span class="num">0</span>
+              </article>
+
+              <article class="t-work">
+                <span class="lbl">Skilled work experience<small>(maximum 15 points)</small></span>
+                <span class="num">9</span>
+              </article>
+
+              <article class="t-age">
+                <span class="lbl">Age<small>(maximum 12 points)</small></span>
+                <span class="num">12</span>
+              </article>
+
+            </div>
+          </div>
+          <div class="results-foot">
+            <button class="btn ghost">Hide Results</button>
+            <button class="btn red">Calculate New Score →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="showcase-cap">
+    fig. iv &mdash; six selection factors. <b>pass threshold: 67 / 100.</b>
+  </p>
+
+</section>
+
+<!-- CONTEXT BELOW (after FSWP) -->
+<div class="context-post">
+  Begin <span class="e">section V</span> · The Express Entry draws tracker ·
+</div>
+
+</body>
+</html>
