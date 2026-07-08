@@ -289,9 +289,7 @@ export function AydinCPAPage({ client }: Props) {
 
         .ac-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:820px;margin:0 auto}
         .ac-reels .rcell{position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;border-radius:12px;aspect-ratio:9/16;background:#111;box-shadow:0 12px 30px rgba(4,69,133,.16);transition:transform .3s ease}
-        .ac-reels .rcell img{width:100%;height:100%;object-fit:cover}
         .ac-reels .rcell:hover{transform:translateY(-4px)}
-        .ac-reels .play{position:absolute;inset:0;margin:auto;width:60px;height:60px;border-radius:50%;background:rgba(236,128,35,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
         .ac-reels .rtag{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;color:#fff;font-family:"Montserrat",sans-serif;font-weight:700;font-size:13px;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.6)}
         .ac-page .ac-reels .rcell video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
         .ac-page .ac-reels .rcell{background:#111}
@@ -303,7 +301,7 @@ export function AydinCPAPage({ client }: Props) {
         .ac-browser-bar .dot{width:11px;height:11px;border-radius:50%}
         .ac-browser-bar .dot.r{background:#ff5f57}.ac-browser-bar .dot.y{background:#febc2e}.ac-browser-bar .dot.g{background:#28c840}
         .ac-url{margin-left:14px;font-size:13px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.08);padding:4px 14px;border-radius:100px}
-        .ac-browser-shot{line-height:0}.ac-browser-shot img{width:100%;height:auto;display:block}
+        .ac-browser-shot{line-height:0;max-height:620px;overflow:hidden}.ac-browser-shot img{width:100%;height:auto;display:block}
         .ac-web-below{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end;margin-top:40px}
         .ac-web-features{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:20px 40px}
         .ac-web-features li{border-top:2px solid rgba(255,255,255,.14);padding-top:12px}
@@ -347,6 +345,12 @@ export function AydinCPAPage({ client }: Props) {
           .ac-rail-center{display:none}
         }
         @media (max-width:520px){.ac-pillars .grid{grid-template-columns:1fr}}
+
+        @media (prefers-reduced-motion: reduce){
+          .ac-page .ac-marquee-track{animation:none;transform:none}
+          .ac-page .ac-hcard,.ac-page .ac-grid .cell,.ac-page .ac-reels .rcell,.ac-page .pill,.ac-page .ac-visit{transition:none}
+          .ac-page .ac-hcard:hover{transform:none}
+        }
       `}</style>
     </div>
   );
