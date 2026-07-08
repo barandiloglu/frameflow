@@ -57,6 +57,27 @@ export function AydinCPAPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="ac-marquee" aria-hidden="true">
+        <div className="ac-marquee-track">
+          {[0, 1].map((dup) => (
+            <span className="ac-marquee-group" key={dup}>
+              {["FHSA", "Salary or Dividend", "CRA Red Flags", "Did You Hit $30,000?", "Business Guides", "Deadlines & Urgency"].map((h) => (
+                <span className="ac-marquee-item" key={h}>{h}<i>✦</i></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="ac-brief">
+        <div className="ac-brief-inner">
+          <span className="ac-brief-stamp">The brief</span>
+          <h2>Make tax feel <em>simple, modern,</em><br />and worth booking.</h2>
+          <p>Their audience knows the words — CRA, RRSP, HST — but not the strategy, and they&apos;re a little afraid of all of it. The job: explain advanced tax simply, look nothing like a dusty accountant, and turn attention into consultations. No stock photos, no jargon.</p>
+          <p className="ac-brief-by"><span></span> Aydın CPA · Ottawa &amp; Toronto</p>
+        </div>
+      </section>
+
       <FontLink />
       <style jsx global>{`
         .ac-page{--navy:#044585;--navy-deep:#033568;--orange:#ec8023;--orange-deep:#cf6c17;--red:#cc0000;--off:#f5f6f8;--off-deep:#e6e9ee;--ink:#0f2136;background:var(--off);color:var(--navy);font-family:"Poppins",system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
@@ -84,6 +105,13 @@ export function AydinCPAPage({ client }: Props) {
         .hc-1{left:0;top:6%;transform:rotate(-4deg);z-index:2}
         .hc-2{right:0;bottom:0;transform:rotate(4deg);z-index:1}
         .ac-hcard:hover{transform:scale(1.04) rotate(0);box-shadow:0 30px 70px rgba(236,128,35,.3);z-index:4}
+
+        .ac-marquee{overflow:hidden;border-top:1px solid var(--off-deep);border-bottom:1px solid var(--off-deep);background:#fff;padding:18px 0}
+        .ac-marquee-track{display:flex;width:max-content;animation:ac-scroll 32s linear infinite}
+        .ac-marquee-group{display:flex;flex-shrink:0}
+        .ac-marquee-item{display:flex;align-items:center;gap:26px;padding:0 26px;font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(20px,2.4vw,34px);letter-spacing:-.01em;color:var(--navy);white-space:nowrap}
+        .ac-marquee-item i{color:var(--orange);font-style:normal;font-size:.7em}
+        @keyframes ac-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
         .ac-brief{background:var(--navy);color:#fff;padding:clamp(60px,9vw,130px) 32px}
         .ac-brief-inner{max-width:900px;margin:0 auto;text-align:center}
@@ -191,9 +219,13 @@ export function AydinCPAPage({ client }: Props) {
 
 function FontLink() {
   return (
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Poppins:wght@400;500;600&display=swap"
-    />
+    <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Poppins:wght@400;500;600&display=swap"
+      />
+    </>
   );
 }
