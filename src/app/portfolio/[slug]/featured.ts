@@ -18,6 +18,7 @@ import { CanapyPage } from "@/components/portfolio/featured/CanapyPage";
 import { CTBDHPage } from "@/components/portfolio/featured/CTBDHPage";
 import { AdriansPage } from "@/components/portfolio/featured/AdriansPage";
 import { NorthernPathwaysPage } from "@/components/portfolio/featured/NorthernPathwaysPage";
+import { AydinCPAPage } from "@/components/portfolio/featured/AydinCPAPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -28,4 +29,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "ctbdh":                          CTBDHPage,
   "adrians-wasaga-beach":           AdriansPage,
   "northern-pathways-immigration":  NorthernPathwaysPage,
+  "aydin-cpa":                      AydinCPAPage,
 };

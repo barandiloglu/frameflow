@@ -151,7 +151,18 @@ export const clients: readonly Client[] = [
     ],
   },
   { slug: "asd-laminate",                name: "ASD Laminate",                              services: ["Ad Management", "Social Media"] },
-  { slug: "aydin-cpa",                   name: "AYDIN CPA",                                 services: ["Photography", "Website Design"] },
+  {
+    slug: "aydin-cpa",
+    name: "AYDIN CPA",
+    services: ["Social Media", "Videography", "Website Design"],
+    year: "2026",
+    location: "Ottawa & Toronto, ON",
+    runtime: "Live · aydincpa.ca",
+    scene: "INT. FIRM — DAY",
+    synopsis:
+      "Social and web for a two-office Canadian accounting firm. A five-pillar content system rendered as 3D editorial illustration — a feed that stops the scroll — direct-to-camera reels, and aydincpa.ca, the firm site that turns attention into booked consultations.",
+    featured: true,
+  },
   {
     slug: "big-bears-baked-potato",
     name: "Big Bears Baked Potato",
