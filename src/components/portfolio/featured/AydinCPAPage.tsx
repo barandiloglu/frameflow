@@ -155,6 +155,43 @@ export function AydinCPAPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="ac-web">
+        <div className="ac-web-inner">
+          <div className="ac-del-head light">
+            <span className="num">02</span>
+            <div className="text"><p className="label">Deliverable 02 · Website Design</p><h3>A firm site <em>that closes.</em></h3></div>
+            <p className="meta"><span><b>aydincpa.ca</b></span><span><b>Design + build</b></span><span><b>2 offices</b></span><span><b>Live</b></span></p>
+          </div>
+          <div className="ac-browser">
+            <div className="ac-browser-bar"><span className="dot r"></span><span className="dot y"></span><span className="dot g"></span><span className="ac-url">aydincpa.ca</span></div>
+            <div className="ac-browser-shot"><img src="/portfolio/aydin-cpa/website/home.png" alt="Aydın CPA website homepage — navy and orange, 'We Offer Reliable Accounting', Book a Consultation and File Your Tax Now" /></div>
+          </div>
+          <div className="ac-web-below">
+            <ul className="ac-web-features">
+              <li><span className="fl">Two-office firm site</span><span className="fn">Ottawa HQ + Toronto, one clear identity</span></li>
+              <li><span className="fl">Services architecture</span><span className="fn">Personal · Corporate · GST/HST · Payroll · Advisory</span></li>
+              <li><span className="fl">Dual conversion CTAs</span><span className="fn">&ldquo;Book a Consultation&rdquo; + &ldquo;File Your Tax Now&rdquo;</span></li>
+              <li><span className="fl">Compliance / Advisory / Management</span><span className="fn">Tabbed offering, plain-English</span></li>
+            </ul>
+            <a className="ac-visit" href="https://aydincpa.ca/" target="_blank" rel="noopener noreferrer">Visit the live site →</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="ac-colophon">
+        <div className="ac-swatches">
+          <div className="sw"><span className="chip" style={{ background: "#044585" }}></span><span className="sw-name">Deep Blue</span><span className="sw-hex">#044585</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#EC8023" }}></span><span className="sw-name">Orange</span><span className="sw-hex">#EC8023</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#F5F6F8", border: "1px solid #e6e9ee" }}></span><span className="sw-name">Off White</span><span className="sw-hex">#F5F6F8</span></div>
+        </div>
+        <h2 className="ac-close">Complex tax.<br /><em>Clear content.</em></h2>
+        <p className="ac-sign">Prepared by <b>FrameFlow</b> · Reel {frame} · 2026</p>
+        <div className="ac-colophon-cta">
+          <Link className="ac-back-btn" href="/contact">Start a project →</Link>
+          <Link className="ac-colophon-link" href="/portfolio">← Back to the archive</Link>
+        </div>
+      </section>
+
       {lightbox !== null && (
         <div
           className="ac-modal open"
@@ -286,6 +323,9 @@ export function AydinCPAPage({ client }: Props) {
         .ac-sign{font-size:14px;letter-spacing:.06em;color:#7a869a;margin-bottom:30px}.ac-sign b{color:var(--navy)}
         .ac-back-btn{display:inline-block;font-family:"Montserrat",sans-serif;font-weight:700;font-size:15px;color:#fff;background:var(--orange);padding:14px 30px;border-radius:100px;text-decoration:none;cursor:pointer;border:0}
         .ac-back-btn:hover{background:var(--orange-deep)}
+        .ac-page .ac-colophon-cta{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap}
+        .ac-page .ac-colophon-link{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#7a869a;text-decoration:none;font-weight:600}
+        .ac-page .ac-colophon-link:hover{color:var(--navy)}
 
         .ac-modal{position:fixed;inset:0;z-index:200;background:rgba(6,20,40,.95);display:none;align-items:center;justify-content:center;padding:40px}
         .ac-modal.open{display:flex}
