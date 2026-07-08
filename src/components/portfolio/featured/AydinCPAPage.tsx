@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -15,12 +15,46 @@ const POSTS = [
   { src: "/portfolio/aydin-cpa/posts/04-cra-red-flags.png",      alt: "Aydın CPA social post — a single red flag on white, headline 'CRA red flags'",                                                             tag: "Myth Busting",    headline: "CRA Red Flags" },
 ] as const;
 
+const REELS = [
+  { src: "/portfolio/aydin-cpa/reels/reel-01-new-tax-season.mp4",  poster: "/portfolio/aydin-cpa/reels/reel-01-new-tax-season-poster.jpg",  headline: "New Tax Season Is Here" },
+  { src: "/portfolio/aydin-cpa/reels/reel-02-not-filing-risk.mp4", poster: "/portfolio/aydin-cpa/reels/reel-02-not-filing-risk-poster.jpg", headline: "Not Filing Is The Real Risk" },
+  { src: "/portfolio/aydin-cpa/reels/reel-03-when-to-incorporate.mp4",          poster: "/portfolio/aydin-cpa/reels/reel-03-when-to-incorporate-poster.jpg",          headline: "When To Incorporate" },
+] as const;
+
+const PILLARS = [
+  { id: "P.01", name: "Tax Strategy & Myth Busting", note: "How tax actually works" },
+  { id: "P.02", name: "Business Owner Guides",        note: "Corp vs. personal, vehicles, dividends" },
+  { id: "P.03", name: "Niche Deep-Dives",            note: "Realtors, gig economy, expats" },
+  { id: "P.04", name: "Deadlines & Urgency",         note: "RRSP, T4, year-ends" },
+  { id: "P.05", name: "Firm Authority",              note: "Proactive partner, not a filer" },
+] as const;
+
 export function AydinCPAPage({ client }: Props) {
   const frame = getFrameNumber(client);
 
   // Lightbox state (wired in Task 5)
   const [lightbox, setLightbox] = useState<number | null>(null);
   const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + POSTS.length) % POSTS.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="ac-page">
@@ -77,6 +111,65 @@ export function AydinCPAPage({ client }: Props) {
           <p className="ac-brief-by"><span></span> Aydın CPA · Ottawa &amp; Toronto</p>
         </div>
       </section>
+
+      <section className="ac-del">
+        <div className="ac-del-head">
+          <span className="num">01</span>
+          <div className="text"><p className="label">Deliverable 01 · Social Media</p><h3><em>A look</em> nobody else in tax has.</h3></div>
+          <p className="meta"><span><b>5</b> content pillars</span><span><b>3D editorial</b> illustration</span><span><b>Posts + reels</b></span></p>
+        </div>
+
+        <div className="ac-pillars">
+          <div className="head"><span>The content pillars</span><small>1 firm · 5 stories</small></div>
+          <div className="grid">
+            {PILLARS.map((p) => (
+              <div className="pill" key={p.id}>
+                <span className="pid">{p.id}</span>
+                <span className="pname">{p.name}</span>
+                <span className="pnote">{p.note}</span>
+              </div>
+            ))}
+          </div>
+          <p className="note">Every post is a single symbolic hero object on clean space — a path to a house, a coin at a crossroads, a red flag. Reads as a brand, not a spreadsheet.</p>
+        </div>
+
+        <p className="ac-grid-lbl">— The feed · illustration posts · tap to enlarge —</p>
+        <div className="ac-grid">
+          {POSTS.map((m, i) => (
+            <button className="cell" key={m.src} onClick={() => openLightbox(i)}>
+              <img src={m.src} alt={m.alt} />
+              <span className="tag">{m.tag}</span>
+              <span className="zoom">↗</span>
+            </button>
+          ))}
+        </div>
+
+        <p className="ac-grid-lbl reels-lbl">— The reels · direct-to-camera explainers —</p>
+        <div className="ac-reels">
+          {REELS.map((r) => (
+            <div className="rcell" key={r.src}>
+              <video src={r.src} poster={r.poster} controls playsInline preload="none" />
+              <span className="rtag">{r.headline}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="ac-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${POSTS[lightbox].headline} — enlarged`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="ac-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
+          <button className="ac-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
+          <div className="ac-modal-img"><img src={POSTS[lightbox].src} alt={POSTS[lightbox].alt} /></div>
+          <button className="ac-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
+          <p className="ac-modal-cap">Post · {POSTS[lightbox].tag} · {lightbox + 1} / {POSTS.length}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
@@ -163,6 +256,8 @@ export function AydinCPAPage({ client }: Props) {
         .ac-reels .rcell:hover{transform:translateY(-4px)}
         .ac-reels .play{position:absolute;inset:0;margin:auto;width:60px;height:60px;border-radius:50%;background:rgba(236,128,35,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
         .ac-reels .rtag{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;color:#fff;font-family:"Montserrat",sans-serif;font-weight:700;font-size:13px;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+        .ac-page .ac-reels .rcell video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
+        .ac-page .ac-reels .rcell{background:#111}
 
         .ac-web{background:var(--navy);color:#fff}
         .ac-web-inner{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
