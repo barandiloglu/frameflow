@@ -288,11 +288,10 @@ export function AydinCPAPage({ client }: Props) {
         .ac-grid .cell:hover .zoom{opacity:1}
 
         .ac-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:820px;margin:0 auto}
-        .ac-reels .rcell{position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;border-radius:12px;aspect-ratio:9/16;background:#111;box-shadow:0 12px 30px rgba(4,69,133,.16);transition:transform .3s ease}
+        .ac-reels .rcell{position:relative;border:0;padding:0;overflow:hidden;border-radius:12px;aspect-ratio:9/16;background:#111;box-shadow:0 12px 30px rgba(4,69,133,.16);transition:transform .3s ease}
         .ac-reels .rcell:hover{transform:translateY(-4px)}
         .ac-reels .rtag{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;color:#fff;font-family:"Montserrat",sans-serif;font-weight:700;font-size:13px;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.6)}
         .ac-page .ac-reels .rcell video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
-        .ac-page .ac-reels .rcell{background:#111}
 
         .ac-web{background:var(--navy);color:#fff}
         .ac-web-inner{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
@@ -350,6 +349,10 @@ export function AydinCPAPage({ client }: Props) {
           .ac-page .ac-marquee-track{animation:none;transform:none}
           .ac-page .ac-hcard,.ac-page .ac-grid .cell,.ac-page .ac-reels .rcell,.ac-page .pill,.ac-page .ac-visit{transition:none}
           .ac-page .ac-hcard:hover{transform:none}
+          .ac-page .ac-grid .cell:hover{transform:none}
+          .ac-page .ac-reels .rcell:hover{transform:none}
+          .ac-page .pill:hover{transform:none}
+          .ac-page .ac-visit:hover{transform:none}
         }
       `}</style>
     </div>
