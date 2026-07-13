@@ -154,6 +154,101 @@ export function ASDLaminatPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="asd-ads">
+        <div className="asd-ads-inner">
+          <div className="asd-del-head light">
+            <span className="num">02</span>
+            <div className="text">
+              <p className="label">Deliverable 02 · Ad Management</p>
+              <h3><em>Three channels.</em> One coordinated push.</h3>
+            </div>
+            <p className="meta">
+              <span><b>LinkedIn</b> · IG · Google</span>
+              <span><b>678K</b> impressions</span>
+              <span><b>Canada</b>-wide</span>
+              <span><b>Spring</b> 2025</span>
+            </p>
+          </div>
+
+          <div className="asd-channels">
+            <div className="asd-ch ch-linkedin">
+              <div className="ch-head"><span className="ch-name">LinkedIn</span><span className="ch-role">B2B awareness — reaching specifiers</span></div>
+              <div className="ch-stats">
+                <div className="stat"><span className="v">138K</span><span className="l">Impressions</span></div>
+                <div className="stat"><span className="v">88.4K</span><span className="l">Reach</span></div>
+                <div className="stat"><span className="v">147%</span><span className="l">of target audience</span></div>
+                <div className="stat"><span className="v">9</span><span className="l">Ads run</span></div>
+              </div>
+              <p className="ch-take">Government Administration, Higher Education and Technology led engagement — the Greater Toronto Area was the most responsive market.</p>
+            </div>
+            <div className="asd-ch ch-instagram">
+              <div className="ch-head"><span className="ch-name">Instagram</span><span className="ch-role">Brand presence — from a standing start</span></div>
+              <div className="ch-stats">
+                <div className="stat"><span className="v">28.7K</span><span className="l">Views</span></div>
+                <div className="stat"><span className="v">14.5K</span><span className="l">Reach</span></div>
+                <div className="stat"><span className="v">692</span><span className="l">Link clicks</span></div>
+                <div className="stat"><span className="v">↑100%</span><span className="l">Across the board</span></div>
+              </div>
+              <p className="ch-take">A brand-new paid presence: reach, engagement and link clicks all built from zero over the campaign window.</p>
+            </div>
+            <div className="asd-ch ch-google">
+              <div className="ch-head"><span className="ch-name">Google Search</span><span className="ch-role">Intent capture — catching demand</span></div>
+              <div className="ch-stats">
+                <div className="stat"><span className="v">511K</span><span className="l">Impressions</span></div>
+                <div className="stat"><span className="v">2.1K</span><span className="l">Clicks</span></div>
+                <div className="stat"><span className="v">CA$0.21</span><span className="l">Avg. cost / click</span></div>
+                <div className="stat"><span className="v">EN·FR</span><span className="l">Bilingual terms</span></div>
+              </div>
+              <p className="ch-take">Ranked on high-intent searches in both languages — from &ldquo;high pressure laminate&rdquo; to &ldquo;comptoir stratifié&rdquo; — at a $0.21 average click.</p>
+            </div>
+          </div>
+
+          <div className="asd-combined">
+            <span className="c-lead">Across three channels</span>
+            <div className="c-row"><span><b>678K+</b> impressions</span><i>·</i><span><b>Halifax → Vancouver</b></span><i>·</i><span><b>GTA</b> most responsive</span></div>
+            <p className="c-note">Full campaign reporting shared privately with the client.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="asd-leanin">
+        <div className="asd-leanin-inner">
+          <p className="asd-eyebrow">Where it landed</p>
+          <h3>Who leaned in.</h3>
+          <div className="asd-cols">
+            <div className="col">
+              <p className="col-lbl">Top sectors by engagement</p>
+              <ul>
+                <li>Government Administration</li><li>Higher Education</li><li>Technology &amp; Internet</li>
+                <li>Business Consulting</li><li>Hospitals &amp; Health Care</li><li>Construction</li>
+              </ul>
+            </div>
+            <div className="col">
+              <p className="col-lbl">Most-reached regions</p>
+              <ul>
+                <li>Greater Toronto Area</li><li>Greater Montreal</li><li>Greater Vancouver</li>
+                <li>Ottawa</li><li>Calgary</li><li>Halifax</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="asd-colophon">
+        <div className="asd-swatches">
+          <div className="sw"><span className="chip" style={{ background: "#F26A21" }}></span><span className="sw-name">ASD Orange</span><span className="sw-hex">#F26A21</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#262626" }}></span><span className="sw-name">Graphite</span><span className="sw-hex">#262626</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#8A8C8E" }}></span><span className="sw-name">Steel Gray</span><span className="sw-hex">#8A8C8E</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#F4F2EF", border: "1px solid #e7e3dc" }}></span><span className="sw-name">Off White</span><span className="sw-hex">#F4F2EF</span></div>
+        </div>
+        <h2 className="asd-close">One brand.<br /><em>Every channel.</em></h2>
+        <p className="asd-sign">Prepared by <b>FrameFlow</b> · Reel {frame} · 2025</p>
+        <div className="asd-colophon-cta">
+          <Link className="asd-back-btn" href="/contact">Start a project →</Link>
+          <Link className="asd-colophon-link" href="/portfolio">← Back to the archive</Link>
+        </div>
+      </section>
+
       {lightbox !== null && (
         <div
           className="asd-modal open"
@@ -310,6 +405,9 @@ export function ASDLaminatPage({ client }: Props) {
         .asd-sign b{color:var(--graphite)}
         .asd-back-btn{display:inline-block;font-family:"Poppins",sans-serif;font-weight:600;font-size:15px;color:#fff;background:var(--orange);padding:14px 30px;border-radius:100px;text-decoration:none;transition:background .25s,transform .25s;cursor:pointer;border:0}
         .asd-back-btn:hover{background:var(--orange-deep);transform:translateY(-2px)}
+        .asd-page .asd-colophon-cta{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap}
+        .asd-page .asd-colophon-link{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);text-decoration:none;font-weight:600}
+        .asd-page .asd-colophon-link:hover{color:var(--graphite)}
 
         /* LIGHTBOX */
         .asd-modal{position:fixed;inset:0;z-index:200;background:rgba(20,19,17,.94);display:none;align-items:center;justify-content:center;padding:40px}
