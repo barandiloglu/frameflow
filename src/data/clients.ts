@@ -150,7 +150,18 @@ export const clients: readonly Client[] = [
       { src: "/portfolio/adrians-wasaga-beach/photos/16-living-kitchen-combo.jpg",     alt: "Living + kitchen combo in a cottage",                       slate: "Living + Kitchen",             orientation: "landscape" },
     ],
   },
-  { slug: "asd-laminate",                name: "ASD Laminate",                              services: ["Ad Management", "Social Media"] },
+  {
+    slug: "asd-laminate",
+    name: "ASD Laminat",
+    services: ["Social Media", "Ad Management"],
+    year: "2025",
+    location: "Canada",
+    runtime: "Spring 2025",
+    scene: "EXT. THE MARKET — DAY",
+    synopsis:
+      "A five-pillar social system and a coordinated three-channel ad push introducing ASD Laminat — a 65-year, 85-country surfaces manufacturer — to the Canadian market. Product-led creative across LinkedIn, Instagram and Google, 678K+ impressions from Halifax to Vancouver, reaching the architects, fabricators and specifiers who choose the panel.",
+    featured: true,
+  },
   {
     slug: "aydin-cpa",
     name: "AYDIN CPA",
