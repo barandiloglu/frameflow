@@ -63,6 +63,27 @@ export function ASDLaminatPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="asd-marquee" aria-hidden="true">
+        <div className="asd-marquee-track">
+          {[0, 1].map((dup) => (
+            <span className="asd-marquee-group" key={dup}>
+              {["Product Lines", "Canadian Market", "Performance", "Healthy Spaces", "Decors"].map((h) => (
+                <span className="asd-marquee-item" key={h}>{h}<i>✦</i></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="asd-brief">
+        <div className="asd-brief-inner">
+          <span className="asd-brief-stamp">The brief</span>
+          <h2>Make Canadian architects<br /><em>know the name.</em></h2>
+          <p>A 65-year manufacturer, brand-new to the Canadian conversation. Two sides to the story — the product&apos;s proof, and the market&apos;s attention. Reach the people who actually spec the panel: architects, designers, fabricators. From Halifax to Vancouver.</p>
+          <p className="asd-brief-by"><span></span> ASD Laminat · Canada</p>
+        </div>
+      </section>
+
       <FontLink />
       <style jsx global>{`
         .asd-page{
@@ -103,6 +124,14 @@ export function ASDLaminatPage({ client }: Props) {
         .hc-2{right:4%;top:0;transform:rotate(4deg);z-index:2}
         .hc-3{left:22%;bottom:0;transform:rotate(-1deg);z-index:1;opacity:.96}
         .asd-hcard:hover{transform:scale(1.04) rotate(0);box-shadow:0 30px 70px rgba(242,106,33,.32);z-index:5}
+
+        /* MARQUEE */
+        .asd-marquee{overflow:hidden;border-top:1px solid var(--off-deep);border-bottom:1px solid var(--off-deep);background:#fff;padding:18px 0}
+        .asd-marquee-track{display:flex;width:max-content;animation:asd-scroll 30s linear infinite}
+        .asd-marquee-group{display:flex;flex-shrink:0}
+        .asd-marquee-item{display:flex;align-items:center;gap:26px;padding:0 26px;font-family:"Anton",sans-serif;font-size:clamp(22px,2.6vw,38px);letter-spacing:.01em;text-transform:uppercase;color:var(--graphite);white-space:nowrap}
+        .asd-marquee-item i{color:var(--orange);font-style:normal;font-size:.7em}
+        @keyframes asd-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
         /* BRIEF */
         .asd-brief{background:var(--graphite);color:var(--off);padding:clamp(60px,9vw,130px) 32px}
