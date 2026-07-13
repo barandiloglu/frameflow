@@ -31,7 +31,7 @@ const PILLARS = [
 export function ASDLaminatPage({ client }: Props) {
   const frame = getFrameNumber(client);
 
-  // Lightbox state (wired in Task 5)
+  // Lightbox: index of the open feed post, or null when closed.
   const [lightbox, setLightbox] = useState<number | null>(null);
   const openLightbox = useCallback((i: number) => setLightbox(i), []);
   const closeLightbox = useCallback(() => setLightbox(null), []);
