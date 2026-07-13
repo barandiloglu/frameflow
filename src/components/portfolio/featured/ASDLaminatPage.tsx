@@ -438,6 +438,16 @@ export function ASDLaminatPage({ client }: Props) {
           .asd-grid{grid-template-columns:1fr 1fr}
           .asd-ch .ch-stats{grid-template-columns:1fr 1fr}
         }
+
+        @media (prefers-reduced-motion: reduce){
+          .asd-marquee-track{animation:none;transform:none}
+          .asd-hcard,.asd-grid .cell,.pill,.asd-back-btn{transition:none}
+          .asd-hcard:hover{transform:none}
+          .asd-grid .cell:hover{transform:none}
+          .asd-grid .zoom{transition:none}
+          .pill:hover{transform:none}
+          .asd-back-btn:hover{transform:none}
+        }
       `}</style>
     </div>
   );
