@@ -20,12 +20,40 @@ const POSTS = [
   { src: "/portfolio/asd-laminate/posts/09-decors-designs.png",     alt: "ASD social post — a grid of solid-colour laminate swatches, headline 'Decors & Designs', 90-plus standard colours",                       pillar: "Decors" },
 ] as const;
 
+const PILLARS = [
+  { id: "P.01", name: "Product Lines",   note: "Exterior · Compact · Carbon" },
+  { id: "P.02", name: "Canadian Market", note: "Halifax → Vancouver" },
+  { id: "P.03", name: "Performance",     note: "Durable · fire-safe · formable" },
+  { id: "P.04", name: "Healthy Spaces",  note: "Antiviral · food-safe" },
+  { id: "P.05", name: "Decors",          note: "Wood, stone & trend collections" },
+] as const;
+
 export function ASDLaminatPage({ client }: Props) {
   const frame = getFrameNumber(client);
 
   // Lightbox state (wired in Task 5)
   const [lightbox, setLightbox] = useState<number | null>(null);
   const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + POSTS.length) % POSTS.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="asd-page">
@@ -83,6 +111,64 @@ export function ASDLaminatPage({ client }: Props) {
           <p className="asd-brief-by"><span></span> ASD Laminat · Canada</p>
         </div>
       </section>
+
+      <section className="asd-del">
+        <div className="asd-del-head">
+          <span className="num">01</span>
+          <div className="text">
+            <p className="label">Deliverable 01 · Social Media</p>
+            <h3><em>System</em> before posts. Five pillars, one voice.</h3>
+          </div>
+          <p className="meta">
+            <span><b>5</b> content pillars</span>
+            <span><b>9</b> hero creatives</span>
+            <span><b>Product-led</b> storytelling</span>
+          </p>
+        </div>
+
+        <div className="asd-pillars">
+          <div className="head"><span>The pillar system</span><small>1 brand · 5 stories</small></div>
+          <div className="grid">
+            {PILLARS.map((p) => (
+              <div className="pill" key={p.id}>
+                <span className="pid">{p.id}</span>
+                <span className="pname">{p.name}</span>
+                <span className="pnote">{p.note}</span>
+              </div>
+            ))}
+          </div>
+          <p className="note">Every post ladders up to one of five pillars — so the feed reads as a brand, not a scrapbook.</p>
+        </div>
+
+        <div className="asd-grid-wrap">
+          <p className="lbl">— The feed · nine shipped creatives · tap to enlarge —</p>
+          <div className="asd-grid">
+            {POSTS.map((m, i) => (
+              <button className="cell" key={m.src} onClick={() => openLightbox(i)}>
+                <img src={m.src} alt={m.alt} />
+                <span className="pill-tag">{m.pillar}</span>
+                <span className="zoom">↗</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="asd-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${POSTS[lightbox].pillar} creative — enlarged`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="asd-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
+          <button className="asd-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
+          <div className="asd-modal-img"><img src={POSTS[lightbox].src} alt={POSTS[lightbox].alt} /></div>
+          <button className="asd-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
+          <p className="asd-modal-cap">{POSTS[lightbox].pillar} · {lightbox + 1} / {POSTS.length}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
