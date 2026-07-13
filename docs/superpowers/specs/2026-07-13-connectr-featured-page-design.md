@@ -17,9 +17,9 @@ keyboard lightbox, reduced-motion guard).
 
 Narrative angle: **"More than a fair — a community gathered."** An event-coverage
 case study. Deliverable 01 is the photography (five coverage tracks + a masonry
-gallery of ~20 curated frames). Deliverable 02 is the event film — a styled
-placeholder slot now, wired to a real inline `<video>` when the client sends the
-final edit.
+gallery of ~20 curated frames). Deliverable 02 is the event film — the real
+**"ConnecTR 2025 Recap"**, embedded from YouTube (the same video on the client's own
+gallery).
 
 ## Source material
 
@@ -30,8 +30,10 @@ final edit.
   published on the client's site — authorized for the agency's portfolio.
 - **Logo:** `https://connectr.ca/brand/header-logo-ctr-map.png` (the header wordmark
   the hero brand card uses).
-- **Video:** NOT yet available — the client will provide the final edit later. Until
-  then the Videography section renders a styled "coming soon" slot.
+- **Video:** **"ConnecTR 2025 Recap"** on YouTube — video ID `rP7XosGV3a4`
+  (`https://www.youtube.com/embed/rP7XosGV3a4`), by "Connectr Turkish Community Fair"
+  — the same embed the client's own gallery uses. Embed reachable (HTTP 200); HD
+  poster at `https://i.ytimg.com/vi/rP7XosGV3a4/maxresdefault.jpg` (HTTP 200).
 
 ### Curation — 20 frames across 5 coverage tracks
 
@@ -148,10 +150,15 @@ pattern (verified against `AydinCPAPage.tsx` / `ASDLaminatPage.tsx`):
    - **The gallery** (`.ctr-gallery`): the ~20 curated frames in a 4-col dense masonry
      (wide/tall spans per the curation table), hover slates + zoom cue, tap → lightbox.
 7. **Deliverable 02 · Videography** (`.ctr-video`) — navy band. Header `02` +
-   *"The day, in motion."* + a 16:9 **film slot**: a styled placeholder with a play
-   glyph and "Event film — coming soon" (caption noting it's added when the edit
-   lands). Structured so swapping in a real inline `<video controls playsInline
-   poster>` later is a one-block change.
+   *"The day, in motion."* + a 16:9 **film frame** playing the real event film via a
+   **click-to-load YouTube facade**: the frame shows the HD recap poster + a crimson
+   play glyph + the title "ConnecTR 2025 Recap"; on click it swaps to the YouTube
+   `<iframe>` (`https://www.youtube.com/embed/rP7XosGV3a4?autoplay=1`,
+   `title="ConnecTR 2025 Recap"`, `allow="accelerometer; autoplay; clipboard-write;
+   encrypted-media; gyroscope; picture-in-picture; web-share"`, `allowFullScreen`,
+   `loading="lazy"`). The facade keeps YouTube's heavy player off the page until the
+   user opts in (performance + privacy), reusing the prototype's `.ctr-video-slot`
+   play-button styling. Caption links out to watch on YouTube.
 8. **Colophon** (`.ctr-colophon`) — palette swatches (crimson/navy/sand/off-white
    with hex), **"More than a fair. / *A community, on film.*"**, "Prepared by
    FrameFlow · Reel 007 · 2025", Start-a-project (`/contact`) + back-to-portfolio
@@ -177,12 +184,16 @@ Prerequisite tools (ffmpeg + pngquant) already installed.
   (verify each by viewing), copy to the descriptive names, and compress for web
   (target ≤ ~350 KB each; sources are ~400 KB, JPEG quality re-encode via ffmpeg
   `-q:v`). Landscape/portrait preserved.
-- **`video/`** — created empty / omitted for now; wired later.
+- **`video/recap-poster.jpg`** — download the HD YouTube thumbnail
+  (`https://i.ytimg.com/vi/rP7XosGV3a4/maxresdefault.jpg`) for the click-to-load
+  facade poster; compress to ≤ ~200 KB. No video file is stored — the film streams
+  from YouTube on click.
 
 ## Scope guardrails (YAGNI)
 
 - Gallery shows the **20 curated frames** — not all 117.
-- **Video is a placeholder** until the client provides the edit — no fake/stock video.
+- **Video is embedded from YouTube** (click-to-load facade) — not downloaded or
+  self-hosted; only the poster thumbnail is stored.
 - Captions stay **track-based** — respectful, no invented names of individuals.
 - Logo sourced from the client's own site.
 - No prev/next adjacent-client nav (featured pages end on the bespoke colophon).
@@ -194,11 +205,7 @@ Prerequisite tools (ffmpeg + pngquant) already installed.
   "Now showing" pill (from `featured: true`) and services `PHOTOGRAPHY · VIDEOGRAPHY`.
 - The hero shows the real ConnecTR logo; the 4-photo strip + all 20 gallery frames
   open in a keyboard-navigable lightbox; captions match the images.
-- The Videography section renders the styled placeholder slot (no broken video).
+- The Videography section shows the recap poster + play glyph; clicking loads and
+  plays the real YouTube film inline (no broken/empty slot).
 - `prefers-reduced-motion` is honored across all animations.
 - Type-checks and builds clean; responsive at the sibling breakpoints (~880 / ~520px).
-
-## Follow-up (out of scope for this build)
-
-- When the client sends the event film, swap the `.ctr-video` placeholder for a real
-  inline `<video>` (or YouTube/Vimeo embed) — a single-section change.
