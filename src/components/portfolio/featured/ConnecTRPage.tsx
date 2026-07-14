@@ -305,11 +305,11 @@ export function ConnecTRPage({ client }: Props) {
         .ctr-coverage .head span{font-family:"Montserrat",sans-serif;font-weight:800;font-size:20px;color:var(--navy)}
         .ctr-coverage .head small{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#7c7a74}
         .ctr-coverage .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-        .cov{border:1px solid var(--off-deep);border-radius:14px;padding:18px 14px;background:var(--off);display:flex;flex-direction:column;gap:8px;transition:border-color .25s,transform .25s}
-        .cov:hover{border-color:var(--crimson);transform:translateY(-3px)}
-        .cov .cid{font-family:"Montserrat",sans-serif;font-weight:800;font-size:14px;color:var(--crimson);letter-spacing:.04em}
-        .cov .cname{font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;color:var(--navy)}
-        .cov .cnote{font-size:12px;color:#7c7a74;line-height:1.3}
+        .ctr-coverage .cov{border:1px solid var(--off-deep);border-radius:14px;padding:18px 14px;background:var(--off);display:flex;flex-direction:column;gap:8px;transition:border-color .25s,transform .25s}
+        .ctr-coverage .cov:hover{border-color:var(--crimson);transform:translateY(-3px)}
+        .ctr-coverage .cov .cid{font-family:"Montserrat",sans-serif;font-weight:800;font-size:14px;color:var(--crimson);letter-spacing:.04em}
+        .ctr-coverage .cov .cname{font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;color:var(--navy)}
+        .ctr-coverage .cov .cnote{font-size:12px;color:#7c7a74;line-height:1.3}
 
         .ctr-gallery-lbl{text-align:center;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#7c7a74;margin-bottom:22px}
         .ctr-gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:14px;grid-auto-flow:dense}
@@ -325,13 +325,12 @@ export function ConnecTRPage({ client }: Props) {
 
         .ctr-video{background:var(--navy);color:var(--off)}
         .ctr-video-inner{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
-        .ctr-video-frame{border-radius:20px;overflow:hidden;background:var(--navy-soft);border:1px solid rgba(247,245,241,.1);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+        .ctr-video-frame{position:relative;border-radius:20px;overflow:hidden;background:var(--navy-soft);border:1px solid rgba(247,245,241,.1);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
         .ctr-video-slot{text-align:center;padding:30px}
         .ctr-video-slot .play{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;background:var(--crimson);color:#fff;font-size:30px;padding-left:6px;margin-bottom:22px;box-shadow:0 14px 40px rgba(200,16,46,.4)}
         .ctr-video-slot .vp-title{font-family:"Montserrat",sans-serif;font-weight:700;font-size:22px;color:var(--off);margin-bottom:8px}
         .ctr-video-slot .vp-note{font-size:14px;color:rgba(247,245,241,.6)}
         .ctr-video-cap{text-align:center;margin-top:18px;font-size:13px;color:rgba(247,245,241,.5);font-style:italic}
-        .ctr-video-frame{position:relative}
         .ctr-video-iframe{width:100%;height:100%;border:0;display:block}
         .ctr-video-facade{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;overflow:hidden;background:var(--navy-soft);display:flex;align-items:center;justify-content:center}
         .ctr-video-facade img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
@@ -381,10 +380,10 @@ export function ConnecTRPage({ client }: Props) {
 
         @media (prefers-reduced-motion: reduce){
           .ctr-marquee-track{animation:none;transform:none}
-          .ctr-strip-img,.ctr-gallery .cell,.cov,.ctr-gallery .slate,.ctr-gallery .zoom{transition:none}
+          .ctr-strip-img,.ctr-gallery .cell,.ctr-coverage .cov,.ctr-gallery .slate,.ctr-gallery .zoom{transition:none}
           .ctr-strip-img:hover{transform:none}
           .ctr-gallery .cell:hover{transform:none}
-          .cov:hover{transform:none}
+          .ctr-coverage .cov:hover{transform:none}
           .ctr-video-facade:hover .play{transform:none}
         }
       `}</style>
