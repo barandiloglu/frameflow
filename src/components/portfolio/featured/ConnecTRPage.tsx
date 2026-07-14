@@ -35,12 +35,40 @@ const PHOTOS = [
 // The hero strip reuses four gallery frames (portrait, live music, handshake, conversation).
 const STRIP = [0, 13, 15, 1] as const;
 
+const TRACKS = [
+  { id: "C.01", name: "Exhibitors", note: "Branded booths & displays" },
+  { id: "C.02", name: "Vendors",    note: "Honey, pastry, food floor" },
+  { id: "C.03", name: "Culture",    note: "Art & live music" },
+  { id: "C.04", name: "People",     note: "Portraits & candids" },
+  { id: "C.05", name: "Connection", note: "Handshakes & networking" },
+] as const;
+
 export function ConnecTRPage({ client }: Props) {
   const frame = getFrameNumber(client);
 
   // Lightbox: index of the open gallery photo, or null when closed.
   const [lightbox, setLightbox] = useState<number | null>(null);
   const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + PHOTOS.length) % PHOTOS.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="ctr-page">
@@ -107,6 +135,54 @@ export function ConnecTRPage({ client }: Props) {
           <p className="ctr-brief-by"><span></span> ConnecTR · The Civic Exchange</p>
         </div>
       </section>
+
+      <section className="ctr-del">
+        <div className="ctr-del-head">
+          <span className="num">01</span>
+          <div className="text"><p className="label">Deliverable 01 · Photography</p><h3>One floor, <em>every corner.</em></h3></div>
+          <p className="meta"><span><b>Full-day</b> coverage</span><span><b>5</b> coverage tracks</span><span><b>Exhibitors → candids</b></span><span><b>Delivered</b> 2025</span></p>
+        </div>
+
+        <div className="ctr-coverage">
+          <div className="head"><span>What we covered</span><small>one day · five tracks</small></div>
+          <div className="grid">
+            {TRACKS.map((t) => (
+              <div className="cov" key={t.id}>
+                <span className="cid">{t.id}</span>
+                <span className="cname">{t.name}</span>
+                <span className="cnote">{t.note}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="ctr-gallery-lbl">— Selected frames · tap to enlarge —</p>
+        <div className="ctr-gallery">
+          {PHOTOS.map((p, i) => (
+            <button className={`cell ${p.span}`} key={p.src} onClick={() => openLightbox(i)}>
+              <img src={p.src} alt={p.alt} />
+              <span className="slate">{p.slate}</span>
+              <span className="zoom">↗</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="ctr-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${PHOTOS[lightbox].slate} — enlarged`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="ctr-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
+          <button className="ctr-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
+          <div className="ctr-modal-img"><img src={PHOTOS[lightbox].src} alt={PHOTOS[lightbox].alt} /></div>
+          <button className="ctr-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
+          <p className="ctr-modal-cap">{PHOTOS[lightbox].slate} · {lightbox + 1} / {PHOTOS.length}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
