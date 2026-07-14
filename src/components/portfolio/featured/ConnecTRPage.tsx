@@ -223,14 +223,26 @@ export function ConnecTRPage({ client }: Props) {
           className="ctr-modal open"
           role="dialog"
           aria-modal="true"
-          aria-label={`${PHOTOS[lightbox].slate} — enlarged`}
+          aria-label={`${PHOTOS[lightbox].slate} — frame ${lightbox + 1} of ${PHOTOS.length}`}
           onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
         >
-          <button className="ctr-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
-          <button className="ctr-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
-          <div className="ctr-modal-img"><img src={PHOTOS[lightbox].src} alt={PHOTOS[lightbox].alt} /></div>
-          <button className="ctr-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
-          <p className="ctr-modal-cap">{PHOTOS[lightbox].slate} · {lightbox + 1} / {PHOTOS.length}</p>
+          <button className="ctr-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="ctr-modal-stage">
+            <div className="ctr-modal-bar top">
+              <span className="ctr-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(PHOTOS.length).padStart(2, "0")}</span>
+              <span className="ctr-modal-brand">ConnecTR · Reel {frame}</span>
+              <button className="ctr-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="ctr-modal-image-wrap">
+              <img src={PHOTOS[lightbox].src} alt={PHOTOS[lightbox].alt} />
+            </div>
+            <div className="ctr-modal-bar bot">
+              <span className="ctr-modal-slate">{PHOTOS[lightbox].slate}</span>
+            </div>
+          </div>
+
+          <button className="ctr-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
         </div>
       )}
 
@@ -356,15 +368,24 @@ export function ConnecTRPage({ client }: Props) {
         .ctr-colophon-link{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#7c7a74;text-decoration:none;font-weight:600}
         .ctr-colophon-link:hover{color:var(--navy)}
 
-        .ctr-modal{position:fixed;inset:0;z-index:200;background:rgba(12,18,38,.95);display:none;align-items:center;justify-content:center;padding:40px}
+        .ctr-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(12,18,38,.94);animation:ctr-fade .22s ease-out}
         .ctr-modal.open{display:flex}
-        .ctr-modal-img{position:relative;width:min(92vw,1100px);height:min(84vh,760px);display:flex;align-items:center;justify-content:center}
-        .ctr-modal-img img{max-width:100%;max-height:100%;object-fit:contain}
-        .ctr-modal-close{position:absolute;top:24px;right:28px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer;opacity:.8}
-        .ctr-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:0;color:#fff;font-size:40px;width:60px;height:60px;border-radius:50%;cursor:pointer;line-height:1}
-        .ctr-modal-nav:hover{background:var(--crimson)}
-        .ctr-modal-nav.prev{left:24px}.ctr-modal-nav.next{right:24px}
-        .ctr-modal-cap{position:absolute;bottom:26px;left:0;right:0;text-align:center;color:rgba(255,255,255,.7);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+        @keyframes ctr-fade{from{opacity:0}to{opacity:1}}
+        .ctr-modal-stage{position:relative;width:min(960px,92vw);height:min(92vh,1080px);max-height:92vh;background:var(--off);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:ctr-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes ctr-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .ctr-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:14px 18px;font-family:"Montserrat",sans-serif;font-weight:700;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#7c7a74}
+        .ctr-modal-bar.top{border-bottom:2px solid var(--navy);justify-content:space-between}
+        .ctr-modal-bar.bot{border-top:2px solid var(--off-deep);justify-content:center}
+        .ctr-modal-counter b{color:var(--crimson);font-weight:900}
+        .ctr-modal-brand{letter-spacing:.32em;color:var(--navy)}
+        .ctr-modal-slate{font-family:"Fraunces",serif;letter-spacing:-.005em;text-transform:none;font-weight:500;color:var(--navy);font-size:17px}
+        .ctr-modal-close{width:32px;height:32px;background:var(--navy);color:var(--off);border:0;cursor:pointer;font-family:"Montserrat",sans-serif;font-size:18px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .2s}
+        .ctr-modal-close:hover{background:var(--crimson)}
+        .ctr-modal-image-wrap{flex:1 1 auto;min-height:0;position:relative;background:var(--off-deep);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .ctr-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+        .ctr-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;background:var(--off);color:var(--navy);border:2px solid var(--navy);cursor:pointer;font-family:"Montserrat",sans-serif;font-size:20px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s,color .2s;z-index:2}
+        .ctr-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--crimson);color:var(--off);border-color:var(--crimson)}
+        .ctr-modal-nav.prev{left:32px}.ctr-modal-nav.next{right:32px}
 
         @media (max-width:880px){
           .ctr-del-head{grid-template-columns:1fr}.ctr-del-head .num{grid-row:auto}.ctr-del-head .meta{grid-column:1}
@@ -375,6 +396,10 @@ export function ConnecTRPage({ client }: Props) {
           .ctr-hero-brand{justify-content:flex-start}
           .ctr-hero-brand-card{max-width:320px;align-items:flex-start}
           .ctr-rail-center{display:none}
+          .ctr-modal{padding:16px}
+          .ctr-modal-nav{width:44px;height:44px;font-size:16px}
+          .ctr-modal-nav.prev{left:8px}.ctr-modal-nav.next{right:8px}
+          .ctr-modal-brand{display:none}
         }
         @media (max-width:520px){.ctr-coverage .grid{grid-template-columns:1fr}}
 
@@ -385,6 +410,9 @@ export function ConnecTRPage({ client }: Props) {
           .ctr-gallery .cell:hover{transform:none}
           .ctr-coverage .cov:hover{transform:none}
           .ctr-video-facade:hover .play{transform:none}
+          .ctr-modal,.ctr-modal-stage{animation:none}
+          .ctr-modal-close,.ctr-modal-nav{transition:none}
+          .ctr-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
