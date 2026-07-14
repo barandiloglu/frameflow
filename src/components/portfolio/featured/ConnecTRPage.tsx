@@ -48,6 +48,7 @@ export function ConnecTRPage({ client }: Props) {
 
   // Lightbox: index of the open gallery photo, or null when closed.
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const openLightbox = useCallback((i: number) => setLightbox(i), []);
   const closeLightbox = useCallback(() => setLightbox(null), []);
   const stepLightbox = useCallback(
@@ -168,6 +169,55 @@ export function ConnecTRPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="ctr-video">
+        <div className="ctr-video-inner">
+          <div className="ctr-del-head light">
+            <span className="num">02</span>
+            <div className="text"><p className="label">Deliverable 02 · Videography</p><h3>The day, <em>in motion.</em></h3></div>
+            <p className="meta"><span><b>Event film</b></span><span><b>On-floor</b> capture</span><span><b>Reel</b> cut-down</span><span><b>2025</b></span></p>
+          </div>
+          <div className="ctr-video-frame">
+            {videoPlaying ? (
+              <iframe
+                className="ctr-video-iframe"
+                src="https://www.youtube.com/embed/rP7XosGV3a4?autoplay=1"
+                title="ConnecTR 2025 Recap"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+              />
+            ) : (
+              <button className="ctr-video-facade" onClick={() => setVideoPlaying(true)} aria-label="Play ConnecTR 2025 Recap">
+                <img src="/portfolio/connectr/video/recap-poster.jpg" alt="" aria-hidden="true" />
+                <span className="ctr-video-slot">
+                  <span className="play">▶</span>
+                  <span className="vp-title">ConnecTR 2025 Recap</span>
+                  <span className="vp-note">Play the event film</span>
+                </span>
+              </button>
+            )}
+          </div>
+          <p className="ctr-video-cap">
+            <a href="https://www.youtube.com/watch?v=rP7XosGV3a4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <section className="ctr-colophon">
+        <div className="ctr-swatches">
+          <div className="sw"><span className="chip" style={{ background: "#C8102E" }} /><span className="sw-name">CTR Crimson</span><span className="sw-hex">#C8102E</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#16244B" }} /><span className="sw-name">Navy</span><span className="sw-hex">#16244B</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#D8CBB4" }} /><span className="sw-name">Warm Sand</span><span className="sw-hex">#D8CBB4</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#F7F5F1", border: "1px solid #ece7dd" }} /><span className="sw-name">Off White</span><span className="sw-hex">#F7F5F1</span></div>
+        </div>
+        <h2 className="ctr-close">More than a fair.<br /><em>A community, on film.</em></h2>
+        <p className="ctr-sign">Prepared by <b>FrameFlow</b> · Reel {frame} · 2025</p>
+        <div className="ctr-colophon-cta">
+          <Link className="ctr-back-btn" href="/contact">Start a project →</Link>
+          <Link className="ctr-colophon-link" href="/portfolio">← Back to the archive</Link>
+        </div>
+      </section>
+
       {lightbox !== null && (
         <div
           className="ctr-modal open"
@@ -281,6 +331,16 @@ export function ConnecTRPage({ client }: Props) {
         .ctr-video-slot .vp-title{font-family:"Montserrat",sans-serif;font-weight:700;font-size:22px;color:var(--off);margin-bottom:8px}
         .ctr-video-slot .vp-note{font-size:14px;color:rgba(247,245,241,.6)}
         .ctr-video-cap{text-align:center;margin-top:18px;font-size:13px;color:rgba(247,245,241,.5);font-style:italic}
+        .ctr-video-frame{position:relative}
+        .ctr-video-iframe{width:100%;height:100%;border:0;display:block}
+        .ctr-video-facade{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;overflow:hidden;background:var(--navy-soft);display:flex;align-items:center;justify-content:center}
+        .ctr-video-facade img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+        .ctr-video-facade .ctr-video-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:30px}
+        .ctr-video-facade .vp-title{font-family:"Montserrat",sans-serif;font-weight:700;font-size:22px;color:var(--off)}
+        .ctr-video-facade .vp-note{font-size:14px;color:rgba(247,245,241,.75)}
+        .ctr-video-facade:hover .play{transform:scale(1.06)}
+        .ctr-video-cap a{color:rgba(247,245,241,.6);text-decoration:none}
+        .ctr-video-cap a:hover{color:var(--sand)}
 
         .ctr-colophon{background:var(--off-deep);padding:clamp(56px,8vw,110px) 32px;text-align:center}
         .ctr-swatches{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:50px}
@@ -293,6 +353,9 @@ export function ConnecTRPage({ client }: Props) {
         .ctr-sign{font-size:14px;letter-spacing:.06em;color:#7c7a74;margin-bottom:30px}.ctr-sign b{color:var(--navy)}
         .ctr-back-btn{display:inline-block;font-family:"Montserrat",sans-serif;font-weight:700;font-size:15px;color:#fff;background:var(--crimson);padding:14px 30px;border-radius:100px;text-decoration:none;cursor:pointer;border:0}
         .ctr-back-btn:hover{background:var(--crimson-deep)}
+        .ctr-colophon-cta{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap}
+        .ctr-colophon-link{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#7c7a74;text-decoration:none;font-weight:600}
+        .ctr-colophon-link:hover{color:var(--navy)}
 
         .ctr-modal{position:fixed;inset:0;z-index:200;background:rgba(12,18,38,.95);display:none;align-items:center;justify-content:center;padding:40px}
         .ctr-modal.open{display:flex}
