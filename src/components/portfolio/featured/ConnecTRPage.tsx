@@ -87,6 +87,27 @@ export function ConnecTRPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="ctr-marquee" aria-hidden="true">
+        <div className="ctr-marquee-track">
+          {[0, 1].map((dup) => (
+            <span className="ctr-marquee-group" key={dup}>
+              {["Exhibitors", "Vendors", "Culture", "People", "Connection"].map((h) => (
+                <span className="ctr-marquee-item" key={h}>{h}<i>✦</i></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="ctr-brief">
+        <div className="ctr-brief-inner">
+          <span className="ctr-brief-stamp">The brief</span>
+          <h2>Capture the room<br /><em>so it feels like being there.</em></h2>
+          <p>A community fair lives in its faces — the vendor mid-sentence, the handshake that turns into a deal, the kid in front of the art. The brief was simple: document the whole floor honestly, and give ConnecTR a library it can build a year of promotion on.</p>
+          <p className="ctr-brief-by"><span></span> ConnecTR · The Civic Exchange</p>
+        </div>
+      </section>
+
       <FontLink />
       <style jsx global>{`
         .ctr-page{
@@ -132,6 +153,13 @@ export function ConnecTRPage({ client }: Props) {
         .ctr-brief p{font-size:clamp(16px,1.7vw,21px);line-height:1.7;color:rgba(247,245,241,.74);max-width:680px;margin:0 auto}
         .ctr-brief-by{margin-top:32px!important;font-size:14px!important;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)!important;display:flex;align-items:center;justify-content:center;gap:12px}
         .ctr-brief-by span{width:40px;height:2px;background:var(--crimson);display:inline-block}
+
+        .ctr-marquee{overflow:hidden;border-top:1px solid var(--off-deep);border-bottom:1px solid var(--off-deep);background:#fff;padding:16px 0}
+        .ctr-marquee-track{display:flex;width:max-content;animation:ctr-scroll 32s linear infinite}
+        .ctr-marquee-group{display:flex;flex-shrink:0}
+        .ctr-marquee-item{display:flex;align-items:center;gap:26px;padding:0 26px;font-family:"Montserrat",sans-serif;font-weight:900;font-size:clamp(20px,2.4vw,34px);letter-spacing:-.01em;text-transform:uppercase;color:var(--navy);white-space:nowrap}
+        .ctr-marquee-item i{color:var(--crimson);font-style:normal;font-size:.7em}
+        @keyframes ctr-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
         .ctr-del{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
         .ctr-del-head{display:grid;grid-template-columns:auto 1fr;gap:20px 28px;align-items:start;margin-bottom:48px}
