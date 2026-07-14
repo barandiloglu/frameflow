@@ -257,11 +257,23 @@ export function ASDLaminatPage({ client }: Props) {
           aria-label={`${POSTS[lightbox].pillar} creative — enlarged`}
           onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
         >
-          <button className="asd-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
-          <button className="asd-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
-          <div className="asd-modal-img"><img src={POSTS[lightbox].src} alt={POSTS[lightbox].alt} /></div>
-          <button className="asd-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
-          <p className="asd-modal-cap">{POSTS[lightbox].pillar} · {lightbox + 1} / {POSTS.length}</p>
+          <button className="asd-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="asd-modal-stage">
+            <div className="asd-modal-bar top">
+              <span className="asd-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(POSTS.length).padStart(2, "0")}</span>
+              <span className="asd-modal-brand">{client.name} · Reel {frame}</span>
+              <button className="asd-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="asd-modal-image-wrap">
+              <img src={POSTS[lightbox].src} alt={POSTS[lightbox].alt} />
+            </div>
+            <div className="asd-modal-bar bot">
+              <span className="asd-modal-slate">{POSTS[lightbox].pillar}</span>
+            </div>
+          </div>
+
+          <button className="asd-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
         </div>
       )}
 
@@ -410,16 +422,24 @@ export function ASDLaminatPage({ client }: Props) {
         .asd-page .asd-colophon-link:hover{color:var(--graphite)}
 
         /* LIGHTBOX */
-        .asd-modal{position:fixed;inset:0;z-index:200;background:rgba(20,19,17,.94);display:none;align-items:center;justify-content:center;padding:40px}
+        .asd-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(20,19,17,.94);animation:asd-fade .22s ease-out}
         .asd-modal.open{display:flex}
-        .asd-modal-img{position:relative;width:min(88vw,620px);height:min(84vh,820px);display:flex;align-items:center;justify-content:center}
-        .asd-modal-img img{max-width:100%;max-height:100%;object-fit:contain}
-        .asd-modal-close{position:absolute;top:24px;right:28px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer;opacity:.8}
-        .asd-modal-close:hover{opacity:1}
-        .asd-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:0;color:#fff;font-size:40px;width:60px;height:60px;border-radius:50%;cursor:pointer;line-height:1}
-        .asd-modal-nav:hover{background:var(--orange)}
-        .asd-modal-nav.prev{left:24px} .asd-modal-nav.next{right:24px}
-        .asd-modal-cap{position:absolute;bottom:26px;left:0;right:0;text-align:center;color:rgba(255,255,255,.7);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+        @keyframes asd-fade{from{opacity:0}to{opacity:1}}
+        .asd-modal-stage{position:relative;width:min(960px,92vw);height:min(92vh,1080px);max-height:92vh;background:var(--off);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.55);animation:asd-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes asd-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .asd-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:14px 18px;font-family:"Poppins",sans-serif;font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--steel)}
+        .asd-modal-bar.top{border-bottom:2px solid var(--graphite);justify-content:space-between}
+        .asd-modal-bar.bot{border-top:2px solid var(--off-deep);justify-content:center}
+        .asd-modal-counter b{font-family:"Anton",sans-serif;color:var(--orange);font-weight:400;font-size:15px;letter-spacing:.02em}
+        .asd-modal-brand{letter-spacing:.26em;color:var(--graphite)}
+        .asd-modal-slate{font-family:"Poppins",sans-serif;letter-spacing:0;text-transform:none;font-weight:600;color:var(--graphite);font-size:16px}
+        .asd-modal-close{width:32px;height:32px;background:var(--graphite);color:var(--off);border:0;cursor:pointer;font-family:"Poppins",sans-serif;font-size:18px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .2s}
+        .asd-modal-close:hover{background:var(--orange)}
+        .asd-modal-image-wrap{flex:1 1 auto;min-height:0;position:relative;background:var(--off-deep);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .asd-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+        .asd-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;background:var(--off);color:var(--graphite);border:2px solid var(--graphite);cursor:pointer;font-family:"Poppins",sans-serif;font-size:20px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s,color .2s;z-index:2}
+        .asd-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--orange);color:var(--off);border-color:var(--orange)}
+        .asd-modal-nav.prev{left:32px} .asd-modal-nav.next{right:32px}
 
         @media (max-width:880px){
           .asd-hero-inner{grid-template-columns:1fr}
@@ -432,6 +452,10 @@ export function ASDLaminatPage({ client }: Props) {
           .asd-channels{grid-template-columns:1fr}
           .asd-cols{grid-template-columns:1fr;gap:30px}
           .asd-rail-center{display:none}
+          .asd-modal{padding:16px}
+          .asd-modal-nav{width:44px;height:44px;font-size:16px}
+          .asd-modal-nav.prev{left:8px} .asd-modal-nav.next{right:8px}
+          .asd-modal-brand{display:none}
         }
         @media (max-width:520px){
           .asd-pillars .grid{grid-template-columns:1fr}
@@ -447,6 +471,9 @@ export function ASDLaminatPage({ client }: Props) {
           .asd-grid .zoom{transition:none}
           .pill:hover{transform:none}
           .asd-back-btn:hover{transform:none}
+          .asd-modal,.asd-modal-stage{animation:none}
+          .asd-modal-close,.asd-modal-nav{transition:none}
+          .asd-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
