@@ -378,6 +378,15 @@ export function ConnecTRPage({ client }: Props) {
           .ctr-rail-center{display:none}
         }
         @media (max-width:520px){.ctr-coverage .grid{grid-template-columns:1fr}}
+
+        @media (prefers-reduced-motion: reduce){
+          .ctr-marquee-track{animation:none;transform:none}
+          .ctr-strip-img,.ctr-gallery .cell,.cov,.ctr-gallery .slate,.ctr-gallery .zoom{transition:none}
+          .ctr-strip-img:hover{transform:none}
+          .ctr-gallery .cell:hover{transform:none}
+          .cov:hover{transform:none}
+          .ctr-video-facade:hover .play{transform:none}
+        }
       `}</style>
     </div>
   );
