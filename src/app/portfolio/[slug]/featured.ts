@@ -20,6 +20,7 @@ import { AdriansPage } from "@/components/portfolio/featured/AdriansPage";
 import { NorthernPathwaysPage } from "@/components/portfolio/featured/NorthernPathwaysPage";
 import { AydinCPAPage } from "@/components/portfolio/featured/AydinCPAPage";
 import { ASDLaminatPage } from "@/components/portfolio/featured/ASDLaminatPage";
+import { ConnecTRPage } from "@/components/portfolio/featured/ConnecTRPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -32,4 +33,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "northern-pathways-immigration":  NorthernPathwaysPage,
   "aydin-cpa":                      AydinCPAPage,
   "asd-laminate":                   ASDLaminatPage,
+  "connectr":                       ConnecTRPage,
 };

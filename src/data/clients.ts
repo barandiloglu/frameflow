@@ -277,7 +277,18 @@ export const clients: readonly Client[] = [
       { src: "/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg",      alt: "Walnut arch dining table, book-matched top.",                              slate: "Walnut Arch — Table",        orientation: "portrait"  },
     ],
   },
-  { slug: "connectr",                    name: "ConnecTR",                                  services: ["Photography", "Videography"] },
+  {
+    slug: "connectr",
+    name: "ConnecTR",
+    services: ["Photography", "Videography"],
+    year: "2025",
+    location: "Vaughan, ON",
+    runtime: "Event · 2025",
+    scene: "INT. THE FAIR — DAY",
+    synopsis:
+      "Full-day event coverage of ConnecTR 2025 — the Turkish Community Fair in Vaughan, the largest gathering of Turkic entrepreneurship, culture and community in North America. Photography across the whole exhibitor floor — booths, vendors, culture and candids — plus an event film, giving ConnecTR a library it can build a year of promotion on.",
+    featured: true,
+  },
   {
     slug: "ctbdh",
     name: "CTBDH",
