@@ -27,6 +27,21 @@ const CREATIVES = [
   { src: "/portfolio/fidan-construction/ads/05-flawless-finish.jpg",     alt: "Before and after of a bare wall finished and painted with a window, headline 'Flawless finish, no callbacks'",    hook: "Trade quality",  line: "Flawless finish, no callbacks." },
 ] as const;
 
+const SHOTS = [
+  { label: "Property Managers", path: "/property-managers", src: "/portfolio/fidan-construction/website/property-managers.jpg", ours: true,  note: "The B2B page. Offer and qualifying form above the fold, then the five trades, the three-step process, and the objections answered in order." },
+  { label: "Home",             path: "/",                  src: "/portfolio/fidan-construction/website/home.jpg",             ours: false, note: "The site the campaign page lives inside — residential-facing, built for a different reader. Kept intact; we added the commercial door beside it." },
+  { label: "Services",         path: "/services",          src: "/portfolio/fidan-construction/website/services.jpg",         ours: false, note: "Five trades under one vendor — the claim the whole B2B pitch rests on, stated on the client's own site." },
+  { label: "Projects",         path: "/projects",          src: "/portfolio/fidan-construction/website/projects.jpg",         ours: false, note: "The proof shelf. Real completed work, which is also where the campaign creative was sourced from." },
+] as const;
+
+const LADDER = [
+  { step: "01", title: "Submit the form",          note: "Six fields. Role, portfolio size, service, timeline." },
+  { step: "02", title: "30-min walkthrough",       note: "On site. Free. Issues found before they are quoted." },
+  { step: "03", title: "Written quote in 48 hours", note: "In writing, not a phone estimate." },
+] as const;
+
+const SITE_ROOT = "https://fidanconstruction.com";
+
 export function FidanConstructionPage({ client }: Props) {
   const frame = getFrameNumber(client); // "012"
   const wo = `FF-${frame}`;
@@ -40,6 +55,10 @@ export function FidanConstructionPage({ client }: Props) {
     (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + CREATIVES.length) % CREATIVES.length)),
     []
   );
+
+  const [siteTab, setSiteTab] = useState(0);
+  const shot = SHOTS[siteTab];
+  const shotUrl = "fidanconstruction.com" + (shot.path === "/" ? "" : shot.path);
 
   useEffect(() => {
     if (lightbox === null) return;
@@ -131,6 +150,49 @@ export function FidanConstructionPage({ client }: Props) {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className="fx-land">
+        <h2 className="fx-sec-head"><span>THE LANDING PAGE</span><i></i><span className="fx-sec-meta">LIVE</span></h2>
+        <div className="fx-land-grid">
+          <div className="fx-land-copy">
+            <p className="fx-url">fidanconstruction.com/property-managers</p>
+            <p>The homepage sells to homeowners. Property managers buy differently — they are not choosing a colour, they are removing a problem from a list. So they got their own page: the trades named in plain language, the service radius stated, compliance and after-hours availability up front, and a single offer repeated until it is impossible to miss.</p>
+            <p className="fx-land-note">One page, one reader, one call to action. Everything that did not serve the walkthrough was cut.</p>
+          </div>
+          <ol className="fx-ladder">
+            {LADDER.map((l) => (
+              <li key={l.step}><span className="fx-ladder-step">{l.step}</span><div><b>{l.title}</b><span>{l.note}</span></div></li>
+            ))}
+          </ol>
+        </div>
+
+        <figure className="fx-site">
+          <div className="fx-shot-bar">
+            <span className="fx-shot-dots"><i></i><i></i><i></i></span>
+            <span className="fx-shot-url">{shotUrl}</span>
+            {shot.ours && <span className="fx-shot-ours">BUILT BY US</span>}
+            <span className="fx-shot-live">● LIVE</span>
+          </div>
+          <nav className="fx-site-tabs">
+            {SHOTS.map((s, i) => (
+              <button type="button" key={s.path} className={i === siteTab ? "on" : ""} onClick={() => setSiteTab(i)}>{s.label}</button>
+            ))}
+          </nav>
+          <div className="fx-site-window" key={siteTab}>
+            <img className="fx-site-img" src={shot.src} alt={`${shot.label} page of fidanconstruction.com, full page`} />
+            <span className="fx-site-hint">scroll inside ↕</span>
+          </div>
+          <div className="fx-site-foot">
+            <div className="fx-site-nav">
+              <button type="button" onClick={() => setSiteTab((i) => (i - 1 + SHOTS.length) % SHOTS.length)} aria-label="Previous page">‹</button>
+              <span>{String(siteTab + 1).padStart(2, "0")} / {String(SHOTS.length).padStart(2, "0")}</span>
+              <button type="button" onClick={() => setSiteTab((i) => (i + 1) % SHOTS.length)} aria-label="Next page">›</button>
+            </div>
+            <a className="fx-visit" href={SITE_ROOT + shot.path} target="_blank" rel="noopener noreferrer">Visit this page <span>↗</span></a>
+          </div>
+          <figcaption>{shot.note}</figcaption>
+        </figure>
       </section>
 
       {lightbox !== null && (
