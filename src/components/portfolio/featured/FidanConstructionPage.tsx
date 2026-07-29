@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 
@@ -18,11 +18,43 @@ const BUILD = [
 
 const TRADES = ["Unit Turnovers", "Water Damage", "Asbestos (O. Reg. 278/05)", "Painting", "Drywall & Plaster"] as const;
 
+// Display order per prototype: 02, 03, 01, 04, 05
+const CREATIVES = [
+  { src: "/portfolio/fidan-construction/ads/02-turnover-ready.jpg",      alt: "Before and after of a patched, repainted rental-unit wall and ceiling, headline 'Turnover ready in 48 hours'", hook: "Turnover speed", line: "Turnover ready in 48 hours." },
+  { src: "/portfolio/fidan-construction/ads/03-vacant-units.jpg",        alt: "A vacant, sunlit rental unit with torn-up subfloor, headline 'Vacant units cost you money'",                   hook: "Vacancy math",   line: "Vacant units cost you money." },
+  { src: "/portfolio/fidan-construction/ads/01-demo-to-clean-finish.jpg", alt: "Before and after of stripped basement framing and insulation, cleaned and sealed, headline 'From demo to clean finish'", hook: "Scope of work", line: "From demo to clean finish — 2 days." },
+  { src: "/portfolio/fidan-construction/ads/04-one-team.jpg",            alt: "Before and after of a repaired ceiling beside finished kitchen cabinets, headline 'One team, start to finish'",   hook: "One vendor",     line: "One team, start to finish." },
+  { src: "/portfolio/fidan-construction/ads/05-flawless-finish.jpg",     alt: "Before and after of a bare wall finished and painted with a window, headline 'Flawless finish, no callbacks'",    hook: "Trade quality",  line: "Flawless finish, no callbacks." },
+] as const;
+
 export function FidanConstructionPage({ client }: Props) {
   const frame = getFrameNumber(client); // "012"
   const wo = `FF-${frame}`;
 
   const [phase, setPhase] = useState<"before" | "after">("after");
+
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + CREATIVES.length) % CREATIVES.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="fx-page">
@@ -67,6 +99,67 @@ export function FidanConstructionPage({ client }: Props) {
           {TRADES.map((t) => <li key={t}>{t}</li>)}
         </ul>
       </section>
+
+      <section className="fx-scope">
+        <h2 className="fx-sec-head"><span>SCOPE OF WORK</span><i></i><span className="fx-sec-meta">3 LINE ITEMS</span></h2>
+
+        <article className="fx-row"><span className="fx-row-no">01</span><div className="fx-row-main">
+          <h3>Ad Management</h3><p className="fx-row-meta">META · IG + FB · OTTAWA +50KM</p>
+          <p className="fx-row-body">A two-stage B2B funnel built for property managers, not homeowners. Cold lead generation on native lead forms with a higher-intent qualifying step, retargeting held back until the audience pool could actually carry it. Reviewed on a fixed cadence — creative, audience and form read together, never in isolation.</p>
+        </div></article>
+
+        <article className="fx-row"><span className="fx-row-no">02</span><div className="fx-row-main">
+          <h3>Website Design</h3><p className="fx-row-meta">FIDANCONSTRUCTION.COM/PROPERTY-MANAGERS · LIVE</p>
+          <p className="fx-row-body">A landing page written for one reader. Not the homepage, not the residential pitch — a dedicated B2B page that answers the property manager&rsquo;s question in the first screen and carries one offer the whole way down.</p>
+        </div></article>
+
+        <article className="fx-row"><span className="fx-row-no">03</span><div className="fx-row-main">
+          <h3>SEO</h3><p className="fx-row-meta">LOCAL · OTTAWA METRO</p>
+          <p className="fx-row-body">Service and geography made legible: five trades named plainly, the service radius stated, compliance and after-hours availability surfaced as text rather than buried in a brochure.</p>
+        </div></article>
+      </section>
+
+      <section className="fx-creative">
+        <h2 className="fx-sec-head light"><span>THE CREATIVE SYSTEM</span><i></i><span className="fx-sec-meta">5 ASSETS · ONE GRAMMAR</span></h2>
+        <p className="fx-creative-intro">We set the rules and built to them. No stock, no renders — every frame is a real Fidan job, shot on site and cut <b>BEFORE</b> against <b>AFTER</b> so the proof lands before a word is read. One condensed headline, the payoff line always in red, the logo in the same place every time. Built once, extended five ways — square for feed, vertical for reels. A system the client can keep shooting into, not five one-off posts.</p>
+        <div className="fx-sheet">
+          {CREATIVES.map((c, i) => (
+            <button className="fx-cell" key={c.src} onClick={() => openLightbox(i)}>
+              <span className="fx-cell-tag">{c.hook}</span>
+              <img className="fx-cell-img" src={c.src} alt={c.alt} />
+              <span className="fx-cell-line">{c.line}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="fx-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${CREATIVES[lightbox].hook} — frame ${lightbox + 1} of ${CREATIVES.length}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="fx-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="fx-modal-stage">
+            <div className="fx-modal-bar top">
+              <span className="fx-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(CREATIVES.length).padStart(2, "0")}</span>
+              <span className="fx-modal-brand">FIDAN · {wo}</span>
+              <button className="fx-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="fx-modal-image-wrap">
+              <img src={CREATIVES[lightbox].src} alt={CREATIVES[lightbox].alt} />
+            </div>
+            <div className="fx-modal-bar bot">
+              <span className="fx-modal-slate">{CREATIVES[lightbox].hook} — {CREATIVES[lightbox].line}</span>
+            </div>
+          </div>
+
+          <button className="fx-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
@@ -204,17 +297,24 @@ export function FidanConstructionPage({ client }: Props) {
           letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:none}
         .fx-sign-back:hover{color:var(--red)}
 
-        .fx-modal{--red:#e2231a;position:fixed;inset:0;z-index:90;background:rgba(8,8,9,.95);display:none;align-items:center;justify-content:center;padding:40px}
+        .fx-modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(8,8,9,.95);animation:fx-fade .22s ease-out}
         .fx-modal.open{display:flex}
-        .fx-modal-inner{max-width:min(560px,84vw);max-height:84vh}
-        .fx-modal-img{width:100%;height:auto;display:block}
-        .fx-modal-x{position:absolute;top:22px;right:26px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-        .fx-modal-x:hover,.fx-modal-nav:hover{color:var(--red)}
-        .fx-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:0;color:#fff;
-          font-size:38px;width:56px;height:56px;cursor:pointer;line-height:1}
-        .fx-modal-nav.prev{left:22px}.fx-modal-nav.next{right:22px}
-        .fx-modal-cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-family:"JetBrains Mono",monospace;
-          font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+        @keyframes fx-fade{from{opacity:0}to{opacity:1}}
+        .fx-modal-stage{position:relative;width:min(960px,92vw);height:min(92vh,1080px);max-height:92vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.6);animation:fx-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes fx-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .fx-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:13px 16px;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey)}
+        .fx-modal-bar.top{border-bottom:3px solid var(--red);justify-content:space-between}
+        .fx-modal-bar.bot{border-top:1px solid var(--rule);justify-content:center}
+        .fx-modal-counter b{color:var(--red);font-weight:700}
+        .fx-modal-brand{letter-spacing:.2em;color:var(--ink)}
+        .fx-modal-slate{letter-spacing:.08em;color:var(--ink);text-transform:none;font-weight:500}
+        .fx-modal-close{width:30px;height:30px;background:var(--ink);color:var(--paper);border:0;cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .16s}
+        .fx-modal-close:hover{background:var(--red)}
+        .fx-modal-image-wrap{flex:1 1 auto;min-height:0;position:relative;background:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .fx-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+        .fx-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;background:var(--paper);color:var(--ink);border:2px solid var(--ink);cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:20px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .fx-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--red);color:#fff;border-color:var(--red)}
+        .fx-modal-nav.prev{left:32px}.fx-modal-nav.next{right:32px}
 
         @media(max-width:940px){
           .fx-hero-grid{grid-template-columns:1fr;gap:40px}
