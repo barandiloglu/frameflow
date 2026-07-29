@@ -40,6 +40,16 @@ const LADDER = [
   { step: "03", title: "Written quote in 48 hours", note: "In writing, not a phone estimate." },
 ] as const;
 
+const PUNCH = [
+  ["Campaign architecture", "Two-stage funnel, budget split, scaling thresholds defined up front"],
+  ["Audience stack",        "Property & building managers, Ottawa metro + 50 km"],
+  ["Lead form",             "Higher-intent mode, six qualifying questions, routing rules"],
+  ["Creative system",       "Five statics on one visual grammar, 1:1 and 9:16"],
+  ["Copy bank",             "Four hooks — turnover speed, one vendor, social proof, after-hours"],
+  ["Landing page",          "/property-managers — live, offer-led, one CTA"],
+  ["Reporting",             "Scheduled performance reviews against the plan's own thresholds"],
+] as const;
+
 const SITE_ROOT = "https://fidanconstruction.com";
 
 export function FidanConstructionPage({ client }: Props) {
@@ -194,6 +204,24 @@ export function FidanConstructionPage({ client }: Props) {
           <figcaption>{shot.note}</figcaption>
         </figure>
       </section>
+
+      <section className="fx-punch">
+        <h2 className="fx-sec-head light"><span>PUNCH LIST</span><i></i><span className="fx-sec-meta">DELIVERED</span></h2>
+        <ul className="fx-punch-list">
+          {PUNCH.map(([label, desc]) => (
+            <li key={label}><span className="fx-tick">✕</span><b>{label}</b><span>{desc}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <footer className="fx-signoff">
+        <div className="fx-sign-grid">
+          <div><p className="fx-sign-label">PREPARED BY</p><p className="fx-sign-name">FrameFlow</p></div>
+          <div><p className="fx-sign-label">WORK ORDER</p><p className="fx-sign-name">{wo}</p></div>
+          <div><p className="fx-sign-label">STATUS</p><p className="fx-sign-name red">Delivered</p></div>
+        </div>
+        <Link className="fx-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
 
       {lightbox !== null && (
         <div
