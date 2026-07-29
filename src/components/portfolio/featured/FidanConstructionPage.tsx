@@ -421,6 +421,12 @@ export function FidanConstructionPage({ client }: Props) {
           .fx-row-no{font-size:32px}
           .fx-sign-grid{grid-template-columns:1fr;gap:18px}
         }
+        @media (prefers-reduced-motion: reduce){
+          .fx-modal,.fx-modal-stage{animation:none}
+          .fx-cell-img,.fx-modal-close,.fx-modal-nav,.fx-site-nav button,.fx-visit,.fx-toggle button,.fx-site-tabs button{transition:none}
+          .fx-cell:hover .fx-cell-img{transform:none}
+          .fx-modal-nav:hover{transform:translateY(-50%)}
+        }
       `}</style>
     </div>
   );
