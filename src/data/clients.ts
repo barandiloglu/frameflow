@@ -150,8 +150,30 @@ export const clients: readonly Client[] = [
       { src: "/portfolio/adrians-wasaga-beach/photos/16-living-kitchen-combo.jpg",     alt: "Living + kitchen combo in a cottage",                       slate: "Living + Kitchen",             orientation: "landscape" },
     ],
   },
-  { slug: "asd-laminate",                name: "ASD Laminate",                              services: ["Ad Management", "Social Media"] },
-  { slug: "aydin-cpa",                   name: "AYDIN CPA",                                 services: ["Photography", "Website Design"] },
+  {
+    slug: "asd-laminate",
+    name: "ASD Laminat",
+    services: ["Social Media", "Ad Management"],
+    year: "2025",
+    location: "Canada",
+    runtime: "Spring 2025",
+    scene: "EXT. THE MARKET — DAY",
+    synopsis:
+      "A five-pillar social system and a coordinated three-channel ad push introducing ASD Laminat — a 65-year, 85-country surfaces manufacturer — to the Canadian market. Product-led creative across LinkedIn, Instagram and Google, 678K+ impressions from Halifax to Vancouver, reaching the architects, fabricators and specifiers who choose the panel.",
+    featured: true,
+  },
+  {
+    slug: "aydin-cpa",
+    name: "AYDIN CPA",
+    services: ["Social Media", "Videography", "Website Design"],
+    year: "2026",
+    location: "Ottawa & Toronto, ON",
+    runtime: "Live · aydincpa.ca",
+    scene: "INT. FIRM — DAY",
+    synopsis:
+      "Social and web for a two-office Canadian accounting firm. A five-pillar content system rendered as 3D editorial illustration — a feed that stops the scroll — direct-to-camera reels, and aydincpa.ca, the firm site that turns attention into booked consultations.",
+    featured: true,
+  },
   {
     slug: "big-bears-baked-potato",
     name: "Big Bears Baked Potato",
@@ -255,7 +277,18 @@ export const clients: readonly Client[] = [
       { src: "/portfolio/canapy-furniture/photos/13-walnut-arch-table.jpg",      alt: "Walnut arch dining table, book-matched top.",                              slate: "Walnut Arch — Table",        orientation: "portrait"  },
     ],
   },
-  { slug: "connectr",                    name: "ConnecTR",                                  services: ["Photography", "Videography"] },
+  {
+    slug: "connectr",
+    name: "ConnecTR",
+    services: ["Photography", "Videography"],
+    year: "2025",
+    location: "Vaughan, ON",
+    runtime: "Event · 2025",
+    scene: "INT. THE FAIR — DAY",
+    synopsis:
+      "Full-day event coverage of ConnecTR 2025 — the Turkish Community Fair in Vaughan, the largest gathering of Turkic entrepreneurship, culture and community in North America. Photography across the whole exhibitor floor — booths, vendors, culture and candids — plus an event film, giving ConnecTR a library it can build a year of promotion on.",
+    featured: true,
+  },
   {
     slug: "ctbdh",
     name: "CTBDH",

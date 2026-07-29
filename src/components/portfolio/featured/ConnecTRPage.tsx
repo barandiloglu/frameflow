@@ -1,0 +1,433 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { getFrameNumber } from "@/data/clients";
+import type { Client } from "@/data/clients";
+import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
+
+type Props = { client: Client };
+
+// span: "" | "wide" | "tall" — masonry sizing in the gallery.
+const PHOTOS = [
+  { src: "/portfolio/connectr/photos/01-guests-portrait.jpg",   alt: "Two guests at the ConnecTR 2025 fair, posing for a portrait",              slate: "Guests · Portrait",     span: "tall" },
+  { src: "/portfolio/connectr/photos/02-conversation.jpg",      alt: "Two attendees in conversation on the exhibitor floor",                     slate: "Candid · Talk",         span: ""     },
+  { src: "/portfolio/connectr/photos/03-art-easel.jpg",         alt: "A portrait painting displayed on an easel in the culture area",            slate: "Culture · Art",         span: "wide" },
+  { src: "/portfolio/connectr/photos/04-group.jpg",             alt: "Attendees on stage during a recognition moment at the fair",               slate: "Community · Group",     span: ""     },
+  { src: "/portfolio/connectr/photos/05-topcu-booth.jpg",       alt: "An exhibitor at their branded booth",                                      slate: "Exhibitor · Booth",     span: ""     },
+  { src: "/portfolio/connectr/photos/06-mavi-booth.jpg",        alt: "The Mavi Travel & Tours exhibitor booth",                                  slate: "Exhibitor · Travel",    span: ""     },
+  { src: "/portfolio/connectr/photos/07-ibiza-booth.jpg",       alt: "The Ibiza Premium Furniture exhibitor booth",                              slate: "Exhibitor · Furniture", span: ""     },
+  { src: "/portfolio/connectr/photos/08-atlantis-auto.jpg",     alt: "The Atlantis Auto exhibitor booth",                                        slate: "Exhibitor · Auto",      span: ""     },
+  { src: "/portfolio/connectr/photos/09-frameflow-booth.jpg",   alt: "A FrameFlow crew member filming on the exhibitor floor",                   slate: "On site · FrameFlow",   span: ""     },
+  { src: "/portfolio/connectr/photos/10-honey-vendor.jpg",      alt: "A vendor's table of local honey jars",                                     slate: "Vendor · Honey",        span: "tall" },
+  { src: "/portfolio/connectr/photos/11-baklava-vendor.jpg",    alt: "A close-up of baklava at a pastry vendor",                                 slate: "Vendor · Pastry",       span: ""     },
+  { src: "/portfolio/connectr/photos/12-food-vendor.jpg",       alt: "A Turkish food vendor on the fair floor",                                  slate: "Vendor · Food",         span: ""     },
+  { src: "/portfolio/connectr/photos/13-superb-auto.jpg",       alt: "A car showcased by Superb Auto at the fair",                               slate: "Showcase · Auto",       span: "tall" },
+  { src: "/portfolio/connectr/photos/14-live-music.jpg",        alt: "A live musician performing on stage",                                      slate: "Stage · Live music",    span: "wide" },
+  { src: "/portfolio/connectr/photos/15-behind-the-scenes.jpg", alt: "The FrameFlow videographer filming on the floor",                          slate: "Behind the scenes",     span: ""     },
+  { src: "/portfolio/connectr/photos/16-handshake.jpg",         alt: "Two attendees shaking hands",                                              slate: "Candid · Connection",   span: "wide" },
+  { src: "/portfolio/connectr/photos/17-networking.jpg",        alt: "Attendees networking on the exhibitor floor",                              slate: "Candid · Network",      span: ""     },
+  { src: "/portfolio/connectr/photos/18-candid-smile.jpg",      alt: "A smiling guest at the fair",                                              slate: "Candid · Smile",        span: ""     },
+  { src: "/portfolio/connectr/photos/19-flag-portrait.jpg",     alt: "A guest photographed by the Turkish flag",                                 slate: "Portrait · Flag",       span: "tall" },
+  { src: "/portfolio/connectr/photos/20-festival-context.jpg",  alt: "The ConnecTR Turkish Culture & Food Festival banner",                      slate: "ConnecTR · The Fair",   span: ""     },
+] as const;
+
+// The hero strip reuses four gallery frames (portrait, live music, handshake, conversation).
+const STRIP = [0, 13, 15, 1] as const;
+
+const TRACKS = [
+  { id: "C.01", name: "Exhibitors", note: "Branded booths & displays" },
+  { id: "C.02", name: "Vendors",    note: "Honey, pastry, food floor" },
+  { id: "C.03", name: "Culture",    note: "Art & live music" },
+  { id: "C.04", name: "People",     note: "Portraits & candids" },
+  { id: "C.05", name: "Connection", note: "Handshakes & networking" },
+] as const;
+
+export function ConnecTRPage({ client }: Props) {
+  const frame = getFrameNumber(client);
+
+  // Lightbox: index of the open gallery photo, or null when closed.
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + PHOTOS.length) % PHOTOS.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
+
+  return (
+    <div className="ctr-page">
+      <LoadingTransition
+        frameNumber={frame}
+        clientName={client.name}
+        scope={["Photography", "Video"]}
+        location="Vaughan, ON"
+        year={client.year}
+      />
+
+      <header className="ctr-rail">
+        <Link className="ctr-rail-back" href="/portfolio">← Portfolio</Link>
+        <span className="ctr-rail-center">CONNEC<b>TR</b> · CASE STUDY</span>
+        <span className="ctr-rail-meta">FrameFlow · Reel <b>{frame}</b> · 2025</span>
+      </header>
+
+      <section className="ctr-hero">
+        <div className="ctr-hero-band" />
+        <div className="ctr-hero-top">
+          <div className="ctr-hero-inner">
+            <p className="ctr-crumb"><span>Case Study</span><i>·</i><span>Reel {frame}</span><i>·</i><span>Vaughan, ON</span></p>
+            <h1 className="ctr-hero-title">More than a fair —<br /><em>a community gathered.</em></h1>
+            <p className="ctr-hero-deck"><b>ConnecTR 2025</b> — the largest gathering of Turkic entrepreneurship, culture and community in North America. FrameFlow covered the day end to end: <b>photography</b> and <b>video</b> across a full exhibitor floor.</p>
+            <dl className="ctr-hero-meta">
+              <div><dt>01 · Photography</dt><dd>Full-day coverage</dd></div>
+              <div><dt>02 · Videography</dt><dd>Event film</dd></div>
+              <div><dt>Where</dt><dd>Vaughan, Ontario</dd></div>
+            </dl>
+          </div>
+          <div className="ctr-hero-brand">
+            <div className="ctr-hero-brand-card">
+              <img src="/portfolio/connectr/logo.png" alt="ConnecTR — Turkish Community Fair" />
+              <span className="ctr-hero-brand-cap">Turkish Community Fair · 2025</span>
+            </div>
+          </div>
+        </div>
+        <div className="ctr-hero-strip">
+          {STRIP.map((idx, i) => (
+            <button className={`ctr-strip-img si-${i + 1}`} key={idx} onClick={() => openLightbox(idx)}>
+              <img src={PHOTOS[idx].src} alt={PHOTOS[idx].alt} />
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="ctr-marquee" aria-hidden="true">
+        <div className="ctr-marquee-track">
+          {[0, 1].map((dup) => (
+            <span className="ctr-marquee-group" key={dup}>
+              {["Exhibitors", "Vendors", "Culture", "People", "Connection"].map((h) => (
+                <span className="ctr-marquee-item" key={h}>{h}<i>✦</i></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="ctr-brief">
+        <div className="ctr-brief-inner">
+          <span className="ctr-brief-stamp">The brief</span>
+          <h2>Capture the room<br /><em>so it feels like being there.</em></h2>
+          <p>A community fair lives in its faces — the vendor mid-sentence, the handshake that turns into a deal, the kid in front of the art. The brief was simple: document the whole floor honestly, and give ConnecTR a library it can build a year of promotion on.</p>
+          <p className="ctr-brief-by"><span></span> ConnecTR · The Civic Exchange</p>
+        </div>
+      </section>
+
+      <section className="ctr-del">
+        <div className="ctr-del-head">
+          <span className="num">01</span>
+          <div className="text"><p className="label">Deliverable 01 · Photography</p><h3>One floor, <em>every corner.</em></h3></div>
+          <p className="meta"><span><b>Full-day</b> coverage</span><span><b>5</b> coverage tracks</span><span><b>Exhibitors → candids</b></span><span><b>Delivered</b> 2025</span></p>
+        </div>
+
+        <div className="ctr-coverage">
+          <div className="head"><span>What we covered</span><small>one day · five tracks</small></div>
+          <div className="grid">
+            {TRACKS.map((t) => (
+              <div className="cov" key={t.id}>
+                <span className="cid">{t.id}</span>
+                <span className="cname">{t.name}</span>
+                <span className="cnote">{t.note}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="ctr-gallery-lbl">— Selected frames · tap to enlarge —</p>
+        <div className="ctr-gallery">
+          {PHOTOS.map((p, i) => (
+            <button className={`cell ${p.span}`} key={p.src} onClick={() => openLightbox(i)}>
+              <img src={p.src} alt={p.alt} />
+              <span className="slate">{p.slate}</span>
+              <span className="zoom">↗</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="ctr-video">
+        <div className="ctr-video-inner">
+          <div className="ctr-del-head light">
+            <span className="num">02</span>
+            <div className="text"><p className="label">Deliverable 02 · Videography</p><h3>The day, <em>in motion.</em></h3></div>
+            <p className="meta"><span><b>Event film</b></span><span><b>On-floor</b> capture</span><span><b>Reel</b> cut-down</span><span><b>2025</b></span></p>
+          </div>
+          <div className="ctr-video-frame">
+            {videoPlaying ? (
+              <iframe
+                className="ctr-video-iframe"
+                src="https://www.youtube.com/embed/rP7XosGV3a4?autoplay=1"
+                title="ConnecTR 2025 Recap"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+              />
+            ) : (
+              <button className="ctr-video-facade" onClick={() => setVideoPlaying(true)} aria-label="Play ConnecTR 2025 Recap">
+                <img src="/portfolio/connectr/video/recap-poster.jpg" alt="" aria-hidden="true" />
+                <span className="ctr-video-slot">
+                  <span className="play">▶</span>
+                  <span className="vp-title">ConnecTR 2025 Recap</span>
+                  <span className="vp-note">Play the event film</span>
+                </span>
+              </button>
+            )}
+          </div>
+          <p className="ctr-video-cap">
+            <a href="https://www.youtube.com/watch?v=rP7XosGV3a4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <section className="ctr-colophon">
+        <div className="ctr-swatches">
+          <div className="sw"><span className="chip" style={{ background: "#C8102E" }} /><span className="sw-name">CTR Crimson</span><span className="sw-hex">#C8102E</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#16244B" }} /><span className="sw-name">Navy</span><span className="sw-hex">#16244B</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#D8CBB4" }} /><span className="sw-name">Warm Sand</span><span className="sw-hex">#D8CBB4</span></div>
+          <div className="sw"><span className="chip" style={{ background: "#F7F5F1", border: "1px solid #ece7dd" }} /><span className="sw-name">Off White</span><span className="sw-hex">#F7F5F1</span></div>
+        </div>
+        <h2 className="ctr-close">More than a fair.<br /><em>A community, on film.</em></h2>
+        <p className="ctr-sign">Prepared by <b>FrameFlow</b> · Reel {frame} · 2025</p>
+        <div className="ctr-colophon-cta">
+          <Link className="ctr-back-btn" href="/contact">Start a project →</Link>
+          <Link className="ctr-colophon-link" href="/portfolio">← Back to the archive</Link>
+        </div>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="ctr-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${PHOTOS[lightbox].slate} — frame ${lightbox + 1} of ${PHOTOS.length}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="ctr-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="ctr-modal-stage">
+            <div className="ctr-modal-bar top">
+              <span className="ctr-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(PHOTOS.length).padStart(2, "0")}</span>
+              <span className="ctr-modal-brand">ConnecTR · Reel {frame}</span>
+              <button className="ctr-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="ctr-modal-image-wrap">
+              <img src={PHOTOS[lightbox].src} alt={PHOTOS[lightbox].alt} />
+            </div>
+            <div className="ctr-modal-bar bot">
+              <span className="ctr-modal-slate">{PHOTOS[lightbox].slate}</span>
+            </div>
+          </div>
+
+          <button className="ctr-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
+        </div>
+      )}
+
+      <FontLink />
+      <style jsx global>{`
+        .ctr-page{
+          --crimson:#c8102e;--crimson-deep:#9d0c24;--navy:#16244b;--navy-soft:#24345f;
+          --sand:#d8cbb4;--off:#f7f5f1;--off-deep:#ece7dd;
+          background:var(--off);color:var(--navy);font-family:"Inter",system-ui,sans-serif;min-height:100vh;overflow-x:hidden;
+        }
+        .ctr-page img{display:block;max-width:100%}
+
+        .ctr-rail{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--off-deep);font-size:13px;letter-spacing:.14em;text-transform:uppercase;position:sticky;top:0;z-index:30;background:rgba(247,245,241,.88);backdrop-filter:blur(10px)}
+        .ctr-rail-back{color:var(--navy);text-decoration:none;font-weight:600}
+        .ctr-rail-center{color:var(--navy);font-weight:700}.ctr-rail-center b{color:var(--crimson)}
+        .ctr-rail-meta{color:#7c7a74}.ctr-rail-meta b{color:var(--crimson)}
+
+        .ctr-hero{position:relative;max-width:1240px;margin:0 auto;padding:clamp(44px,7vw,100px) 32px clamp(40px,6vw,80px)}
+        .ctr-hero-band{position:absolute;top:0;left:0;width:6px;height:100%;background:linear-gradient(180deg,var(--crimson),var(--navy))}
+        .ctr-hero-top{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(30px,5vw,70px);align-items:center}
+        .ctr-hero-inner{max-width:820px}
+        .ctr-hero-brand{display:flex;align-items:center;justify-content:center}
+        .ctr-hero-brand-card{background:#fff;border-radius:18px;padding:clamp(28px,3vw,44px);box-shadow:0 22px 54px rgba(22,36,75,.12);border-top:4px solid var(--crimson);display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;max-width:400px}
+        .ctr-hero-brand-card img{display:block;width:100%;height:auto}
+        .ctr-hero-brand-cap{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#7c7a74;font-weight:600;text-align:center}
+        .ctr-crumb{display:flex;gap:12px;align-items:center;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#7c7a74;font-weight:600;margin-bottom:26px}
+        .ctr-crumb i{color:var(--crimson);font-style:normal}
+        .ctr-hero-title{font-family:"Montserrat",sans-serif;font-weight:900;font-size:clamp(40px,6.4vw,90px);line-height:1;letter-spacing:-.02em;color:var(--navy);margin-bottom:26px}
+        .ctr-hero-title em{font-style:normal;color:var(--crimson)}
+        .ctr-hero-deck{font-family:"Fraunces",serif;font-size:clamp(18px,2vw,26px);line-height:1.5;color:#3c4258;max-width:620px;margin-bottom:34px}
+        .ctr-hero-deck b{color:var(--navy);font-weight:600}
+        .ctr-hero-meta{display:flex;gap:34px;flex-wrap:wrap;border-top:2px solid var(--off-deep);padding-top:22px}
+        .ctr-hero-meta dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:6px}
+        .ctr-hero-meta dd{font-family:"Montserrat",sans-serif;font-size:17px;font-weight:700;color:var(--navy)}
+        .ctr-hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:46px}
+        .ctr-strip-img{position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;border-radius:10px;aspect-ratio:3/4;background:#ccc;box-shadow:0 14px 34px rgba(22,36,75,.16);transition:transform .3s ease}
+        .ctr-strip-img img{width:100%;height:100%;object-fit:cover}
+        .ctr-strip-img:hover{transform:translateY(-4px)}
+        .ctr-strip-img.si-1{border-bottom:4px solid var(--crimson)}
+
+        .ctr-brief{background:var(--navy);color:var(--off);padding:clamp(60px,9vw,130px) 32px}
+        .ctr-brief-inner{max-width:900px;margin:0 auto;text-align:center}
+        .ctr-brief-stamp{display:inline-block;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--crimson);font-weight:700;border:1px solid rgba(200,16,46,.5);padding:7px 18px;border-radius:100px;margin-bottom:34px}
+        .ctr-brief h2{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(30px,4.6vw,58px);line-height:1.14;margin-bottom:30px}
+        .ctr-brief h2 em{font-style:italic;color:var(--sand)}
+        .ctr-brief p{font-size:clamp(16px,1.7vw,21px);line-height:1.7;color:rgba(247,245,241,.74);max-width:680px;margin:0 auto}
+        .ctr-brief-by{margin-top:32px!important;font-size:14px!important;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)!important;display:flex;align-items:center;justify-content:center;gap:12px}
+        .ctr-brief-by span{width:40px;height:2px;background:var(--crimson);display:inline-block}
+
+        .ctr-marquee{overflow:hidden;border-top:1px solid var(--off-deep);border-bottom:1px solid var(--off-deep);background:#fff;padding:16px 0}
+        .ctr-marquee-track{display:flex;width:max-content;animation:ctr-scroll 32s linear infinite}
+        .ctr-marquee-group{display:flex;flex-shrink:0}
+        .ctr-marquee-item{display:flex;align-items:center;gap:26px;padding:0 26px;font-family:"Montserrat",sans-serif;font-weight:900;font-size:clamp(20px,2.4vw,34px);letter-spacing:-.01em;text-transform:uppercase;color:var(--navy);white-space:nowrap}
+        .ctr-marquee-item i{color:var(--crimson);font-style:normal;font-size:.7em}
+        @keyframes ctr-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        .ctr-del{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
+        .ctr-del-head{display:grid;grid-template-columns:auto 1fr;gap:20px 28px;align-items:start;margin-bottom:48px}
+        .ctr-del-head .num{font-family:"Montserrat",sans-serif;font-weight:900;font-size:clamp(60px,9vw,120px);line-height:.8;color:var(--crimson);grid-row:span 2}
+        .ctr-del-head .label{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#7c7a74;font-weight:700;margin-bottom:10px}
+        .ctr-del-head h3{font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(26px,3.6vw,46px);line-height:1.08;letter-spacing:-.01em;color:var(--navy)}
+        .ctr-del-head h3 em{font-style:normal;color:var(--crimson)}
+        .ctr-del-head .meta{grid-column:2;display:flex;gap:26px;flex-wrap:wrap;margin-top:18px}
+        .ctr-del-head .meta span{font-size:14px;color:#55596a}
+        .ctr-del-head .meta b{font-family:"Montserrat",sans-serif;color:var(--navy);font-weight:700}
+        .ctr-del-head.light .label{color:rgba(247,245,241,.6)}
+        .ctr-del-head.light h3{color:var(--off)}.ctr-del-head.light h3 em{color:var(--sand)}
+        .ctr-del-head.light .meta span{color:rgba(247,245,241,.72)}.ctr-del-head.light .meta b{color:var(--off)}
+
+        .ctr-coverage{background:#fff;border:1px solid var(--off-deep);border-radius:20px;padding:30px;margin-bottom:46px;box-shadow:0 18px 44px rgba(22,36,75,.06)}
+        .ctr-coverage .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
+        .ctr-coverage .head span{font-family:"Montserrat",sans-serif;font-weight:800;font-size:20px;color:var(--navy)}
+        .ctr-coverage .head small{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#7c7a74}
+        .ctr-coverage .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+        .ctr-coverage .cov{border:1px solid var(--off-deep);border-radius:14px;padding:18px 14px;background:var(--off);display:flex;flex-direction:column;gap:8px;transition:border-color .25s,transform .25s}
+        .ctr-coverage .cov:hover{border-color:var(--crimson);transform:translateY(-3px)}
+        .ctr-coverage .cov .cid{font-family:"Montserrat",sans-serif;font-weight:800;font-size:14px;color:var(--crimson);letter-spacing:.04em}
+        .ctr-coverage .cov .cname{font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;color:var(--navy)}
+        .ctr-coverage .cov .cnote{font-size:12px;color:#7c7a74;line-height:1.3}
+
+        .ctr-gallery-lbl{text-align:center;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#7c7a74;margin-bottom:22px}
+        .ctr-gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:14px;grid-auto-flow:dense}
+        .ctr-gallery .cell{position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;border-radius:12px;background:#ccc;box-shadow:0 10px 26px rgba(22,36,75,.1);transition:transform .3s ease}
+        .ctr-gallery .cell img{width:100%;height:100%;object-fit:cover}
+        .ctr-gallery .cell.wide{grid-column:span 2}
+        .ctr-gallery .cell.tall{grid-row:span 2}
+        .ctr-gallery .cell:hover{transform:translateY(-4px)}
+        .ctr-gallery .slate{position:absolute;left:10px;bottom:10px;z-index:2;background:rgba(22,36,75,.82);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 9px;border-radius:6px;opacity:0;transform:translateY(6px);transition:all .3s ease}
+        .ctr-gallery .cell:hover .slate{opacity:1;transform:translateY(0)}
+        .ctr-gallery .zoom{position:absolute;right:10px;top:10px;z-index:2;color:#fff;font-size:18px;opacity:0;transition:opacity .3s ease;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+        .ctr-gallery .cell:hover .zoom{opacity:1}
+
+        .ctr-video{background:var(--navy);color:var(--off)}
+        .ctr-video-inner{max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,110px) 32px}
+        .ctr-video-frame{position:relative;border-radius:20px;overflow:hidden;background:var(--navy-soft);border:1px solid rgba(247,245,241,.1);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+        .ctr-video-slot{text-align:center;padding:30px}
+        .ctr-video-slot .play{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;background:var(--crimson);color:#fff;font-size:30px;padding-left:6px;margin-bottom:22px;box-shadow:0 14px 40px rgba(200,16,46,.4)}
+        .ctr-video-slot .vp-title{font-family:"Montserrat",sans-serif;font-weight:700;font-size:22px;color:var(--off);margin-bottom:8px}
+        .ctr-video-slot .vp-note{font-size:14px;color:rgba(247,245,241,.6)}
+        .ctr-video-cap{text-align:center;margin-top:18px;font-size:13px;color:rgba(247,245,241,.5);font-style:italic}
+        .ctr-video-iframe{width:100%;height:100%;border:0;display:block}
+        .ctr-video-facade{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;overflow:hidden;background:var(--navy-soft);display:flex;align-items:center;justify-content:center}
+        .ctr-video-facade img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+        .ctr-video-facade .ctr-video-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:30px}
+        .ctr-video-facade .vp-title{font-family:"Montserrat",sans-serif;font-weight:700;font-size:22px;color:var(--off)}
+        .ctr-video-facade .vp-note{font-size:14px;color:rgba(247,245,241,.75)}
+        .ctr-video-facade:hover .play{transform:scale(1.06)}
+        .ctr-video-cap a{color:rgba(247,245,241,.6);text-decoration:none}
+        .ctr-video-cap a:hover{color:var(--sand)}
+
+        .ctr-colophon{background:var(--off-deep);padding:clamp(56px,8vw,110px) 32px;text-align:center}
+        .ctr-swatches{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:50px}
+        .ctr-swatches .sw{display:flex;flex-direction:column;align-items:center;gap:8px}
+        .ctr-swatches .chip{width:68px;height:68px;border-radius:14px;box-shadow:0 8px 20px rgba(22,36,75,.15)}
+        .ctr-swatches .sw-name{font-family:"Montserrat",sans-serif;font-weight:700;font-size:14px;color:var(--navy)}
+        .ctr-swatches .sw-hex{font-size:12px;color:#7c7a74;font-variant-numeric:tabular-nums}
+        .ctr-close{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(32px,5.4vw,68px);line-height:1.06;color:var(--navy);margin-bottom:22px}
+        .ctr-close em{font-style:italic;color:var(--crimson)}
+        .ctr-sign{font-size:14px;letter-spacing:.06em;color:#7c7a74;margin-bottom:30px}.ctr-sign b{color:var(--navy)}
+        .ctr-back-btn{display:inline-block;font-family:"Montserrat",sans-serif;font-weight:700;font-size:15px;color:#fff;background:var(--crimson);padding:14px 30px;border-radius:100px;text-decoration:none;cursor:pointer;border:0}
+        .ctr-back-btn:hover{background:var(--crimson-deep)}
+        .ctr-colophon-cta{display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap}
+        .ctr-colophon-link{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#7c7a74;text-decoration:none;font-weight:600}
+        .ctr-colophon-link:hover{color:var(--navy)}
+
+        .ctr-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(12,18,38,.94);animation:ctr-fade .22s ease-out}
+        .ctr-modal.open{display:flex}
+        @keyframes ctr-fade{from{opacity:0}to{opacity:1}}
+        .ctr-modal-stage{position:relative;width:min(960px,92vw);height:min(92vh,1080px);max-height:92vh;background:var(--off);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:ctr-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes ctr-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .ctr-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:14px 18px;font-family:"Montserrat",sans-serif;font-weight:700;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#7c7a74}
+        .ctr-modal-bar.top{border-bottom:2px solid var(--navy);justify-content:space-between}
+        .ctr-modal-bar.bot{border-top:2px solid var(--off-deep);justify-content:center}
+        .ctr-modal-counter b{color:var(--crimson);font-weight:900}
+        .ctr-modal-brand{letter-spacing:.32em;color:var(--navy)}
+        .ctr-modal-slate{font-family:"Fraunces",serif;letter-spacing:-.005em;text-transform:none;font-weight:500;color:var(--navy);font-size:17px}
+        .ctr-modal-close{width:32px;height:32px;background:var(--navy);color:var(--off);border:0;cursor:pointer;font-family:"Montserrat",sans-serif;font-size:18px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .2s}
+        .ctr-modal-close:hover{background:var(--crimson)}
+        .ctr-modal-image-wrap{flex:1 1 auto;min-height:0;position:relative;background:var(--off-deep);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .ctr-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+        .ctr-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;background:var(--off);color:var(--navy);border:2px solid var(--navy);cursor:pointer;font-family:"Montserrat",sans-serif;font-size:20px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s,color .2s;z-index:2}
+        .ctr-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--crimson);color:var(--off);border-color:var(--crimson)}
+        .ctr-modal-nav.prev{left:32px}.ctr-modal-nav.next{right:32px}
+
+        @media (max-width:880px){
+          .ctr-del-head{grid-template-columns:1fr}.ctr-del-head .num{grid-row:auto}.ctr-del-head .meta{grid-column:1}
+          .ctr-coverage .grid{grid-template-columns:repeat(2,1fr)}
+          .ctr-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:180px}
+          .ctr-hero-strip{grid-template-columns:repeat(2,1fr)}
+          .ctr-hero-top{grid-template-columns:1fr;gap:34px}
+          .ctr-hero-brand{justify-content:flex-start}
+          .ctr-hero-brand-card{max-width:320px;align-items:flex-start}
+          .ctr-rail-center{display:none}
+          .ctr-modal{padding:16px}
+          .ctr-modal-nav{width:44px;height:44px;font-size:16px}
+          .ctr-modal-nav.prev{left:8px}.ctr-modal-nav.next{right:8px}
+          .ctr-modal-brand{display:none}
+        }
+        @media (max-width:520px){.ctr-coverage .grid{grid-template-columns:1fr}}
+
+        @media (prefers-reduced-motion: reduce){
+          .ctr-marquee-track{animation:none;transform:none}
+          .ctr-strip-img,.ctr-gallery .cell,.ctr-coverage .cov,.ctr-gallery .slate,.ctr-gallery .zoom{transition:none}
+          .ctr-strip-img:hover{transform:none}
+          .ctr-gallery .cell:hover{transform:none}
+          .ctr-coverage .cov:hover{transform:none}
+          .ctr-video-facade:hover .play{transform:none}
+          .ctr-modal,.ctr-modal-stage{animation:none}
+          .ctr-modal-close,.ctr-modal-nav{transition:none}
+          .ctr-modal-nav:hover{transform:translateY(-50%)}
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function FontLink() {
+  return (
+    <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+      />
+    </>
+  );
+}
