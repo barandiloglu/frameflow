@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
+import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
 
 type Props = { client: Client };
 
@@ -87,6 +88,14 @@ export function FidanConstructionPage({ client }: Props) {
 
   return (
     <div className="fx-page">
+      <LoadingTransition
+        frameNumber={frame}
+        clientName={client.name}
+        scope={["Ads", "Website", "SEO"]}
+        location="Ottawa, ON"
+        year={client.year}
+      />
+
       <header className="fx-rail">
         <Link className="fx-back" href="/portfolio">← Portfolio</Link>
         <span className="fx-rail-mid">WORK ORDER <b>{wo}</b> · FIDAN CONSTRUCTION</span>
