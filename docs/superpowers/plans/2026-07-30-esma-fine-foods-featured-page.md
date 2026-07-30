@@ -411,7 +411,7 @@ const AISLE = [
     alt: "Weekly deals board — eight product cards with photo, description, weight and price on cream",
     note: "Eight lines, each with weight and price. Built to be read at arm's length on a phone, not admired." },
   { id: "A.02", lane: "appetite", shelf: "Choose your taste",     src: "/portfolio/esma-fine-foods/appetite/02-choose-your-taste.jpg",
-    alt: "Close-up of freshly baked lahmacun with minced meat and peppers, script headline over the top",
+    alt: "Close-up of a minced-meat pide with peppers, script headline over the top",
     note: "Shot close enough that you can see the pepper. No price anywhere — this frame only has to make you hungry." },
   { id: "P.02", lane: "price",    shelf: "Weekend — up to 30%",   src: "/portfolio/esma-fine-foods/price/02-weekend-deals.jpg",
     alt: "Weekend deals board — nine produce cards with per-kilo prices, old prices struck through",
