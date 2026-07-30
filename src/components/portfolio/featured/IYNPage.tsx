@@ -17,8 +17,54 @@ const BUILT = [
   "Midjourney prompt architecture for the illustrated pillar",
 ] as const;
 
+/* Section 02 embeds a static snapshot of the client's own marketing site
+   (public/portfolio/iyn/site), so the real pages run and scroll. It is
+   same-origin, which is what lets applySiteGuards() neutralise navigation
+   and form submission inside the frame. */
+const SITE_EMBED = "/portfolio/iyn/site";
+const SITE_ROOT = "https://www.iyn.com.tr";
+
+const SHOTS = [
+  { label: "Home",         path: "/en",              src: `${SITE_EMBED}/en/index.html`,              note: "“The formula for success is made for you.” Proof band, eleven exam programmes, the five-step method, and the portal shown working — one scroll." },
+  { label: "Exams",        path: "/en/exams",        src: `${SITE_EMBED}/en/exams/index.html`,        note: "A-Level, AP, IB, SAT, IELTS, TMUA, ESAT, MAT, STEP, TARA, Italy — each exam its own entry point rather than one generic enquiry form." },
+  { label: "Courses",      path: "/en/courses",      src: `${SITE_EMBED}/en/courses/index.html`,      note: "The deepest page on the site. Programme structure written so a parent can compare without a phone call." },
+  { label: "Study Abroad", path: "/en/study-abroad", src: `${SITE_EMBED}/en/study-abroad/index.html`, note: "The consultancy line, kept distinct from exam prep — different buyer, different decision, different page." },
+  { label: "Services",     path: "/en/services",     src: `${SITE_EMBED}/en/services/index.html`,     note: "The short page. What IYN does, in the order a first-time visitor needs it." },
+] as const;
+
+/**
+ * The embedded site is a real, running copy — so it would happily navigate or
+ * submit. This is a portfolio exhibit, not the client's live funnel, so we
+ * neutralise anything that leaves the page or sends data, while leaving the
+ * interactions that demonstrate the build (scrolling, menus) untouched.
+ * Runs on every iframe load because each tab switch remounts the frame.
+ */
+function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
+  const doc = e.currentTarget.contentDocument;
+  if (!doc) return; // cross-origin or not ready
+
+  doc.addEventListener(
+    "click",
+    (ev) => {
+      const el = ev.target as HTMLElement | null;
+      if (el?.closest("a[href], button[type='submit'], [role='link']")) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    },
+    true
+  );
+  doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
+  for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
+    a.removeAttribute("target");
+    a.setAttribute("aria-disabled", "true");
+  }
+}
+
 export function IYNPage({ client }: Props) {
   const frame = getFrameNumber(client); // "016"
+  const [siteTab, setSiteTab] = useState(0);
+  const shot = SHOTS[siteTab];
 
   return (
     <div className="iy-page">
@@ -48,6 +94,58 @@ export function IYNPage({ client }: Props) {
             {BUILT.map((b) => <li key={b}>{b}</li>)}
           </ul>
         </div>
+      </section>
+
+      <section className="iy-portal">
+        <h2 className="iy-sec"><span className="iy-sec-no">01</span><span className="iy-sec-name">The Portal</span><i></i><span className="iy-sec-meta">WEB APPLICATION</span></h2>
+        <div className="iy-portal-grid">
+          <div className="iy-portal-copy">
+            <p className="iy-lead">Exam prep runs on a feeling — <em>am I actually getting better?</em> The portal answers it with data.</p>
+            <p>Mock exams, a 70,000-question bank, section-level breakdowns and a progress curve that updates after every session. Weak topics surface on their own. Parents get the same view the student does, which removes the most tiring conversation in the business.</p>
+            <p>We built it, then made the film that introduced it, then announced it through the feed we had spent two years building. Same brand voice at every step — the site, the product and the post do not sound like three different companies.</p>
+          </div>
+          <figure className="iy-video">
+            <video className="iy-video-el" controls preload="none" poster="/portfolio/iyn/video/portal-tour-poster.jpg">
+              <source src="/portfolio/iyn/video/portal-tour.mp4" type="video/mp4" />
+            </video>
+            <figcaption><b>Portal launch film</b> — 1:15. &ldquo;Başarının formülü sana özel.&rdquo;</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="iy-site-sec">
+        <h2 className="iy-sec"><span className="iy-sec-no">02</span><span className="iy-sec-name">The Site</span><i></i><span className="iy-sec-meta">LIVE · BILINGUAL</span></h2>
+        <figure className="iy-site">
+          <div className="iy-bar">
+            <span className="iy-dots"><i></i><i></i><i></i></span>
+            <span className="iy-url">www.iyn.com.tr{shot.path}</span>
+            <span className="iy-live">● LIVE</span>
+          </div>
+          <nav className="iy-tabs">
+            {SHOTS.map((s, i) => (
+              <button type="button" key={s.path} className={i === siteTab ? "on" : ""} onClick={() => setSiteTab(i)}>{s.label}</button>
+            ))}
+          </nav>
+          <div className="iy-window" key={siteTab}>
+            <iframe
+              className="iy-window-frame"
+              src={shot.src}
+              title={`${shot.label} page of iyn.com.tr — live embed`}
+              onLoad={applySiteGuards}
+              loading="lazy"
+            />
+            <span className="iy-hint">live page · scroll inside</span>
+          </div>
+          <div className="iy-foot">
+            <div className="iy-nav">
+              <button type="button" onClick={() => setSiteTab((i) => (i - 1 + SHOTS.length) % SHOTS.length)} aria-label="Previous page">‹</button>
+              <span>{String(siteTab + 1).padStart(2, "0")} / {String(SHOTS.length).padStart(2, "0")}</span>
+              <button type="button" onClick={() => setSiteTab((i) => (i + 1) % SHOTS.length)} aria-label="Next page">›</button>
+            </div>
+            <a className="iy-visit" href={SITE_ROOT + shot.path} target="_blank" rel="noopener noreferrer">Visit this page <span>↗</span></a>
+          </div>
+          <figcaption>{shot.note}</figcaption>
+        </figure>
       </section>
 
       <FontLink />
@@ -111,10 +209,9 @@ export function IYNPage({ client }: Props) {
         .iy-tabs button:last-child{border-right:0}
         .iy-tabs button:hover{background:#dcdfeb;color:var(--ink)}
         .iy-tabs button.on{background:var(--paper);color:var(--blue-a)}
-        .iy-window{position:relative;height:620px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--rule);background:#fff;scrollbar-width:thin}
-        .iy-window-img{width:100%;height:auto;display:block}
-        .iy-hint{position:sticky;bottom:10px;float:right;margin-right:12px;background:rgba(3,73,170,.82);color:#fff;
-          font-family:"Oswald",sans-serif;font-size:10px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;padding:5px 9px;pointer-events:none}
+        .iy-window{position:relative;height:620px;overflow:hidden;border:1px solid var(--rule);background:#fff}
+        .iy-window-frame{width:100%;height:100%;border:0;display:block;background:#fff}
+        .iy-hint{position:absolute;bottom:12px;right:12px;z-index:2;background:rgba(3,73,170,.82);color:#fff;font-family:"Oswald",sans-serif;font-size:10px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;padding:5px 9px;pointer-events:none}
         .iy-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--rule);border-top:0;padding:12px 14px}
         .iy-nav{display:flex;align-items:center;gap:12px}
         .iy-nav button{width:34px;height:34px;cursor:pointer;line-height:1;background:transparent;border:1px solid var(--rule);color:var(--ink);font-size:20px;transition:all 140ms}
