@@ -371,7 +371,18 @@ export const clients: readonly Client[] = [
     ],
   },
   { slug: "edupathways",                 name: "EduPathways",                               services: ["Branding", "Photography", "SEO", "Social Media", "Videography", "Website Design"] },
-  { slug: "esma-fine-foods",             name: "Esma Fine Foods",                           services: ["Photography", "Social Media", "Videography"] },
+  {
+    slug: "esma-fine-foods",
+    name: "Esma Fine Foods",
+    services: ["Social Media", "Photography", "Videography"],
+    year: "2026",
+    location: "Concord, ON",
+    runtime: "Ongoing",
+    scene: "INT. THE AISLE — DAY",
+    synopsis:
+      "Social media for a Jane Street grocery with a Turkish bakery counter at one end and weekly produce deals at the other. Two content lanes on one palette — appetite photography that never mentions money, and price boards built to be compared at arm's length — plus in-store films that let the shelves make the argument.",
+    featured: true,
+  },
   {
     slug: "fidan-construction",
     name: "Fidan Construction",

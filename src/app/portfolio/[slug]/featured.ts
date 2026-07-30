@@ -23,6 +23,7 @@ import { ASDLaminatPage } from "@/components/portfolio/featured/ASDLaminatPage";
 import { ConnecTRPage } from "@/components/portfolio/featured/ConnecTRPage";
 import { FidanConstructionPage } from "@/components/portfolio/featured/FidanConstructionPage";
 import { IYNPage } from "@/components/portfolio/featured/IYNPage";
+import { EsmaPage } from "@/components/portfolio/featured/EsmaPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -38,4 +39,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "connectr":                       ConnecTRPage,
   "fidan-construction":             FidanConstructionPage,
   "iyn":                            IYNPage,
+  "esma-fine-foods":                EsmaPage,
 };
