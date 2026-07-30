@@ -364,7 +364,11 @@ export function IYNPage({ client }: Props) {
 
         .iy-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(4,40,100,.95);animation:iy-fade .22s ease-out}
         @keyframes iy-fade{from{opacity:0}to{opacity:1}}
-        .iy-modal-stage{position:relative;width:min(760px,92vw);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.45);animation:iy-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        /* The stage needs a DEFINITE height: the image below sizes itself with
+           object-fit against a percentage height, which is ignored if the parent
+           resolves to auto — the image would render at natural size and get
+           clipped by the wrap's overflow. */
+        .iy-modal-stage{position:relative;width:min(760px,92vw);height:min(86vh,1000px);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.45);animation:iy-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
         @keyframes iy-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
         .iy-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:13px 16px;font-family:"Oswald",sans-serif;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
         .iy-modal-bar.top{border-bottom:2px solid var(--amber);justify-content:space-between}
@@ -374,7 +378,7 @@ export function IYNPage({ client }: Props) {
         .iy-modal-close{width:30px;height:30px;background:var(--blue-a);color:#fff;border:0;cursor:pointer;font-family:"Oswald",sans-serif;font-size:16px;font-weight:500;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .16s}
         .iy-modal-close:hover{background:var(--amber)}
         .iy-modal-image-wrap{flex:1 1 auto;min-height:0;background:var(--light);overflow:hidden;display:flex;align-items:center;justify-content:center}
-        .iy-modal-image-wrap img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+        .iy-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
         .iy-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;background:var(--paper);color:var(--blue-a);border:2px solid var(--blue-a);cursor:pointer;font-family:"Oswald",sans-serif;font-size:20px;font-weight:500;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
         .iy-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--amber);color:#fff;border-color:var(--amber)}
         .iy-modal-nav.prev{left:32px}.iy-modal-nav.next{right:32px}
@@ -398,6 +402,13 @@ export function IYNPage({ client }: Props) {
           .iy-visit,.iy-nav{justify-content:center}
           .iy-url{display:none}
           .iy-sign-grid{grid-template-columns:1fr;gap:18px}
+          /* Narrow the stage so the nav arrows sit in the gutter rather than
+             over the artwork; keep the height definite (see .iy-modal-stage). */
+          .iy-modal{padding:12px}
+          .iy-modal-stage{width:calc(100% - 92px);height:min(76vh,720px)}
+          .iy-modal-nav{width:38px;height:38px;font-size:15px}
+          .iy-modal-nav.prev{left:8px}.iy-modal-nav.next{right:8px}
+          .iy-modal-cap{left:12px;right:12px;bottom:8px;font-size:12px}
         }
 
         @media (prefers-reduced-motion: reduce){
