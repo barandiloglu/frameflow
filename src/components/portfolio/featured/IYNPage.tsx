@@ -402,6 +402,13 @@ export function IYNPage({ client }: Props) {
           .iy-url{display:none}
           .iy-sign-grid{grid-template-columns:1fr;gap:18px}
         }
+
+        @media (prefers-reduced-motion: reduce){
+          .iy-modal,.iy-modal-stage{animation:none}
+          .iy-cell-img,.iy-modal-close,.iy-modal-nav,.iy-tabs button,.iy-nav button,.iy-visit{transition:none}
+          .iy-cell:hover .iy-cell-img{transform:none}
+          .iy-modal-nav:hover{transform:translateY(-50%)}
+        }
       `}</style>
     </div>
   );
