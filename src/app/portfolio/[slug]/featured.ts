@@ -22,6 +22,7 @@ import { AydinCPAPage } from "@/components/portfolio/featured/AydinCPAPage";
 import { ASDLaminatPage } from "@/components/portfolio/featured/ASDLaminatPage";
 import { ConnecTRPage } from "@/components/portfolio/featured/ConnecTRPage";
 import { FidanConstructionPage } from "@/components/portfolio/featured/FidanConstructionPage";
+import { IYNPage } from "@/components/portfolio/featured/IYNPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -36,4 +37,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "asd-laminate":                   ASDLaminatPage,
   "connectr":                       ConnecTRPage,
   "fidan-construction":             FidanConstructionPage,
+  "iyn":                            IYNPage,
 };

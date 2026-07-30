@@ -387,7 +387,18 @@ export const clients: readonly Client[] = [
   { slug: "goldenhorn-construction",     name: "Goldenhorn Construction",                   services: ["Logo", "Photography", "Website Design"] },
   { slug: "harbourloom",                 name: "Harbourloom",                               services: ["Logo", "Photography", "Social Media", "Videography"] },
   { slug: "hopeway-immigration",         name: "Hopeway Immigration",                       services: ["Social Media", "Website Design"] },
-  { slug: "iyn",                         name: "IYN",                                       services: ["App", "Social Media", "Website Design"] },
+  {
+    slug: "iyn",
+    name: "IYN",
+    services: ["Website Design", "App", "Social Media"],
+    year: "2026",
+    location: "İzmir, Türkiye",
+    runtime: "Ongoing · since 2024",
+    scene: "INT. THE STUDY — DAY",
+    synopsis:
+      "A bilingual marketing site, a student portal that makes exam progress visible to students and parents alike, the film that launched it, and a two-year Instagram system running four content pillars across four visual registers — for an İzmir consultancy preparing students for AP, IB, SAT and the British admissions exams.",
+    featured: true,
+  },
   { slug: "mavi-travel",                 name: "Mavi Travel",                               services: ["Social Media"] },
   { slug: "minauto",                     name: "MinAuto",                                   services: ["Logo", "Social Media"] },
   {
