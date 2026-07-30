@@ -8,6 +8,21 @@ import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
 
 type Props = { client: Client };
 
+const LANES = [
+  {
+    key: "appetite",
+    name: "Appetite",
+    rule: "Photograph, script name, no numbers",
+    body: "Full-bleed food, one word of copy, logo bottom-centre. These posts never mention money. Their entire job is to put a craving in front of someone who was not planning to shop today.",
+  },
+  {
+    key: "price",
+    name: "Price",
+    rule: "Grid, weights, old price struck through",
+    body: "Boards and single-SKU cards. Olive header, cream field, the old price always visible beside the new one. Dense on purpose — a customer scanning these is comparing, not browsing.",
+  },
+] as const;
+
 export function EsmaPage({ client }: Props) {
   const frame = getFrameNumber(client); // "011"
 
@@ -36,6 +51,37 @@ export function EsmaPage({ client }: Props) {
           <p className="es-deck">Make you hungry, and make you feel clever about money. <b>Esma Fine Foods</b> is a grocery store on Jane Street in Concord — Turkish bakery counter at one end, weekly produce deals at the other. We gave those two jobs two different design languages and held them together with one palette.</p>
         </div>
         <div className="es-hero-band"><span></span><span></span><span></span></div>
+      </section>
+
+      <section className="es-lanes">
+        <h2 className="es-sec"><span className="es-sec-no">01</span>Two lanes</h2>
+        <div className="es-lane-grid">
+          {LANES.map((l) => (
+            <article className={`es-lane es-lane-${l.key}`} key={l.key}>
+              <h3>{l.name}</h3>
+              <p className="es-lane-rule">{l.rule}</p>
+              <p>{l.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="es-film">
+        <h2 className="es-sec"><span className="es-sec-no">03</span>In store</h2>
+        <div className="es-film-grid">
+          <figure className="es-clip">
+            <video className="es-clip-el" controls preload="none" poster="/portfolio/esma-fine-foods/video/pov-poster.jpg">
+              <source src="/portfolio/esma-fine-foods/video/pov-reel.mp4" type="video/mp4" />
+            </video>
+            <figcaption><b>Store POV</b> — 1:30. A shop-with-me: cart down the aisles, items off the shelf and into the basket, deli counter, checkout. Price cards drop in over the picks — the one place both lanes run at once.</figcaption>
+          </figure>
+          <figure className="es-clip">
+            <video className="es-clip-el" controls preload="none" poster="/portfolio/esma-fine-foods/video/baklava-poster.jpg">
+              <source src="/portfolio/esma-fine-foods/video/baklava.mp4" type="video/mp4" />
+            </video>
+            <figcaption><b>Free baklava tasting</b> — 0:15. A standing in-store offer, shot at the counter and closed on the logo. Appetite doing a job no price board can.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <FontLink />
