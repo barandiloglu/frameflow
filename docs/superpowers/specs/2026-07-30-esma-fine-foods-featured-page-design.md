@@ -28,7 +28,7 @@ through) — held together by one palette. The structure borrows the store itsel
   |---|---|---|---|
   | `…10.00.54.jpeg`     | "Fresh & Organic / Grocery", wire basket + green tote, SAVE 25% bubble, address bar | Appetite | `appetite/01-grocery.jpg` (A.01) |
   | `…10.00.44.jpeg`     | "Fresh Deals THIS WEEK" — 8 product cards with weight + price | Price | `price/01-fresh-deals-week.jpg` (P.01) |
-  | `…10.00.54 (1).jpeg` | "Choose your taste!" — lahmacun close-up, script headline | Appetite | `appetite/02-choose-your-taste.jpg` (A.02) |
+  | `…10.00.54 (1).jpeg` | "Choose your taste!" — minced-meat pide close-up, script headline | Appetite | `appetite/02-choose-your-taste.jpg` (A.02) |
   | `…10.00.44 (1).jpeg` | "Weekend Fresh Deals · up to 30% off" — 9 produce cards, per kg, old prices struck | Price | `price/02-weekend-deals.jpg` (P.02) |
   | `…10.00.54 (2).jpeg` | "Pide" — loaves in a brown paper bag, dark ground | Appetite | `appetite/03-pide.jpg` (A.03) |
   | `…10.00.44 (2).jpeg` | Pınar Creamy Labneh 2×500gr, $12.00 struck → $7.00 | Price | `price/03-labne.jpg` (P.03) |

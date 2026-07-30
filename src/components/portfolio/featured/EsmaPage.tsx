@@ -18,8 +18,8 @@ const LANES = [
   {
     key: "price",
     name: "Price",
-    rule: "Grid, weights, old price struck through",
-    body: "Boards and single-SKU cards. Olive header, cream field, the old price always visible beside the new one. Dense on purpose — a customer scanning these is comparing, not browsing.",
+    rule: "Grid, weights, old price beside the new",
+    body: "Boards and single-SKU cards. On the discount cards and the weekend board, the old price stays beside the new one. Dense on purpose — a customer scanning these is comparing, not browsing.",
   },
 ] as const;
 
@@ -31,14 +31,14 @@ const AISLE = [
     alt: "Weekly deals board — eight product cards with photo, description, weight and price on cream",
     note: "Eight lines, each with weight and price. Built to be read at arm's length on a phone, not admired." },
   { id: "A.02", lane: "appetite", shelf: "Choose your taste",     src: "/portfolio/esma-fine-foods/appetite/02-choose-your-taste.jpg",
-    alt: "Close-up of freshly baked lahmacun with minced meat and peppers, script headline over the top",
+    alt: "Close-up of a minced-meat pide with peppers, script headline over the top",
     note: "Shot close enough that you can see the pepper. No price anywhere — this frame only has to make you hungry." },
   { id: "P.02", lane: "price",    shelf: "Weekend — up to 30%",   src: "/portfolio/esma-fine-foods/price/02-weekend-deals.jpg",
     alt: "Weekend deals board — nine produce cards with per-kilo prices, old prices struck through",
     note: "Produce only, per kilo, old price struck out. The comparison is the message." },
   { id: "A.03", lane: "appetite", shelf: "Pide",                  src: "/portfolio/esma-fine-foods/appetite/03-pide.jpg",
     alt: "Ramazan pide loaves in a brown paper bag on a wooden table, dark background",
-    note: "One word, one loaf, one paper bag. The bakery counter without a word of copy." },
+    note: "One word, one paper bag. The bakery counter without a word of copy." },
   { id: "P.03", lane: "price",    shelf: "Pınar Labne — $12 → $7", src: "/portfolio/esma-fine-foods/price/03-labne.jpg",
     alt: "Single-product discount card for Pınar creamy labneh twin pack, old price crossed out beside a large new price",
     note: "The single-SKU card. Corner ribbon, old price buried in a maroon dot, new price in a red slab you cannot miss." },
@@ -71,11 +71,11 @@ const SWATCHES = [
 
 /* Rendered live rather than shipped as an image: the prototype referenced a
    spec-sheet photo that does not exist, and inventing a client brand document
-   would be dishonest. These are the real faces the feed is set in. */
+   would be dishonest. These name the faces this page actually loads. */
 const FACES = [
-  { sample: "Grocery",        name: "Mirza",          role: "Headlines",     cls: "es-face-serif"  },
-  { sample: "Fresh & Organic", name: "Vintage Rotter", role: "Product names", cls: "es-face-script" },
-  { sample: "$7.70 / kg",     name: "Mont",           role: "Price grids",   cls: "es-face-mono"   },
+  { sample: "Grocery",        name: "Mirza",       role: "Headlines",     cls: "es-face-serif"  },
+  { sample: "Fresh & Organic", name: "Yellowtail", role: "Product names", cls: "es-face-script" },
+  { sample: "$7.70 / kg",     name: "Montserrat",  role: "Price grids",   cls: "es-face-mono"   },
 ] as const;
 
 export function EsmaPage({ client }: Props) {
@@ -149,7 +149,7 @@ export function EsmaPage({ client }: Props) {
         <div className="es-aisle">
           {AISLE.map((it, i) => (
             <button type="button" className={`es-slot es-slot-${it.lane}`} key={it.id} onClick={() => openLightbox(i)}>
-              <img className="es-slot-img" src={it.src} alt={it.alt} />
+              <img className="es-slot-img" src={it.src} alt={it.alt} loading="lazy" />
               <span className="es-tag">
                 <span className="es-tag-id">{it.id}</span>
                 <span className="es-tag-name">{it.shelf}</span>
@@ -212,7 +212,7 @@ export function EsmaPage({ client }: Props) {
                 ))}
               </ul>
             </div>
-            <figcaption>Three colours, three faces. <b>Mirza</b> sets the headlines, a script carries the product names, <b>Mont</b> does the work in the price grids.</figcaption>
+            <figcaption>Three core colours, three roles. A serif sets the headlines, a script carries the product names, a sans does the work in the price grids.</figcaption>
           </figure>
         </div>
       </section>
@@ -228,7 +228,7 @@ export function EsmaPage({ client }: Props) {
 
       {lightbox !== null && (
         <div
-          className="es-modal open"
+          className="es-modal"
           role="dialog"
           aria-modal="true"
           aria-label={`${AISLE[lightbox].shelf} — frame ${lightbox + 1} of ${AISLE.length}`}
@@ -257,7 +257,7 @@ export function EsmaPage({ client }: Props) {
 
       <FontLink />
       <style jsx global>{`
-        .es-page{--maroon:#3b0f0e;--cream:#f6eac7;--olive:#5c6c40;--paper:#fffdf7;--ink:#2c1a17;--mute:#8c7f6b;--rule:rgba(59,15,14,.16);
+        .es-page{--maroon:#3b0f0e;--cream:#f6eac7;--olive:#5c6c40;--paper:#fffdf7;--ink:#2c1a17;--mute:#7a6e5b;--rule:rgba(59,15,14,.16);
           background:var(--paper);color:var(--ink);font-family:"Mont","Montserrat",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
         .es-page b{font-weight:600}
 
@@ -302,7 +302,7 @@ export function EsmaPage({ client }: Props) {
         .es-aisle::-webkit-scrollbar{height:8px}
         .es-aisle::-webkit-scrollbar-thumb{background:var(--olive)}
         .es-slot{flex:0 0 auto;width:280px;scroll-snap-align:start;padding:0;border:0;background:transparent;cursor:pointer;text-align:left}
-        .es-slot-img{width:100%;height:auto;display:block;border-bottom:5px solid var(--olive);transition:transform 420ms}
+        .es-slot-img{width:100%;height:auto;display:block;aspect-ratio:1131/1600;border-bottom:5px solid var(--olive);transition:transform 420ms}
         .es-slot-appetite .es-slot-img{border-bottom-color:var(--cream)}
         .es-slot:hover .es-slot-img{transform:translateY(-6px)}
         .es-tag{display:block;background:var(--cream);color:var(--maroon);padding:9px 11px}
@@ -391,7 +391,7 @@ export function EsmaPage({ client }: Props) {
           .es-modal-stage{width:calc(100% - 88px);height:min(76vh,720px)}
           .es-modal-nav{width:36px;height:36px;font-size:15px}
           .es-modal-nav.prev{left:6px}.es-modal-nav.next{right:6px}
-          .es-modal-cap{left:12px;right:12px;font-size:12px}
+          .es-modal-cap{left:12px;right:12px;bottom:8px;font-size:12px}
         }
         @media (prefers-reduced-motion: reduce){
           .es-modal,.es-modal-stage{animation:none}
