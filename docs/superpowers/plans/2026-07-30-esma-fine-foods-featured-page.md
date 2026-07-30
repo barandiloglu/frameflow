@@ -707,6 +707,22 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
 Do **not** disable the aisle's `scroll-snap-type` or horizontal overflow — those are layout, not motion.
 
+- [ ] **Step 2b: Add the mobile lightbox override** (carried forward from the Task 5
+  review). The nav buttons are positioned against the fixed `.es-modal`, not the
+  ~92vw stage, so at narrow widths they overlap the artwork instead of sitting in the
+  gutter. The sibling IYN page needed the same fix. Add inside the existing
+  `@media (max-width:560px)` block:
+
+```css
+.es-modal{padding:12px}
+.es-modal-stage{width:calc(100% - 88px);height:min(76vh,720px)}
+.es-modal-nav{width:36px;height:36px;font-size:15px}
+.es-modal-nav.prev{left:6px}.es-modal-nav.next{right:6px}
+.es-modal-cap{left:12px;right:12px;font-size:12px}
+```
+Keep the stage's **definite height** here too — `height:min(76vh,720px)`, never
+`max-height` alone (same regression guard as Task 5).
+
 - [ ] **Step 3: Typecheck + lint**
 
 ```bash
