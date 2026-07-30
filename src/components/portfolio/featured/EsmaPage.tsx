@@ -53,6 +53,31 @@ const AISLE = [
     note: "Deli counter. Dark ground, single hero, script name top-left — the appetite lane's most restrained frame." },
 ] as const;
 
+const RECEIPT = [
+  ["Weekly deals board", "recurring"],
+  ["Weekend produce board", "recurring"],
+  ["Single-SKU discount cards", "on demand"],
+  ["Appetite photography posts", "5 shown"],
+  ["Store POV reel", "1:30"],
+  ["Product tasting reel", "0:15"],
+  ["Palette + type system", "locked"],
+] as const;
+
+const SWATCHES = [
+  { name: "Maroon", hex: "#3B0F0E", css: "var(--maroon)" },
+  { name: "Olive",  hex: "#5C6C40", css: "var(--olive)"  },
+  { name: "Cream",  hex: "#F6EAC7", css: "var(--cream)"  },
+] as const;
+
+/* Rendered live rather than shipped as an image: the prototype referenced a
+   spec-sheet photo that does not exist, and inventing a client brand document
+   would be dishonest. These are the real faces the feed is set in. */
+const FACES = [
+  { sample: "Grocery",        name: "Mirza",          role: "Headlines",     cls: "es-face-serif"  },
+  { sample: "Fresh & Organic", name: "Vintage Rotter", role: "Product names", cls: "es-face-script" },
+  { sample: "$7.70 / kg",     name: "Mont",           role: "Price grids",   cls: "es-face-mono"   },
+] as const;
+
 export function EsmaPage({ client }: Props) {
   const frame = getFrameNumber(client); // "011"
 
@@ -152,6 +177,54 @@ export function EsmaPage({ client }: Props) {
           </figure>
         </div>
       </section>
+
+      <section className="es-receipt-sec">
+        <h2 className="es-sec"><span className="es-sec-no">04</span>The receipt</h2>
+        <div className="es-receipt-grid">
+          <div className="es-receipt">
+            <p className="es-receipt-head">ESMA FINE FOODS<br /><span>9100 Jane St Unit 55 · Concord, ON</span></p>
+            <ul>
+              {RECEIPT.map(([item, qty]) => (
+                <li key={item}><span>{item}</span><i></i><span>{qty}</span></li>
+              ))}
+            </ul>
+            <p className="es-receipt-total"><span>Scope</span><i></i><span>Social media</span></p>
+            <p className="es-receipt-foot">Thank you — come again</p>
+          </div>
+
+          <figure className="es-spec">
+            <div className="es-spec-panel">
+              <div className="es-spec-swatches">
+                {SWATCHES.map((s) => (
+                  <div className="es-swatch" key={s.name}>
+                    <span className="es-swatch-chip" style={{ background: s.css }} />
+                    <span className="es-swatch-name">{s.name}</span>
+                    <span className="es-swatch-hex">{s.hex}</span>
+                  </div>
+                ))}
+              </div>
+              <ul className="es-spec-faces">
+                {FACES.map((f) => (
+                  <li key={f.name}>
+                    <span className={`es-face-sample ${f.cls}`}>{f.sample}</span>
+                    <span className="es-face-meta"><b>{f.name}</b> — {f.role}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <figcaption>Three colours, three faces. <b>Mirza</b> sets the headlines, a script carries the product names, <b>Mont</b> does the work in the price grids.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <footer className="es-signoff">
+        <div className="es-sign-grid">
+          <div><p className="es-sign-label">Client</p><p className="es-sign-name">Esma Fine Foods</p></div>
+          <div><p className="es-sign-label">Where</p><p className="es-sign-name">Concord, ON</p></div>
+          <div><p className="es-sign-label">By</p><p className="es-sign-name accent">FrameFlow</p></div>
+        </div>
+        <Link className="es-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
 
       {lightbox !== null && (
         <div
@@ -255,7 +328,20 @@ export function EsmaPage({ client }: Props) {
         .es-receipt-total{margin-top:14px;padding-top:16px;border-top:1px dashed var(--rule);font-weight:700;color:var(--maroon);font-size:14px}
         .es-receipt-foot{text-align:center;font-family:"Vintage Rotter","Yellowtail",cursive;font-size:22px;color:var(--olive);margin:22px 0 0}
         .es-spec{margin:0}
-        .es-spec-img{width:100%;height:auto;display:block;border:1px solid var(--rule)}
+        .es-spec-panel{border:1px solid var(--rule);background:var(--paper);padding:26px 24px}
+        .es-spec-swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+        .es-swatch{display:flex;flex-direction:column;gap:7px}
+        .es-swatch-chip{display:block;height:64px;border:1px solid var(--rule)}
+        .es-swatch-name{font-size:12px;font-weight:600;color:var(--maroon);letter-spacing:.04em}
+        .es-swatch-hex{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+        .es-spec-faces{list-style:none;margin:0;padding:0;border-top:1px dashed var(--rule)}
+        .es-spec-faces li{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px dashed var(--rule)}
+        .es-face-sample{color:var(--maroon);line-height:1.1}
+        .es-face-serif{font-family:"Mirza",Georgia,serif;font-size:30px;font-weight:600}
+        .es-face-script{font-family:"Vintage Rotter","Yellowtail",cursive;font-size:26px;color:var(--olive)}
+        .es-face-mono{font-family:"Mont","Montserrat",sans-serif;font-size:22px;font-weight:700}
+        .es-face-meta{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+        .es-face-meta b{color:var(--maroon);font-weight:600}
         .es-spec figcaption{font-size:13.5px;line-height:1.65;color:#6a584f;margin-top:14px;border-left:3px solid var(--olive);padding-left:14px}
         .es-spec figcaption b{color:var(--maroon)}
 
