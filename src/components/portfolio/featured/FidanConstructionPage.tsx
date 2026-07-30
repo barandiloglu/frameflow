@@ -28,12 +28,56 @@ const CREATIVES = [
   { src: "/portfolio/fidan-construction/ads/05-flawless-finish.jpg",     alt: "Before and after of a bare wall finished and painted with a window, headline 'Flawless finish, no callbacks'",    hook: "Trade quality",  line: "Flawless finish, no callbacks." },
 ] as const;
 
+/* The site window embeds a self-hosted static build of the client's own site
+   (public/portfolio/fidan-construction/site), so the real page runs — the
+   before/after sliders drag, the FAQ opens, the project filters work. It is
+   same-origin, which is what lets useSiteGuards() below neutralise navigation
+   and form submission inside the frame. */
+const SITE_EMBED = "/portfolio/fidan-construction/site";
+
 const SHOTS = [
-  { label: "Property Managers", path: "/property-managers", src: "/portfolio/fidan-construction/website/property-managers.jpg", ours: true,  note: "The B2B page. Offer and qualifying form above the fold, then the five trades, the three-step process, and the objections answered in order." },
-  { label: "Home",             path: "/",                  src: "/portfolio/fidan-construction/website/home.jpg",             ours: false, note: "The site the campaign page lives inside — residential-facing, built for a different reader. Kept intact; we added the commercial door beside it." },
-  { label: "Services",         path: "/services",          src: "/portfolio/fidan-construction/website/services.jpg",         ours: false, note: "Five trades under one vendor — the claim the whole B2B pitch rests on, stated on the client's own site." },
-  { label: "Projects",         path: "/projects",          src: "/portfolio/fidan-construction/website/projects.jpg",         ours: false, note: "The proof shelf. Real completed work, which is also where the campaign creative was sourced from." },
+  /* Explicit index.html: these are static files under public/, which has no
+     directory-index resolution — a bare directory URL 404s. */
+  { label: "Property Managers", path: "/property-managers", src: `${SITE_EMBED}/property-managers/index.html`, ours: true,  note: "The B2B page. Offer and qualifying form above the fold, then the five trades, the three-step process, and the objections answered in order." },
+  { label: "Home",             path: "/",                  src: `${SITE_EMBED}/index.html`,                  ours: false, note: "The site the campaign page lives inside — residential-facing, built for a different reader. Kept intact; we added the commercial door beside it." },
+  { label: "Services",         path: "/services",          src: `${SITE_EMBED}/services/index.html`,         ours: false, note: "Five trades under one vendor — the claim the whole B2B pitch rests on, stated on the client's own site." },
+  { label: "Projects",         path: "/projects",          src: `${SITE_EMBED}/projects/index.html`,         ours: false, note: "The proof shelf. Real completed work — drag any slider to wipe between before and after." },
 ] as const;
+
+/**
+ * The embedded site is a real, running copy — so it would happily navigate or
+ * submit its lead form. This is a portfolio exhibit, not the live funnel, so we
+ * neutralise anything that leaves the page or sends data, while leaving the
+ * interactions that demonstrate the build (before/after sliders, filters,
+ * accordions, scrolling) untouched.
+ *
+ * Runs on every iframe load because each tab switch remounts the frame.
+ */
+function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
+  const doc = e.currentTarget.contentDocument;
+  if (!doc) return; // cross-origin or not ready — nothing to guard
+
+  // Capture phase so we win before the page's own handlers run.
+  doc.addEventListener(
+    "click",
+    (ev) => {
+      const el = ev.target as HTMLElement | null;
+      if (el?.closest("a[href], button[type='submit'], [role='link']")) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    },
+    true
+  );
+
+  doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
+
+  // Belt and braces: links can also be followed via keyboard or target attrs.
+  for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
+    a.removeAttribute("target");
+    a.setAttribute("aria-disabled", "true");
+  }
+}
 
 const LADDER = [
   { step: "01", title: "Submit the form",          note: "Six fields. Role, portfolio size, service, timeline." },
@@ -199,8 +243,14 @@ export function FidanConstructionPage({ client }: Props) {
             ))}
           </nav>
           <div className="fx-site-window" key={siteTab}>
-            <img className="fx-site-img" src={shot.src} alt={`${shot.label} page of fidanconstruction.com, full page`} />
-            <span className="fx-site-hint">scroll inside ↕</span>
+            <iframe
+              className="fx-site-frame"
+              src={shot.src}
+              title={`${shot.label} page of fidanconstruction.com — live embed`}
+              onLoad={applySiteGuards}
+              loading="lazy"
+            />
+            <span className="fx-site-hint">live page · scroll &amp; drag inside</span>
           </div>
           <div className="fx-site-foot">
             <div className="fx-site-nav">
@@ -363,9 +413,9 @@ export function FidanConstructionPage({ client }: Props) {
         .fx-site-tabs button:last-child{border-right:0}
         .fx-site-tabs button:hover{background:#dedad2;color:var(--ink)}
         .fx-site-tabs button.on{background:var(--paper);color:var(--red)}
-        .fx-site-window{position:relative;height:620px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--rule);background:#fff;scrollbar-width:thin}
-        .fx-site-img{width:100%;height:auto;display:block}
-        .fx-site-hint{position:sticky;bottom:10px;float:right;right:10px;margin-right:12px;background:rgba(12,12,13,.78);
+        .fx-site-window{position:relative;height:620px;overflow:hidden;border:1px solid var(--rule);background:#fff}
+        .fx-site-frame{width:100%;height:100%;border:0;display:block;background:#fff}
+        .fx-site-hint{position:absolute;bottom:12px;right:12px;z-index:2;background:rgba(12,12,13,.78);
           color:var(--paper);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
           padding:5px 9px;pointer-events:none}
         .fx-site-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--rule);border-top:0;padding:12px 14px}

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static assets are served verbatim, never compiled — this includes the
+    // pre-built client-site snapshot embedded in the Fidan case study, whose
+    // minified bundles would otherwise flood the report.
+    "public/**",
   ]),
 ]);
 
