@@ -23,8 +23,61 @@ const LANES = [
   },
 ] as const;
 
+const AISLE = [
+  { id: "A.01", lane: "appetite", shelf: "Grocery — hero",        src: "/portfolio/esma-fine-foods/appetite/01-grocery.jpg",
+    alt: "Esma promo poster — a wire basket and a green tote overflowing with produce on cream, with a 25% saving bubble",
+    note: "The store, in one frame. Basket and bag cut out on cream, address along the bottom where a shopfront sign would be." },
+  { id: "P.01", lane: "price",    shelf: "Fresh Deals — weekly",  src: "/portfolio/esma-fine-foods/price/01-fresh-deals-week.jpg",
+    alt: "Weekly deals board — eight product cards with photo, description, weight and price on cream",
+    note: "Eight lines, each with weight and price. Built to be read at arm's length on a phone, not admired." },
+  { id: "A.02", lane: "appetite", shelf: "Choose your taste",     src: "/portfolio/esma-fine-foods/appetite/02-choose-your-taste.jpg",
+    alt: "Close-up of freshly baked lahmacun with minced meat and peppers, script headline over the top",
+    note: "Shot close enough that you can see the pepper. No price anywhere — this frame only has to make you hungry." },
+  { id: "P.02", lane: "price",    shelf: "Weekend — up to 30%",   src: "/portfolio/esma-fine-foods/price/02-weekend-deals.jpg",
+    alt: "Weekend deals board — nine produce cards with per-kilo prices, old prices struck through",
+    note: "Produce only, per kilo, old price struck out. The comparison is the message." },
+  { id: "A.03", lane: "appetite", shelf: "Pide",                  src: "/portfolio/esma-fine-foods/appetite/03-pide.jpg",
+    alt: "Ramazan pide loaves in a brown paper bag on a wooden table, dark background",
+    note: "One word, one loaf, one paper bag. The bakery counter without a word of copy." },
+  { id: "P.03", lane: "price",    shelf: "Pınar Labne — $12 → $7", src: "/portfolio/esma-fine-foods/price/03-labne.jpg",
+    alt: "Single-product discount card for Pınar creamy labneh twin pack, old price crossed out beside a large new price",
+    note: "The single-SKU card. Corner ribbon, old price buried in a maroon dot, new price in a red slab you cannot miss." },
+  { id: "A.04", lane: "appetite", shelf: "Simit",                 src: "/portfolio/esma-fine-foods/appetite/04-simit.jpg",
+    alt: "Sesame-crusted simit on a white plate beside a bowl of flour and a coral napkin",
+    note: "Lighter and cleaner than the rest of the appetite lane — breakfast light instead of dinner light." },
+  { id: "P.04", lane: "price",    shelf: "Pide — $12 → $7",       src: "/portfolio/esma-fine-foods/price/04-pide-discount.jpg",
+    alt: "Minimal discount card — a round pide on white inside an olive frame, old price struck through above the new one",
+    note: "Same offer as the labneh card, stripped to a frame and a number. Proof the price template survives being emptied out." },
+  { id: "A.05", lane: "appetite", shelf: "Sandwich",              src: "/portfolio/esma-fine-foods/appetite/05-sandwich.jpg",
+    alt: "Stacked club sandwich with ham, tomato and lettuce on dark rye, photographed on a black plate",
+    note: "Deli counter. Dark ground, single hero, script name top-left — the appetite lane's most restrained frame." },
+] as const;
+
 export function EsmaPage({ client }: Props) {
   const frame = getFrameNumber(client); // "011"
+
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + AISLE.length) % AISLE.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="es-page">
@@ -66,6 +119,22 @@ export function EsmaPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="es-aisle-sec">
+        <h2 className="es-sec light"><span className="es-sec-no">02</span>The aisle<span className="es-scroll-hint">scroll sideways →</span></h2>
+        <div className="es-aisle">
+          {AISLE.map((it, i) => (
+            <button type="button" className={`es-slot es-slot-${it.lane}`} key={it.id} onClick={() => openLightbox(i)}>
+              <img className="es-slot-img" src={it.src} alt={it.alt} />
+              <span className="es-tag">
+                <span className="es-tag-id">{it.id}</span>
+                <span className="es-tag-name">{it.shelf}</span>
+              </span>
+            </button>
+          ))}
+          <span className="es-aisle-end" />
+        </div>
+      </section>
+
       <section className="es-film">
         <h2 className="es-sec"><span className="es-sec-no">03</span>In store</h2>
         <div className="es-film-grid">
@@ -83,6 +152,35 @@ export function EsmaPage({ client }: Props) {
           </figure>
         </div>
       </section>
+
+      {lightbox !== null && (
+        <div
+          className="es-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${AISLE[lightbox].shelf} — frame ${lightbox + 1} of ${AISLE.length}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button type="button" className="es-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="es-modal-stage">
+            <div className="es-modal-bar top">
+              <span className="es-modal-counter">★ Shelf <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(AISLE.length).padStart(2, "0")}</span>
+              <span className="es-modal-brand">ESMA · REEL {frame}</span>
+              <button type="button" className="es-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="es-modal-image-wrap">
+              <img src={AISLE[lightbox].src} alt={AISLE[lightbox].alt} />
+            </div>
+            <div className="es-modal-bar bot">
+              <span className="es-modal-slate">{AISLE[lightbox].shelf}</span>
+            </div>
+          </div>
+
+          <button type="button" className="es-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
+          <p className="es-modal-cap">{AISLE[lightbox].note}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
@@ -169,16 +267,27 @@ export function EsmaPage({ client }: Props) {
         .es-sign-back{display:block;max-width:1200px;margin:0 auto;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--maroon);text-decoration:none}
         .es-sign-back:hover{color:var(--olive)}
 
-        .es-modal{--olive:#5c6c40;position:fixed;inset:0;z-index:90;background:rgba(28,8,7,.95);display:none;align-items:center;justify-content:center;padding:40px;font-family:"Mont","Montserrat",sans-serif}
-        .es-modal.open{display:flex}
-        .es-modal-inner{max-width:min(500px,80vw);max-height:80vh}
-        .es-modal-img{width:100%;height:auto;display:block}
-        .es-modal-x{position:absolute;top:22px;right:26px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-        .es-modal-x:hover,.es-modal-nav:hover{color:var(--olive)}
-        .es-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:0;color:#fff;font-size:38px;width:56px;height:56px;cursor:pointer;line-height:1}
-        .es-modal-nav.prev{left:22px}.es-modal-nav.next{right:22px}
-        .es-modal-cap{position:absolute;bottom:22px;left:40px;right:40px;text-align:center;font-size:13px;line-height:1.55;color:rgba(246,234,199,.72)}
-        .es-modal-cap b{color:#fff}
+        .es-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(28,8,7,.95);font-family:"Mont","Montserrat",sans-serif;animation:es-fade .22s ease-out}
+        @keyframes es-fade{from{opacity:0}to{opacity:1}}
+        /* The stage needs a DEFINITE height: the image below sizes itself with
+           object-fit against a percentage height, which is ignored if the parent
+           resolves to auto — the image would render at natural size and get
+           clipped by the wrap's overflow. */
+        .es-modal-stage{position:relative;width:min(680px,92vw);height:min(86vh,940px);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:es-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes es-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .es-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:13px 16px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+        .es-modal-bar.top{border-bottom:2px solid var(--olive);justify-content:space-between}
+        .es-modal-bar.bot{border-top:1px dashed var(--rule);justify-content:center;text-transform:none;letter-spacing:.04em;color:var(--maroon);font-family:"Mirza",Georgia,serif;font-size:19px;font-weight:600}
+        .es-modal-counter b{color:var(--olive);font-weight:700}
+        .es-modal-brand{letter-spacing:.2em;color:var(--maroon)}
+        .es-modal-close{width:30px;height:30px;background:var(--maroon);color:var(--cream);border:0;cursor:pointer;font-size:16px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .16s}
+        .es-modal-close:hover{background:var(--olive)}
+        .es-modal-image-wrap{flex:1 1 auto;min-height:0;background:var(--cream);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .es-modal-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+        .es-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;background:var(--paper);color:var(--maroon);border:2px solid var(--maroon);cursor:pointer;font-size:20px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .es-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--olive);color:var(--cream);border-color:var(--olive)}
+        .es-modal-nav.prev{left:32px}.es-modal-nav.next{right:32px}
+        .es-modal-cap{position:absolute;bottom:22px;left:40px;right:40px;text-align:center;font-size:13px;line-height:1.5;color:rgba(246,234,199,.72)}
 
         @media(max-width:900px){
           .es-lane-grid,.es-film-grid,.es-receipt-grid{grid-template-columns:1fr;gap:26px}
