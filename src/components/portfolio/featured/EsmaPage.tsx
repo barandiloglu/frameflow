@@ -387,6 +387,17 @@ export function EsmaPage({ client }: Props) {
           .es-hero-logo{height:70px;margin-bottom:22px}
           .es-sign-grid{grid-template-columns:1fr;gap:16px}
           .es-rail-end{display:none}
+          .es-modal{padding:12px}
+          .es-modal-stage{width:calc(100% - 88px);height:min(76vh,720px)}
+          .es-modal-nav{width:36px;height:36px;font-size:15px}
+          .es-modal-nav.prev{left:6px}.es-modal-nav.next{right:6px}
+          .es-modal-cap{left:12px;right:12px;font-size:12px}
+        }
+        @media (prefers-reduced-motion: reduce){
+          .es-modal,.es-modal-stage{animation:none}
+          .es-slot-img,.es-modal-close,.es-modal-nav{transition:none}
+          .es-slot:hover .es-slot-img{transform:none}
+          .es-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
