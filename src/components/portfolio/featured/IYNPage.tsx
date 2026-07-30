@@ -59,17 +59,15 @@ function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
   const doc = e.currentTarget.contentDocument;
   if (!doc) return; // cross-origin or not ready
 
-  doc.addEventListener(
-    "click",
-    (ev) => {
-      const el = ev.target as HTMLElement | null;
-      if (el?.closest("a[href], button[type='submit'], [role='link']")) {
-        ev.preventDefault();
-        ev.stopPropagation();
-      }
-    },
-    true
-  );
+  const blockNavigation = (ev: Event) => {
+    const el = ev.target as HTMLElement | null;
+    if (el?.closest("a[href], button[type='submit'], [role='link']")) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+  };
+  doc.addEventListener("click", blockNavigation, true);
+  doc.addEventListener("auxclick", blockNavigation, true);
   doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
   for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
     a.removeAttribute("target");
@@ -162,7 +160,7 @@ export function IYNPage({ client }: Props) {
           </div>
           <nav className="iy-tabs">
             {SHOTS.map((s, i) => (
-              <button type="button" key={s.path} className={i === siteTab ? "on" : ""} onClick={() => setSiteTab(i)}>{s.label}</button>
+              <button type="button" key={s.path} className={i === siteTab ? "on" : ""} aria-pressed={i === siteTab} onClick={() => setSiteTab(i)}>{s.label}</button>
             ))}
           </nav>
           <div className="iy-window" key={siteTab}>
@@ -197,7 +195,7 @@ export function IYNPage({ client }: Props) {
         <p className="iy-feed-note">Four subjects, but not one look. A provocation and a deadline reminder should not arrive wearing the same clothes — so the system flexes by content type and stays recognisable by palette, type and logo placement. Click any frame.</p>
         <div className="iy-sheet">
           {REG.map((r, i) => (
-            <button className="iy-cell" key={r.id} onClick={() => openLightbox(i)}>
+            <button type="button" className="iy-cell" key={r.id} onClick={() => openLightbox(i)}>
               <span className="iy-cell-id">{r.id}</span>
               <img className="iy-cell-img" src={r.src} alt={r.alt} />
               <span className="iy-cell-name">{r.name}</span>
@@ -240,13 +238,13 @@ export function IYNPage({ client }: Props) {
           aria-label={`${REG[lightbox].name} — frame ${lightbox + 1} of ${REG.length}`}
           onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
         >
-          <button className="iy-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+          <button type="button" className="iy-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
 
           <div className="iy-modal-stage">
             <div className="iy-modal-bar top">
               <span className="iy-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(REG.length).padStart(2, "0")}</span>
               <span className="iy-modal-brand">IYN · REEL {frame}</span>
-              <button className="iy-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+              <button type="button" className="iy-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
             </div>
             <div className="iy-modal-image-wrap">
               <img src={REG[lightbox].src} alt={REG[lightbox].alt} />
@@ -256,7 +254,7 @@ export function IYNPage({ client }: Props) {
             </div>
           </div>
 
-          <button className="iy-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
+          <button type="button" className="iy-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
           <p className="iy-modal-cap">{REG[lightbox].cap}</p>
         </div>
       )}
@@ -364,8 +362,7 @@ export function IYNPage({ client }: Props) {
         .iy-sign-back{display:block;max-width:1160px;margin:0 auto;font-family:"Oswald",sans-serif;font-size:11.5px;font-weight:300;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);text-decoration:none}
         .iy-sign-back:hover{color:var(--blue-a)}
 
-        .iy-modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(4,40,100,.95);animation:iy-fade .22s ease-out}
-        .iy-modal.open{display:flex}
+        .iy-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(4,40,100,.95);animation:iy-fade .22s ease-out}
         @keyframes iy-fade{from{opacity:0}to{opacity:1}}
         .iy-modal-stage{position:relative;width:min(760px,92vw);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.45);animation:iy-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
         @keyframes iy-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
