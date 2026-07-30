@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -30,6 +30,22 @@ const SHOTS = [
   { label: "Courses",      path: "/en/courses",      src: `${SITE_EMBED}/en/courses/index.html`,      note: "The deepest page on the site. Programme structure written so a parent can compare without a phone call." },
   { label: "Study Abroad", path: "/en/study-abroad", src: `${SITE_EMBED}/en/study-abroad/index.html`, note: "The consultancy line, kept distinct from exam prep — different buyer, different decision, different page." },
   { label: "Services",     path: "/en/services",     src: `${SITE_EMBED}/en/services/index.html`,     note: "The short page. What IYN does, in the order a first-time visitor needs it." },
+] as const;
+
+const PILLARS = [
+  { no: "01", title: "Stratejik Bilgilendirme", body: "AP, IB and SAT explained as strategy — timelines, scoring, what actually moves an application." },
+  { no: "02", title: "Ayın En Garip Bölümü",    body: "One obscure degree a month. The pillar that earns the saves and the shares." },
+  { no: "03", title: "Başarı Hikayeleri",       body: "Real student journeys, published with the family's consent on the client's own channels." },
+  { no: "04", title: "Akıllı Çalışma",          body: "Study method — Feynman, memory palace, Pareto. Useful before anyone has bought anything." },
+] as const;
+
+const REG = [
+  { id: "R.01", name: "The Hook",                 job: "Stops the scroll and starts an argument",                  src: "/portfolio/iyn/posts/01-hook-pahali-okul.jpg",           alt: "IYN post — ochre diagonal band, “Pahalı okul = iyi okul mu?” with a hand-drawn arrow",        look: "Ochre diagonal band · cream condensed caps · hand-drawn arrow · peeling paper corner", cap: "“Pahalı okul = iyi okul mu?” — a question the audience cannot scroll past without answering." },
+  { id: "R.02", name: "The Invitation",           job: "Turns a scroll into a conversation",                        src: "/portfolio/iyn/posts/02-davet-siradaki-adim.jpg",        alt: "IYN post — an illustrated night scene, hands over a map with a lit route and a compass",      look: "Illustrated night scene · ember spotlight on a mapped route · Oswald caps, white",     cap: "“Sıradaki adımını birlikte planlayalım.” The soft close — a route already drawn, someone across the table to walk it with." },
+  { id: "R.03", name: "The Strange Major",        job: "The monthly deep-dive on a career nobody has heard of",     src: "/portfolio/iyn/posts/03-garip-bolum-turfgrass.jpg",      alt: "IYN post — Turfgrass Science, an illustrated figure examining stadium turf",                  look: "Illustrated editorial poster · deep blue and ember · split text-image field",          cap: "Turfgrass Science — a real degree, taught to graduate level at one American university." },
+  { id: "R.04", name: "The Strange Major, again", job: "Proof the illustration system holds across subjects",        src: "/portfolio/iyn/posts/04-garip-bolum-bioinformatik.jpg",  alt: "IYN post — Bioinformatik, a figure standing in a lit threshold amid data panels",             look: "Same palette, same figure-in-a-threshold composition",                                  cap: "Bioinformatics — “the field nobody knows about that everybody will need.” Opening slide of a six-part carousel." },
+  { id: "R.05", name: "The Calendar",             job: "Utility content — deadlines, camps, application windows",   src: "/portfolio/iyn/posts/05-kritik-tarihler.jpg",            alt: "IYN post — “Kritik Tarihler!” with dated deadlines beside a library photograph",              look: "White field · ochre display · diagonal photographic cut",                              cap: "Dated, specific, saveable. The post a parent screenshots." },
+  { id: "R.06", name: "The Product Launch",       job: "Announcing the portal to the feed that was built to receive it", src: "/portfolio/iyn/posts/06-portal-lansman.jpg",        alt: "IYN post — “İYN Eğitim Portalı ile tanışın” with laptop, tablet and phone mockups",           look: "Electric blue · device mockups · the softest voice in the set",                        cap: "“İYN Eğitim Portalı ile tanışın.” Two years of feed-building paid off in one announcement." },
 ] as const;
 
 /**
@@ -65,6 +81,29 @@ export function IYNPage({ client }: Props) {
   const frame = getFrameNumber(client); // "016"
   const [siteTab, setSiteTab] = useState(0);
   const shot = SHOTS[siteTab];
+
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const openLightbox = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + REG.length) % REG.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="iy-page">
@@ -147,6 +186,80 @@ export function IYNPage({ client }: Props) {
           <figcaption>{shot.note}</figcaption>
         </figure>
       </section>
+
+      <section className="iy-feed">
+        <h2 className="iy-sec light"><span className="iy-sec-no">03</span><span className="iy-sec-name">The Feed</span><i></i><span className="iy-sec-meta">4 PILLARS · 6 REGISTERS</span></h2>
+        <div className="iy-pillars">
+          {PILLARS.map((p) => (
+            <article key={p.no}><span>{p.no}</span><h3>{p.title}</h3><p>{p.body}</p></article>
+          ))}
+        </div>
+        <p className="iy-feed-note">Four subjects, but not one look. A provocation and a deadline reminder should not arrive wearing the same clothes — so the system flexes by content type and stays recognisable by palette, type and logo placement. Click any frame.</p>
+        <div className="iy-sheet">
+          {REG.map((r, i) => (
+            <button className="iy-cell" key={r.id} onClick={() => openLightbox(i)}>
+              <span className="iy-cell-id">{r.id}</span>
+              <img className="iy-cell-img" src={r.src} alt={r.alt} />
+              <span className="iy-cell-name">{r.name}</span>
+              <span className="iy-cell-job">{r.job}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="iy-reel-sec">
+        <h2 className="iy-sec"><span className="iy-sec-no">04</span><span className="iy-sec-name">The Reel</span><i></i><span className="iy-sec-meta">VIDEOGRAPHY</span></h2>
+        <div className="iy-reel-grid">
+          <figure className="iy-reel">
+            <video className="iy-reel-el" controls preload="none" poster="/portfolio/iyn/video/imperial-reel-poster.jpg">
+              <source src="/portfolio/iyn/video/imperial-reel.mp4" type="video/mp4" />
+            </video>
+          </figure>
+          <div className="iy-reel-copy">
+            <p className="iy-lead">Imperial College — 0:26, vertical, sound-off legible.</p>
+            <p>Britain&rsquo;s hardest STEM admissions route, cut down to the length of a scroll. Every claim on screen is one an admissions officer would recognise, which is the only way this audience keeps watching.</p>
+            <p className="iy-reel-meta">1080 × 1934 · 60 fps source · captioned throughout</p>
+          </div>
+        </div>
+      </section>
+
+      <footer className="iy-signoff">
+        <div className="iy-sign-grid">
+          <div><p className="iy-sign-label">Client</p><p className="iy-sign-name">IYN Education</p></div>
+          <div><p className="iy-sign-label">Where</p><p className="iy-sign-name">İzmir, Türkiye</p></div>
+          <div><p className="iy-sign-label">By</p><p className="iy-sign-name accent">FrameFlow</p></div>
+        </div>
+        <Link className="iy-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
+
+      {lightbox !== null && (
+        <div
+          className="iy-modal open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${REG[lightbox].name} — frame ${lightbox + 1} of ${REG.length}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button className="iy-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">←</button>
+
+          <div className="iy-modal-stage">
+            <div className="iy-modal-bar top">
+              <span className="iy-modal-counter">★ Frame <b>{String(lightbox + 1).padStart(2, "0")}</b> / {String(REG.length).padStart(2, "0")}</span>
+              <span className="iy-modal-brand">IYN · REEL {frame}</span>
+              <button className="iy-modal-close" onClick={closeLightbox} aria-label="Close">×</button>
+            </div>
+            <div className="iy-modal-image-wrap">
+              <img src={REG[lightbox].src} alt={REG[lightbox].alt} />
+            </div>
+            <div className="iy-modal-bar bot">
+              <span className="iy-modal-slate">{REG[lightbox].name} — {REG[lightbox].look}</span>
+            </div>
+          </div>
+
+          <button className="iy-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">→</button>
+          <p className="iy-modal-cap">{REG[lightbox].cap}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
@@ -251,15 +364,23 @@ export function IYNPage({ client }: Props) {
         .iy-sign-back{display:block;max-width:1160px;margin:0 auto;font-family:"Oswald",sans-serif;font-size:11.5px;font-weight:300;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);text-decoration:none}
         .iy-sign-back:hover{color:var(--blue-a)}
 
-        .iy-modal{--amber:#ec8d13;position:fixed;inset:0;z-index:90;background:rgba(4,40,100,.95);display:none;align-items:center;justify-content:center;padding:40px;font-family:"Garet","Poppins",sans-serif}
+        .iy-modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:32px;background:rgba(4,40,100,.95);animation:iy-fade .22s ease-out}
         .iy-modal.open{display:flex}
-        .iy-modal-inner{max-width:min(520px,82vw);max-height:82vh}
-        .iy-modal-img{width:100%;height:auto;display:block}
-        .iy-modal-look{font-family:"Oswald",sans-serif;font-size:10.5px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:12px 0 0;text-align:center}
-        .iy-modal-x{position:absolute;top:22px;right:26px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-        .iy-modal-x:hover,.iy-modal-nav:hover{color:var(--amber)}
-        .iy-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:0;color:#fff;font-size:38px;width:56px;height:56px;cursor:pointer;line-height:1}
-        .iy-modal-nav.prev{left:22px}.iy-modal-nav.next{right:22px}
+        @keyframes iy-fade{from{opacity:0}to{opacity:1}}
+        .iy-modal-stage{position:relative;width:min(760px,92vw);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.45);animation:iy-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes iy-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .iy-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:13px 16px;font-family:"Oswald",sans-serif;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+        .iy-modal-bar.top{border-bottom:2px solid var(--amber);justify-content:space-between}
+        .iy-modal-bar.bot{border-top:1px solid var(--rule);justify-content:center;text-transform:none;letter-spacing:.04em;color:var(--ink)}
+        .iy-modal-counter b{color:var(--amber);font-weight:700}
+        .iy-modal-brand{letter-spacing:.2em;color:var(--blue-a)}
+        .iy-modal-close{width:30px;height:30px;background:var(--blue-a);color:#fff;border:0;cursor:pointer;font-family:"Oswald",sans-serif;font-size:16px;font-weight:500;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:background .16s}
+        .iy-modal-close:hover{background:var(--amber)}
+        .iy-modal-image-wrap{flex:1 1 auto;min-height:0;background:var(--light);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .iy-modal-image-wrap img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+        .iy-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;background:var(--paper);color:var(--blue-a);border:2px solid var(--blue-a);cursor:pointer;font-family:"Oswald",sans-serif;font-size:20px;font-weight:500;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .iy-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--amber);color:#fff;border-color:var(--amber)}
+        .iy-modal-nav.prev{left:32px}.iy-modal-nav.next{right:32px}
         .iy-modal-cap{position:absolute;bottom:22px;left:40px;right:40px;text-align:center;font-size:13px;line-height:1.5;color:rgba(255,255,255,.68)}
 
         @media(max-width:980px){
