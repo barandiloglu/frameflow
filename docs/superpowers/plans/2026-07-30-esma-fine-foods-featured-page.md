@@ -358,13 +358,13 @@ const LANES = [
             <video className="es-clip-el" controls preload="none" poster="/portfolio/esma-fine-foods/video/pov-poster.jpg">
               <source src="/portfolio/esma-fine-foods/video/pov-reel.mp4" type="video/mp4" />
             </video>
-            <figcaption><b>Store POV</b> — 1:30. A walk through the aisles, shot handheld at eye level. The shelves are the argument: if the range is deep, show the range.</figcaption>
+            <figcaption><b>Store POV</b> — 1:30. A shop-with-me: cart down the aisles, items off the shelf and into the basket, deli counter, checkout. Price cards drop in over the picks — the one place both lanes run at once.</figcaption>
           </figure>
           <figure className="es-clip">
             <video className="es-clip-el" controls preload="none" poster="/portfolio/esma-fine-foods/video/baklava-poster.jpg">
               <source src="/portfolio/esma-fine-foods/video/baklava.mp4" type="video/mp4" />
             </video>
-            <figcaption><b>Baklava tasting</b> — 0:15. The appetite lane in motion.</figcaption>
+            <figcaption><b>Free baklava tasting</b> — 0:15. A standing in-store offer, shot at the counter and closed on the logo. Appetite doing a job no price board can.</figcaption>
           </figure>
         </div>
       </section>
