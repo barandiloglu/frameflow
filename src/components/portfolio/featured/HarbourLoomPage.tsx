@@ -8,8 +8,62 @@ import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
 
 type Props = { client: Client };
 
+const DIVISIONS = [
+  { no: "01", name: "Beach",  camera: "Macro & still",    tone: "Sand, coral, low sun",
+    body: "The consumer line. Everything is shot at arm's length or closer — fringe, weave, the fold of a towel over driftwood. Warm, unhurried, and always tied to a place you would rather be." },
+  { no: "02", name: "Marine", camera: "Aerial & moving",  tone: "Open water, cold light",
+    body: "The boating line. The product barely appears; the water does. Shot from the air, following a catamaran across open lake — this division sells the life the cloth belongs to, not the cloth." },
+  { no: "03", name: "B2B",    camera: "Studio & clean",   tone: "White, marble, poolside",
+    body: "The hospitality line. Sold to operators, not holidaymakers — so the cloth is stacked, spotless and shot on white, and the copy talks about their guests instead of ours." },
+] as const;
+
+const GALLERY = [
+  { id: "B.01", lane: "beach", src: "/portfolio/harbourloom/posts/01-beach-triptych.jpg",
+    line: "Let the footprints fade. Keep the feeling. A tangible piece of a perfect day.",
+    note: "Triptych. Product, place, detail — read left to right in a second and a half.",
+    alt: "Three-panel Harbour Loom post — a blue and orange fish-print towel on sand, footprints through sunlit dunes, and a fringed woven edge in close-up" },
+  { id: "B.02", lane: "beach", src: "/portfolio/harbourloom/posts/02-muse.jpg",
+    line: "Mother Nature is our muse. And our toughest rival.",
+    note: "One hero frame, three supporting. The line earns the space it takes.",
+    alt: "Harbour Loom post — an orange fringed towel draped over driftwood beside three smaller frames of weave, sunset shore and sunset sky" },
+  { id: "B.03", lane: "beach", src: "/portfolio/harbourloom/posts/03-weave-macro.jpg",
+    line: "No copy. Just the cloth.",
+    note: "Shot close enough to count threads. The texture is the entire argument.",
+    alt: "Macro photograph of a pink and orange patterned Harbour Loom weave folded over a blue cloth" },
+  { id: "W.01", lane: "b2b", src: "/portfolio/harbourloom/posts/04-b2b-cloud.jpg",
+    line: "We tried to photograph a cloud. This was the best we could do.",
+    note: "Pure studio. One joke, delivered straight — the only humour anywhere in the brand.",
+    alt: "Three folded white hotel towels stacked on a marble counter against a pure white background" },
+  { id: "W.02", lane: "b2b", src: "/portfolio/harbourloom/posts/05-b2b-hospitality.jpg",
+    line: "You create the picture-perfect oasis for your guests. We supply the high-performance textiles to complete it.",
+    note: "The buyer's world, not the product's. Baskets, poolside, service in motion.",
+    alt: "Harbour Loom hospitality post — rolled white towels in wicker baskets beside a resort pool with palms and a sea view" },
+] as const;
+
 export function HarbourLoomPage({ client }: Props) {
   const frame = getFrameNumber(client); // "014"
+
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const stepLightbox = useCallback(
+    (delta: number) => setLightbox((i) => (i === null ? i : (i + delta + GALLERY.length) % GALLERY.length)),
+    []
+  );
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeLightbox, stepLightbox]);
 
   return (
     <div className="hl-page">
@@ -36,6 +90,66 @@ export function HarbourLoomPage({ client }: Props) {
         </div>
         <div className="hl-hero-strip"><span></span><span></span><span></span><span></span><span></span></div>
       </section>
+
+      <section className="hl-div">
+        <h2 className="hl-sec"><span>The Three Lines</span><i></i></h2>
+        <div className="hl-div-grid">
+          {DIVISIONS.map((d) => (
+            <article key={d.no}>
+              <span className="hl-div-no">{d.no}</span>
+              <h3>{d.name}</h3>
+              <p className="hl-div-meta">{d.camera}<i>·</i>{d.tone}</p>
+              <p>{d.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="hl-beach">
+        <h2 className="hl-sec"><span>01 — Beach</span><i></i><em>Macro &amp; still</em></h2>
+        <p className="hl-lead">Sell the cloth by making people want to touch it.</p>
+        <p className="hl-body">Every frame in this division is either the weave itself or the weave against somewhere warm. Editorial grids — a triptych, a hero with three supports — because a single square cannot carry both the product and the place. The copy stays out of the way: two lines, set in the brand&rsquo;s own serif, never competing with the photograph.</p>
+        <div className="hl-sheet">
+          {GALLERY.map((g, i) => g.lane !== "beach" ? null : (
+            <button type="button" className="hl-cell" key={g.id} onClick={() => setLightbox(i)}>
+              <img className="hl-cell-img" src={g.src} alt={g.alt} loading="lazy" />
+              <span className="hl-cell-meta"><b>{g.id}</b><span>{g.note}</span></span>
+            </button>
+          ))}
+        </div>
+        <figure className="hl-reel beach">
+          <video className="hl-reel-el" controls preload="none" poster="/portfolio/harbourloom/video/beach-poster.jpg">
+            <source src="/portfolio/harbourloom/video/beach-reel.mp4" type="video/mp4" />
+          </video>
+          <figcaption><b>Beach reel</b> — 0:17, vertical. Towels over a fence, one pattern after another, closing on &ldquo;Which one is yours?&rdquo;</figcaption>
+        </figure>
+      </section>
+
+      {lightbox !== null && (
+        <div
+          className="hl-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${GALLERY[lightbox].id} — frame ${lightbox + 1} of ${GALLERY.length}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          <button type="button" className="hl-modal-nav prev" onClick={() => stepLightbox(-1)} aria-label="Previous">‹</button>
+
+          <div className="hl-modal-stage">
+            <div className="hl-modal-bar">
+              <span className="hl-modal-id">{GALLERY[lightbox].id}</span>
+              <span className="hl-modal-count">{String(lightbox + 1).padStart(2, "0")} / {String(GALLERY.length).padStart(2, "0")}</span>
+              <button type="button" className="hl-modal-close" onClick={closeLightbox} aria-label="Close">✕</button>
+            </div>
+            <div className="hl-modal-shot">
+              <img src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} />
+            </div>
+          </div>
+
+          <button type="button" className="hl-modal-nav next" onClick={() => stepLightbox(1)} aria-label="Next">›</button>
+          <p className="hl-modal-cap">{GALLERY[lightbox].line}</p>
+        </div>
+      )}
 
       <FontLink />
       <style jsx global>{`
@@ -117,15 +231,21 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-sign-back{display:block;max-width:1160px;margin:0 auto;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-decoration:none}
         .hl-sign-back:hover{color:var(--coral)}
 
-        .hl-modal{--coral:#e8763f;position:fixed;inset:0;z-index:90;background:rgba(12,26,33,.95);display:none;align-items:center;justify-content:center;padding:40px;font-family:"Jost",sans-serif}
-        .hl-modal.open{display:flex}
-        .hl-modal-inner{max-width:min(520px,82vw);max-height:82vh}
-        .hl-modal-img{width:100%;height:auto;display:block}
-        .hl-modal-x{position:absolute;top:22px;right:26px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-        .hl-modal-x:hover,.hl-modal-nav:hover{color:var(--coral)}
-        .hl-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:0;color:#fff;font-size:38px;width:56px;height:56px;cursor:pointer;line-height:1}
-        .hl-modal-nav.prev{left:22px}.hl-modal-nav.next{right:22px}
-        .hl-modal-cap{position:absolute;bottom:24px;left:40px;right:40px;text-align:center;font-family:"Juana","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;color:rgba(255,255,255,.78)}
+        .hl-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:36px;background:rgba(12,26,33,.95);font-family:"Jost",sans-serif;animation:hl-fade .22s ease-out}
+        @keyframes hl-fade{from{opacity:0}to{opacity:1}}
+        .hl-modal-stage{position:relative;width:min(560px,88vw);height:min(78vh,860px);max-height:82vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:hl-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes hl-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .hl-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--rule);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+        .hl-modal-id{color:var(--coral)}
+        .hl-modal-count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink)}
+        .hl-modal-close{width:26px;height:26px;background:none;border:0;color:var(--ink);cursor:pointer;font-size:15px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:color .16s}
+        .hl-modal-close:hover{color:var(--coral)}
+        .hl-modal-shot{flex:1 1 auto;min-height:0;background:var(--shell);overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .hl-modal-shot img{width:100%;height:100%;object-fit:contain;display:block}
+        .hl-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:rgba(255,255,255,.07);border:0;color:#fff;font-size:34px;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .hl-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:rgba(255,255,255,.14);color:var(--coral)}
+        .hl-modal-nav.prev{left:26px}.hl-modal-nav.next{right:26px}
+        .hl-modal-cap{position:absolute;left:40px;right:40px;bottom:22px;margin:0;text-align:center;font-family:"Juana","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82);z-index:1}
 
         @media(max-width:980px){
           .hl-div-grid{grid-template-columns:1fr;gap:26px}
