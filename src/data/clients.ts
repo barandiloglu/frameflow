@@ -396,7 +396,18 @@ export const clients: readonly Client[] = [
     featured: true,
   },
   { slug: "goldenhorn-construction",     name: "Goldenhorn Construction",                   services: ["Logo", "Photography", "Website Design"] },
-  { slug: "harbourloom",                 name: "Harbourloom",                               services: ["Logo", "Photography", "Social Media", "Videography"] },
+  {
+    slug: "harbourloom",
+    name: "Harbour Loom",
+    services: ["Logo", "Photography", "Social Media", "Videography"],
+    year: "2026",
+    location: "Ontario",
+    runtime: "Ongoing",
+    scene: "EXT. THE SHORELINE — GOLDEN HOUR",
+    synopsis:
+      "Identity, photography and social for a flat-woven cotton mill selling to three buyers who want three different pictures. Beach is shot at arm's length and warm; Marine drops the product entirely and goes up on a drone; B2B strips the sand out and stacks the cloth on marble. Three registers that should not belong together, held in one brand by the mark that closes every frame.",
+    featured: true,
+  },
   { slug: "hopeway-immigration",         name: "Hopeway Immigration",                       services: ["Social Media", "Website Design"] },
   {
     slug: "iyn",
