@@ -8,12 +8,10 @@ import {
   clients,
   getFrameNumber,
   getServiceCounts,
-  getDistinctServiceCount,
   type Client,
 } from "@/data/clients";
 
 const TOTAL_CLIENTS = clients.length;
-const DISTINCT_SERVICES = getDistinctServiceCount();
 const TOP_SERVICES = getServiceCounts().slice(0, 6);
 
 export default function PortfolioPage() {
@@ -122,50 +120,8 @@ export default function PortfolioPage() {
                 Selected work from the FrameFlow studio — branding, digital, social,
                 and film. No filters. Just the reel, front to back.
               </p>
-              <div className="grid grid-cols-3 gap-8 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60">
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Clients</span>
-                  <span className="font-editorial font-[300] text-[44px] text-amber leading-none tracking-[-0.02em]">
-                    {String(TOTAL_CLIENTS).padStart(3, "0")}
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Years</span>
-                  <span className="font-editorial font-[300] text-[44px] text-on-surface leading-none tracking-[-0.02em]">
-                    05
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Services</span>
-                  <span className="font-editorial font-[300] text-[44px] text-on-surface leading-none tracking-[-0.02em]">
-                    {String(DISTINCT_SERVICES).padStart(2, "0")}
-                  </span>
-                </div>
-              </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* TITLES MARQUEE */}
-      <section className="relative overflow-hidden bg-surface-alt border-y border-on-alt-10">
-        <div className="flex w-max animate-ticker-slow items-center py-9">
-          {[...clients, ...clients, ...clients].map((c, i) => (
-            <span key={i} className="flex items-center gap-12 pr-12 shrink-0">
-              <span
-                className="font-editorial italic font-[300] leading-none text-on-alt"
-                style={{ fontSize: "clamp(44px, 7vw, 110px)" }}
-              >
-                {c.name}
-              </span>
-              <span
-                className="font-editorial not-italic text-ember font-[300] leading-none"
-                style={{ fontSize: "clamp(30px, 5vw, 76px)" }}
-              >
-                ✦
-              </span>
-            </span>
-          ))}
         </div>
       </section>
 
