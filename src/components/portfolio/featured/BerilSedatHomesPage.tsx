@@ -113,7 +113,7 @@ export function BerilSedatHomesPage({ client }: Props) {
     if (!doc) return;
     const block = (ev: Event) => {
       const el = ev.target as HTMLElement | null;
-      if (el?.closest("a[href], button, [role='link']")) {
+      if (el?.closest("a[href], button[type='submit'], [role='link']")) {
         ev.preventDefault();
         ev.stopPropagation();
       }
