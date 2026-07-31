@@ -8,6 +8,22 @@ import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
 
 type Props = { client: Client };
 
+const LOCKUPS = [
+  { id: "L.01", name: "Primary",    use: "Stacked. Signage, profile pictures, anything square.", src: "/portfolio/minauto/logo/lockup-primary.png",    dark: false },
+  { id: "L.02", name: "Horizontal", use: "Wide lockup. Website header, email signature, banners.", src: "/portfolio/minauto/logo/lockup-horizontal.png", dark: false },
+  { id: "L.03", name: "Compact",    use: "Two-line wordmark beside the mark. Tight spaces, print.", src: "/portfolio/minauto/logo/lockup-compact.png",   dark: false },
+  { id: "L.04", name: "Knockout",   use: "Reversed for navy and photographic backgrounds.", src: "/portfolio/minauto/logo/lockup-knockout.png",   dark: true  },
+] as const;
+
+/* Two brand colours come from the client's own spec sheet. Surface is a neutral
+   FrameFlow added for layout — labelled as such so the panel does not contradict
+   the sheet, which specifies two colours. */
+const SWATCHES = [
+  { name: "Trust Navy",    hex: "#123645", role: "Foundation. Every frame sits on it.",       light: false },
+  { name: "Safety Orange", hex: "#DC4C14", role: "The check, the tag, the price. Action only.", light: false },
+  { name: "Surface",       hex: "#F4F4F4", role: "Neutral. Not a brand colour — breathing room between proof points.", light: true },
+] as const;
+
 export function MinAutoPage({ client }: Props) {
   const frame = getFrameNumber(client); // "018"
 
@@ -38,6 +54,40 @@ export function MinAutoPage({ client }: Props) {
           <div className="ma-hero-mark">
             <img className="ma-hero-logo" src="/portfolio/minauto/logo/lockup-knockout.png" alt="MinAuto logo in white" />
           </div>
+        </div>
+      </section>
+
+      <section className="ma-mark">
+        <h2 className="ma-sec"><span className="ma-sec-no">01</span><span className="ma-sec-name">The Mark</span><i></i><span className="ma-sec-meta">4 LOCKUPS</span></h2>
+        <p className="ma-lead">A used-car buyer is not shopping — they are checking. So the logo is a check.</p>
+        <p className="ma-body">The car front is drawn flat and calm; the tick sits over it in safety orange, the one colour that means <i>go</i> on a work site. It reads at signage size and it survives at favicon size, because the tick alone is already the brand. The wordmark splits the same way the business does — <b>MIN</b> in orange, the part that is theirs; <b>AUTO</b> in navy, the part that is the category.</p>
+
+        <div className="ma-lockups">
+          {LOCKUPS.map((l) => (
+            <figure className={`ma-lock${l.dark ? " dark" : ""}`} key={l.id}>
+              <span className="ma-lock-id">{l.id}</span>
+              <div className="ma-lock-stage">
+                <img className="ma-lock-img" src={l.src} alt={`MinAuto ${l.name} logo lockup`} loading="lazy" />
+              </div>
+              <figcaption><b>{l.name}</b><span>{l.use}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div className="ma-spec">
+          <div className="ma-swatches">
+            {SWATCHES.map((s) => (
+              <div className={`ma-chip${s.light ? " light" : ""}`} style={{ background: s.hex }} key={s.name}>
+                <span className="ma-chip-hex">{s.hex}</span>
+                <span className="ma-chip-name">{s.name}</span>
+                <span className="ma-chip-role">{s.role}</span>
+              </div>
+            ))}
+          </div>
+          <figure className="ma-specsheet">
+            <img className="ma-specsheet-img" src="/portfolio/minauto/logo/spec-sheet.png" alt="MinAuto colour and type specification sheet" loading="lazy" />
+            <figcaption>The sheet the client got. Two colours, one typeface — <b>Gotham Bold</b>. This page is set in Montserrat, because Gotham is not licensed for the web here.</figcaption>
+          </figure>
         </div>
       </section>
 
