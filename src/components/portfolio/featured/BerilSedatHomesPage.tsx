@@ -93,6 +93,17 @@ const SHOTS = [
   { tab: "Türkçe", path: "tr", url: "/tr", note: "The Turkish site — not a translation layer bolted on, a parallel build with its own copy." },
 ] as const;
 
+const SCOPE = [
+  { no: "01", title: "Social Media", meta: "INSTAGRAM · EN + TR",
+    body: "A navy editorial feed on a fixed grammar — Cinzel headline, bronze rule, restraint over volume. Carousels for anything that needs a build, singles for news. Bilingual announcements run as one post with two clean language blocks, never sentence-level mixing." },
+  { no: "02", title: "Videography", meta: "ON CAMERA + BUILT GRAPHICS · 9:16",
+    body: "Two strands. On camera: property walkthroughs with the price burned in, monthly market updates, and policy explainers — mostly Turkish, both principals visible, captions on. Underneath: a built graphics system that animates the parts of a purchase people avoid reading — carrying cost, closing costs, first-time buyer programmes — one number at a time." },
+  { no: "03", title: "Website Design", meta: "BERILSEDATHOMES.CA · LIVE · EN + TR",
+    body: "A full bilingual site: home, listings, neighbourhoods, advice, about, contact, blog, and a parallel Turkish build. Cinzel and Montserrat throughout, RECO-compliant, with the micro-market pages doing the SEO work a boutique brokerage actually needs." },
+  { no: "04", title: "Ad Management", meta: "META · TR + EN · LISTING AND BRAND",
+    body: "Paid support behind the listings and the seminar programme, reported on a fixed cadence against the plan rather than on whatever the dashboard highlighted that week." },
+] as const;
+
 export function BerilSedatHomesPage({ client }: Props) {
   const frame = getFrameNumber(client); // "020"
 
@@ -264,6 +275,43 @@ export function BerilSedatHomesPage({ client }: Props) {
           <figcaption>{SHOTS[siteTab].note}</figcaption>
         </figure>
       </section>
+
+      <section className="bs-lang">
+        <div className="bs-lang-inner">
+          <h2 className="bs-lang-head">Two languages, not one translated twice.</h2>
+          <div className="bs-lang-grid">
+            <div><p className="bs-lang-label">EN</p><p className="bs-lang-quote">&ldquo;Quiet luxury.&rdquo;</p></div>
+            <div><p className="bs-lang-label">TR</p><p className="bs-lang-quote">&ldquo;Kişiye özel.&rdquo;</p></div>
+          </div>
+          <p className="bs-lang-body">Rendered literally, &ldquo;quiet luxury&rdquo; lands in Turkish as something closer to <i>muted expensive</i> — the wrong idea entirely. The Turkish side of this brand is transcreated, not translated: the promise is carried, the phrasing is rebuilt. &ldquo;A timeless home&rdquo; becomes <i>size yakışan bir yuva</i> — a home that suits you. Same brand. Two readers who each think it was written for them.</p>
+        </div>
+      </section>
+
+      <section className="bs-scope">
+        <h2 className="bs-sec-head light"><i></i><span>SCOPE</span><i></i></h2>
+        <div>
+          {SCOPE.map((s) => (
+            <article className="bs-row" key={s.no}>
+              <span className="bs-row-no">{s.no}</span>
+              <div>
+                <h3>{s.title}</h3>
+                <p className="bs-row-meta">{s.meta}</p>
+                <p className="bs-row-body">{s.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <footer className="bs-signoff">
+        <div className="bs-sign-mark"><img className="bs-sign-img" src="/portfolio/beril-sedat-homes/brand/logo-navy.png" alt="Beril &amp; Sedat Homes monogram" loading="lazy" /></div>
+        <div className="bs-sign-grid">
+          <div><p className="bs-sign-label">PREPARED BY</p><p className="bs-sign-name">FrameFlow</p></div>
+          <div><p className="bs-sign-label">FRAME</p><p className="bs-sign-name">{frame}</p></div>
+          <div><p className="bs-sign-label">STATUS</p><p className="bs-sign-name bronze">ONGOING</p></div>
+        </div>
+        <Link className="bs-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
 
       {lightbox && (() => {
         const isVideo = lightbox.set !== "feed";
