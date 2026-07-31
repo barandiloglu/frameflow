@@ -15,8 +15,90 @@ const REGISTERS = [
     body: "Numbers, tables, step-by-step. Terracotta on the one figure that matters in each frame. Used in the explainers, and in the feed wherever a post is meant to be read rather than admired." },
 ] as const;
 
+const REELS = [
+  { id: "R.01", src: "/portfolio/beril-sedat-homes/reels/01-crimson-millway.mp4", cap: "Walkthrough · Bayview & York Mills",
+    note: "Beril walking a $1,190,000 listing, price burned in from the first second.",
+    alt: "Beril walking up to a Bayview and York Mills house, asking price on screen" },
+  { id: "R.02", src: "/portfolio/beril-sedat-homes/reels/02-19-schell.mp4", cap: "Walkthrough · 19 Schell Ave · EN",
+    note: "Sedat, in English, on what an $85,000 down payment actually buys.",
+    alt: "Sedat outside 19 Schell Avenue with the down payment figure on screen" },
+  { id: "R.03", src: "/portfolio/beril-sedat-homes/reels/03-nisan-guncelleme.mp4", cap: "April market update · TR",
+    note: "The monthly read. Beril to camera, TRREB numbers, no voiceover hiding who is talking.",
+    alt: "Beril to camera presenting the April market update in Turkish" },
+  { id: "R.04", src: "/portfolio/beril-sedat-homes/reels/04-mart-guncelleme.mp4", cap: "March market update · TR",
+    note: "Same slot, previous month — the series is the point, not any one episode.",
+    alt: "Beril to camera presenting the March market update in Turkish" },
+  { id: "R.05", src: "/portfolio/beril-sedat-homes/reels/05-hst.mp4", cap: "Policy · is HST going? · TR",
+    note: "Sedat on the 13% that lands on new construction, and who actually pays it.",
+    alt: "Sedat to camera explaining HST on new-build homes in Turkish" },
+  { id: "R.06", src: "/portfolio/beril-sedat-homes/reels/06-merkez-bankasi.mp4", cap: "Bank of Canada decision · TR",
+    note: "Filmed the day before the announcement — the reason this series runs on a schedule.",
+    alt: "Sedat outdoors discussing the Bank of Canada rate decision in Turkish" },
+  { id: "R.07", src: "/portfolio/beril-sedat-homes/reels/07-pov-200k.mp4", cap: "POV · the gifted deposit · EN",
+    note: "Ten seconds. The short end of the range, and the one that travels furthest.",
+    alt: "Sedat on the phone, caption about a buyer receiving a gifted down payment" },
+  { id: "R.08", src: "/portfolio/beril-sedat-homes/reels/08-offer-counter.mp4", cap: "Offer and counter · EN",
+    note: "Beril in the car, playing both sides of a negotiation that is $50,000 apart.",
+    alt: "Beril in a car acting out an offer and counter-offer exchange" },
+  { id: "R.09", src: "/portfolio/beril-sedat-homes/reels/09-day-after-closing.mp4", cap: "The day after closing",
+    note: "No pitch, no numbers, no one on camera. The only piece in the series like it.",
+    alt: "A pool at a home the day after closing, with an on-screen caption" },
+] as const;
+
+const FEED = [
+  { id: "F.01", src: "/portfolio/beril-sedat-homes/feed/carousel-1-hook.jpg", cap: "Market carousel · 01 — the hook",
+    alt: "Navy carousel opener reading The Shocking Truth About Toronto Real Estate Today" },
+  { id: "F.02", src: "/portfolio/beril-sedat-homes/feed/carousel-2-source.jpg", cap: "Market carousel · 02 — the source",
+    alt: "Carousel slide crediting Tom Ferry's Toronto event, with a photo of Beril and Sedat" },
+  { id: "F.03", src: "/portfolio/beril-sedat-homes/feed/carousel-3-2022.jpg", cap: "Market carousel · 03 — 2022",
+    alt: "Hourglass infographic showing how Toronto sales volume split across agents in 2022" },
+  { id: "F.04", src: "/portfolio/beril-sedat-homes/feed/carousel-4-2025.jpg", cap: "Market carousel · 04 — 2025",
+    alt: "The same hourglass infographic for 2025, with the top ten per cent taking ninety per cent" },
+  { id: "F.05", src: "/portfolio/beril-sedat-homes/feed/carousel-5-wakeup.jpg", cap: "Market carousel · 05 — the wake-up call",
+    alt: "Bar chart showing ninety per cent of licensed Toronto agents closed four deals or fewer" },
+  { id: "F.06", src: "/portfolio/beril-sedat-homes/feed/carousel-6-shift.jpg", cap: "Market carousel · 06 — the shift",
+    alt: "TRREB table comparing 2022 and 2025 rental and sale transactions" },
+  { id: "F.07", src: "/portfolio/beril-sedat-homes/feed/carousel-7-question.jpg", cap: "Market carousel · 07 — the question",
+    alt: "Closing carousel slide asking whether your agent is truly active, signed Beril and Sedat" },
+  { id: "F.08", src: "/portfolio/beril-sedat-homes/feed/pinned-buyers.jpg", cap: "Pinned · For Buyers",
+    alt: "Navy pinned post reading Finding the right home starts with the right guidance" },
+  { id: "F.09", src: "/portfolio/beril-sedat-homes/feed/pinned-sellers.jpg", cap: "Pinned · For Sellers",
+    alt: "Warm limestone pinned post reading Every home has a story, we're here to tell it" },
+  { id: "F.10", src: "/portfolio/beril-sedat-homes/feed/just-sold-a.jpg", cap: "Just sold · 25 Broadway Ave",
+    alt: "Just Sold announcement for 25 Broadway Avenue over a photo of the tower" },
+  { id: "F.11", src: "/portfolio/beril-sedat-homes/feed/just-sold-b.jpg", cap: "Just sold · 25 Broadway Ave · detail",
+    alt: "Specification card for 25 Broadway Avenue listing two bedrooms and two bathrooms" },
+  { id: "F.12", src: "/portfolio/beril-sedat-homes/feed/seminar.jpg", cap: "Seminar · career management in the age of AI",
+    alt: "Seminar announcement for a career management talk, co-branded with EduPathways" },
+] as const;
+
 export function BerilSedatHomesPage({ client }: Props) {
   const frame = getFrameNumber(client); // "020"
+
+  const [lightbox, setLightbox] = useState<{ set: "reels" | "feed"; i: number } | null>(null);
+  const closeBox = useCallback(() => setLightbox(null), []);
+  const stepBox = useCallback((delta: number) => {
+    setLightbox((o) => {
+      if (!o) return o;
+      const len = o.set === "reels" ? REELS.length : FEED.length;
+      return { set: o.set, i: (o.i + delta + len) % len };
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeBox();
+      else if (e.key === "ArrowLeft") stepBox(-1);
+      else if (e.key === "ArrowRight") stepBox(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, closeBox, stepBox]);
 
   return (
     <div className="bs-page">
@@ -61,6 +143,69 @@ export function BerilSedatHomesPage({ client }: Props) {
           ))}
         </div>
       </section>
+
+      <section className="bs-reels">
+        <h2 className="bs-sec-head light"><i></i><span>THE REELS</span><i></i></h2>
+        <p className="bs-sub">On camera · 9:16 · walkthroughs, monthly updates, policy explainers</p>
+        <p className="bs-lede">The strongest thing this brokerage has is that there are two of them and you can see both. So the reels put them on camera and keep them there — Beril walking a Bayview listing, Sedat on what a rate decision does to a closing. Prices burned in, captions burned in, mostly Turkish, no voiceover hiding who is talking.</p>
+        <div className="bs-grid bs-grid--916">
+          {REELS.map((r, i) => (
+            <button type="button" className="bs-cell bs-cell--onDark" key={r.id} onClick={() => setLightbox({ set: "reels", i })}>
+              <span className="bs-play">▶</span>
+              <img className="bs-cell-img" src={`${r.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={r.alt} loading="lazy" />
+              <span className="bs-cell-cap">{r.cap}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="bs-feed">
+        <h2 className="bs-sec-head"><i></i><span>THE FEED</span><i></i></h2>
+        <p className="bs-sub bs-sub--dark">Instagram · 4:5</p>
+        <div className="bs-grid bs-grid--45">
+          {FEED.map((f, i) => (
+            <button type="button" className="bs-cell bs-cell--onLight" key={f.id} onClick={() => setLightbox({ set: "feed", i })}>
+              <img className="bs-cell-img" src={f.src} alt={f.alt} loading="lazy" />
+              <span className="bs-cell-cap">{f.cap}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {lightbox && (() => {
+        const isReel = lightbox.set === "reels";
+        const item = isReel ? REELS[lightbox.i] : FEED[lightbox.i];
+        const len = isReel ? REELS.length : FEED.length;
+        return (
+          <div
+            className="bs-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${item.id} — ${lightbox.i + 1} of ${len}`}
+            onClick={(e) => { if (e.target === e.currentTarget) closeBox(); }}
+          >
+            <button type="button" className="bs-modal-nav prev" onClick={() => stepBox(-1)} aria-label="Previous">‹</button>
+            <div className="bs-modal-stage">
+              <div className="bs-modal-bar">
+                <span className="bs-modal-id">{item.id}</span>
+                <span className="bs-modal-count">{String(lightbox.i + 1).padStart(2, "0")} / {String(len).padStart(2, "0")}</span>
+                <button type="button" className="bs-modal-close" onClick={closeBox} aria-label="Close">✕</button>
+              </div>
+              <div className="bs-modal-shot">
+                {isReel ? (
+                  <video key={item.src} controls autoPlay playsInline poster={`${item.src.replace(/\.mp4$/, "")}-poster.jpg`}>
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={item.src} alt={item.alt} />
+                )}
+              </div>
+            </div>
+            <button type="button" className="bs-modal-nav next" onClick={() => stepBox(1)} aria-label="Next">›</button>
+            <p className="bs-modal-cap">{item.cap}</p>
+          </div>
+        );
+      })()}
 
       <FontLink />
       <style jsx global>{`
@@ -183,17 +328,21 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-sign-back{display:inline-block;font-size:9.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);text-decoration:none}
         .bs-sign-back:hover{color:var(--bronze)}
 
-        .bs-modal{--limestone:#e1d4c0;position:fixed;inset:0;z-index:90;background:rgba(14,22,38,.96);display:flex;align-items:center;justify-content:center;
-          padding:44px;font-family:"Montserrat",system-ui,sans-serif}
-        .bs-modal[hidden]{display:none}
-        .bs-modal-inner{max-width:min(480px,86vw);max-height:84vh}
-        .bs-modal-img{width:100%;height:auto;max-height:84vh;object-fit:contain;display:block}
-        .bs-modal-x{position:absolute;top:24px;right:28px;background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
-        .bs-modal-x:hover,.bs-modal-nav:hover{color:var(--limestone)}
-        .bs-modal-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:0;color:#fff;font-size:34px;width:54px;height:54px;cursor:pointer;line-height:1}
-        .bs-modal-nav.prev{left:24px}
-        .bs-modal-nav.next{right:24px}
-        .bs-modal-cap{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:9.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.58)}
+        .bs-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:44px;background:rgba(14,22,38,.96);font-family:"Montserrat",system-ui,sans-serif;animation:bs-fade .22s ease-out}
+        @keyframes bs-fade{from{opacity:0}to{opacity:1}}
+        .bs-modal-stage{position:relative;width:min(460px,86vw);height:min(82vh,880px);max-height:86vh;background:var(--cloud);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:bs-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        @keyframes bs-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+        .bs-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--rule);font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6f6252}
+        .bs-modal-id{color:var(--bronze)}
+        .bs-modal-count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--navy)}
+        .bs-modal-close{width:26px;height:26px;background:none;border:0;color:var(--navy);cursor:pointer;font-size:14px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:color .16s}
+        .bs-modal-close:hover{color:var(--bronze)}
+        .bs-modal-shot{flex:1 1 auto;min-height:0;background:#0e1626;overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .bs-modal-shot img,.bs-modal-shot video{width:100%;height:100%;object-fit:contain;display:block}
+        .bs-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;background:var(--cloud);border:1px solid var(--rule);color:var(--navy);font-size:30px;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .bs-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--bronze);color:var(--cloud);border-color:var(--bronze)}
+        .bs-modal-nav.prev{left:24px}.bs-modal-nav.next{right:24px}
+        .bs-modal-cap{position:absolute;left:40px;right:40px;bottom:24px;margin:0;text-align:center;font-size:9.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.62);z-index:1}
 
         @media(max-width:1080px){.bs-grid--916{grid-template-columns:repeat(4,1fr)}}
         @media(max-width:940px){
