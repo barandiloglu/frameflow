@@ -1,0 +1,7 @@
+:HL["/portfolio/beril-sedat-homes/site/_next/static/chunks/0ygdbhwt7soew.css","style"]
+:HL["/portfolio/beril-sedat-homes/site/_next/static/media/a88409fdd7dc121c-s.p.0ir_pxtv760h..woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/portfolio/beril-sedat-homes/site/_next/static/media/cc014fcb166cf364-s.p.0rbrcy8kuidpb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/portfolio/beril-sedat-homes/site/_next/static/media/e8f2fbee2754df70-s.p.0fzkl03jw-sdz.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/portfolio/beril-sedat-homes/site/_next/static/media/f13700f23fbdc6fd-s.p.0q1bf9cc3c0ui.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/portfolio/beril-sedat-homes/site/assets/logo.png","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":0,"slots":{"children":{"name":"lang","param":{"type":"d","key":"en","siblings":null},"prefetchHints":16,"slots":{"children":{"name":"advice","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"OuN9_6T3v_KS8pzVY1NGD"}
