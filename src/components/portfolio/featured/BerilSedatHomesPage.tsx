@@ -83,6 +83,10 @@ const EXPLAINERS = [
     alt: "Text explainer contrasting a realtor with a doctor, a lawyer and a mechanic" },
 ] as const;
 
+/* The two pinned posts were exported at 1280x1600; the other ten feed stills are
+   1080x1350. Same 4:5 ratio, but the intrinsic sizes should still be accurate. */
+const FEED_1280 = new Set(["F.08", "F.09"]);
+
 const SHOTS = [
   { tab: "Home", path: "en", url: "/", note: "Full-bleed property hero, the pair shown at the same size as the house, and the proof band — transactions, ranking, families served — before a single listing." },
   { tab: "Listings", path: "en/listings", url: "/listings", note: "Held deliberately short while the curated roster is assembled — it asks for the brief instead of padding the page with stock inventory." },
@@ -221,7 +225,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         <div className="bs-grid bs-grid--45">
           {FEED.map((f, i) => (
             <button type="button" className="bs-cell bs-cell--onLight" key={f.id} onClick={() => setLightbox({ set: "feed", i })}>
-              <img className="bs-cell-img" src={f.src} alt={f.alt} width={1080} height={1350} loading="lazy" />
+              <img className="bs-cell-img" src={f.src} alt={f.alt} width={FEED_1280.has(f.id) ? 1280 : 1080} height={FEED_1280.has(f.id) ? 1600 : 1350} loading="lazy" />
               <span className="bs-cell-cap">{f.cap}</span>
             </button>
           ))}
