@@ -643,7 +643,7 @@ const SETS = [
 
 ```tsx
       <section className="ma-feed">
-        <h2 className="ma-sec"><span className="ma-sec-no">03</span><span className="ma-sec-name">The Feed</span><i></i><span className="ma-sec-meta">9 SETS · 22 SLIDES</span></h2>
+        <h2 className="ma-sec"><span className="ma-sec-no">03</span><span className="ma-sec-name">The Feed</span><i></i><span className="ma-sec-meta">9 SETS · 24 SLIDES</span></h2>
         <p className="ma-lead">Three carousels that argue, six listings that sell.</p>
         <p className="ma-body">The carousels do the work a listing cannot: explain what OMVIC registration actually buys you, hand over the three checks any buyer should run, and stretch the template to a travel trailer. Every proof point in them is set with the same tick that makes the logo.</p>
         <div className="ma-feed-grid">
@@ -748,8 +748,8 @@ Keep the stage's **definite height** at this breakpoint too — never `max-heigh
 ```bash
 grep -c "slides: \[" src/components/portfolio/featured/MinAutoPage.tsx   # expect 9
 ```
-Total slides must equal 22 (3+5+3 carousels + 2+3+2+2+2+2 listings). If the markup says
-"9 SETS · 22 SLIDES", both numbers must match the data. Fix the copy, not the data.
+Total slides must equal 24 (11 carousel + 13 listing). If the markup says
+"9 SETS · 24 SLIDES", both numbers must match the data. Fix the copy, not the data.
 
 - [ ] **Step 8: Typecheck, lint, build**
 
