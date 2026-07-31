@@ -12,7 +12,7 @@ const DIVISIONS = [
   { no: "01", name: "Beach",  camera: "Macro & still",    tone: "Sand, coral, low sun",
     body: "The consumer line. Everything is shot at arm's length or closer — fringe, weave, the fold of a towel over driftwood. Warm, unhurried, and always tied to a place you would rather be." },
   { no: "02", name: "Marine", camera: "Aerial & moving",  tone: "Open water, cold light",
-    body: "The boating line. The product barely appears; the water does. Shot from the air, following a catamaran across open lake — this division sells the life the cloth belongs to, not the cloth." },
+    body: "The boating line. It opens from the air, following a catamaran across open lake, and stays on the water long enough to sell the Saturday before the cloth appears at all. Then it does — fish-print towels on a warm deck, shot close." },
   { no: "03", name: "B2B",    camera: "Studio & clean",   tone: "White, marble, poolside",
     body: "The hospitality line. Sold to operators, not holidaymakers — so the cloth is stacked, spotless and shot on white, and the copy talks about their guests instead of ours." },
 ] as const;
@@ -35,7 +35,7 @@ const GALLERY = [
     note: "Pure studio. One joke, delivered straight — the only humour anywhere in the brand.",
     alt: "Three folded white hotel towels stacked on a marble counter against a pure white background" },
   { id: "W.02", lane: "b2b", src: "/portfolio/harbourloom/posts/05-b2b-hospitality.jpg",
-    line: "You create the picture-perfect oasis for your guests. We supply the high-performance textiles to complete it. Let's ensure your service never misses a beat.",
+    line: "You create the picture-perfect oasis for your guests. We supply the high-performance textiles to complete it. Let’s ensure your service never misses a beat.",
     note: "The buyer's world, not the product's. Baskets, poolside, service in motion.",
     alt: "Harbour Loom hospitality post — rolled white towels in wicker baskets beside a resort pool with palms and a sea view" },
 ] as const;
@@ -121,7 +121,7 @@ export function HarbourLoomPage({ client }: Props) {
           <video className="hl-reel-el" controls preload="none" poster="/portfolio/harbourloom/video/beach-poster.jpg">
             <source src="/portfolio/harbourloom/video/beach-reel.mp4" type="video/mp4" />
           </video>
-          <figcaption><b>Beach reel</b> — 0:17, vertical. Towels over a fence, one pattern after another, closing on &ldquo;Which one is yours?&rdquo;</figcaption>
+          <figcaption><b>Beach reel</b> — 0:17, vertical. Towels over a fence, one pattern after another, building to &ldquo;Which one is yours?&rdquo; before the mark closes it.</figcaption>
         </figure>
       </section>
 
@@ -132,11 +132,11 @@ export function HarbourLoomPage({ client }: Props) {
             <video className="hl-reel-el" controls preload="none" poster="/portfolio/harbourloom/video/marine-poster.jpg">
               <source src="/portfolio/harbourloom/video/marine-reel.mp4" type="video/mp4" />
             </video>
-            <figcaption><b>Marine reel</b> — 0:25, vertical, drone. Out on the lake, a moored yacht, a marina of masts.</figcaption>
+            <figcaption><b>Marine reel</b> — 0:25, vertical, drone. Out on the lake, a moored yacht, a marina of masts — then the towels, on deck.</figcaption>
           </figure>
           <div>
-            <p className="hl-lead light">Here the product gets out of the way.</p>
-            <p className="hl-body light">A boat owner is not shopping for a towel. They are picturing a Saturday. So Marine drops the macro lens entirely and goes up — a catamaran cutting a line across the lake, twin wakes behind it, the horizon doing all the selling.</p>
+            <p className="hl-lead light">Here the water sells first.</p>
+            <p className="hl-body light">A boat owner is not shopping for a towel. They are picturing a Saturday. So Marine opens by going up — a catamaran cutting a line across the lake, twin wakes behind it, the horizon doing the selling long before a towel is in frame.</p>
             <p className="hl-body light">Cold light where Beach is warm. Motion where Beach is still. Wide where Beach is close. The only constant is the mark in the corner — which is exactly how you keep one brand from splitting into three.</p>
           </div>
         </div>
@@ -210,7 +210,7 @@ export function HarbourLoomPage({ client }: Props) {
 
       <FontLink />
       <style jsx global>{`
-        .hl-page{--ink:#1d2b33;--sea:#2e7ba6;--coral:#e8763f;--sand:#f2e9dd;--shell:#faf6f0;--paper:#fff;--mute:#8a8378;--rule:rgba(29,43,51,.14);
+        .hl-page{--ink:#1d2b33;--sea:#2e7ba6;--coral:#e8763f;--coral-ink:#a94718;--sand:#f2e9dd;--shell:#faf6f0;--paper:#fff;--mute:#6f6960;--rule:rgba(29,43,51,.14);
           background:var(--paper);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
         .hl-page b{font-weight:500}
 
@@ -251,8 +251,7 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-div{padding:84px 22px}
         .hl-div-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
         .hl-div-grid article{border-top:1px solid var(--ink);padding-top:18px}
-        .hl-div-grid article.muted{border-top-color:var(--rule);opacity:.55}
-        .hl-div-no{font-size:11px;letter-spacing:.2em;color:var(--coral)}
+        .hl-div-no{font-size:11px;letter-spacing:.2em;color:var(--coral-ink)}
         .hl-div-grid h3{font-family:"Juana","Cormorant Garamond",Georgia,serif;font-weight:400;font-size:30px;margin:8px 0 6px;letter-spacing:.01em}
         .hl-div-meta{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 14px}
         .hl-div-meta i{font-style:normal;margin:0 8px;opacity:.5}
@@ -264,7 +263,7 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-cell-img{width:100%;height:auto;display:block;transition:transform 500ms,opacity 240ms}
         .hl-cell:hover .hl-cell-img{transform:scale(1.02);opacity:.94}
         .hl-cell-meta{display:block;padding-top:12px}
-        .hl-cell-meta b{display:block;font-size:11px;letter-spacing:.18em;color:var(--coral);margin-bottom:5px}
+        .hl-cell-meta b{display:block;font-size:11px;letter-spacing:.18em;color:var(--coral-ink);margin-bottom:5px}
         .hl-cell-meta span{font-size:13.5px;line-height:1.6;font-weight:300;color:#5a6670}
         .hl-reel{margin:0}
         .hl-reel-el{width:100%;display:block;background:#000}
@@ -293,14 +292,14 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-modal-stage{position:relative;width:min(560px,88vw);height:min(78vh,860px);max-height:82vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.5);animation:hl-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
         @keyframes hl-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
         .hl-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--rule);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
-        .hl-modal-id{color:var(--coral)}
+        .hl-modal-id{color:var(--coral-ink)}
         .hl-modal-count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink)}
         .hl-modal-close{width:26px;height:26px;background:none;border:0;color:var(--ink);cursor:pointer;font-size:15px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:color .16s}
         .hl-modal-close:hover{color:var(--coral)}
         .hl-modal-shot{flex:1 1 auto;min-height:0;background:var(--shell);overflow:hidden;display:flex;align-items:center;justify-content:center}
         .hl-modal-shot img{width:100%;height:100%;object-fit:contain;display:block}
-        .hl-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:rgba(255,255,255,.07);border:0;color:#fff;font-size:34px;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
-        .hl-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:rgba(255,255,255,.14);color:var(--coral)}
+        .hl-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:var(--paper);border:1px solid var(--rule);color:var(--ink);font-size:34px;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s;z-index:2}
+        .hl-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--coral);color:#fff;border-color:var(--coral)}
         .hl-modal-nav.prev{left:26px}.hl-modal-nav.next{right:26px}
         .hl-modal-cap{position:absolute;left:40px;right:40px;bottom:22px;margin:0;text-align:center;font-family:"Juana","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82);z-index:1}
 
@@ -309,7 +308,7 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-mark-tile{margin:0}
         .hl-mark-tile img{width:100%;height:auto;display:block;border:1px solid var(--rule);background:var(--paper)}
         .hl-mark-tile figcaption{margin-top:12px;font-size:13px;line-height:1.6;font-weight:300;color:#5a6670}
-        .hl-mark-tile figcaption b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:5px;font-weight:400}
+        .hl-mark-tile figcaption b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral-ink);margin-bottom:5px;font-weight:400}
 
         @media(max-width:980px){
           .hl-div-grid{grid-template-columns:1fr;gap:26px}
@@ -334,6 +333,11 @@ export function HarbourLoomPage({ client }: Props) {
           .hl-cell-img,.hl-modal-close,.hl-modal-nav{transition:none}
           .hl-cell:hover .hl-cell-img{transform:none}
           .hl-modal-nav:hover{transform:translateY(-50%)}
+        }
+
+        @media (max-height:520px){
+          .hl-modal-stage{height:min(66vh,660px)}
+          .hl-modal-cap{bottom:8px;font-size:14px}
         }
       `}</style>
     </div>
