@@ -321,11 +321,19 @@ export function HarbourLoomPage({ client }: Props) {
         @media(max-width:560px){
           .hl-hero{padding-top:56px}
           .hl-sign-grid{grid-template-columns:1fr;gap:16px}
+          .hl-modal{padding:12px}
+          .hl-modal-stage{width:calc(100% - 84px);height:min(74vh,660px)}
+          .hl-modal-nav{width:34px;height:34px;font-size:22px}
+          .hl-modal-nav.prev{left:5px}
+          .hl-modal-nav.next{right:5px}
+          .hl-modal-cap{left:12px;right:12px;bottom:8px;font-size:14px}
         }
 
         @media (prefers-reduced-motion: reduce){
-          .hl-cell-img{transition:none}
+          .hl-modal,.hl-modal-stage{animation:none}
+          .hl-cell-img,.hl-modal-close,.hl-modal-nav{transition:none}
           .hl-cell:hover .hl-cell-img{transform:none}
+          .hl-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
