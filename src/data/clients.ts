@@ -460,6 +460,18 @@ export const clients: readonly Client[] = [
       tagline: "Guiding your Canadian immigration journey with competence, care, and clarity.",
     },
   },
+  {
+    slug: "beril-sedat-homes",
+    name: "Beril & Sedat Homes",
+    services: ["Social Media", "Videography", "Website Design", "Ad Management"],
+    year: "2026",
+    location: "Toronto, ON",
+    runtime: "Ongoing",
+    scene: "INT. THE LISTING — GOLDEN HOUR",
+    synopsis:
+      "A boutique GTA brokerage that retired its group name and relaunched under the two principals' own. Quiet luxury is easy to say and hard to hold, so we held it in four places at once — a navy editorial feed, a reel series with both of them on camera in Turkish and English, a built graphics layer for the parts of a purchase people avoid reading, and a bilingual site with their names on it.",
+    featured: true,
+  },
 ];
 
 /**
