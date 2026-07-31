@@ -505,7 +505,17 @@ export function BerilSedatHomesPage({ client }: Props) {
           .bs-row{grid-template-columns:54px 1fr;gap:14px}
           .bs-row-no{font-size:22px}
           .bs-modal{padding:22px}
-          .bs-modal-nav{width:42px;height:42px;font-size:26px}
+          .bs-modal-stage{width:calc(100% - 84px);height:min(72vh,640px)}
+          .bs-modal-nav{width:34px;height:34px;font-size:22px}
+          .bs-modal-nav.prev{left:5px}.bs-modal-nav.next{right:5px}
+          .bs-modal-cap{left:12px;right:12px;bottom:8px}
+        }
+
+        @media (prefers-reduced-motion: reduce){
+          .bs-modal,.bs-modal-stage{animation:none}
+          .bs-cell-img,.bs-play,.bs-modal-close,.bs-modal-nav,.bs-site-tabs button,.bs-site-nav button,.bs-visit{transition:none}
+          .bs-cell:hover .bs-cell-img{transform:none}
+          .bs-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
