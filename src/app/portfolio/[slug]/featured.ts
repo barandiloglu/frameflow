@@ -24,6 +24,7 @@ import { ConnecTRPage } from "@/components/portfolio/featured/ConnecTRPage";
 import { FidanConstructionPage } from "@/components/portfolio/featured/FidanConstructionPage";
 import { IYNPage } from "@/components/portfolio/featured/IYNPage";
 import { EsmaPage } from "@/components/portfolio/featured/EsmaPage";
+import { MinAutoPage } from "@/components/portfolio/featured/MinAutoPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -40,4 +41,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "fidan-construction":             FidanConstructionPage,
   "iyn":                            IYNPage,
   "esma-fine-foods":                EsmaPage,
+  "minauto":                        MinAutoPage,
 };

@@ -411,7 +411,18 @@ export const clients: readonly Client[] = [
     featured: true,
   },
   { slug: "mavi-travel",                 name: "Mavi Travel",                               services: ["Social Media"] },
-  { slug: "minauto",                     name: "MinAuto",                                   services: ["Logo", "Social Media"] },
+  {
+    slug: "minauto",
+    name: "MinAuto",
+    services: ["Logo", "Branding", "Social Media"],
+    year: "2026",
+    location: "Wasaga Beach, ON",
+    runtime: "Ongoing",
+    scene: "EXT. 1525 MOSLEY ST — DAY",
+    synopsis:
+      "Identity and social for an OMVIC-registered used-car lot in Wasaga Beach. A used-car buyer is not shopping, they are checking — so the logo is a check, and the tick that makes it becomes the hang-tag, the proof-bullet and the seal on everything after it. Built from nothing: four lockups, a colour and type spec, a listing-card template the dealership runs itself, and two channels started from zero.",
+    featured: true,
+  },
   {
     slug: "northern-pathways-immigration",
     name: "Northern Pathways Immigration Consulting",
