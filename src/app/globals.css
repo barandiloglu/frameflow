@@ -4,6 +4,7 @@
 :root {
   --surface:       #353230;
   --surface-alt:   #ffffeb;
+  --surface-muted: #e7e5d7;   /* warm light grey — the third ground */
   --on-surface:    #ffffeb;
   --on-surface-60: rgba(255, 255, 235, 0.6);
   --on-surface-30: rgba(255, 255, 235, 0.3);
@@ -24,6 +25,7 @@
 [data-theme="light"] {
   --surface:       #ffffeb;
   --surface-alt:   #353230;
+  --surface-muted: #46433f;
   --on-surface:    #353230;
   --on-surface-60: rgba(53, 50, 48, 0.6);
   --on-surface-30: rgba(53, 50, 48, 0.3);
@@ -63,6 +65,7 @@
   /* Semantic theme tokens — swapped by [data-theme] */
   --color-surface:       var(--surface);
   --color-surface-alt:   var(--surface-alt);
+  --color-surface-muted: var(--surface-muted);
   --color-on-surface:    var(--on-surface);
   --color-on-surface-60: var(--on-surface-60);
   --color-on-surface-30: var(--on-surface-30);

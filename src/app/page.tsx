@@ -260,7 +260,7 @@ export default function Home() {
               className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
               style={{ fontSize: "clamp(40px, 8.2vw, 132px)" }}
             >
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={0}
                   initial="hidden"
@@ -271,7 +271,7 @@ export default function Home() {
                   We roll cameras
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={1}
                   initial="hidden"
@@ -283,7 +283,7 @@ export default function Home() {
                   <em className="italic font-[400] text-amber">brands</em>
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={2}
                   initial="hidden"
