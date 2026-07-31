@@ -106,8 +106,8 @@ Expected: a navy sailboat above "HARBOUR" / "Loom" on shell, with **no white box
 
 ```bash
 R="/Users/barandiloglu/Desktop/Projects/FrameFlow/public/portfolio/harbourloom"
-find "$R" -type f | wc -l        # expect 10
-find "$R" -type f -size +400k    # expect no output
+find "$R" -type f | wc -l        # expect 12 (5 posts + 4 video + 3 brand)
+find "$R"/posts "$R"/brand -type f -size +400k   # images only; expect no output
 ffprobe -v error -show_entries format=duration -of csv=p=0 "$R/video/beach-reel.mp4"   # ~16.7
 ffprobe -v error -show_entries format=duration -of csv=p=0 "$R/video/marine-reel.mp4"  # ~24.7
 ffprobe -v error -select_streams v:0 -show_entries stream=pix_fmt -of csv=p=0 "$R/brand/logo-navy.png"  # rgba
@@ -712,7 +712,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ## Self-Review
 
 **Spec coverage:**
-- Media pipeline (5 stills, 2 reels, 2 extracted posters, 3 mark crops = 10 files) → Task 1 ✓
+- Media pipeline (5 stills, 2 reels, 2 extracted posters, 3 mark crops = 12 files) → Task 1 ✓
 - Integration (component, featured.ts, clients.ts promote + name change to "Harbour Loom", frame 014, slug unchanged) → Task 2 ✓
 - LoadingTransition + rail + hero (extracted mark, Logo added to scope) → Task 3 ✓
 - The Three Lines → Task 4 ✓
