@@ -35,7 +35,7 @@ const GALLERY = [
     note: "Pure studio. One joke, delivered straight — the only humour anywhere in the brand.",
     alt: "Three folded white hotel towels stacked on a marble counter against a pure white background" },
   { id: "W.02", lane: "b2b", src: "/portfolio/harbourloom/posts/05-b2b-hospitality.jpg",
-    line: "You create the picture-perfect oasis for your guests. We supply the high-performance textiles to complete it.",
+    line: "You create the picture-perfect oasis for your guests. We supply the high-performance textiles to complete it. Let's ensure your service never misses a beat.",
     note: "The buyer's world, not the product's. Baskets, poolside, service in motion.",
     alt: "Harbour Loom hospitality post — rolled white towels in wicker baskets beside a resort pool with palms and a sea view" },
 ] as const;
