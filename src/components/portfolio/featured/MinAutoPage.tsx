@@ -42,7 +42,7 @@ const CARDS = {
 const SETS = [
   {
     id: "C.01", kind: "Carousel", title: "What is OMVIC", meta: "3 slides",
-    note: "Ontario's regulator, explained in plain English, then turned into the reason to buy here. Slide three is all orange ticks — the logo doing argument duty.",
+    note: "Ontario's regulator, explained in plain English, then turned into the reason to buy here. Slide three flips to orange and closes on three ticked benefits — the mark doing argument duty.",
     cover: "/portfolio/minauto/feed/omvic/01.jpg",
     slides: [
       { src: "/portfolio/minauto/feed/omvic/01.jpg", alt: "Carousel slide — “What is OMVIC.” on navy with a large orange question mark" },
@@ -102,7 +102,7 @@ const SETS = [
   },
   {
     id: "V.04", kind: "Listing", title: "Toyota Corolla", meta: "2022 · $17,450",
-    note: "Where the wordmark moved to the top of the frame and stayed there.",
+    note: "Where the year moved up into the headline and stayed there.",
     cover: "/portfolio/minauto/listings/toyota-corolla/01.jpg",
     slides: [
       { src: "/portfolio/minauto/listings/toyota-corolla/01.jpg", alt: "Toyota Corolla listing card — 2022, 140,049 km, $17,450" },
@@ -111,7 +111,7 @@ const SETS = [
   },
   {
     id: "V.05", kind: "Listing", title: "Honda Civic", meta: "2018 · $15,950 → $14,950",
-    note: "First outing for the corner ribbon and the struck-through price.",
+    note: "The corner ribbon and the struck-through price, working together.",
     cover: "/portfolio/minauto/listings/honda-civic/01.jpg",
     slides: [
       { src: "/portfolio/minauto/listings/honda-civic/01.jpg", alt: "Honda Civic listing card — 2018, with a Discount corner ribbon and the old price struck through" },
@@ -194,7 +194,7 @@ export function MinAutoPage({ client }: Props) {
           <div>
             <p className="ma-kicker">Logo · Brand System · Social Media</p>
             <h1 className="ma-h1">THE LOGO IS A CHECK.<br /><em>SO IS EVERYTHING AFTER IT.</em></h1>
-            <p className="ma-deck"><b>MinAuto</b> sells certified pre-owned stock out of a lot on Mosley Street in Wasaga Beach, OMVIC registered. We built the identity around the one thing that decides a used-car sale — whether the car passed. The tick that makes the logo does not stay in it: it becomes the corner tag on a listing, the bullet on every proof point, and the whole right-hand side of the business card.</p>
+            <p className="ma-deck"><b>MinAuto</b> sells certified pre-owned stock out of a lot on Mosley Street in Wasaga Beach, OMVIC registered. We built the identity around the one thing that decides a used-car sale — whether the car passed. The tick that makes the logo does not stay in it: it becomes the seal stamped on a price, the bullet on every proof point, and the whole right-hand side of the business card.</p>
             <p className="ma-tagline">&ldquo;Certified Pre-Owned. Driven by Trust.&rdquo;</p>
           </div>
           <div className="ma-hero-mark">
@@ -232,7 +232,7 @@ export function MinAutoPage({ client }: Props) {
           </div>
           <figure className="ma-specsheet">
             <img className="ma-specsheet-img" src="/portfolio/minauto/logo/spec-sheet.png" alt="MinAuto colour and type specification sheet" loading="lazy" />
-            <figcaption>The sheet the client got. Two colours, one typeface — <b>Gotham Bold</b>. This page is set in Montserrat, because Gotham is not licensed for the web here.</figcaption>
+            <figcaption>The sheet the client got. Two colours, one typeface — <b>Gotham Bold</b>. The display type here is Montserrat, because Gotham is not licensed for the web.</figcaption>
           </figure>
         </div>
       </section>
@@ -251,7 +251,8 @@ export function MinAutoPage({ client }: Props) {
               <button type="button" className={cardView === "launch" ? "on" : ""} onClick={() => setCardView("launch")} aria-pressed={cardView === "launch"}>{CARDS.launch.label}</button>
               <button type="button" className={cardView === "current" ? "on" : ""} onClick={() => setCardView("current")} aria-pressed={cardView === "current"}>{CARDS.current.label}</button>
             </div>
-            <img className="ma-card-img" src={CARDS[cardView].src} alt={CARDS[cardView].alt} />
+            <img className="ma-card-img" src={CARDS.launch.src} alt={CARDS.launch.alt} style={{ display: cardView === "launch" ? undefined : "none" }} />
+            <img className="ma-card-img" src={CARDS.current.src} alt={CARDS.current.alt} style={{ display: cardView === "current" ? undefined : "none" }} />
             <figcaption>{CARDS[cardView].cap}</figcaption>
           </figure>
         </div>
@@ -265,13 +266,13 @@ export function MinAutoPage({ client }: Props) {
       <section className="ma-feed">
         <h2 className="ma-sec"><span className="ma-sec-no">03</span><span className="ma-sec-name">The Feed</span><i></i><span className="ma-sec-meta">9 SETS · 24 SLIDES</span></h2>
         <p className="ma-lead">Three carousels that argue, six listings that sell.</p>
-        <p className="ma-body">The carousels do the work a listing cannot: explain what OMVIC registration actually buys you, hand over the three checks any buyer should run, and stretch the template to a travel trailer. Every proof point in them is set with the same tick that makes the logo.</p>
+        <p className="ma-body">The carousels do the work a listing cannot: explain what OMVIC registration actually buys you, hand over the three checks any buyer should run, and stretch the template to a travel trailer. Every proof point in them is ticked off — the same gesture the logo is built on.</p>
         <div className="ma-feed-grid">
           {SETS.map((s, i) => (
             <button type="button" className="ma-set" key={s.id} onClick={() => setOpen({ set: i, slide: 0 })}>
               <span className="ma-set-shot">
-                <img src={s.cover} alt={s.slides[0].alt} loading="lazy" />
-                <span className="ma-set-count">{s.slides.length}</span>
+                <img src={s.cover} alt="" loading="lazy" />
+                <span className="ma-set-count">{s.slides.length}<span className="ma-sr-only"> slides</span></span>
               </span>
               <span className="ma-set-meta">
                 <span className="ma-set-kind">{s.id} · {s.kind}</span>
@@ -320,7 +321,7 @@ export function MinAutoPage({ client }: Props) {
           <button type="button" className="ma-modal-nav prev" onClick={() => stepBox(-1)} aria-label="Previous slide">←</button>
 
           <div className="ma-modal-stage">
-            <div className="ma-modal-bar top">
+            <div className="ma-modal-bar">
               <span className="ma-modal-id">{SETS[open.set].id} · {SETS[open.set].kind}</span>
               <span className="ma-modal-title">{SETS[open.set].title}</span>
               <span className="ma-modal-count">{String(open.slide + 1).padStart(2, "0")} / {String(SETS[open.set].slides.length).padStart(2, "0")}</span>
@@ -338,7 +339,7 @@ export function MinAutoPage({ client }: Props) {
 
       <FontLink />
       <style jsx global>{`
-        .ma-page{--navy:#123645;--orange:#dc4c14;--surface:#f4f4f4;--paper:#fff;--ink:#2a2a2a;--mute:#7b8288;--rule:rgba(18,54,69,.14);
+        .ma-page{--navy:#123645;--orange:#dc4c14;--surface:#f4f4f4;--paper:#fff;--ink:#2a2a2a;--mute:#5c6469;--rule:rgba(18,54,69,.14);
           background:var(--paper);color:var(--ink);font-family:"Source Sans 3",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
         .ma-page b{font-weight:600}
 
@@ -400,7 +401,7 @@ export function MinAutoPage({ client }: Props) {
 
         .ma-card-sec{background:var(--navy);padding:82px 22px}
         .ma-card-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:56px;align-items:center}
-        .ma-note{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin:22px 0 0}
+        .ma-note{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin:22px 0 0}
         .ma-card{margin:0}
         .ma-card-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
         .ma-card-toggle button{cursor:pointer;padding:10px 8px;background:transparent;border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.72);
@@ -445,10 +446,11 @@ export function MinAutoPage({ client }: Props) {
         .ma-set-kind{display:block;font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
         .ma-set-title{display:block;font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;color:var(--navy);margin-top:5px}
         .ma-set-sub{display:block;font-size:13px;color:var(--mute);margin-top:3px}
+        .ma-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
         .ma-modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(9,27,35,.95);animation:ma-fade .22s ease-out}
         @keyframes ma-fade{from{opacity:0}to{opacity:1}}
-        .ma-modal-stage{position:relative;width:min(660px,92vw);height:min(86vh,920px);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.55);animation:ma-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
+        .ma-modal-stage{position:relative;width:min(660px,92vw);height:min(78vh,860px);max-height:86vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.55);animation:ma-pop .28s cubic-bezier(0.34,1.56,0.64,1)}
         @keyframes ma-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
         .ma-modal-bar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:3px solid var(--orange);font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
         .ma-modal-id{color:var(--orange);font-weight:700}
@@ -461,7 +463,7 @@ export function MinAutoPage({ client }: Props) {
         .ma-modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:var(--paper);color:var(--navy);border:2px solid var(--navy);cursor:pointer;font-size:19px;font-weight:700;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,background .16s,color .16s,border-color .16s;z-index:2}
         .ma-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--orange);color:#fff;border-color:var(--orange)}
         .ma-modal-nav.prev{left:30px}.ma-modal-nav.next{right:30px}
-        .ma-modal-note{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;max-width:min(660px,92vw);margin:0;text-align:center;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.8)}
+        .ma-modal-note{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;max-width:min(660px,92vw);margin:0;text-align:center;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.8);z-index:1}
 
         @media(max-width:980px){
           .ma-hero-inner{grid-template-columns:1fr;gap:38px}
@@ -504,7 +506,7 @@ function FontLink() {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600&family=Barlow+Condensed:wght@600;700&display=swap"
       />
     </>
   );

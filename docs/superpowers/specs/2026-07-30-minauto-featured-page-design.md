@@ -95,16 +95,16 @@ recoloured vector.)
 **Card → `card/`**
 | Source | Target |
 |---|---|
-| `Posts/Mazda/2.png` | `launch-mazda-cx5.png` |
-| `Posts/July 13-19/2.png` | `current-ford-interceptor.png` |
-| `Business Card/Min Auto Print.pdf` → rendered @1600px | `business-card.png` |
+| `Posts/Mazda/2.png` | `launch-mazda-cx5.jpg` |
+| `Posts/July 13-19/2.png` | `current-ford-interceptor.jpg` |
+| `Business Card/Min Auto Print.pdf` → rendered @1600px | `business-card.jpg` |
 
 **Carousels → `feed/`** (order is the swipe order and is load-bearing)
 | Source | Target |
 |---|---|
-| `Posts/What is OMVIC/11,12,13.png` | `omvic/01,02,03.png` |
-| `Posts/3 Things to Check First/14,15,16,17,18.png` | `checks/01…05.png` |
-| `Posts/Coachman Viking/slide1_hero,slide2_proof,slide3_cta.png` | `coachmen/01,02,03.png` |
+| `Posts/What is OMVIC/11,12,13.png` | `omvic/01,02,03.jpg` |
+| `Posts/3 Things to Check First/14,15,16,17,18.png` | `checks/01…05.jpg` |
+| `Posts/Coachman Viking/slide1_hero,slide2_proof,slide3_cta.png` | `coachmen/01,02,03.jpg` |
 
 Note the folder is named "3 Things to **Check** First" but the artwork reads
 **"3 THINGS TO KNOW FIRST"** — the artwork wins.

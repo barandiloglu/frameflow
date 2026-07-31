@@ -420,7 +420,7 @@ export const clients: readonly Client[] = [
     runtime: "Ongoing",
     scene: "EXT. 1525 MOSLEY ST — DAY",
     synopsis:
-      "Identity and social for an OMVIC-registered used-car lot in Wasaga Beach. A used-car buyer is not shopping, they are checking — so the logo is a check, and the tick that makes it becomes the hang-tag, the proof-bullet and the seal on everything after it. Built from nothing: four lockups, a colour and type spec, a listing-card template the dealership runs itself, and two channels started from zero.",
+      "Identity and social for an OMVIC-registered used-car lot in Wasaga Beach. A used-car buyer is not shopping, they are checking — so the logo is a check, and the tick that makes it becomes the seal, the proof-bullet and the artwork on everything after it. Built from nothing: four lockups, a colour and type spec, a listing-card template the dealership runs itself, and two channels started from zero.",
     featured: true,
   },
   {
