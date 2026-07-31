@@ -125,6 +125,37 @@ export function HarbourLoomPage({ client }: Props) {
         </figure>
       </section>
 
+      <section className="hl-marine">
+        <h2 className="hl-sec light"><span>02 — Marine</span><i></i><em>Aerial &amp; moving</em></h2>
+        <div className="hl-marine-grid">
+          <figure className="hl-reel marine">
+            <video className="hl-reel-el" controls preload="none" poster="/portfolio/harbourloom/video/marine-poster.jpg">
+              <source src="/portfolio/harbourloom/video/marine-reel.mp4" type="video/mp4" />
+            </video>
+            <figcaption><b>Marine reel</b> — 0:25, vertical, drone. Out on the lake, a moored yacht, a marina of masts.</figcaption>
+          </figure>
+          <div>
+            <p className="hl-lead light">Here the product gets out of the way.</p>
+            <p className="hl-body light">A boat owner is not shopping for a towel. They are picturing a Saturday. So Marine drops the macro lens entirely and goes up — a catamaran cutting a line across the lake, twin wakes behind it, the horizon doing all the selling.</p>
+            <p className="hl-body light">Cold light where Beach is warm. Motion where Beach is still. Wide where Beach is close. The only constant is the mark in the corner — which is exactly how you keep one brand from splitting into three.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hl-b2b">
+        <h2 className="hl-sec"><span>03 — B2B</span><i></i><em>Studio &amp; clean</em></h2>
+        <p className="hl-lead">Third buyer, third room entirely.</p>
+        <p className="hl-body">Hotels and clubs do not buy a feeling, they buy linen that survives a thousand washes. So the sunset goes and the cloth gets stacked on marble against pure white — the one place in this brand where the product is photographed like a product. Then the second frame steps into the buyer&rsquo;s own world instead: baskets, poolside, service mid-service. Warm again, but warm about <i>their</i> guests, never ours.</p>
+        <div className="hl-sheet two">
+          {GALLERY.map((g, i) => g.lane !== "b2b" ? null : (
+            <button type="button" className="hl-cell" key={g.id} onClick={() => setLightbox(i)}>
+              <img className="hl-cell-img" src={g.src} alt={g.alt} loading="lazy" />
+              <span className="hl-cell-meta"><b>{g.id}</b><span>{g.note}</span></span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       {lightbox !== null && (
         <div
           className="hl-modal"
