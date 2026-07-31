@@ -156,6 +156,32 @@ export function HarbourLoomPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="hl-mark">
+        <h2 className="hl-sec"><span>04 — One Mark</span><i></i><em>Two colourways</em></h2>
+        <p className="hl-lead">Three registers. Seven pieces. One thing in common.</p>
+        <p className="hl-body">Beach is warm and close, Marine is cold and wide, B2B is clean and bright — three treatments that would read as three companies if nothing tied them. What ties them is a sailboat and two words, and the discipline of putting it in every single frame. Navy where the ground is white, reversed where it sits on a photograph. Nothing else about the mark changes, anywhere.</p>
+        <div className="hl-mark-pair">
+          <figure className="hl-mark-tile">
+            <img src="/portfolio/harbourloom/brand/mark-navy.png" alt="The Harbour Loom mark in navy — a sailboat above HARBOUR in serif capitals over Loom in script" loading="lazy" />
+            <figcaption><b>Navy</b> — on white and marble grounds. B.01, W.01.</figcaption>
+          </figure>
+          <figure className="hl-mark-tile">
+            <img src="/portfolio/harbourloom/brand/mark-reversed.png" alt="The same Harbour Loom mark reversed in white, sitting over an orange woven towel" loading="lazy" />
+            <figcaption><b>Reversed</b> — on photography. B.02, B.03, W.02, and the closing card of both reels.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <footer className="hl-signoff">
+        <img className="hl-sign-logo" src="/portfolio/harbourloom/brand/logo-navy.png" alt="Harbour Loom" />
+        <div className="hl-sign-grid">
+          <div><p className="hl-sign-label">Client</p><p className="hl-sign-name">Harbour Loom</p></div>
+          <div><p className="hl-sign-label">Scope</p><p className="hl-sign-name">Logo · Photography · Social · Film</p></div>
+          <div><p className="hl-sign-label">By</p><p className="hl-sign-name accent">FrameFlow</p></div>
+        </div>
+        <Link className="hl-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
+
       {lightbox !== null && (
         <div
           className="hl-modal"
@@ -278,10 +304,18 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-modal-nav.prev{left:26px}.hl-modal-nav.next{right:26px}
         .hl-modal-cap{position:absolute;left:40px;right:40px;bottom:22px;margin:0;text-align:center;font-family:"Juana","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82);z-index:1}
 
+        .hl-mark{background:var(--shell);padding:84px 22px}
+        .hl-mark-pair{max-width:1160px;margin:40px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+        .hl-mark-tile{margin:0}
+        .hl-mark-tile img{width:100%;height:auto;display:block;border:1px solid var(--rule);background:var(--paper)}
+        .hl-mark-tile figcaption{margin-top:12px;font-size:13px;line-height:1.6;font-weight:300;color:#5a6670}
+        .hl-mark-tile figcaption b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:5px;font-weight:400}
+
         @media(max-width:980px){
           .hl-div-grid{grid-template-columns:1fr;gap:26px}
           .hl-sheet,.hl-sheet.two{grid-template-columns:1fr;max-width:420px}
           .hl-marine-grid{grid-template-columns:1fr;gap:34px;max-width:420px}
+          .hl-mark-pair{grid-template-columns:1fr;max-width:420px}
           .hl-rail-end{display:none}
         }
         @media(max-width:560px){
