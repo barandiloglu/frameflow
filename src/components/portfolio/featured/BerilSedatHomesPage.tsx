@@ -38,7 +38,7 @@ const REELS = [
     note: "Ten seconds. The short end of the range, and the one that travels furthest.",
     alt: "Sedat on the phone, caption about a buyer receiving a gifted down payment" },
   { id: "R.08", src: "/portfolio/beril-sedat-homes/reels/08-offer-counter.mp4", cap: "Offer and counter · EN",
-    note: "Beril in the car, playing both sides of a negotiation that is $50,000 apart.",
+    note: "Beril in the car, playing both sides. The gap closes from $75,000 to $15,000 and the deal still dies.",
     alt: "Beril in a car acting out an offer and counter-offer exchange" },
   { id: "R.09", src: "/portfolio/beril-sedat-homes/reels/09-day-after-closing.mp4", cap: "The day after closing",
     note: "No pitch, no numbers, no one on camera. The only piece in the series like it.",
@@ -104,6 +104,28 @@ const SCOPE = [
     body: "Paid support behind the listings and the seminar programme, reported on a fixed cadence against the plan rather than on whatever the dashboard highlighted that week." },
 ] as const;
 
+/* The embed is a real static export of the client's site, served same-origin so the
+   guards below can reach its document. Navigation and form submission are made inert;
+   the site's own interactive UI (tabs, menu toggles) is deliberately left working. */
+function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
+  const doc = e.currentTarget.contentDocument;
+  if (!doc) return;
+  const block = (ev: Event) => {
+    const el = ev.target as HTMLElement | null;
+    if (el?.closest("a[href], button[type='submit'], [role='link']")) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+  };
+  doc.addEventListener("click", block, true);
+  doc.addEventListener("auxclick", block, true);
+  doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
+  for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
+    a.removeAttribute("target");
+    a.setAttribute("aria-disabled", "true");
+  }
+}
+
 export function BerilSedatHomesPage({ client }: Props) {
   const frame = getFrameNumber(client); // "020"
 
@@ -118,25 +140,6 @@ export function BerilSedatHomesPage({ client }: Props) {
   }, []);
 
   const [siteTab, setSiteTab] = useState(0);
-
-  function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
-    const doc = e.currentTarget.contentDocument;
-    if (!doc) return;
-    const block = (ev: Event) => {
-      const el = ev.target as HTMLElement | null;
-      if (el?.closest("a[href], button[type='submit'], [role='link']")) {
-        ev.preventDefault();
-        ev.stopPropagation();
-      }
-    };
-    doc.addEventListener("click", block, true);
-    doc.addEventListener("auxclick", block, true);
-    doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
-    for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
-      a.removeAttribute("target");
-      a.setAttribute("aria-disabled", "true");
-    }
-  }
 
   useEffect(() => {
     if (!lightbox) return;
@@ -205,7 +208,7 @@ export function BerilSedatHomesPage({ client }: Props) {
           {REELS.map((r, i) => (
             <button type="button" className="bs-cell bs-cell--onDark" key={r.id} onClick={() => setLightbox({ set: "reels", i })}>
               <span className="bs-play">▶</span>
-              <img className="bs-cell-img" src={`${r.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={r.alt} loading="lazy" />
+              <img className="bs-cell-img" src={`${r.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={r.alt} width={540} height={960} loading="lazy" />
               <span className="bs-cell-cap">{r.cap}</span>
             </button>
           ))}
@@ -218,7 +221,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         <div className="bs-grid bs-grid--45">
           {FEED.map((f, i) => (
             <button type="button" className="bs-cell bs-cell--onLight" key={f.id} onClick={() => setLightbox({ set: "feed", i })}>
-              <img className="bs-cell-img" src={f.src} alt={f.alt} loading="lazy" />
+              <img className="bs-cell-img" src={f.src} alt={f.alt} width={1080} height={1350} loading="lazy" />
               <span className="bs-cell-cap">{f.cap}</span>
             </button>
           ))}
@@ -228,12 +231,12 @@ export function BerilSedatHomesPage({ client }: Props) {
       <section className="bs-motion">
         <h2 className="bs-sec-head"><i></i><span>THE EXPLAINERS</span><i></i></h2>
         <p className="bs-sub bs-sub--dark">Vertical motion · 9:16</p>
-        <p className="bs-lede">This is the layer that sits under the talking. Each explainer is cut against a built graphics pass — the number lands, the label arrives, the table fills a row at a time — so the voice never has to describe what the screen could just show. Rendered from one template, which means a new episode is a data change rather than a rebuild.</p>
+        <p className="bs-lede">This is the layer that sits under the talking. The strongest of them are cut against a built graphics pass — the number lands, the label arrives, the table fills a row at a time — so the voice never has to describe what the screen could just show. The rest are lighter: a caption, a list, one idea held on screen long enough to land.</p>
         <div className="bs-grid bs-grid--916">
           {EXPLAINERS.map((x, i) => (
             <button type="button" className="bs-cell bs-cell--onLight" key={x.id} onClick={() => setLightbox({ set: "explainers", i })}>
               <span className="bs-play">▶</span>
-              <img className="bs-cell-img" src={`${x.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={x.alt} loading="lazy" />
+              <img className="bs-cell-img" src={`${x.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={x.alt} width={540} height={960} loading="lazy" />
               <span className="bs-cell-cap">{x.cap}</span>
             </button>
           ))}
@@ -304,7 +307,7 @@ export function BerilSedatHomesPage({ client }: Props) {
       </section>
 
       <footer className="bs-signoff">
-        <div className="bs-sign-mark"><img className="bs-sign-img" src="/portfolio/beril-sedat-homes/brand/logo-navy.png" alt="Beril &amp; Sedat Homes monogram" loading="lazy" /></div>
+        <div className="bs-sign-mark"><img className="bs-sign-img" src="/portfolio/beril-sedat-homes/brand/logo-navy.png" alt="Beril &amp; Sedat Homes logo" loading="lazy" /></div>
         <div className="bs-sign-grid">
           <div><p className="bs-sign-label">PREPARED BY</p><p className="bs-sign-name">FrameFlow</p></div>
           <div><p className="bs-sign-label">FRAME</p><p className="bs-sign-name">{frame}</p></div>
@@ -344,6 +347,7 @@ export function BerilSedatHomesPage({ client }: Props) {
             </div>
             <button type="button" className="bs-modal-nav next" onClick={() => stepBox(1)} aria-label="Next">›</button>
             <p className="bs-modal-cap">{item.cap}</p>
+            {"note" in item && item.note ? <p className="bs-modal-note">{item.note}</p> : null}
           </div>
         );
       })()}
@@ -359,7 +363,7 @@ export function BerilSedatHomesPage({ client }: Props) {
           background:var(--cloud);color:var(--navy);border-bottom:1px solid var(--rule);font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase}
         .bs-back{color:var(--navy);text-decoration:none;opacity:.75}
         .bs-back:hover{opacity:1;color:var(--bronze)}
-        .bs-rail-end{opacity:.5}
+        .bs-rail-end{opacity:.75}
 
         .bs-hero{background:var(--navy);color:var(--cloud);padding:88px 26px 96px}
         .bs-hero-inner{max-width:1000px;margin:0 auto;text-align:center}
@@ -379,7 +383,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-sec-head.light{color:var(--cloud)}
         .bs-sec-head.light i{background:rgba(240,240,240,.22)}
         .bs-sub{text-align:center;font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,240,240,.5);margin:0 0 46px}
-        .bs-sub--dark{color:rgba(28,40,65,.45)}
+        .bs-sub--dark{color:rgba(28,40,65,.75)}
 
         .bs-registers{padding:96px 26px}
         .bs-lede{max-width:68ch;margin:30px auto 48px;text-align:center;font-size:15.5px;font-weight:300;line-height:1.9;color:#3d4757}
@@ -405,7 +409,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-cell:hover .bs-cell-img{opacity:.86;transform:translateY(-3px)}
         .bs-cell-cap{display:block;padding-top:11px;font-size:9.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase}
         .bs-cell--onDark .bs-cell-cap{color:rgba(240,240,240,.5)}
-        .bs-cell--onLight .bs-cell-cap{color:rgba(28,40,65,.5)}
+        .bs-cell--onLight .bs-cell-cap{color:rgba(28,40,65,.75)}
         .bs-play{position:absolute;z-index:2;top:12px;left:12px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
           background:rgba(28,40,65,.55);color:#fff;font-size:10px;line-height:1;padding-left:2px;backdrop-filter:blur(3px);transition:background 200ms ease}
         .bs-cell:hover .bs-play{background:var(--bronze)}
@@ -424,12 +428,12 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-shot-live{color:var(--limestone);font-weight:600}
         .bs-site-tabs{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-top:0;border-bottom:0}
         .bs-site-tabs button{flex:1;min-width:104px;cursor:pointer;background:#d6c8b2;border:0;border-right:1px solid rgba(28,40,65,.1);padding:12px 8px;
-          font-family:"Montserrat",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6f6252;transition:background 150ms ease,color 150ms ease}
+          font-family:"Montserrat",sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#584d40;transition:background 150ms ease,color 150ms ease}
         .bs-site-tabs button:last-child{border-right:0}
         .bs-site-tabs button:hover{background:#cbbca4;color:var(--navy)}
         .bs-site-tabs button.on{background:var(--cloud);color:var(--bronze)}
         .bs-site-window{position:relative;height:640px;overflow:hidden;border:1px solid var(--rule);background:#fff}
-        .bs-site-frame{width:100%;height:100%;border:0;display:block;background:#fff}
+        .bs-site-frame{width:125.3%;height:125.3%;transform:scale(.798);transform-origin:0 0;border:0;display:block;background:#fff}
         .bs-site-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--rule);border-top:0;padding:13px 15px}
         .bs-site-nav{display:flex;align-items:center;gap:12px}
         .bs-site-nav button{width:34px;height:34px;cursor:pointer;line-height:1;background:transparent;border:1px solid var(--rule);color:var(--navy);font-size:19px;transition:all 150ms ease}
@@ -482,6 +486,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-modal-nav:hover{transform:translateY(-50%) scale(1.06);background:var(--bronze);color:var(--cloud);border-color:var(--bronze)}
         .bs-modal-nav.prev{left:24px}.bs-modal-nav.next{right:24px}
         .bs-modal-cap{position:absolute;left:40px;right:40px;bottom:24px;margin:0;text-align:center;font-size:9.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.62);z-index:1}
+        .bs-modal-note{position:absolute;left:40px;right:40px;bottom:44px;margin:0;text-align:center;font-size:12.5px;font-weight:300;line-height:1.6;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.8);z-index:1}
 
         @media(max-width:1080px){.bs-grid--916{grid-template-columns:repeat(4,1fr)}}
         @media(max-width:940px){
@@ -509,6 +514,7 @@ export function BerilSedatHomesPage({ client }: Props) {
           .bs-modal-nav{width:34px;height:34px;font-size:22px}
           .bs-modal-nav.prev{left:5px}.bs-modal-nav.next{right:5px}
           .bs-modal-cap{left:12px;right:12px;bottom:8px}
+          .bs-modal-note{left:12px;right:12px;bottom:30px;font-size:11.5px}
         }
 
         @media (prefers-reduced-motion: reduce){
