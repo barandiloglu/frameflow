@@ -437,7 +437,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-site-tabs button:hover{background:#cbbca4;color:var(--navy)}
         .bs-site-tabs button.on{background:var(--cloud);color:var(--bronze)}
         .bs-site-window{position:relative;height:640px;overflow:hidden;border:1px solid var(--rule);background:#fff}
-        .bs-site-frame{width:125.3%;height:125.3%;transform:scale(.798);transform-origin:0 0;border:0;display:block;background:#fff}
+        .bs-site-frame{width:148.5%;height:148.5%;transform:scale(.6734);transform-origin:0 0;border:0;display:block;background:#fff}
         .bs-site-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--rule);border-top:0;padding:13px 15px}
         .bs-site-nav{display:flex;align-items:center;gap:12px}
         .bs-site-nav button{width:34px;height:34px;cursor:pointer;line-height:1;background:transparent;border:1px solid var(--rule);color:var(--navy);font-size:19px;transition:all 150ms ease}
