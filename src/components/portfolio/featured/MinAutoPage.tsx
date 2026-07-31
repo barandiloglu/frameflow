@@ -129,6 +129,21 @@ const SETS = [
   },
 ] as const;
 
+const ZERO = [
+  { no: "01", title: "Identity", body: "Logo system in four lockups, colour and type spec, source files handed over. The checkmark was chosen before anything else — it is the whole promise in one shape." },
+  { no: "02", title: "Channels", body: "Instagram and Facebook business pages built from nothing. Facebook first: the 35–65 buyer this dealership actually sells to lives there, not on Instagram." },
+  { no: "03", title: "Template system", body: "An inventory card any listing drops into — photo, corner tag, spec strip, price. Seven Canva templates so the client can keep shipping without us." },
+  { no: "04", title: "Voice", body: "Three buyers, one tone: the fleet owner, the credit-rebuilder, the family afraid of a lemon. Same warmth, different fear answered." },
+] as const;
+
+const PILLARS = [
+  "Vehicle showcases",
+  "Inspection & certification",
+  "Financing for real people",
+  "Commercial & fleet",
+  "Trust-building",
+] as const;
+
 export function MinAutoPage({ client }: Props) {
   const frame = getFrameNumber(client); // "018"
   const [cardView, setCardView] = useState<"launch" | "current">("current");
@@ -267,6 +282,32 @@ export function MinAutoPage({ client }: Props) {
           ))}
         </div>
       </section>
+
+      <section className="ma-zero">
+        <h2 className="ma-sec"><span className="ma-sec-no">04</span><span className="ma-sec-name">From Zero</span><i></i><span className="ma-sec-meta">MONTH ONE</span></h2>
+        <div className="ma-zero-grid">
+          {ZERO.map((z) => (
+            <article key={z.no}>
+              <span className="ma-zero-no">{z.no}</span>
+              <h3>{z.title}</h3>
+              <p>{z.body}</p>
+            </article>
+          ))}
+        </div>
+        <div className="ma-pillars">
+          <span className="ma-pillars-label">Content pillars</span>
+          <ul>{PILLARS.map((p) => <li key={p}>{p}</li>)}</ul>
+        </div>
+      </section>
+
+      <footer className="ma-signoff">
+        <div className="ma-sign-grid">
+          <div><p className="ma-sign-label">Client</p><p className="ma-sign-name">MinAuto</p></div>
+          <div><p className="ma-sign-label">Where</p><p className="ma-sign-name">Wasaga Beach, ON</p></div>
+          <div><p className="ma-sign-label">By</p><p className="ma-sign-name accent">FrameFlow</p></div>
+        </div>
+        <Link className="ma-sign-back" href="/portfolio">← Back to portfolio</Link>
+      </footer>
 
       {open && (
         <div
@@ -443,6 +484,13 @@ export function MinAutoPage({ client }: Props) {
           .ma-modal-nav{width:34px;height:34px;font-size:15px}
           .ma-modal-nav.prev{left:6px}.ma-modal-nav.next{right:6px}
           .ma-modal-note{bottom:8px;left:12px;right:12px;transform:none;max-width:none;font-size:12px}
+        }
+
+        @media (prefers-reduced-motion: reduce){
+          .ma-modal,.ma-modal-stage{animation:none}
+          .ma-set,.ma-modal-close,.ma-modal-nav,.ma-card-toggle button{transition:none}
+          .ma-set:hover{transform:none}
+          .ma-modal-nav:hover{transform:translateY(-50%)}
         }
       `}</style>
     </div>
