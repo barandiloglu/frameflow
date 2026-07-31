@@ -33,7 +33,7 @@
 
 Place everything under `public/portfolio/minauto/`. No app code.
 
-**Files:** creates 33 assets across `logo/`, `card/`, `feed/{omvic,checks,coachmen}/`, `listings/{kia-soul,infiniti-q50,subaru-forester,toyota-corolla,honda-civic,ford-escape}/`.
+**Files:** creates 32 assets (5 logo, 3 card, 11 carousel slides, 13 listing slides) across `logo/`, `card/`, `feed/{omvic,checks,coachmen}/`, `listings/{kia-soul,infiniti-q50,subaru-forester,toyota-corolla,honda-civic,ford-escape}/`.
 
 All sources are under `/Users/barandiloglu/Downloads/Min Auto/`. **The mapping below was verified by a human viewing every file — do not re-derive it.**
 
@@ -128,7 +128,7 @@ q "$S/July 6-12/Ford Escape /48.png"   "$R/ford-escape/02.jpg"
 
 ```bash
 R="/Users/barandiloglu/Desktop/Projects/FrameFlow/public/portfolio/minauto"
-find "$R" -type f | wc -l          # expect 33
+find "$R" -type f | wc -l          # expect 32
 find "$R" -type f -size +400k      # expect no output
 for f in "$R"/logo/lockup-*.png; do echo "$f $(ffprobe -v error -select_streams v:0 -show_entries stream=pix_fmt -of csv=p=0 "$f")"; done  # all rgba
 ```
