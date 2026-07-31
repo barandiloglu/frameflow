@@ -72,18 +72,60 @@ const FEED = [
     alt: "Seminar announcement for a career management talk, co-branded with EduPathways" },
 ] as const;
 
+const EXPLAINERS = [
+  { id: "X.01", src: "/portfolio/beril-sedat-homes/explainers/01-programs-missed.mp4", cap: "Programs most buyers miss",
+    alt: "Warm limestone explainer listing the FHSA, RRSP Home Buyers' Plan and Land Transfer Tax rebate" },
+  { id: "X.02", src: "/portfolio/beril-sedat-homes/explainers/02-roi-table.mp4", cap: "What actually adds value · EN",
+    alt: "Explainer ranking ten home upgrades by return on investment" },
+  { id: "X.03", src: "/portfolio/beril-sedat-homes/explainers/03-expiry-date.mp4", cap: "Your property has an expiry date · EN",
+    alt: "Explainer listing the service life of roofs, windows, water heaters and other components" },
+  { id: "X.04", src: "/portfolio/beril-sedat-homes/explainers/04-only-a-realtor.mp4", cap: "Only a realtor · EN",
+    alt: "Text explainer contrasting a realtor with a doctor, a lawyer and a mechanic" },
+] as const;
+
+const SHOTS = [
+  { tab: "Home", path: "en", url: "/", note: "Full-bleed property hero, the pair shown at the same size as the house, and the proof band — transactions, ranking, families served — before a single listing." },
+  { tab: "Listings", path: "en/listings", url: "/listings", note: "Held deliberately short while the curated roster is assembled — it asks for the brief instead of padding the page with stock inventory." },
+  { tab: "Neighbourhoods", path: "en/neighbourhoods", url: "/neighbourhoods", note: "The micro-market pages — Oakville, Humber Bay, North York, the Distillery. This is where a boutique brokerage out-argues a portal." },
+  { tab: "Advice", path: "en/advice", url: "/advice", note: "The written counterpart to the explainer reels. Same subjects, longer form, indexable." },
+  { tab: "About", path: "en/about", url: "/about", note: "Two people, named, photographed, credentials stated. The whole pitch is that you know who is handling the file." },
+  { tab: "Contact", path: "en/contact", url: "/contact", note: "One consultation request, no lead-magnet clutter." },
+  { tab: "Türkçe", path: "tr", url: "/tr", note: "The Turkish site — not a translation layer bolted on, a parallel build with its own copy." },
+] as const;
+
 export function BerilSedatHomesPage({ client }: Props) {
   const frame = getFrameNumber(client); // "020"
 
-  const [lightbox, setLightbox] = useState<{ set: "reels" | "feed"; i: number } | null>(null);
+  const [lightbox, setLightbox] = useState<{ set: "reels" | "feed" | "explainers"; i: number } | null>(null);
   const closeBox = useCallback(() => setLightbox(null), []);
   const stepBox = useCallback((delta: number) => {
     setLightbox((o) => {
       if (!o) return o;
-      const len = o.set === "reels" ? REELS.length : FEED.length;
+      const len = o.set === "reels" ? REELS.length : o.set === "explainers" ? EXPLAINERS.length : FEED.length;
       return { set: o.set, i: (o.i + delta + len) % len };
     });
   }, []);
+
+  const [siteTab, setSiteTab] = useState(0);
+
+  function applySiteGuards(e: React.SyntheticEvent<HTMLIFrameElement>) {
+    const doc = e.currentTarget.contentDocument;
+    if (!doc) return;
+    const block = (ev: Event) => {
+      const el = ev.target as HTMLElement | null;
+      if (el?.closest("a[href], button, [role='link']")) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    };
+    doc.addEventListener("click", block, true);
+    doc.addEventListener("auxclick", block, true);
+    doc.addEventListener("submit", (ev) => ev.preventDefault(), true);
+    for (const a of Array.from(doc.querySelectorAll("a[href]"))) {
+      a.removeAttribute("target");
+      a.setAttribute("aria-disabled", "true");
+    }
+  }
 
   useEffect(() => {
     if (!lightbox) return;
@@ -172,10 +214,61 @@ export function BerilSedatHomesPage({ client }: Props) {
         </div>
       </section>
 
+      <section className="bs-motion">
+        <h2 className="bs-sec-head"><i></i><span>THE EXPLAINERS</span><i></i></h2>
+        <p className="bs-sub bs-sub--dark">Vertical motion · 9:16</p>
+        <p className="bs-lede">This is the layer that sits under the talking. Each explainer is cut against a built graphics pass — the number lands, the label arrives, the table fills a row at a time — so the voice never has to describe what the screen could just show. Rendered from one template, which means a new episode is a data change rather than a rebuild.</p>
+        <div className="bs-grid bs-grid--916">
+          {EXPLAINERS.map((x, i) => (
+            <button type="button" className="bs-cell bs-cell--onLight" key={x.id} onClick={() => setLightbox({ set: "explainers", i })}>
+              <span className="bs-play">▶</span>
+              <img className="bs-cell-img" src={`${x.src.replace(/\.mp4$/, "")}-poster.jpg`} alt={x.alt} loading="lazy" />
+              <span className="bs-cell-cap">{x.cap}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="bs-site-sec">
+        <h2 className="bs-sec-head"><i></i><span>THE SITE</span><i></i></h2>
+        <p className="bs-sub bs-sub--dark">berilsedathomes.ca · live · English and Turkish</p>
+        <figure className="bs-site">
+          <div className="bs-shot-bar">
+            <span className="bs-shot-dots"><i></i><i></i><i></i></span>
+            <span className="bs-shot-url">berilsedathomes.ca{SHOTS[siteTab].url}</span>
+            <span className="bs-shot-live">● LIVE</span>
+          </div>
+          <nav className="bs-site-tabs">
+            {SHOTS.map((s, i) => (
+              <button type="button" key={s.tab} className={i === siteTab ? "on" : ""} onClick={() => setSiteTab(i)} aria-pressed={i === siteTab}>{s.tab}</button>
+            ))}
+          </nav>
+          <div className="bs-site-window">
+            <iframe
+              key={SHOTS[siteTab].path}
+              className="bs-site-frame"
+              src={`/portfolio/beril-sedat-homes/site/${SHOTS[siteTab].path}/index.html`}
+              title={`${SHOTS[siteTab].tab} page of berilsedathomes.ca`}
+              loading="lazy"
+              onLoad={applySiteGuards}
+            />
+          </div>
+          <div className="bs-site-foot">
+            <div className="bs-site-nav">
+              <button type="button" onClick={() => setSiteTab((t) => (t - 1 + SHOTS.length) % SHOTS.length)} aria-label="Previous page">‹</button>
+              <span>{String(siteTab + 1).padStart(2, "0")} / {String(SHOTS.length).padStart(2, "0")}</span>
+              <button type="button" onClick={() => setSiteTab((t) => (t + 1) % SHOTS.length)} aria-label="Next page">›</button>
+            </div>
+            <a className="bs-visit" href={`https://www.berilsedathomes.ca${SHOTS[siteTab].url}`} target="_blank" rel="noopener noreferrer">Visit this page <span>↗</span></a>
+          </div>
+          <figcaption>{SHOTS[siteTab].note}</figcaption>
+        </figure>
+      </section>
+
       {lightbox && (() => {
-        const isReel = lightbox.set === "reels";
-        const item = isReel ? REELS[lightbox.i] : FEED[lightbox.i];
-        const len = isReel ? REELS.length : FEED.length;
+        const isVideo = lightbox.set !== "feed";
+        const item = lightbox.set === "reels" ? REELS[lightbox.i] : lightbox.set === "explainers" ? EXPLAINERS[lightbox.i] : FEED[lightbox.i];
+        const len = lightbox.set === "reels" ? REELS.length : lightbox.set === "explainers" ? EXPLAINERS.length : FEED.length;
         return (
           <div
             className="bs-modal"
@@ -192,7 +285,7 @@ export function BerilSedatHomesPage({ client }: Props) {
                 <button type="button" className="bs-modal-close" onClick={closeBox} aria-label="Close">✕</button>
               </div>
               <div className="bs-modal-shot">
-                {isReel ? (
+                {isVideo ? (
                   <video key={item.src} controls autoPlay playsInline poster={`${item.src.replace(/\.mp4$/, "")}-poster.jpg`}>
                     <source src={item.src} type="video/mp4" />
                   </video>
@@ -287,10 +380,8 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-site-tabs button:last-child{border-right:0}
         .bs-site-tabs button:hover{background:#cbbca4;color:var(--navy)}
         .bs-site-tabs button.on{background:var(--cloud);color:var(--bronze)}
-        .bs-site-window{position:relative;height:640px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--rule);background:#fff;scrollbar-width:thin}
-        .bs-site-img{width:100%;height:auto;display:block}
-        .bs-site-hint{position:sticky;bottom:10px;float:right;right:10px;margin-right:12px;background:rgba(28,40,65,.82);color:var(--cloud);font-size:8.5px;
-          font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:5px 9px;pointer-events:none}
+        .bs-site-window{position:relative;height:640px;overflow:hidden;border:1px solid var(--rule);background:#fff}
+        .bs-site-frame{width:100%;height:100%;border:0;display:block;background:#fff}
         .bs-site-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--rule);border-top:0;padding:13px 15px}
         .bs-site-nav{display:flex;align-items:center;gap:12px}
         .bs-site-nav button{width:34px;height:34px;cursor:pointer;line-height:1;background:transparent;border:1px solid var(--rule);color:var(--navy);font-size:19px;transition:all 150ms ease}
