@@ -121,6 +121,24 @@ const MAP_PINS = [
   { x: 59.248, y: 46.875, big: false },
 ] as const;
 
+/* The zoom step: the densest cluster of the same feed, re-projected at z13. */
+const ZOOM_PINS = [
+  { id: "C13617544", addr: "711-215 Fort York Boulevard", price: "$445,000", short: "$445K",
+    bd: 1, ba: 1, x: 27.572, y: 80.854 },
+  { id: "E13613062", addr: "406-1190 Dundas Street", price: "$450,000", short: "$450K",
+    bd: 1, ba: 1, x: 63.503, y: 58.403 },
+  { id: "C13615832", addr: "427-543 Richmond Street", price: "$499,000", short: "$499K",
+    bd: 2, ba: 2, x: 29.254, y: 72.954 },
+  { id: "C13607570", addr: "317-38 Hollywood Avenue", price: "$499,800", short: "$499K",
+    bd: 2, ba: 1, x: 77.437, y: 48.386 },
+  { id: "C13615864", addr: "PH7-28 Linden Street", price: "$595,000", short: "$595K",
+    bd: 2, ba: 1, x: 43.386, y: 53.893 },
+  { id: "C13607962", addr: "902-2181 Yonge Street", price: "$889,900", short: "$889K",
+    bd: 2, ba: 2, x: 31.508, y: 26.89 },
+  { id: "C13615930", addr: "53 St Paul Street", price: "$1,150,000", short: "$1.15M",
+    bd: 3, ba: 2, x: 52.777, y: 65.328 },
+] as const;
+
 const MAP_CARDS = [
   { id: "C13615018", addr: "220-4005 Don Mills Road", hood: "Toronto", price: "$499,900",
     bd: 3, ba: 3, sqft: "1,200–1,399", type: "Condo Apartment",
@@ -145,7 +163,7 @@ const FEED_1280 = new Set(["F.08", "F.09"]);
 
 const SHOTS = [
   { tab: "Home", path: "en", url: "/", note: "Full-bleed property hero, the pair shown at the same size as the house, and the proof band — transactions, ranking, families served — before a single listing." },
-  { tab: "Listings", path: "en/listings", url: "/listings", note: "Held deliberately short while the curated roster is assembled — it asks for the brief instead of padding the page with stock inventory." },
+  { tab: "Listings", path: "en/listings", url: "/listings", note: "The filterable roster — neighbourhood, property type, price, bedrooms and status, with sorting over the top. Running here against a frozen snapshot of the office feed rather than the live API, so the counts are fixed rather than current." },
   { tab: "Neighbourhoods", path: "en/neighbourhoods", url: "/neighbourhoods", note: "The micro-market pages — Oakville, Humber Bay, North York, the Distillery. This is where a boutique brokerage out-argues a portal." },
   { tab: "Advice", path: "en/advice", url: "/advice", note: "The written counterpart to the explainer reels. Same subjects, longer form, indexable." },
   { tab: "About", path: "en/about", url: "/about", note: "Two people, named, photographed, credentials stated. The whole pitch is that you know who is handling the file." },
@@ -206,6 +224,7 @@ export function BerilSedatHomesPage({ client }: Props) {
      reduced motion, which jumps straight to the settled state. */
   const [mapStep, setMapStep] = useState(0);
   const [mapActive, setMapActive] = useState<number | null>(null);
+  const [zoomActive, setZoomActive] = useState<number | null>(null);
   const mapRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -222,12 +241,15 @@ export function BerilSedatHomesPage({ client }: Props) {
       const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
       setMapStep(0);
       setMapActive(null);
+      setZoomActive(null);
       at(400, () => setMapStep(1));
       at(2600, () => setMapStep(2));
-      at(4200, () => setMapActive(0));
-      at(6000, () => setMapActive(2));
-      at(7800, () => setMapActive(4));
-      at(9800, run);
+      at(4100, () => setMapActive(0));
+      at(5600, () => setMapActive(2));
+      at(7200, () => { setMapStep(3); setMapActive(null); });
+      at(9000, () => setZoomActive(2));
+      at(10600, () => setZoomActive(5));
+      at(12600, run);
     };
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -237,8 +259,9 @@ export function BerilSedatHomesPage({ client }: Props) {
         }
         // Reduced motion: settle on the filtered state, never animate.
         if (reduce) {
-          setMapStep(2);
-          setMapActive(0);
+          setMapStep(3);
+          setMapActive(null);
+          setZoomActive(2);
           return;
         }
         run();
@@ -437,23 +460,41 @@ export function BerilSedatHomesPage({ client }: Props) {
             </div>
 
             <div className="bs-map-canvas">
-              <img src="/portfolio/beril-sedat-homes/mapsearch/basemap.jpg" alt="" width={1024} height={768} loading="lazy" />
-              {MAP_PINS.map((p, i) => (
-                <span
-                  key={i}
-                  className={`bs-pin${mapStep >= 1 ? " drop" : ""}${mapStep >= 2 && !p.big ? " dim" : ""}`}
-                  style={{ left: `${p.x}%`, top: `${p.y}%`, transitionDelay: `${mapStep >= 1 && mapStep < 2 ? (i % 12) * 45 : 0}ms` }}
-                />
-              ))}
-              {MAP_CARDS.map((c, i) => (
-                <span
-                  key={c.id}
-                  className={`bs-pin big${mapStep >= 2 ? " drop" : ""}${mapActive === i ? " hot" : ""}`}
-                  style={{ left: `${c.x}%`, top: `${c.y}%` }}
-                >
-                  <em>{c.price.replace(/,\d{3}$/, "K").replace("$", "$")}</em>
-                </span>
-              ))}
+              <span className={`bs-map-layer wide${mapStep >= 3 ? " out" : ""}`}>
+                <img src="/portfolio/beril-sedat-homes/mapsearch/basemap.jpg" alt="" width={1024} height={768} loading="lazy" />
+                {MAP_PINS.map((p, i) => (
+                  <span
+                    key={i}
+                    className={`bs-pin${mapStep >= 1 ? " drop" : ""}${mapStep >= 2 && !p.big ? " dim" : ""}`}
+                    style={{ left: `${p.x}%`, top: `${p.y}%`, transitionDelay: `${mapStep >= 1 && mapStep < 2 ? (i % 12) * 45 : 0}ms` }}
+                  />
+                ))}
+                {MAP_CARDS.map((c, i) => (
+                  <span
+                    key={c.id}
+                    className={`bs-pin big${mapStep >= 2 ? " drop" : ""}${mapActive === i ? " hot" : ""}`}
+                    style={{ left: `${c.x}%`, top: `${c.y}%` }}
+                  >
+                    <em>{c.price.replace(/,\d{3}$/, "K")}</em>
+                  </span>
+                ))}
+              </span>
+
+              <span className={`bs-map-layer zoom${mapStep >= 3 ? " in" : ""}`}>
+                <img src="/portfolio/beril-sedat-homes/mapsearch/basemap-zoom.jpg" alt="" width={1024} height={1024} loading="lazy" />
+                {ZOOM_PINS.map((z, i) => (
+                  <span
+                    key={z.id}
+                    className={`bs-pin big${mapStep >= 3 ? " drop" : ""}${zoomActive === i ? " hot" : ""}`}
+                    style={{ left: `${z.x}%`, top: `${z.y}%`, transitionDelay: `${mapStep >= 3 ? i * 70 : 0}ms` }}
+                  >
+                    <em>{z.short}</em>
+                    <b className="bs-pin-tip">{z.addr} · {z.bd} bd {z.ba} ba</b>
+                  </span>
+                ))}
+              </span>
+
+              <span className={`bs-map-zoomtag${mapStep >= 3 ? " on" : ""}`}>Downtown &amp; midtown Toronto</span>
               <span className="bs-map-attr">© OpenStreetMap © CARTO</span>
             </div>
           </div>
@@ -656,7 +697,17 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-mcard-specs i{font-style:normal;font-weight:600;color:var(--navy)}
         .bs-mcard-link{margin-top:7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze)}
         .bs-map-canvas{position:relative;overflow:hidden;background:#eef1f3}
-        .bs-map-canvas img{width:100%;height:100%;object-fit:cover;display:block}
+        .bs-map-layer{position:absolute;inset:0;display:block;transition:opacity .9s ease,transform 1.1s cubic-bezier(0.4,0,0.2,1)}
+        .bs-map-layer img{width:100%;height:100%;object-fit:cover;display:block}
+        .bs-map-layer.wide{opacity:1;transform:scale(1)}
+        .bs-map-layer.wide.out{opacity:0;transform:scale(2.6)}
+        .bs-map-layer.zoom{opacity:0;transform:scale(.45);pointer-events:none}
+        .bs-map-layer.zoom.in{opacity:1;transform:scale(1)}
+        .bs-map-zoomtag{position:absolute;left:12px;top:12px;z-index:3;background:var(--navy);color:var(--cloud);padding:6px 11px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;opacity:0;transform:translateY(-6px);transition:opacity .5s ease .35s,transform .5s ease .35s}
+        .bs-map-zoomtag.on{opacity:1;transform:none}
+        .bs-pin-tip{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;background:#fff;color:var(--navy);padding:5px 9px;font-size:10px;font-weight:400;letter-spacing:.02em;box-shadow:0 6px 18px rgba(12,27,51,.22);opacity:0;transition:opacity .25s}
+        .bs-pin.big.hot{z-index:4}
+        .bs-pin.hot .bs-pin-tip{opacity:1}
         .bs-pin{position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--bronze);border:1.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);opacity:0;transform:translateY(-14px) scale(.4);transition:opacity .4s ease,transform .5s cubic-bezier(0.34,1.56,0.64,1)}
         .bs-pin.drop{opacity:1;transform:none}
         .bs-pin.dim{opacity:.22}
@@ -747,7 +798,9 @@ export function BerilSedatHomesPage({ client }: Props) {
         }
 
         @media (prefers-reduced-motion: reduce){
-    .bs-pin,.bs-mcard,.bs-map-input,.bs-map-sel,.bs-pin.big em{transition:none}
+    .bs-pin,.bs-mcard,.bs-map-input,.bs-map-sel,.bs-pin.big em,.bs-map-layer,.bs-map-zoomtag,.bs-pin-tip{transition:none}
+    .bs-map-layer.wide.out{transform:none}
+    .bs-map-layer.zoom.in{transform:none}
           .bs-modal,.bs-modal-stage{animation:none}
           .bs-cell-img,.bs-play,.bs-modal-close,.bs-modal-nav,.bs-site-tabs button,.bs-site-nav button,.bs-visit{transition:none}
           .bs-cell:hover .bs-cell-img{transform:none}
