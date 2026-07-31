@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -83,6 +83,62 @@ const EXPLAINERS = [
     alt: "Text explainer contrasting a realtor with a doctor, a lawyer and a mechanic" },
 ] as const;
 
+/* 32 real office-feed listings, pulled once from the Birdi API and frozen here.
+   The page never calls that API: no key ships, no request is billed to the client.
+   Marker positions are Web-Mercator projections onto the stitched CARTO basemap. */
+const MAP_PINS = [
+  { x: 44.795, y: 39.362, big: false },
+  { x: 53.447, y: 59.31, big: false },
+  { x: 57.939, y: 55.573, big: false },
+  { x: 44.424, y: 33.919, big: false },
+  { x: 50.352, y: 47.982, big: false },
+  { x: 53.652, y: 57.995, big: false },
+  { x: 59.678, y: 53.893, big: false },
+  { x: 56.68, y: 36.419, big: true },
+  { x: 58.398, y: 30.0, big: false },
+  { x: 47.988, y: 47.721, big: false },
+  { x: 76.602, y: 33.802, big: true },
+  { x: 45.723, y: 50.13, big: false },
+  { x: 55.42, y: 54.818, big: false },
+  { x: 76.338, y: 32.5, big: true },
+  { x: 45.459, y: 30.716, big: false },
+  { x: 54.971, y: 42.266, big: false },
+  { x: 57.773, y: 46.654, big: true },
+  { x: 53.936, y: 50.312, big: false },
+  { x: 36.279, y: 66.055, big: true },
+  { x: 68.584, y: 41.81, big: false },
+  { x: 38.242, y: 62.773, big: false },
+  { x: 30.537, y: 58.958, big: false },
+  { x: 74.893, y: 32.799, big: false },
+  { x: 56.602, y: 56.719, big: false },
+  { x: 22.695, y: 43.815, big: false },
+  { x: 60.371, y: 52.578, big: false },
+  { x: 35.898, y: 24.896, big: false },
+  { x: 48.301, y: 60.508, big: false },
+  { x: 54.404, y: 40.143, big: false },
+  { x: 32.5, y: 90.117, big: false },
+  { x: 54.434, y: 44.388, big: false },
+  { x: 59.248, y: 46.875, big: false },
+] as const;
+
+const MAP_CARDS = [
+  { id: "C13615018", addr: "220-4005 Don Mills Road", hood: "Toronto", price: "$499,900",
+    bd: 3, ba: 3, sqft: "1,200–1,399", type: "Condo Apartment",
+    x: 56.68, y: 36.419 },
+  { id: "E13624552", addr: "1212-1480 Bayly Street", hood: "Pickering", price: "$548,800",
+    bd: 3, ba: 2, sqft: "900–999", type: "Condo Apartment",
+    x: 76.602, y: 33.802 },
+  { id: "E13624968", addr: "1109-1890 Valley Farm Road", hood: "Pickering", price: "$629,000",
+    bd: 3, ba: 2, sqft: "1,000–1,199", type: "Condo Apartment",
+    x: 76.338, y: 32.5 },
+  { id: "C13611616", addr: "626-20 O'Neill Road", hood: "Toronto", price: "$699,000",
+    bd: 3, ba: 2, sqft: "800–899", type: "Condo Apartment",
+    x: 57.773, y: 46.654 },
+  { id: "W13611612", addr: "PH4-4011 Brickstone Mews", hood: "Mississauga", price: "$899,000",
+    bd: 4, ba: 3, sqft: "1,400–1,599", type: "Condo Apartment",
+    x: 36.279, y: 66.055 },
+] as const;
+
 /* The two pinned posts were exported at 1280x1600; the other ten feed stills are
    1080x1350. Same 4:5 ratio, but the intrinsic sizes should still be accurate. */
 const FEED_1280 = new Set(["F.08", "F.09"]);
@@ -144,6 +200,57 @@ export function BerilSedatHomesPage({ client }: Props) {
   }, []);
 
   const [siteTab, setSiteTab] = useState(0);
+
+  /* Map-search demo: 0 = empty, 1 = all pins dropped, 2 = filtered to the rail.
+     Driven only while the section is on screen, and skipped entirely under
+     reduced motion, which jumps straight to the settled state. */
+  const [mapStep, setMapStep] = useState(0);
+  const [mapActive, setMapActive] = useState<number | null>(null);
+  const mapRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const node = mapRef.current;
+    if (!node) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timers: number[] = [];
+    const clear = () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+    };
+    const run = () => {
+      clear();
+      const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+      setMapStep(0);
+      setMapActive(null);
+      at(400, () => setMapStep(1));
+      at(2600, () => setMapStep(2));
+      at(4200, () => setMapActive(0));
+      at(6000, () => setMapActive(2));
+      at(7800, () => setMapActive(4));
+      at(9800, run);
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          clear();
+          return;
+        }
+        // Reduced motion: settle on the filtered state, never animate.
+        if (reduce) {
+          setMapStep(2);
+          setMapActive(0);
+          return;
+        }
+        run();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(node);
+    return () => {
+      io.disconnect();
+      clear();
+    };
+  }, []);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -281,6 +388,77 @@ export function BerilSedatHomesPage({ client }: Props) {
           </div>
           <figcaption>{SHOTS[siteTab].note}</figcaption>
         </figure>
+      </section>
+
+      <section className="bs-map-sec" ref={mapRef}>
+        <h2 className="bs-sec-head light"><i></i><span>MAP SEARCH</span><i></i></h2>
+        <p className="bs-sub">berilsedathomes.ca/listings/map · office feed · split view</p>
+        <p className="bs-lede">The largest build on the site, and the one a portal usually wins on. Every listing carries coordinates, so the roster and the map are the same query seen two ways: filter the list and the pins follow, hover a pin and the card answers. What plays below is that interface, recreated frame for frame.</p>
+
+        <figure className="bs-map">
+          <div className="bs-map-bar">
+            <span className={`bs-map-input${mapStep >= 1 ? " typed" : ""}`}>{mapStep >= 1 ? "Toronto & east GTA" : "Search address, MLS®, keyword…"}</span>
+            <span className="bs-map-group">
+              <b className="on">Buy</b><b>Lease</b>
+            </span>
+            <span className={`bs-map-sel${mapStep >= 2 ? " set" : ""}`}>{mapStep >= 2 ? "3+ beds" : "Beds"}</span>
+            <span className="bs-map-sel">Baths</span>
+            <span className={`bs-map-sel${mapStep >= 2 ? " set" : ""}`}>{mapStep >= 2 ? "Under $900K" : "Price"}</span>
+            <span className="bs-map-right">
+              <span className="bs-map-count">{mapStep === 0 ? 0 : mapStep === 1 ? MAP_PINS.length : MAP_CARDS.length} results</span>
+              <span className="bs-map-group dark">
+                <b className="on">Split</b><b>Map</b><b>List</b>
+              </span>
+            </span>
+          </div>
+
+          <div className="bs-map-body">
+            <div className="bs-map-rail">
+              {MAP_CARDS.map((c, i) => (
+                <article
+                  key={c.id}
+                  className={`bs-mcard${mapStep >= 2 ? " in" : ""}${mapActive === i ? " active" : ""}`}
+                  style={{ transitionDelay: `${i * 70}ms` }}
+                >
+                  <span className="bs-mcard-shot">
+                    <span className="bs-mcard-badge">For sale</span>
+                  </span>
+                  <span className="bs-mcard-body">
+                    <b className="bs-mcard-price">{c.price}</b>
+                    <span className="bs-mcard-addr">{c.addr}</span>
+                    <span className="bs-mcard-hood">{c.hood}</span>
+                    <span className="bs-mcard-specs">
+                      <span><i>{c.bd}</i> bd</span><span><i>{c.ba}</i> ba</span><span><i>{c.sqft}</i> sqft</span>
+                    </span>
+                    <span className="bs-mcard-link">View listing</span>
+                  </span>
+                </article>
+              ))}
+            </div>
+
+            <div className="bs-map-canvas">
+              <img src="/portfolio/beril-sedat-homes/mapsearch/basemap.jpg" alt="" width={1024} height={768} loading="lazy" />
+              {MAP_PINS.map((p, i) => (
+                <span
+                  key={i}
+                  className={`bs-pin${mapStep >= 1 ? " drop" : ""}${mapStep >= 2 && !p.big ? " dim" : ""}`}
+                  style={{ left: `${p.x}%`, top: `${p.y}%`, transitionDelay: `${mapStep >= 1 && mapStep < 2 ? (i % 12) * 45 : 0}ms` }}
+                />
+              ))}
+              {MAP_CARDS.map((c, i) => (
+                <span
+                  key={c.id}
+                  className={`bs-pin big${mapStep >= 2 ? " drop" : ""}${mapActive === i ? " hot" : ""}`}
+                  style={{ left: `${c.x}%`, top: `${c.y}%` }}
+                >
+                  <em>{c.price.replace(/,\d{3}$/, "K").replace("$", "$")}</em>
+                </span>
+              ))}
+              <span className="bs-map-attr">© OpenStreetMap © CARTO</span>
+            </div>
+          </div>
+        </figure>
+        <figcaption className="bs-map-cap">Recreated for this case study from the live components, with a basemap and 32 office-feed listings captured once and frozen. Nothing here calls the brokerage&rsquo;s listing API.</figcaption>
       </section>
 
       <section className="bs-lang">
@@ -448,6 +626,47 @@ export function BerilSedatHomesPage({ client }: Props) {
         .bs-visit:hover{background:var(--bronze)}
         .bs-site figcaption{font-size:12.5px;font-weight:300;line-height:1.75;color:#5b5344;border-left:2px solid var(--bronze);padding-left:16px;margin-top:20px;max-width:72ch}
 
+        /* ---- Map search demo: a recreation of the live MapSearch component ---- */
+        .bs-map-sec{background:var(--navy);padding:96px 26px}
+        .bs-map-sec .bs-lede{color:rgba(240,240,240,.72)}
+        .bs-map{max-width:1160px;margin:40px auto 0;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+        .bs-map-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-bottom:1px solid rgba(28,40,65,.1);padding:12px 20px}
+        .bs-map-input{flex:1;min-width:170px;max-width:300px;border:1px solid rgba(28,40,65,.18);padding:8px 12px;font-size:12.5px;color:rgba(28,40,65,.42);transition:color .3s,border-color .3s}
+        .bs-map-input.typed{color:var(--navy);border-color:var(--bronze)}
+        .bs-map-group{display:flex;border:1px solid rgba(28,40,65,.15)}
+        .bs-map-group b{padding:6px 12px;font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+        .bs-map-group b.on{background:var(--bronze);color:var(--cloud)}
+        .bs-map-group.dark b.on{background:var(--navy);color:var(--cloud)}
+        .bs-map-sel{border:1px solid rgba(28,40,65,.15);padding:6px 12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,40,65,.55);transition:color .3s,border-color .3s,background .3s}
+        .bs-map-sel.set{background:var(--bronze);border-color:var(--bronze);color:var(--cloud)}
+        .bs-map-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+        .bs-map-count{font-size:11.5px;letter-spacing:.05em;color:rgba(28,40,65,.6);font-variant-numeric:tabular-nums}
+        .bs-map-body{display:grid;grid-template-columns:minmax(320px,390px) 1fr;height:470px}
+        .bs-map-rail{display:flex;flex-direction:column;gap:10px;overflow:hidden;border-right:1px solid rgba(28,40,65,.1);padding:12px;background:#fff}
+        .bs-mcard{display:flex;gap:12px;border:1px solid rgba(28,40,65,.08);background:#fff;padding:10px;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease,border-color .25s,box-shadow .25s}
+        .bs-mcard.in{opacity:1;transform:none}
+        .bs-mcard.active{border-color:var(--bronze);box-shadow:0 10px 30px rgba(12,27,51,.1)}
+        .bs-mcard-shot{position:relative;flex:0 0 108px;aspect-ratio:4/3;background:var(--catalyst);display:block}
+        .bs-mcard-badge{position:absolute;left:6px;top:6px;background:var(--bronze);color:var(--cloud);padding:3px 7px;font-size:8px;letter-spacing:.15em;text-transform:uppercase}
+        .bs-mcard-body{display:flex;flex-direction:column;min-width:0;flex:1}
+        .bs-mcard-price{font-family:"Cinzel",Georgia,serif;font-size:17px;font-weight:500;color:var(--navy);line-height:1.2}
+        .bs-mcard-addr{font-size:12px;color:rgba(28,40,65,.8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .bs-mcard-hood{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--bronze);margin-bottom:6px}
+        .bs-mcard-specs{margin-top:auto;display:flex;gap:10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(28,40,65,.6)}
+        .bs-mcard-specs i{font-style:normal;font-weight:600;color:var(--navy)}
+        .bs-mcard-link{margin-top:7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze)}
+        .bs-map-canvas{position:relative;overflow:hidden;background:#eef1f3}
+        .bs-map-canvas img{width:100%;height:100%;object-fit:cover;display:block}
+        .bs-pin{position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--bronze);border:1.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);opacity:0;transform:translateY(-14px) scale(.4);transition:opacity .4s ease,transform .5s cubic-bezier(0.34,1.56,0.64,1)}
+        .bs-pin.drop{opacity:1;transform:none}
+        .bs-pin.dim{opacity:.22}
+        .bs-pin.big{width:auto;height:auto;margin:0;border-radius:0;background:none;border:0;box-shadow:none;transform:translate(-50%,-140%) scale(.8)}
+        .bs-pin.big.drop{transform:translate(-50%,-140%) scale(1)}
+        .bs-pin.big em{display:block;font-style:normal;background:var(--navy);color:var(--cloud);padding:4px 8px;font-size:11px;font-weight:600;letter-spacing:.03em;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.35);transition:background .25s,transform .25s}
+        .bs-pin.big.hot em{background:var(--bronze);transform:scale(1.12)}
+        .bs-map-attr{position:absolute;right:6px;bottom:5px;background:rgba(255,255,255,.78);padding:2px 6px;font-size:8.5px;letter-spacing:.02em;color:rgba(28,40,65,.65)}
+        .bs-map-cap{max-width:1160px;margin:18px auto 0;font-size:12.5px;font-weight:300;line-height:1.75;color:rgba(240,240,240,.6);border-left:2px solid var(--bronze);padding-left:16px}
+
         .bs-lang{background:var(--catalyst);color:var(--cloud);padding:100px 26px}
         .bs-lang-inner{max-width:860px;margin:0 auto;text-align:center}
         .bs-lang-head{font-size:clamp(22px,3vw,34px);margin:0 0 44px;color:var(--limestone)}
@@ -494,12 +713,18 @@ export function BerilSedatHomesPage({ client }: Props) {
 
         @media(max-width:1080px){.bs-grid--916{grid-template-columns:repeat(4,1fr)}}
         @media(max-width:940px){
+    .bs-map-body{grid-template-columns:1fr;height:auto}
+    .bs-map-rail{max-height:250px;overflow-y:auto;border-right:0;border-bottom:1px solid rgba(28,40,65,.1)}
+    .bs-map-canvas{height:340px}
           .bs-grid--45{grid-template-columns:repeat(3,1fr)}
           .bs-grid--916{grid-template-columns:repeat(3,1fr)}
           .bs-reg-grid{grid-template-columns:1fr}
           .bs-rail-mid{display:none}
         }
         @media(max-width:620px){
+    .bs-map-canvas{height:260px}
+    .bs-map-bar{padding:10px 12px}
+    .bs-pin.big em{font-size:10px;padding:3px 6px}
           .bs-hero{padding:68px 22px 62px}
           .bs-grid--45{grid-template-columns:repeat(2,1fr)}
           .bs-grid--916{grid-template-columns:repeat(2,1fr)}
@@ -522,6 +747,7 @@ export function BerilSedatHomesPage({ client }: Props) {
         }
 
         @media (prefers-reduced-motion: reduce){
+    .bs-pin,.bs-mcard,.bs-map-input,.bs-map-sel,.bs-pin.big em{transition:none}
           .bs-modal,.bs-modal-stage{animation:none}
           .bs-cell-img,.bs-play,.bs-modal-close,.bs-modal-nav,.bs-site-tabs button,.bs-site-nav button,.bs-visit{transition:none}
           .bs-cell:hover .bs-cell-img{transform:none}
