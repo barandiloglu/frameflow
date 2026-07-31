@@ -639,6 +639,15 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/components/portfolio/featured/HarbourLoomPage.tsx`
 
+- [ ] **Step 0: Consolidate the existing reduced-motion block.** Task 3's implementer
+  added an early `@media (prefers-reduced-motion: reduce)` block covering only the
+  `.hl-cell` hover — ahead of its task. There must end up with exactly **ONE** such
+  block in the file. Find it, and extend it in place rather than adding a second:
+
+```bash
+grep -c "prefers-reduced-motion" src/components/portfolio/featured/HarbourLoomPage.tsx  # must be 1 before AND after this task
+```
+
 - [ ] **Step 1: Grep for the real motion declarations**, then write the block to match. Do not invent selectors:
 
 ```bash
