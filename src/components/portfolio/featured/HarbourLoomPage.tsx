@@ -83,7 +83,7 @@ export function HarbourLoomPage({ client }: Props) {
 
       <section className="hl-hero">
         <div className="hl-hero-inner">
-          <img className="hl-hero-logo" src="/portfolio/harbourloom/brand/logo-navy.png" alt="Harbour Loom" />
+          <img className="hl-hero-logo" src="/portfolio/harbourloom/brand/logo-primary.png" alt="Harbour Loom" />
           <p className="hl-kicker">Logo · Photography · Social Media · Film</p>
           <h1 className="hl-h1">Shot close for the beach.<br /><em>Wide for the water.</em><br />Clean for the trade.</h1>
           <p className="hl-deck"><b>Harbour Loom</b> weaves flat-woven cotton for three different buyers, and the same picture does not work on all three. We built the mark, the photography and the feed around that split — one division shot at arm&rsquo;s length, one from a hundred feet up, one on pure white — and kept all three unmistakably the same brand.</p>
@@ -157,23 +157,28 @@ export function HarbourLoomPage({ client }: Props) {
       </section>
 
       <section className="hl-mark">
-        <h2 className="hl-sec"><span>04 — One Mark</span><i></i><em>Two colourways</em></h2>
+        <h2 className="hl-sec"><span>04 — One Mark</span><i></i><em>One lockup, two applications</em></h2>
         <p className="hl-lead">Three registers. Seven pieces. One thing in common.</p>
-        <p className="hl-body">Beach is warm and close, Marine is cold and wide, B2B is clean and bright — three treatments that would read as three companies if nothing tied them. What ties them is a sailboat and two words, and the discipline of putting it in every single frame. Navy where the ground is white, reversed where it sits on a photograph. Nothing else about the mark changes, anywhere.</p>
+        <p className="hl-body">Beach is warm and close, Marine is cold and wide, B2B is clean and bright — three treatments that would read as three companies if nothing tied them. What ties them is a sailboat and two words, and the discipline of putting it in every single frame.</p>
+        <p className="hl-body">The primary lockup carries a gold sail against a navy hull. In the feed it never does — there it runs as a single colour, navy where the ground is white and reversed white where it sits on a photograph, so it can drop onto sand, open water or marble without ever competing with the picture. The drawing itself does not change, anywhere.</p>
         <div className="hl-mark-pair">
-          <figure className="hl-mark-tile">
-            <img src="/portfolio/harbourloom/brand/mark-navy.png" alt="The Harbour Loom mark in navy — a sailboat above HARBOUR in serif capitals over Loom in script" loading="lazy" />
-            <figcaption><b>Navy</b> — on white and marble grounds. B.01, W.01.</figcaption>
+          <figure className="hl-mark-tile primary">
+            <img src="/portfolio/harbourloom/brand/logo-primary.png" alt="The Harbour Loom primary lockup — a gold-sailed boat over a navy wave, beside HARBOUR in serif capitals above Loom in script" loading="lazy" />
+            <figcaption><b>Primary</b> — gold sail, navy hull. The full-colour lockup.</figcaption>
           </figure>
           <figure className="hl-mark-tile">
+            <img src="/portfolio/harbourloom/brand/mark-navy.png" alt="The Harbour Loom mark applied in solid navy on a white ground" loading="lazy" />
+            <figcaption><b>Navy</b> — one colour, on white and marble grounds. B.01, W.01.</figcaption>
+          </figure>
+          <figure className="hl-mark-tile photo">
             <img src="/portfolio/harbourloom/brand/mark-reversed.png" alt="The same Harbour Loom mark reversed in white, sitting over an orange woven towel" loading="lazy" />
-            <figcaption><b>Reversed</b> — on photography. B.02, B.03, W.02, and the closing card of both reels.</figcaption>
+            <figcaption><b>Reversed</b> — one colour, on photography. B.02, B.03, W.02, and the closing card of both reels.</figcaption>
           </figure>
         </div>
       </section>
 
       <footer className="hl-signoff">
-        <img className="hl-sign-logo" src="/portfolio/harbourloom/brand/logo-navy.png" alt="Harbour Loom" />
+        <img className="hl-sign-logo" src="/portfolio/harbourloom/brand/logo-primary.png" alt="Harbour Loom" />
         <div className="hl-sign-grid">
           <div><p className="hl-sign-label">Client</p><p className="hl-sign-name">Harbour Loom</p></div>
           <div><p className="hl-sign-label">Scope</p><p className="hl-sign-name">Logo · Photography · Social · Film</p></div>
@@ -223,7 +228,7 @@ export function HarbourLoomPage({ client }: Props) {
 
         .hl-hero{background:var(--shell);padding:92px 22px 0}
         .hl-hero-inner{max-width:980px;margin:0 auto;text-align:center}
-        .hl-hero-logo{height:58px;width:auto;display:block;margin:0 auto 30px}
+        .hl-hero-logo{height:68px;width:auto;display:block;margin:0 auto 30px}
         .hl-kicker{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--mute);margin:0 0 26px}
         .hl-h1{font-family:"Juana","Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(34px,5.4vw,64px);line-height:1.16;letter-spacing:-.01em;margin:0 0 30px}
         .hl-h1 em{font-style:italic;color:var(--sea)}
@@ -304,9 +309,10 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-modal-cap{position:absolute;left:40px;right:40px;bottom:22px;margin:0;text-align:center;font-family:"Juana","Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82);z-index:1}
 
         .hl-mark{background:var(--shell);padding:84px 22px}
-        .hl-mark-pair{max-width:1160px;margin:40px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+        .hl-mark-pair{max-width:1160px;margin:40px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
         .hl-mark-tile{margin:0}
-        .hl-mark-tile img{width:100%;height:auto;display:block;border:1px solid var(--rule);background:var(--paper)}
+        .hl-mark-tile img{width:100%;aspect-ratio:16/6;object-fit:contain;padding:18px;display:block;border:1px solid var(--rule);background:var(--paper)}
+        .hl-mark-tile.photo img{object-fit:cover;padding:0}
         .hl-mark-tile figcaption{margin-top:12px;font-size:13px;line-height:1.6;font-weight:300;color:#5a6670}
         .hl-mark-tile figcaption b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral-ink);margin-bottom:5px;font-weight:400}
 
