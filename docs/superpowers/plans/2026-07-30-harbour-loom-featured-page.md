@@ -512,7 +512,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
             <video className="hl-reel-el" controls preload="none" poster="/portfolio/harbourloom/video/marine-poster.jpg">
               <source src="/portfolio/harbourloom/video/marine-reel.mp4" type="video/mp4" />
             </video>
-            <figcaption><b>Marine reel</b> — 0:25, vertical, drone. Open water, a moored yacht, a marina of masts.</figcaption>
+            <figcaption><b>Marine reel</b> — 0:25, vertical, drone. Out on the lake, a moored yacht, a marina of masts.</figcaption>
           </figure>
           <div>
             <p className="hl-lead light">Here the product gets out of the way.</p>
