@@ -24,8 +24,24 @@ const SWATCHES = [
   { name: "Surface",       hex: "#F4F4F4", role: "Neutral. Not a brand colour — breathing room between proof points.", light: true },
 ] as const;
 
+const CARDS = {
+  launch: {
+    label: "Launch card",
+    src: "/portfolio/minauto/card/launch-mazda-cx5.jpg",
+    alt: "The launch MinAuto listing card — Mazda CX-5, orange price pill, spec strip, logo at the bottom",
+    cap: "2015 Mazda CX-5 · 180,945 km · $9,950 — the first template.",
+  },
+  current: {
+    label: "Current card",
+    src: "/portfolio/minauto/card/current-ford-interceptor.jpg",
+    alt: "The current MinAuto listing card — Ford Police Interceptor Utility with a struck-through old price, price-guarantee seal and Carfax badge",
+    cap: "2022 Ford Police Interceptor Utility · 152,058 km · $18,950 → $17,950.",
+  },
+} as const;
+
 export function MinAutoPage({ client }: Props) {
   const frame = getFrameNumber(client); // "018"
+  const [cardView, setCardView] = useState<"launch" | "current">("current");
 
   return (
     <div className="ma-page">
@@ -89,6 +105,31 @@ export function MinAutoPage({ client }: Props) {
             <figcaption>The sheet the client got. Two colours, one typeface — <b>Gotham Bold</b>. This page is set in Montserrat, because Gotham is not licensed for the web here.</figcaption>
           </figure>
         </div>
+      </section>
+
+      <section className="ma-card-sec">
+        <h2 className="ma-sec light"><span className="ma-sec-no">02</span><span className="ma-sec-name">The Card</span><i></i><span className="ma-sec-meta">TEMPLATE SYSTEM</span></h2>
+        <div className="ma-card-grid">
+          <div>
+            <p className="ma-lead light">The mark leaves the logo.</p>
+            <p className="ma-body light">Every listing starts as a phone photo on the lot. The template does the rest: the vehicle name across the top, the price in an orange pill because the price is the action, and a spec strip along the bottom carrying model, mileage and fuel. Same moves every time — the dealership shoots a car, drops it in, and the post is on brand before anyone has thought about design.</p>
+            <p className="ma-body light">Then it got sharper in use. The current card moves the logo up out of the photograph, strikes the old price through instead of quietly replacing it, and adds two pieces of proof the first version did not have: a price-guarantee seal and a Carfax badge. Same skeleton, more evidence.</p>
+            <p className="ma-note">Tap the tabs. Launch card ⇄ current card.</p>
+          </div>
+          <figure className="ma-card">
+            <div className="ma-card-toggle">
+              <button type="button" className={cardView === "launch" ? "on" : ""} onClick={() => setCardView("launch")} aria-pressed={cardView === "launch"}>{CARDS.launch.label}</button>
+              <button type="button" className={cardView === "current" ? "on" : ""} onClick={() => setCardView("current")} aria-pressed={cardView === "current"}>{CARDS.current.label}</button>
+            </div>
+            <img className="ma-card-img" src={CARDS[cardView].src} alt={CARDS[cardView].alt} />
+            <figcaption>{CARDS[cardView].cap}</figcaption>
+          </figure>
+        </div>
+
+        <figure className="ma-bizcard">
+          <img className="ma-bizcard-img" src="/portfolio/minauto/card/business-card.jpg" alt="MinAuto business card — horizontal lockup, owner contact details, and an oversized orange checkmark bleeding off the right edge" loading="lazy" />
+          <figcaption>And then it stops being a logo element altogether. On the card the tick is the artwork — full height, bleeding off the right edge, with the contact details set quietly beside it. The same shape is the ✓ bullet on every proof point in the carousels below.</figcaption>
+        </figure>
       </section>
 
       <FontLink />
@@ -164,6 +205,10 @@ export function MinAutoPage({ client }: Props) {
         .ma-card-toggle button.on{background:var(--orange);border-color:var(--orange);color:#fff}
         .ma-card-img{width:100%;height:auto;display:block}
         .ma-card figcaption{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:12px}
+
+        .ma-bizcard{max-width:1160px;margin:56px auto 0}
+        .ma-bizcard-img{width:100%;height:auto;display:block;border:1px solid rgba(255,255,255,.14)}
+        .ma-bizcard figcaption{max-width:64ch;margin-top:16px;font-size:15px;line-height:1.7;color:rgba(255,255,255,.76);border-left:3px solid var(--orange);padding-left:14px}
 
         .ma-zero{padding:82px 22px}
         .ma-zero-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
