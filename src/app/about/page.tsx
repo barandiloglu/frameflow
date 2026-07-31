@@ -189,14 +189,22 @@ export default function AboutPage() {
       {/*  DIRECTIONS — Core values                                    */}
       {/* ============================================================ */}
       <section
-        className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]"
+        className="relative bg-ivory border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]"
+        /* Brand ivory, pinned in both themes. Left theme-relative it would flip
+           to graphite in light mode and merge with the graphite Cast band below. */
         style={{
-          "--surface": "var(--surface-alt)",
-          "--on-surface": "var(--on-alt)",
-          "--on-surface-60": "var(--on-alt-60)",
-          "--on-surface-30": "var(--on-alt-30)",
-          "--on-surface-10": "var(--on-alt-10)",
-          "--on-surface-05": "var(--on-alt-05)",
+          "--surface": "#ffffeb",
+          "--surface-alt": "#ffffeb",
+          "--on-surface": "#353230",
+          "--on-surface-60": "rgba(53, 50, 48, 0.6)",
+          "--on-surface-30": "rgba(53, 50, 48, 0.3)",
+          "--on-surface-10": "rgba(53, 50, 48, 0.1)",
+          "--on-surface-05": "rgba(53, 50, 48, 0.05)",
+          "--on-alt": "#353230",
+          "--on-alt-80": "rgba(53, 50, 48, 0.8)",
+          "--on-alt-60": "rgba(53, 50, 48, 0.6)",
+          "--on-alt-30": "rgba(53, 50, 48, 0.3)",
+          "--on-alt-10": "rgba(53, 50, 48, 0.1)",
         } as React.CSSProperties}
       >
         <div className="max-w-[1500px] mx-auto">
@@ -250,19 +258,26 @@ export default function AboutPage() {
       {/*  CAST — Team                                                 */}
       {/* ============================================================ */}
       <section
-        className="relative bg-surface-muted border-b border-on-alt-10 px-6 md:px-[52px] py-[140px]"
+        className="relative bg-graphite px-6 md:px-[52px] py-[140px]"
+        /* The brand graphite — the navbar's colour — held fixed in both themes,
+           so the ink tokens below are pinned to ivory rather than flipped. */
         style={{
-          "--surface": "var(--surface-muted)",
-          "--surface-alt": "var(--surface-muted)",
-          "--on-surface": "var(--on-alt)",
-          "--on-surface-60": "var(--on-alt-60)",
-          "--on-surface-30": "var(--on-alt-30)",
+          "--surface": "#353230",
+          "--surface-alt": "#353230",
+          "--on-surface": "#ffffeb",
+          "--on-surface-60": "rgba(255, 255, 235, 0.6)",
+          "--on-surface-30": "rgba(255, 255, 235, 0.3)",
+          "--on-alt": "#ffffeb",
+          "--on-alt-80": "rgba(255, 255, 235, 0.8)",
+          "--on-alt-60": "rgba(255, 255, 235, 0.6)",
+          "--on-alt-30": "rgba(255, 255, 235, 0.3)",
+          "--on-alt-10": "rgba(255, 255, 235, 0.1)",
         } as React.CSSProperties}
       >
         <div className="max-w-[1500px] mx-auto">
           <div className="mb-20">
-            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
-              <span className="block h-px w-10 bg-ember" />
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
+              <span className="block h-px w-10 bg-amber" />
               Frame · 02 — The Cast
             </p>
             <h2
@@ -350,7 +365,7 @@ export default function AboutPage() {
       {/*  CTA                                                         */}
       {/* ============================================================ */}
       <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
-        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
+        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-ivory px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
           <div
             aria-hidden
             className="absolute top-0 left-0 right-0 h-9"
@@ -362,12 +377,12 @@ export default function AboutPage() {
           <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-graphite" />
 
           <div className="pt-10">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
-              <span className="block h-px w-10 bg-graphite/60" />
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-ivory flex items-center gap-3">
+              <span className="block h-px w-10 bg-ivory/60" />
               Ready for your close-up?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6vw, 96px)" }}
             >
               Let&apos;s grow <em className="italic">together</em>.
@@ -377,7 +392,7 @@ export default function AboutPage() {
           <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
+              className="group inline-flex items-center gap-4 bg-ivory text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-graphite hover:text-ivory"
             >
               <span className="w-2 h-2 rounded-full bg-ember animate-pulse-dot" />
               Book a free call
@@ -385,7 +400,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/portfolio"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/80 hover:text-graphite underline decoration-graphite/30 underline-offset-4"
+              className="font-mono text-[10px] uppercase tracking-[0.22em] text-ivory hover:text-graphite underline decoration-ivory/40 underline-offset-4"
             >
               / see the reel
             </Link>
