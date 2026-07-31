@@ -167,11 +167,11 @@ export function HarbourLoomPage({ client }: Props) {
             <figcaption><b>Primary</b> — gold sail, navy hull. The full-colour lockup.</figcaption>
           </figure>
           <figure className="hl-mark-tile">
-            <img src="/portfolio/harbourloom/brand/mark-navy.png" alt="The Harbour Loom mark applied in solid navy on a white ground" loading="lazy" />
+            <img src="/portfolio/harbourloom/brand/logo-navy.png" alt="The same Harbour Loom lockup drawn in solid navy, for white and marble grounds" loading="lazy" />
             <figcaption><b>Navy</b> — one colour, on white and marble grounds. B.01, W.01.</figcaption>
           </figure>
-          <figure className="hl-mark-tile photo">
-            <img src="/portfolio/harbourloom/brand/mark-reversed.png" alt="The same Harbour Loom mark reversed in white, sitting over an orange woven towel" loading="lazy" />
+          <figure className="hl-mark-tile dark">
+            <img src="/portfolio/harbourloom/brand/logo-reversed.png" alt="The same Harbour Loom lockup reversed out in white, for photographic grounds" loading="lazy" />
             <figcaption><b>Reversed</b> — one colour, on photography. B.02, B.03, W.02, and the closing card of both reels.</figcaption>
           </figure>
         </div>
@@ -312,7 +312,7 @@ export function HarbourLoomPage({ client }: Props) {
         .hl-mark-pair{max-width:1160px;margin:40px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
         .hl-mark-tile{margin:0}
         .hl-mark-tile img{width:100%;aspect-ratio:16/6;object-fit:contain;padding:18px;display:block;border:1px solid var(--rule);background:var(--paper)}
-        .hl-mark-tile.photo img{object-fit:cover;padding:0}
+        .hl-mark-tile.dark img{background:var(--ink);border-color:var(--ink)}
         .hl-mark-tile figcaption{margin-top:12px;font-size:13px;line-height:1.6;font-weight:300;color:#5a6670}
         .hl-mark-tile figcaption b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral-ink);margin-bottom:5px;font-weight:400}
 
