@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -14,8 +15,58 @@ const TRADES = [
   "Property Management Services",
 ] as const;
 
+/* What is actually true about the drawing. The prototype's notes claimed a
+   uniform stroke weight and a clean 32px reduction; measuring the master file
+   contradicted both — strokes run 1px to 19px, and below ~48px the mane washes
+   out. See the spec's evidence table, rows 6-7. */
+const MARK_NOTES = [
+  {
+    no: "01",
+    title: "One colour, one contour",
+    body: "The horse is a single open line figure in gold — no fills, no second colour, no gradient. That is what lets the same drawing sit on a white page and a navy one without a redraw.",
+  },
+  {
+    no: "02",
+    title: "A calligraphic stroke",
+    body: "The mane is not a uniform weight. Strands swell and taper to points, from roughly one pixel to nineteen across the master file. It reads as drawn rather than constructed, which is what gives it warmth beside a hard grotesque wordmark.",
+  },
+  {
+    no: "03",
+    title: "Three files, three jobs",
+    body: "Primary for light grounds. Knockout for navy. And the mark on its own, without the wordmark, for the favicon and the social avatar — anywhere the name is already on the page.",
+  },
+] as const;
+
+/* Two grounds, because two are real: the site's white and its navy bands. The
+   prototype's third ("Sand") is this document's own paper, not a Golden Horn
+   ground. Gold is an accent and never a field the mark sits on. */
+const GROUNDS = [
+  {
+    key: "white",
+    label: "White",
+    hex: "#ffffff",
+    src: "/portfolio/goldenhorn-construction/logo/primary.png",
+    w: 527,
+    h: 150,
+    alt: "Golden Horn primary lock-up on white — navy wordmark beside the gold horse mark",
+    note: "The site's own ground, and the default. Navy wordmark, gold mark — the pairing everything else is measured against.",
+  },
+  {
+    key: "navy",
+    label: "Horn Navy",
+    hex: "#122640",
+    src: "/portfolio/goldenhorn-construction/logo/knockout.png",
+    w: 810,
+    h: 238,
+    alt: "Golden Horn knockout lock-up on navy — white wordmark beside the gold horse mark",
+    note: "The knockout, for the navy bands that run through the site and anything printed dark. The mark stays gold; only the type drops out.",
+  },
+] as const;
+
 export function GoldenHornPage({ client }: Props) {
   const frame = getFrameNumber(client);
+  const [ground, setGround] = useState(0);
+  const g = GROUNDS[ground];
 
   return (
     <div className="gh-page">
@@ -102,6 +153,100 @@ export function GoldenHornPage({ client }: Props) {
             <li key={t}>{t}</li>
           ))}
         </ul>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  THE MARK                                                    */}
+      {/* ============================================================ */}
+      <section className="gh-mark">
+        <h2 className="gh-sec-head">
+          <span>THE MARK</span>
+          <i />
+          <span className="gh-sec-meta">ONE DRAWING</span>
+        </h2>
+        <div className="gh-mark-grid">
+          <div className="gh-mark-art">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/portfolio/goldenhorn-construction/logo/mark.png"
+              alt="The Golden Horn mark on its own — a horse head and mane drawn in gold as an open line figure"
+              width={512}
+              height={512}
+            />
+          </div>
+          <div className="gh-mark-notes">
+            {MARK_NOTES.map((m) => (
+              <article className="gh-note" key={m.no}>
+                <span className="gh-note-no">{m.no}</span>
+                <div>
+                  <h3>{m.title}</h3>
+                  <p>{m.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  THE LOCK-UPS                                                */}
+      {/* ============================================================ */}
+      <section className="gh-locks">
+        <h2 className="gh-sec-head">
+          <span>THE LOCK-UPS</span>
+          <i />
+          <span className="gh-sec-meta">2 GROUNDS</span>
+        </h2>
+        <div className="gh-locks-grid">
+          <div>
+            <div className="gh-stage" style={{ background: g.hex }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="gh-stage-img" src={g.src} alt={g.alt} width={g.w} height={g.h} />
+            </div>
+            <div className="gh-swatch-row" role="tablist" aria-label="Lock-up ground">
+              {GROUNDS.map((s, i) => (
+                <button
+                  key={s.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === ground}
+                  className={i === ground ? "on" : undefined}
+                  onClick={() => setGround(i)}
+                >
+                  <span className="gh-chip" style={{ background: s.hex }} />
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            <p className="gh-stage-note">{g.note}</p>
+          </div>
+          <div className="gh-locks-list">
+            <div className="gh-lock-row">
+              <span className="gh-lock-no">01</span>
+              <div>
+                <h3>Primary</h3>
+                <p>Navy wordmark, gold mark. The site header, the letterhead, the invoice.</p>
+              </div>
+            </div>
+            <div className="gh-lock-row">
+              <span className="gh-lock-no">02</span>
+              <div>
+                <h3>Knockout</h3>
+                <p>White wordmark, gold mark. The footer and every navy band on the site.</p>
+              </div>
+            </div>
+            <div className="gh-lock-row">
+              <span className="gh-lock-no">03</span>
+              <div>
+                <h3>Standalone mark</h3>
+                <p>
+                  Square, no wordmark. Shipped as the site favicon at 32, 180 and 192
+                  pixels, and as the social avatar.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -343,10 +488,151 @@ export function GoldenHornPage({ client }: Props) {
           color: var(--gold);
         }
 
+        .gh-mark,
+        .gh-locks {
+          padding: 84px 22px;
+        }
+        .gh-locks {
+          border-top: 1px solid var(--rule);
+        }
+        .gh-mark-grid,
+        .gh-locks-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 52px;
+          align-items: start;
+        }
+        .gh-mark-art {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 32px;
+          border: 1px solid var(--rule);
+          background: #fff;
+        }
+        .gh-mark-art img {
+          width: 100%;
+          max-width: 340px;
+          height: auto;
+          display: block;
+        }
+
+        .gh-note,
+        .gh-lock-row {
+          display: grid;
+          grid-template-columns: 62px 1fr;
+          gap: 18px;
+          padding: 26px 0;
+          border-top: 1px solid var(--rule);
+        }
+        .gh-note:last-child,
+        .gh-lock-row:last-child {
+          border-bottom: 1px solid var(--rule);
+        }
+        .gh-note-no,
+        .gh-lock-no {
+          font-family: "Oswald", sans-serif;
+          font-weight: 500;
+          font-size: 36px;
+          line-height: 0.85;
+          color: var(--gold-deep);
+        }
+        .gh-note h3,
+        .gh-lock-row h3 {
+          font-family: "Oswald", sans-serif;
+          font-weight: 500;
+          font-size: 21px;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          margin: 0 0 9px;
+          color: var(--navy);
+        }
+        .gh-note p,
+        .gh-lock-row p {
+          margin: 0;
+          font-size: 14.5px;
+          line-height: 1.68;
+          color: #44423e;
+          max-width: 52ch;
+        }
+
+        .gh-stage {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 260px;
+          padding: 40px 28px;
+          border: 1px solid var(--rule);
+          transition: background 260ms ease;
+        }
+        .gh-stage-img {
+          width: 100%;
+          max-width: 340px;
+          height: auto;
+          display: block;
+        }
+        .gh-swatch-row {
+          display: flex;
+          gap: 0;
+          margin-top: -1px;
+        }
+        .gh-swatch-row button {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          cursor: pointer;
+          padding: 12px 8px;
+          background: transparent;
+          border: 1px solid var(--rule);
+          border-right: 0;
+          font-family: "Montserrat", sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--grey);
+          transition: color 150ms ease, background 150ms ease;
+        }
+        .gh-swatch-row button:last-child {
+          border-right: 1px solid var(--rule);
+        }
+        .gh-swatch-row button:hover {
+          color: var(--ink);
+          background: rgba(18, 38, 64, 0.04);
+        }
+        .gh-swatch-row button.on {
+          color: var(--navy);
+          background: #fff;
+        }
+        .gh-chip {
+          width: 13px;
+          height: 13px;
+          border: 1px solid var(--rule);
+          display: block;
+        }
+        .gh-stage-note {
+          font-size: 13.5px;
+          line-height: 1.65;
+          color: #44423e;
+          border-left: 3px solid var(--gold);
+          padding-left: 14px;
+          margin: 22px 0 0;
+          max-width: 56ch;
+        }
+
         @media (max-width: 940px) {
           .gh-hero-grid {
             grid-template-columns: 1fr;
             gap: 40px;
+          }
+          .gh-mark-grid,
+          .gh-locks-grid {
+            grid-template-columns: 1fr;
+            gap: 44px;
           }
           .gh-rail-mid {
             display: none;
@@ -359,6 +645,25 @@ export function GoldenHornPage({ client }: Props) {
           .gh-facts {
             grid-template-columns: 1fr;
             gap: 16px;
+          }
+          .gh-swatch-row {
+            flex-direction: column;
+          }
+          .gh-swatch-row button {
+            border-right: 1px solid var(--rule);
+            border-bottom: 0;
+          }
+          .gh-swatch-row button:last-child {
+            border-bottom: 1px solid var(--rule);
+          }
+          .gh-note,
+          .gh-lock-row {
+            grid-template-columns: 44px 1fr;
+            gap: 12px;
+          }
+          .gh-note-no,
+          .gh-lock-no {
+            font-size: 27px;
           }
         }
 
