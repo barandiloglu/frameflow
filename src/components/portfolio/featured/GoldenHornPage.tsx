@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -160,6 +160,51 @@ export function GoldenHornPage({ client }: Props) {
     setShot((i + SHOTS.length) % SHOTS.length);
     if (winRef.current) winRef.current.scrollTop = 0;
   };
+
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  /* Focus trap. The other fifteen featured pages let Tab wander behind the
+     lightbox into the page underneath; this one does not. Focus moves to the
+     close button on open and returns to the opener on close. */
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const f = panel.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!f.length) return;
+      const first = f[0];
+      const last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      prev?.focus();
+    };
+  }, [open]);
 
   return (
     <div className="gh-page">
@@ -519,6 +564,74 @@ export function GoldenHornPage({ client }: Props) {
           </table>
         </div>
       </section>
+
+      {/* ============================================================ */}
+      {/*  SIGN-OFF                                                    */}
+      {/* ============================================================ */}
+      <footer className="gh-signoff">
+        <div className="gh-sign-grid">
+          <div>
+            <p className="gh-sign-label">PREPARED BY</p>
+            <p className="gh-sign-name">FrameFlow</p>
+          </div>
+          <div>
+            <p className="gh-sign-label">SCHEDULE</p>
+            <p className="gh-sign-name">FF-{frame}</p>
+          </div>
+          <div>
+            <p className="gh-sign-label">STATUS</p>
+            <p className="gh-sign-name gold">SHIPPED</p>
+          </div>
+        </div>
+        <button className="gh-sign-mark" type="button" onClick={() => setOpen(true)}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="gh-sign-img"
+            src="/portfolio/goldenhorn-construction/logo/primary.png"
+            alt="Golden Horn Construction lock-up — open at full size"
+            width={527}
+            height={150}
+          />
+        </button>
+        <Link className="gh-sign-back" href="/portfolio">
+          ← Back to portfolio
+        </Link>
+      </footer>
+
+      {open ? (
+        <div
+          className="gh-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Golden Horn Construction primary lock-up"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
+        >
+          <div className="gh-modal-panel" ref={panelRef}>
+            <button
+              className="gh-modal-x"
+              type="button"
+              ref={closeRef}
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <div className="gh-modal-inner">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="gh-modal-img"
+                src="/portfolio/goldenhorn-construction/logo/primary.png"
+                alt="Golden Horn Construction primary lock-up at full size — gold horse mark beside a navy wordmark"
+                width={527}
+                height={150}
+              />
+            </div>
+            <p className="gh-modal-cap">Golden Horn Construction — primary lock-up</p>
+          </div>
+        </div>
+      ) : null}
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -1285,6 +1398,141 @@ export function GoldenHornPage({ client }: Props) {
           display: inline-block;
         }
 
+        .gh-signoff {
+          padding: 64px 22px 84px;
+          border-top: 1px solid var(--rule);
+        }
+        .gh-sign-grid {
+          max-width: 1200px;
+          margin: 0 auto 40px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+          border-top: 3px solid var(--navy);
+          padding-top: 22px;
+        }
+        .gh-sign-label {
+          font-family: "Montserrat", sans-serif;
+          font-size: 9.5px;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--grey);
+          margin: 0 0 8px;
+        }
+        .gh-sign-name {
+          font-family: "Oswald", sans-serif;
+          font-weight: 500;
+          font-size: 24px;
+          text-transform: uppercase;
+          margin: 0;
+          letter-spacing: 0.02em;
+          color: var(--navy);
+        }
+        /* gold-deep, not gold: this sits on the paper ground */
+        .gh-sign-name.gold {
+          color: var(--gold-deep);
+        }
+        /* text-align:left because Chrome centres button content by default,
+           which floated the mark away from the column everything else sits in. */
+        .gh-sign-mark {
+          display: block;
+          max-width: 1200px;
+          margin: 0 auto 34px;
+          background: none;
+          border: 0;
+          padding: 26px 0;
+          cursor: pointer;
+          text-align: left;
+        }
+        .gh-sign-img {
+          width: 230px;
+          max-width: 60%;
+          height: auto;
+          display: block;
+          opacity: 0.9;
+          transition: opacity 160ms ease;
+        }
+        .gh-sign-mark:hover .gh-sign-img {
+          opacity: 1;
+        }
+        .gh-sign-back {
+          display: block;
+          max-width: 1200px;
+          margin: 0 auto;
+          font-family: "Montserrat", sans-serif;
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--navy);
+          text-decoration: none;
+        }
+        .gh-sign-back:hover {
+          color: var(--gold-deep);
+        }
+
+        .gh-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(10, 20, 34, 0.96);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px;
+          font-family: "Montserrat", system-ui, sans-serif;
+        }
+        .gh-modal-panel {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 18px;
+        }
+        /* DEFINITE height, never max-height — a max-height panel crops its
+           image at short viewports (the IYN lightbox regression). */
+        .gh-modal-inner {
+          background: var(--wash);
+          padding: 48px 56px;
+          width: min(680px, 88vw);
+          height: min(52vh, 380px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .gh-modal-img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          display: block;
+        }
+        .gh-modal-x {
+          position: absolute;
+          top: -46px;
+          right: 0;
+          background: none;
+          border: 0;
+          color: #fff;
+          font-size: 26px;
+          line-height: 1;
+          cursor: pointer;
+        }
+        .gh-modal-x:hover {
+          color: var(--gold);
+        }
+        .gh-modal-cap {
+          margin: 0;
+          text-align: center;
+          font-family: "Montserrat", sans-serif;
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.78);
+        }
+
         @media (max-width: 940px) {
           .gh-hero-grid {
             grid-template-columns: 1fr;
@@ -1347,6 +1595,17 @@ export function GoldenHornPage({ client }: Props) {
           }
           .gh-shot-url {
             display: none;
+          }
+          .gh-sign-grid {
+            grid-template-columns: 1fr;
+            gap: 18px;
+          }
+          .gh-modal {
+            padding: 24px;
+          }
+          .gh-modal-inner {
+            padding: 28px 24px;
+            height: min(46vh, 300px);
           }
         }
 
