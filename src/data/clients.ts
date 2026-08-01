@@ -395,7 +395,32 @@ export const clients: readonly Client[] = [
       "A B2B repositioning for an Ottawa contractor with eight years and a thousand-plus projects. FrameFlow rebuilt the front of the business around the commercial buyer — a two-stage Meta funnel for property managers, a five-asset creative system cut before-against-after from real job sites, and a dedicated /property-managers landing page — plus local SEO that names the trades and the service radius plainly.",
     featured: true,
   },
-  { slug: "goldenhorn-construction",     name: "Goldenhorn Construction",                   services: ["Logo", "Photography", "Website Design"] },
+  {
+    slug: "goldenhorn-construction",
+    name: "Golden Horn Construction",
+    services: ["Logo", "Website Design"],
+    year: "2026",
+    location: "Stittsville, ON",
+    runtime: "Live since 2025",
+    scene: "INT. FINISH SCHEDULE — DAY",
+    synopsis:
+      "An identity and a website for an Ottawa interior-finishing contractor. One gold horse drawn as an open line figure, cut into three files — primary, knockout, and a standalone mark for the favicon — against a navy grotesque wordmark. Plus ghconstruct.ca: four pages, live, with a consented contact form on two of them.",
+    featured: true,
+    brand: {
+      palette: [
+        { name: "Horn Navy",  hex: "#122640", role: "primary"   },
+        { name: "Gold",       hex: "#db9420", role: "accent"    },
+        { name: "White",      hex: "#ffffff", role: "surface"   },
+        { name: "Light Grey", hex: "#f7f7f7", role: "secondary" },
+      ],
+      typefaces: [
+        { role: "Display", name: "Oswald",     googleFontName: "Oswald",     weights: "300;400;500;600;700" },
+        { role: "Text",    name: "Montserrat", googleFontName: "Montserrat", weights: "400;500;600;700" },
+      ],
+      eyebrow: "Reel 013 · Golden Horn · Case Study",
+      tagline: "Drawn once. Cut three ways.",
+    },
+  },
   {
     slug: "harbourloom",
     name: "Harbour Loom",
