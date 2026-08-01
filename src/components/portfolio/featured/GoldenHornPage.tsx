@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getFrameNumber } from "@/data/clients";
 import type { Client } from "@/data/clients";
 import { LoadingTransition } from "@/components/portfolio/LoadingTransition";
@@ -108,10 +108,58 @@ const SCHEDULE: readonly (readonly [string, string, string])[] = [
   ["Contact form", "Consent + CAPTCHA, on two pages", "Live"],
 ];
 
+/* Static full-page captures rather than an iframe: there is no local export of
+   this site, and framing a live third-party WordPress install is not something
+   to ship. Heights are the real pixel heights of each capture, declared so the
+   scroll window does not jump as they load.
+
+   Captions describe verifiable page structure. The prototype's claimed that the
+   site "answers the question before the scroll", opened navy-and-gold "from the
+   first screen", and had a "portfolio shelf" — see the spec's evidence table,
+   rows 1, 3 and 5. */
+const SHOTS = [
+  {
+    label: "Home",
+    path: "/",
+    src: "/portfolio/goldenhorn-construction/website/home.jpg",
+    h: 8622,
+    note: "The longest of the four — hero, a stat band, service blocks, a testimonial and a closing call to action.",
+  },
+  {
+    label: "Services",
+    path: "/services/",
+    src: "/portfolio/goldenhorn-construction/website/services.jpg",
+    h: 4546,
+    note: "Where the navy-and-gold system lands hardest: the four trades as four cards, then a navy band of capability blocks.",
+  },
+  {
+    label: "Work",
+    path: "/work/",
+    src: "/portfolio/goldenhorn-construction/website/work.jpg",
+    h: 4307,
+    note: "A project grid, and the second placement of the contact form — consent checkbox and CAPTCHA included.",
+  },
+  {
+    label: "Contact",
+    path: "/contact/",
+    src: "/portfolio/goldenhorn-construction/website/contact.jpg",
+    h: 1927,
+    note: "The shortest page. Address, hours, socials, and the same form.",
+  },
+] as const;
+
 export function GoldenHornPage({ client }: Props) {
   const frame = getFrameNumber(client);
   const [ground, setGround] = useState(0);
   const g = GROUNDS[ground];
+  const [shot, setShot] = useState(0);
+  const s = SHOTS[shot];
+  const winRef = useRef<HTMLDivElement | null>(null);
+
+  const goShot = (i: number) => {
+    setShot((i + SHOTS.length) % SHOTS.length);
+    if (winRef.current) winRef.current.scrollTop = 0;
+  };
 
   return (
     <div className="gh-page">
@@ -329,6 +377,92 @@ export function GoldenHornPage({ client }: Props) {
             </ul>
           </div>
         </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  THE SITE                                                    */}
+      {/* ============================================================ */}
+      <section className="gh-site-sec">
+        <h2 className="gh-sec-head">
+          <span>THE SITE</span>
+          <i />
+          <span className="gh-sec-meta">{SHOTS.length} PAGES · LIVE</span>
+        </h2>
+        <p className="gh-site-intro">
+          Four pages on WordPress, built and shipped by FrameFlow — the footer of
+          every one of them says so. The identity carries through it: navy bands,
+          gold accents, Oswald on the headings. <b>Each shot below is the full page</b>,
+          top to bottom; scroll inside the window to read it, or open the live page.
+        </p>
+        <figure className="gh-site">
+          <div className="gh-shot-bar">
+            <span className="gh-shot-dots">
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className="gh-shot-url">ghconstruct.ca{s.path}</span>
+            <span className="gh-shot-ours">BUILT BY US</span>
+            <span className="gh-shot-live">● LIVE</span>
+          </div>
+
+          <nav className="gh-site-tabs" role="tablist" aria-label="Site pages">
+            {SHOTS.map((x, i) => (
+              <button
+                key={x.label}
+                type="button"
+                role="tab"
+                aria-selected={i === shot}
+                className={i === shot ? "on" : undefined}
+                onClick={() => goShot(i)}
+              >
+                {x.label}
+              </button>
+            ))}
+          </nav>
+
+          <div
+            className="gh-site-window"
+            ref={winRef}
+            role="tabpanel"
+            aria-label={`${s.label} page of ghconstruct.ca`}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="gh-site-img"
+              src={s.src}
+              alt={`The ${s.label} page of ghconstruct.ca, captured full length`}
+              width={1440}
+              height={s.h}
+              loading="lazy"
+            />
+            <span className="gh-site-hint">scroll inside ↕</span>
+          </div>
+
+          <div className="gh-site-foot">
+            <div className="gh-site-nav">
+              <button type="button" onClick={() => goShot(shot - 1)} aria-label="Previous page">
+                ‹
+              </button>
+              <span>
+                {String(shot + 1).padStart(2, "0")} / {String(SHOTS.length).padStart(2, "0")}
+              </span>
+              <button type="button" onClick={() => goShot(shot + 1)} aria-label="Next page">
+                ›
+              </button>
+            </div>
+            <a
+              className="gh-visit"
+              href={`https://ghconstruct.ca${s.path}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit this page <span aria-hidden>↗</span>
+            </a>
+          </div>
+
+          <figcaption>{s.note}</figcaption>
+        </figure>
       </section>
 
       {/* ============================================================ */}
@@ -761,6 +895,202 @@ export function GoldenHornPage({ client }: Props) {
           max-width: 56ch;
         }
 
+        .gh-site-sec {
+          padding: 84px 22px;
+          border-top: 1px solid var(--rule);
+        }
+        .gh-site-intro {
+          max-width: 78ch;
+          margin: 0 auto 44px;
+          font-size: 16px;
+          line-height: 1.72;
+          color: #44423e;
+        }
+        .gh-site-intro b {
+          color: var(--navy);
+          font-weight: 600;
+        }
+        .gh-site {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        .gh-shot-bar {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          background: var(--navy);
+          padding: 9px 14px;
+          font-family: "Montserrat", monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+        .gh-shot-dots {
+          display: flex;
+          gap: 6px;
+        }
+        .gh-shot-dots i {
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: rgba(252, 249, 244, 0.26);
+        }
+        .gh-shot-dots i:first-child {
+          background: var(--gold);
+        }
+        .gh-shot-url {
+          flex: 1;
+          color: rgba(252, 249, 244, 0.82);
+          letter-spacing: 0.04em;
+          text-transform: none;
+        }
+        .gh-shot-ours {
+          background: var(--gold);
+          color: var(--navy);
+          font-weight: 700;
+          padding: 3px 8px;
+          letter-spacing: 0.14em;
+        }
+        .gh-shot-live {
+          color: var(--gold);
+          font-weight: 700;
+        }
+
+        .gh-site-tabs {
+          display: flex;
+          flex-wrap: wrap;
+          border: 1px solid var(--rule);
+          border-top: 0;
+          border-bottom: 0;
+        }
+        .gh-site-tabs button {
+          flex: 1;
+          min-width: 110px;
+          cursor: pointer;
+          background: var(--sand);
+          border: 0;
+          border-right: 1px solid var(--rule);
+          padding: 11px 10px;
+          font-family: "Montserrat", sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #56544f;
+          transition: background 140ms ease, color 140ms ease;
+        }
+        .gh-site-tabs button:last-child {
+          border-right: 0;
+        }
+        .gh-site-tabs button:hover {
+          background: #d5d2c6;
+          color: var(--navy);
+        }
+        .gh-site-tabs button.on {
+          background: var(--wash);
+          color: var(--gold-deep);
+        }
+
+        .gh-site-window {
+          position: relative;
+          height: 620px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          border: 1px solid var(--rule);
+          background: #fff;
+          scrollbar-width: thin;
+        }
+        .gh-site-img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .gh-site-hint {
+          position: sticky;
+          bottom: 10px;
+          float: right;
+          right: 10px;
+          margin-right: 12px;
+          background: rgba(18, 38, 64, 0.85);
+          color: var(--wash);
+          font-family: "Montserrat", sans-serif;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 5px 9px;
+          pointer-events: none;
+        }
+
+        .gh-site-foot {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          border: 1px solid var(--rule);
+          border-top: 0;
+          padding: 12px 14px;
+        }
+        .gh-site-nav {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .gh-site-nav button {
+          width: 34px;
+          height: 34px;
+          cursor: pointer;
+          line-height: 1;
+          background: transparent;
+          border: 1px solid var(--rule);
+          color: var(--navy);
+          font-size: 20px;
+          transition: all 140ms ease;
+        }
+        .gh-site-nav button:hover {
+          background: var(--gold);
+          border-color: var(--gold);
+          color: var(--navy);
+        }
+        .gh-site-nav span {
+          font-family: "Montserrat", monospace;
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          color: var(--grey);
+        }
+        .gh-visit {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          background: var(--gold);
+          color: var(--navy);
+          text-decoration: none;
+          padding: 11px 18px;
+          font-family: "Montserrat", sans-serif;
+          font-size: 10.5px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          transition: background 140ms ease, color 140ms ease;
+        }
+        .gh-visit:hover {
+          background: var(--navy);
+          color: var(--wash);
+        }
+        .gh-site figcaption {
+          font-family: "Montserrat", sans-serif;
+          font-size: 11.5px;
+          line-height: 1.65;
+          letter-spacing: 0.02em;
+          color: var(--grey);
+          border-left: 3px solid var(--gold);
+          padding-left: 14px;
+          margin-top: 18px;
+          max-width: 70ch;
+        }
+
         .gh-spec {
           background: var(--navy);
           color: var(--wash);
@@ -1000,6 +1330,23 @@ export function GoldenHornPage({ client }: Props) {
           .gh-note-no,
           .gh-lock-no {
             font-size: 27px;
+          }
+          .gh-site-window {
+            height: 420px;
+          }
+          .gh-site-foot {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+          .gh-visit {
+            justify-content: center;
+          }
+          .gh-site-nav {
+            justify-content: center;
+          }
+          .gh-shot-url {
+            display: none;
           }
         }
 
