@@ -63,6 +63,51 @@ const GROUNDS = [
   },
 ] as const;
 
+/* The four colours actually in use on ghconstruct.ca. The prototype also listed
+   "Lime Wash" and "Sand"; neither appears on the site — they are this document's
+   own paper. */
+const PALETTE = [
+  { name: "Horn Navy", hex: "#122640" },
+  { name: "Gold", hex: "#db9420" },
+  { name: "White", hex: "#ffffff" },
+  { name: "Light Grey", hex: "#f7f7f7" },
+] as const;
+
+/* Two faces, not three. Roboto is declared by the client site's theme
+   stylesheet and renders zero faces on every page tested. */
+const TYPE = [
+  {
+    role: "Display",
+    name: "Oswald",
+    cls: "gh-type-oswald",
+    note: "Condensed, tall x-height. Headlines and card titles — it holds a long trade name on one line without shrinking.",
+  },
+  {
+    role: "Text & UI",
+    name: "Montserrat",
+    cls: "gh-type-mont",
+    note: "Body copy, buttons, labels and the nav. One face doing the reading and the interface both.",
+  },
+] as const;
+
+/* Scope only — no method claims, which cannot be verified from outside. */
+const TRADE_ROWS = [
+  { name: "Drywall Installation & Repair", line: "Board, tape, mud and sand — installation and repair." },
+  { name: "Interior & Exterior Painting", line: "Inside and out, residential and commercial." },
+  { name: "Flooring Installation & Renovation", line: "Installation and renovation, subfloor up." },
+  { name: "Property Management Services", line: "The recurring side — maintain, upgrade, protect." },
+] as const;
+
+const SCHEDULE: readonly (readonly [string, string, string])[] = [
+  ["Primary lock-up", "Horse mark + wordmark, horizontal", "Delivered"],
+  ["Knockout lock-up", "White type, gold mark, dark grounds", "Delivered"],
+  ["Standalone mark", "Square, favicon and avatars", "Delivered"],
+  ["Colour system", "Navy #122640, gold #db9420", "Delivered"],
+  ["Type system", "Oswald display · Montserrat text", "Delivered"],
+  ["Website", "Four pages — home, services, work, contact", "Live"],
+  ["Contact form", "Consent + CAPTCHA, on two pages", "Live"],
+];
+
 export function GoldenHornPage({ client }: Props) {
   const frame = getFrameNumber(client);
   const [ground, setGround] = useState(0);
@@ -246,6 +291,98 @@ export function GoldenHornPage({ client }: Props) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  COLOUR & TYPE                                               */}
+      {/* ============================================================ */}
+      <section className="gh-spec">
+        <h2 className="gh-sec-head light">
+          <span>COLOUR &amp; TYPE</span>
+          <i />
+          <span className="gh-sec-meta">SPEC</span>
+        </h2>
+        <div className="gh-spec-grid">
+          <div>
+            <p className="gh-spec-label">PALETTE</p>
+            <ul className="gh-swatches">
+              {PALETTE.map((s) => (
+                <li key={s.hex}>
+                  <span className="gh-sw" style={{ background: s.hex }} />
+                  <b>{s.name}</b>
+                  <span>{s.hex.toUpperCase()}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="gh-spec-label">TYPE</p>
+            <ul className="gh-type">
+              {TYPE.map((t) => (
+                <li key={t.name}>
+                  <span className="gh-type-role">{t.role}</span>
+                  <b className={t.cls}>{t.name}</b>
+                  <span className="gh-type-note">{t.note}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  WHAT THEY DO                                                */}
+      {/* ============================================================ */}
+      <section className="gh-trades-sec">
+        <h2 className="gh-sec-head light">
+          <span>WHAT THEY DO</span>
+          <i />
+          <span className="gh-sec-meta">4 TRADES</span>
+        </h2>
+        <ul className="gh-trades-list">
+          {TRADE_ROWS.map((t, i) => (
+            <li key={t.name}>
+              <span className="gh-trade-no">{String(i + 1).padStart(2, "0")}</span>
+              <b>{t.name}</b>
+              <span className="gh-trade-line">{t.line}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  FINISH SCHEDULE                                             */}
+      {/* ============================================================ */}
+      <section className="gh-sched">
+        <h2 className="gh-sec-head">
+          <span>FINISH SCHEDULE</span>
+          <i />
+          <span className="gh-sec-meta">{SCHEDULE.length} ITEMS</span>
+        </h2>
+        <div className="gh-table-wrap">
+          <table className="gh-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Spec</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SCHEDULE.map((r) => (
+                <tr key={r[0]}>
+                  <td>
+                    <b>{r[0]}</b>
+                  </td>
+                  <td>{r[1]}</td>
+                  <td>
+                    <span className="gh-status">{r[2]}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -624,15 +761,214 @@ export function GoldenHornPage({ client }: Props) {
           max-width: 56ch;
         }
 
+        .gh-spec {
+          background: var(--navy);
+          color: var(--wash);
+          padding: 84px 22px;
+        }
+        .gh-spec-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 52px;
+          align-items: start;
+        }
+        .gh-spec-label {
+          font-family: "Montserrat", sans-serif;
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--gold);
+          margin: 0 0 20px;
+        }
+        .gh-swatches {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+        .gh-swatches li {
+          display: grid;
+          grid-template-columns: 46px 1fr auto;
+          gap: 16px;
+          align-items: center;
+          padding: 13px 0;
+          border-bottom: 1px solid rgba(252, 249, 244, 0.14);
+        }
+        /* The navy chip is the same colour as this section's ground, so a faint
+           keyline made it read as an empty box rather than a swatch. */
+        .gh-sw {
+          width: 46px;
+          height: 30px;
+          display: block;
+          border: 1px solid rgba(252, 249, 244, 0.55);
+        }
+        .gh-swatches b {
+          font-size: 14px;
+          font-weight: 500;
+        }
+        .gh-swatches span:last-child {
+          font-family: "Montserrat", monospace;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          color: rgba(252, 249, 244, 0.72);
+        }
+
+        .gh-type {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+        .gh-type li {
+          padding: 18px 0;
+          border-bottom: 1px solid rgba(252, 249, 244, 0.14);
+        }
+        .gh-type-role {
+          display: block;
+          font-family: "Montserrat", sans-serif;
+          font-size: 9.5px;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(252, 249, 244, 0.72);
+          margin-bottom: 8px;
+        }
+        .gh-type b {
+          display: block;
+          font-size: 34px;
+          line-height: 1.1;
+          margin-bottom: 8px;
+        }
+        .gh-type-oswald {
+          font-family: "Oswald", sans-serif;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+        }
+        .gh-type-mont {
+          font-family: "Montserrat", sans-serif;
+          font-weight: 600;
+        }
+        .gh-type-note {
+          display: block;
+          font-size: 13.5px;
+          line-height: 1.6;
+          color: rgba(252, 249, 244, 0.78);
+          max-width: 46ch;
+        }
+
+        .gh-trades-sec {
+          background: var(--navy);
+          color: var(--wash);
+          padding: 84px 22px;
+          border-top: 1px solid rgba(252, 249, 244, 0.14);
+        }
+        .gh-trades-list {
+          max-width: 1200px;
+          margin: 0 auto;
+          list-style: none;
+          padding: 0;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0 48px;
+        }
+        .gh-trades-list li {
+          display: grid;
+          grid-template-columns: 46px 1fr;
+          row-gap: 6px;
+          column-gap: 14px;
+          padding: 22px 0;
+          border-bottom: 1px solid rgba(252, 249, 244, 0.14);
+        }
+        .gh-trade-no {
+          grid-row: span 2;
+          font-family: "Oswald", sans-serif;
+          font-weight: 500;
+          font-size: 26px;
+          line-height: 0.9;
+          color: var(--gold);
+        }
+        .gh-trades-list b {
+          font-family: "Oswald", sans-serif;
+          font-weight: 500;
+          font-size: 19px;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+        }
+        .gh-trade-line {
+          font-size: 13.5px;
+          line-height: 1.55;
+          color: rgba(252, 249, 244, 0.74);
+        }
+
+        .gh-sched {
+          padding: 84px 22px;
+        }
+        .gh-table-wrap {
+          max-width: 1200px;
+          margin: 0 auto;
+          overflow-x: auto;
+        }
+        .gh-table {
+          width: 100%;
+          border-collapse: collapse;
+          min-width: 560px;
+        }
+        .gh-table th {
+          text-align: left;
+          padding: 12px 16px;
+          background: var(--navy);
+          color: var(--wash);
+          font-family: "Montserrat", sans-serif;
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+        .gh-table td {
+          padding: 15px 16px;
+          border-bottom: 1px solid var(--rule);
+          font-size: 14px;
+          line-height: 1.5;
+          color: #44423e;
+          vertical-align: top;
+        }
+        .gh-table tbody tr:hover {
+          background: rgba(219, 148, 32, 0.06);
+        }
+        .gh-table td b {
+          color: var(--navy);
+          font-weight: 600;
+        }
+        .gh-status {
+          font-family: "Montserrat", sans-serif;
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--navy);
+          background: var(--gold);
+          padding: 4px 9px;
+          white-space: nowrap;
+          display: inline-block;
+        }
+
         @media (max-width: 940px) {
           .gh-hero-grid {
             grid-template-columns: 1fr;
             gap: 40px;
           }
           .gh-mark-grid,
-          .gh-locks-grid {
+          .gh-locks-grid,
+          .gh-spec-grid {
             grid-template-columns: 1fr;
             gap: 44px;
+          }
+          .gh-trades-list {
+            grid-template-columns: 1fr;
+            gap: 0;
           }
           .gh-rail-mid {
             display: none;
