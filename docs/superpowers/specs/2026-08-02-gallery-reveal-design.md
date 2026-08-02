@@ -99,21 +99,25 @@ this is a deletion with no routing change. A single fixed back mark
 
 76 files across five clients:
 
-| Client | Count | Captions in roster? |
+| Client | Count | Captions live in |
 |---|---|---|
-| Adrian's Wasaga Beach | 16 | ✅ alt + slate |
-| Big Bears Baked Potato | 12 | ✅ alt + slate |
-| Canapy Furniture | 13 | ✅ alt + slate |
-| Destan Turkish Cuisine | 15 | ✅ alt + slate |
-| ConnecTR | 20 | ❌ not in roster |
+| Adrian's Wasaga Beach | 16 | `src/data/clients.ts` — alt + slate |
+| Big Bears Baked Potato | 12 | `src/data/clients.ts` — alt + slate |
+| Canapy Furniture | 13 | `src/data/clients.ts` — alt + slate |
+| Destan Turkish Cuisine | 15 | `src/data/clients.ts` — alt + slate |
+| ConnecTR | 20 | `ConnecTRPage.tsx` — alt + slate |
 
-**56 already carry verified `alt` and `slate` text** in `src/data/clients.ts` —
-reuse them verbatim; they were written against the actual images.
+**All 76 already carry verified `alt` and `slate` text**, written against the
+actual images. Nothing needs describing from scratch; reuse them verbatim.
 
-ConnecTR's 20 have no roster entry. Their captions must be written by **opening
-each image and describing what is in it** — description, not invention. Any
-photo that cannot be described accurately is dropped rather than captioned
-vaguely.
+56 sit in the roster's `photos[]` arrays. ConnecTR's 20 are declared locally in
+`src/components/portfolio/featured/ConnecTRPage.tsx` (its featured page owns
+them, with a `span` field for its own masonry) — cross-checked against disk:
+20 files, 20 captions, none missing.
+
+The gallery therefore composes its manifest from **two** sources. It must not
+move ConnecTR's array into the roster: `ConnecTRPage` renders from its local
+copy, and relocating it would change that page for no gain here.
 
 Orientation: 57 portrait, 19 landscape, 0 square. Portrait suits the format; the
 grid tiles are square with `object-fit: cover`.
