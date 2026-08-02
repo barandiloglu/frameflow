@@ -137,6 +137,49 @@ export default function GalleryPage() {
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
+  /* Focus trap for the opened photo. Focus moves to the close control, Tab is
+     confined to the panel, and focus returns to the tile that opened it. */
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (open === null) return;
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(null);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const f = panel.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!f.length) return;
+      const first = f[0];
+      const last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      prev?.focus();
+    };
+  }, [open]);
+
   /* Derived, not stored: reduced motion lands on the settled grid without the
      sequence ever having to run or set state. */
   const settled = Boolean(reduced) || phase === "settled";
@@ -214,35 +257,74 @@ export default function GalleryPage() {
       ) : null}
 
       {open !== null ? (
-        <div
+        <motion.div
           className="gl-open"
           role="dialog"
           aria-modal="true"
           aria-label={tiles[open].slate}
+          initial={{ opacity: reduced ? 1 : 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reduced ? 0 : 0.4 }}
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(null);
           }}
         >
-          <figure className="gl-open-figure">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={tiles[open].full}
-              alt={tiles[open].alt}
-              width={tiles[open].w}
-              height={tiles[open].h}
-              /* Never past natural width — 16 of the 76 originals are
-                 700-900px wide and turn to mush stretched full-bleed. */
-              style={{ width: `min(${tiles[open].w}px, 92vw)` }}
-            />
-            <figcaption>
-              {tiles[open].slate}
-              <span> · {tiles[open].client.replace(/-/g, " ")}</span>
-            </figcaption>
-          </figure>
-          <button type="button" className="gl-open-x" onClick={() => setOpen(null)} aria-label="Close">
-            ✕
-          </button>
-        </div>
+          <div className="gl-open-panel" ref={panelRef}>
+            <figure className="gl-open-figure">
+              {/* hero-24's opening move: the frame scales up behind an insetting
+                  clip-path while the image inside counter-scales 2 -> 1. The two
+                  transforms in opposition are what make it read as the photo
+                  opening rather than merely growing. */}
+              <motion.div
+                className="gl-open-frame"
+                initial={
+                  reduced
+                    ? false
+                    : { scale: 0.42, clipPath: "polygon(28% 18%, 72% 18%, 72% 82%, 28% 82%)" }
+                }
+                animate={{ scale: 1, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
+                transition={{ duration: reduced ? 0 : 1.5, ease: HOP }}
+                /* Three caps, all of which must hold at once:
+                   - natural width, because 16 of the 76 originals are 700-900px
+                     wide and turn to mush stretched full-bleed;
+                   - 92vw, so it never touches the sides;
+                   - 78vh x aspect, so a tall portrait fits by height instead of
+                     being cropped by the frame's overflow. That third term is
+                     the one whose absence crops 2850px-tall frames to a third
+                     of themselves. aspect-ratio then fixes the height. */
+                style={{
+                  width: `min(${tiles[open].w}px, 92vw, calc(78vh * ${(
+                    tiles[open].w / tiles[open].h
+                  ).toFixed(4)}))`,
+                  aspectRatio: `${tiles[open].w} / ${tiles[open].h}`,
+                }}
+              >
+                <motion.img
+                  src={tiles[open].full}
+                  alt={tiles[open].alt}
+                  width={tiles[open].w}
+                  height={tiles[open].h}
+                  initial={reduced ? false : { scale: 2 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: reduced ? 0 : 1.5, ease: HOP }}
+                />
+              </motion.div>
+              <figcaption>
+                {tiles[open].slate}
+                <span> · {tiles[open].client.replace(/-/g, " ")}</span>
+              </figcaption>
+            </figure>
+            <button
+              type="button"
+              className="gl-open-x"
+              ref={closeRef}
+              onClick={() => setOpen(null)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+        </motion.div>
       ) : null}
 
       <style jsx global>{`
@@ -426,6 +508,13 @@ export default function GalleryPage() {
           justify-content: center;
           padding: 40px;
         }
+        .gl-open-panel {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          max-width: 100%;
+        }
         .gl-open-figure {
           margin: 0;
           display: flex;
@@ -434,10 +523,22 @@ export default function GalleryPage() {
           gap: 16px;
           max-width: 100%;
         }
+        /* The frame carries the scale + clip; the image inside carries the
+           counter-scale. overflow:hidden is what makes the counter-scale read
+           as the photo settling into its frame. */
+        /* The frame carries the scale + clip and is sized by the three caps set
+           inline; the image inside carries the counter-scale. No max-height
+           here — the width formula already accounts for viewport height, and a
+           max-height would crop rather than fit. */
+        .gl-open-frame {
+          overflow: hidden;
+          line-height: 0;
+          display: block;
+        }
         .gl-open-figure img {
-          height: auto;
-          max-height: 78vh;
-          object-fit: contain;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
           display: block;
         }
         .gl-open-figure figcaption {
