@@ -354,7 +354,7 @@ export const clients: readonly Client[] = [
     ],
     photos: [
       { src: "/portfolio/destan-turkish-cuisine/photos/01-cag-kebabi-rotating.jpg",   alt: "Cağ kebabı, mid-rotation above oak embers",                  slate: "Cağ — The Rotation",        orientation: "portrait" },
-      { src: "/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg",     alt: "The first dark crust on the rotating roast",                 slate: "Ateş — The Flame",          orientation: "portrait" },
+      { src: "/portfolio/destan-turkish-cuisine/photos/02-cag-kebabi-flames.jpg",     alt: "Grilled peppers and tomatoes side by side on the coals",     slate: "Biber — On Coals",          orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/03-cag-kebabi-fire-rolling.jpg", alt: "Cağ in mid-rotation, embers low",                          slate: "Mid-Rotation",              orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/04-cag-kebabi-vertical.jpg",   alt: "The roast at rest above the flame",                          slate: "The Roast — At Rest",       orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg",           alt: "The chef carves the cağ with a long blade",                  slate: "Bıçak — The Blade",         orientation: "portrait" },
@@ -364,7 +364,7 @@ export const clients: readonly Client[] = [
       { src: "/portfolio/destan-turkish-cuisine/photos/09-skewers-coals.jpg",         alt: "Coals kept low under the skewers",                           slate: "Kömür — The Coals",         orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/10-chicken-skewers-coals.jpg", alt: "Şiş tavuk on the coals, golden",                             slate: "Şiş Tavuk",                 orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/11-fish-on-flame.jpg",         alt: "A fish, bound for embers — flame around the cheek",          slate: "Balık — On Flame",          orientation: "portrait" },
-      { src: "/portfolio/destan-turkish-cuisine/photos/12-peppers-coals.jpg",         alt: "Grilled peppers and tomatoes side by side on the coals",     slate: "Biber — On Coals",          orientation: "portrait" },
+      { src: "/portfolio/destan-turkish-cuisine/photos/12-peppers-coals.jpg",         alt: "The first dark crust on the rotating roast",                 slate: "Ateş — The Flame",          orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/13-adana-plated.jpg",          alt: "Adana kebab plated with sumac onion and lavash",             slate: "Adana — Plated",            orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/14-adana-lavash.jpg",          alt: "Two long lines of adana on lavash",                          slate: "Adana — On Lavash",         orientation: "portrait" },
       { src: "/portfolio/destan-turkish-cuisine/photos/15-table-spread.jpg",          alt: "A table set with mezze, lavash and adana, top-down",         slate: "Sofra — The Spread",        orientation: "landscape" },
