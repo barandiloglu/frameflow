@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { VerbHero } from "@/components/services/VerbHero";
+import { ServicesHero } from "@/components/services/ServicesHero";
 import { FolderWall } from "@/components/services/FolderWall";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -138,7 +138,7 @@ export default function ServicesPage() {
       {/* ============================================================ */}
       {/*  HERO                                                        */}
       {/* ============================================================ */}
-      <section className="relative bg-surface overflow-hidden pt-[76px]">
+      <section className="relative bg-surface overflow-hidden pt-[76px] min-h-[100svh] flex flex-col">
         {/* backdrops */}
         <div
           aria-hidden
@@ -170,30 +170,8 @@ export default function ServicesPage() {
           </span>
         </div>
 
-        <div className="relative z-10 px-6 md:px-[52px] pt-24 md:pt-32 pb-28">
-          <div className="relative max-w-[1500px] mx-auto">
-            {/* corner brackets */}
-            <span aria-hidden className="pointer-events-none absolute -top-10 -left-3 md:-left-8 w-8 h-8 md:w-10 md:h-10 border-t border-l border-amber/50" />
-            <span aria-hidden className="pointer-events-none absolute -top-10 -right-3 md:-right-8 w-8 h-8 md:w-10 md:h-10 border-t border-r border-amber/50" />
+        <ServicesHero />
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-9 flex items-center gap-3"
-            >
-              <span className="block h-px w-10 bg-amber" />
-              <span>
-                <Link href="/" className="text-on-surface-60 hover:text-amber transition-colors">Home</Link>
-                <span className="mx-2 text-on-surface-30">/</span>
-                Services
-              </span>
-            </motion.p>
-
-            <VerbHero />
-
-          </div>
-        </div>
       </section>
 
       <FolderWall services={services} />
