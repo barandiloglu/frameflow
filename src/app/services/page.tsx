@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { VerbHero } from "@/components/services/VerbHero";
 import { FolderWall } from "@/components/services/FolderWall";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -179,7 +180,7 @@ export default function ServicesPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
+              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-9 flex items-center gap-3"
             >
               <span className="block h-px w-10 bg-amber" />
               <span>
@@ -189,41 +190,7 @@ export default function ServicesPage() {
               </span>
             </motion.p>
 
-            <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
-              style={{ fontSize: "clamp(56px, 10vw, 172px)" }}
-            >
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "108%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.95, delay: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="block"
-                >
-                  Seven <em className="italic text-amber">scenes</em>.
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "108%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.95, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="block"
-                >
-                  One full <em className="italic">reel</em>.
-                </motion.span>
-              </span>
-            </h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.55 }}
-              className="mt-9 max-w-[580px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60"
-            >
-              Every service in the FrameFlow catalog, shot from the same script: strategy first,
-              craft always, no templates, no filler. Scroll the reel to see each scene in detail.
-            </motion.p>
+            <VerbHero />
 
           </div>
         </div>

@@ -71,15 +71,12 @@ export function FolderWall({ services }: { services: readonly Service[] }) {
              ivory surface, so light theme takes a darker burnt amber, and the
              muted ink is mixed toward the surface rather than made translucent
              so it clears 4.5:1 in both themes. */
-          --fw-accent: var(--color-amber);
+          --fw-accent: var(--accent-ink);
           --fw-quiet: color-mix(in srgb, var(--on-surface) 78%, var(--surface));
           position: relative;
           background: var(--surface);
           border-top: 1px solid var(--border-subtle);
           padding: clamp(56px, 7vw, 104px) clamp(18px, 4vw, 52px);
-        }
-        [data-theme="light"] .fw-wall {
-          --fw-accent: #a06210;
         }
         /* Full bleed, no max-width wrapper — standing instruction for this
            page. The grid itself sets the rhythm. */
