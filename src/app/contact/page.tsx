@@ -123,6 +123,8 @@ export default function ContactPage() {
           )}
         </div>
 
+        <Reel photos={[...REEL_LEFT, ...REEL_RIGHT]} side="band" />
+
         <footer className="ct-foot">
           <a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a>
           <span>{STUDIO.address}</span>
@@ -269,6 +271,79 @@ export default function ContactPage() {
         .ct-reel-right::before {
           right: 7px;
         }
+
+        /* ---- the same film, laid on its side ------------------------------
+           Narrow the window and the margins disappear, but the dead band
+           between the sentence and the footer appears in their place. The
+           strip moves there rather than the page simply losing its design. */
+        .ct-band {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          max-width: 1180px;
+          margin: 0 auto;
+          height: clamp(52px, 11vh, 112px);
+          overflow: hidden;
+          pointer-events: none;
+          -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            #000 9%,
+            #000 91%,
+            transparent
+          );
+          mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+        }
+        .ct-band .ct-reel-track {
+          flex-direction: row;
+          height: 100%;
+          padding: 8px 0;
+          animation-name: ct-reel-run-x;
+          animation-duration: 72s;
+        }
+        @keyframes ct-reel-run-x {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+        .ct-band .ct-reel-frame {
+          aspect-ratio: 3 / 2;
+          height: 100%;
+          flex: 0 0 auto;
+        }
+        /* Sprocket rows along both long edges. */
+        .ct-band::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: repeating-linear-gradient(
+              to right,
+              var(--ct-rule) 0 9px,
+              transparent 9px 25px
+            ),
+            repeating-linear-gradient(to right, var(--ct-rule) 0 9px, transparent 9px 25px);
+          background-size: 100% 6px, 100% 6px;
+          background-position: 0 0, 0 100%;
+          background-repeat: no-repeat;
+          opacity: 0.22;
+          z-index: 1;
+        }
+        /* The margins take over here. */
+        @media (min-width: 1520px) {
+          .ct-band {
+            display: none;
+          }
+        }
+        /* No vertical room to give it either — the sentence comes first. */
+        @media (max-height: 700px) {
+          .ct-band {
+            display: none;
+          }
+        }
+
         /* Below this there is no spare margin to give them. */
         @media (max-width: 1519px) {
           .ct-reel {
@@ -445,7 +520,10 @@ export default function ContactPage() {
           }
         }
         @media (prefers-reduced-motion: reduce) {
-          .ct-reel-track {
+          /* .ct-band .ct-reel-track sets animation-name at (0,2,0), so the
+             bare class alone would lose the cascade and the band would run on. */
+          .ct-reel-track,
+          .ct-band .ct-reel-track {
             animation: none;
           }
         }
@@ -456,9 +534,16 @@ export default function ContactPage() {
 
 /* ------------------------------------------------------------------ */
 
-function Reel({ photos, side }: { photos: typeof REEL_LEFT; side: "left" | "right" }) {
+function Reel({
+  photos,
+  side,
+}: {
+  photos: typeof REEL_LEFT;
+  side: "left" | "right" | "band";
+}) {
+  const root = side === "band" ? "ct-band" : `ct-reel ct-reel-${side}`;
   return (
-    <div className={`ct-reel ct-reel-${side}`} aria-hidden>
+    <div className={root} aria-hidden>
       {/* Doubled so the loop closes on itself at -50%. */}
       <div className="ct-reel-track">
         {[...photos, ...photos].map((p, i) => (
