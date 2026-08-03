@@ -5,42 +5,86 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { galleryPhotos } from "@/data/gallery";
 
-/* The nine the sequence settles on — the selects. One from Adrian's, two each
-   from Big Bears, Canapy, Destan and ConnecTR, with Destan's rotating cag at
-   centre where hero-24 puts its hero tile.
+/* ------------------------------------------------------------------ */
+/*  hero-24, ported beat for beat                                      */
+/* ------------------------------------------------------------------ */
 
-   Fixed indices rather than a random pick: choosing at render time gives the
-   server and the client different markup and trips hydration. These are also
-   what renders first, so the grid is in the DOM before any motion runs —
-   assistive tech never waits on the animation. */
-const SETTLED = [0, 42, 28, 27, 41, 69, 34, 19, 56] as const;
+/* The nine the grid deals from, hero at centre. Fixed rather than random:
+   picking at render time desynchronises server and client markup.
+
+   Centre is 56 (Guests · Portrait) because the hero ends up clipped to its
+   middle 60% x 80%, and a frame has to survive that crop. Measured mean
+   luminance through the real crop: 56 reads at 78, where Destan's cag — which
+   sat here first — falls to 35 and goes essentially black. hero-24 centres a
+   face for the same reason. */
+const SETTLED = [0, 42, 28, 27, 56, 69, 34, 19, 41] as const;
 const SELECTED = new Set<number>(SETTLED);
+const HERO_POS = 4;
 
-/* hero-24's CustomEase("hop", "0.9, 0, 0.1, 1") verbatim. A hard hold at both
-   ends with a fast middle — this is why the reveal reads mechanical rather
-   than soft. Do not swap for an easing preset. */
+/* CustomEase("hop", "0.9, 0, 0.1, 1") verbatim. A hard hold at both ends with
+   a fast middle — this is why the whole sequence reads mechanical. */
 const HOP = [0.9, 0, 0.1, 1] as const;
 
 const CLIP_HIDDEN = "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
 const CLIP_SHOWN = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+/* The hero's final crop — a square tile scaled 4x and clipped to 60% x 80%
+   becomes the tall banner the sequence lands on. */
+const CLIP_HERO = "polygon(20% 10%, 80% 10%, 80% 90%, 20% 90%)";
+
+/* Absolute times in seconds, derived from the GSAP timelines rather than
+   guessed: overlayTimeline, imagesTimeline and textTimeline all run in
+   parallel from t=0, and each .to() starts where the previous one ended. */
+const T = {
+  logo2: 1.5,
+  listsIn: 2.5,
+  gridIn: 2.5,
+  rotate: 3.5,
+  collapse: 6.4,
+  heroLift: 7.75,
+  overlayOut: 7.975,
+  heroBlow: 8.75,
+  navIn: 9.0,
+  bannersIn: 9.25,
+  words: 9.5,
+  done: 10.75,
+} as const;
+
+const ROW_D = 0.15;
+const ROW_STAGGER = 0.075;
+const LIST_ROWS = 16;
+/* Normalising window for the list keyframes — must outlast the last row's
+   fade-out at 5.125 + 16 * 0.075 + 0.15. */
+const LIST_SPAN = 7;
 
 const SHUFFLE_CYCLES = 20;
 const SHUFFLE_MS = 150;
-const OVERLAY_MIN_MS = 1800;
 const PRELOAD_TIMEOUT_MS = 4000;
-
-/* Six frames to a strip, the way a 35mm proof sheet is cut. */
 const PER_STRIP = 6;
 
-const TITLE = "Seventy-six frames, nine at a time.";
-
-type Phase = "overlay" | "reveal" | "shuffle" | "settled";
-type View = "selects" | "sheet";
+type View = "reveal" | "sheet";
 
 const frameNo = (i: number) => String(i + 1).padStart(2, "0");
 
-/* Seeded so a given cycle always produces the same nine. Math.random() here
-   would make the sequence impossible to reproduce when verifying it. */
+const CLIENT_META: Record<string, { name: string; location: string }> = {
+  "adrians-wasaga-beach": { name: "Adrian's Wasaga Beach", location: "Wasaga Beach, ON" },
+  "big-bears": { name: "Big Bears Baked Potato", location: "Toronto, ON" },
+  "canapy-furniture": { name: "Canapy Furniture", location: "Toronto, ON" },
+  connectr: { name: "ConnecTR", location: "Vaughan, ON" },
+  "destan-turkish-cuisine": { name: "Destan Turkish Cuisine", location: "Toronto, ON" },
+};
+
+/* The two columns that flank the loader. Real frames, real clients, real
+   locations — hero-24 fills this space with its own project list. */
+const ROWS = Array.from({ length: LIST_ROWS }, (_, i) => {
+  const p = galleryPhotos[Math.floor((i * galleryPhotos.length) / LIST_ROWS)];
+  const meta = CLIENT_META[p.client];
+  return { slate: p.slate, client: meta.name, location: meta.location };
+});
+
+/* Two frames that fan out behind the hero at the end. Both read at small size
+   and at 20 degrees; hero-24 likewise reuses frames already in the grid. */
+const BANNERS = [galleryPhotos[42], galleryPhotos[27]];
+
 function mulberry32(seed: number) {
   return () => {
     seed |= 0;
@@ -51,8 +95,6 @@ function mulberry32(seed: number) {
   };
 }
 
-/* Nine distinct photos, none of them the one already in that position — a
-   repeat in place reads as a dropped frame rather than a shuffle. */
 function pickNine(cycle: number, prev: readonly number[]): number[] {
   const rand = mulberry32(cycle * 2654435761);
   const out: number[] = [];
@@ -69,30 +111,56 @@ function pickNine(cycle: number, prev: readonly number[]): number[] {
 
 const STRIPS = Array.from(
   { length: Math.ceil(galleryPhotos.length / PER_STRIP) },
-  (_, s) => galleryPhotos.slice(s * PER_STRIP, s * PER_STRIP + PER_STRIP).map((p, j) => ({
-    photo: p,
-    index: s * PER_STRIP + j,
-  })),
+  (_, s) =>
+    galleryPhotos.slice(s * PER_STRIP, s * PER_STRIP + PER_STRIP).map((p, j) => ({
+      photo: p,
+      index: s * PER_STRIP + j,
+    })),
 );
+
+/* One row's opacity/colour keyframes, staggered like the GSAP version: fade in
+   at 2.5, brighten at 3.85, fade out at 5.125, each offset by 0.075 per row. */
+function rowKeyframes(i: number) {
+  const at = (t: number) => (t + i * ROW_STAGGER) / LIST_SPAN;
+  return {
+    times: [0, at(2.5), at(2.5 + ROW_D), at(3.85), at(3.85 + ROW_D), at(5.125), at(5.125 + ROW_D)],
+    opacity: [0, 0, 1, 1, 1, 1, 0],
+    color: [
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.95)",
+      "rgba(255,255,235,0.95)",
+      "rgba(255,255,235,0.95)",
+    ],
+  };
+}
 
 export default function GalleryPage() {
   const reduced = useReducedMotion();
-  const [phase, setPhase] = useState<Phase>("overlay");
-  const [view, setView] = useState<View>("selects");
+  const [beat, setBeat] = useState(0);
+  const [view, setView] = useState<View>("reveal");
   const [displayed, setDisplayed] = useState<readonly number[]>(SETTLED);
-  /* An index into galleryPhotos, not into the nine — so stepping walks the
-     whole roll from wherever it was opened. */
   const [open, setOpen] = useState<number | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const shuffleId = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const tiles = useMemo(() => displayed.map((i) => galleryPhotos[i]), [displayed]);
+  const hero = galleryPhotos[SETTLED[HERO_POS]];
 
-  const skip = useCallback(() => {
+  const clearAll = useCallback(() => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
-    setDisplayed(SETTLED);
-    setPhase("settled");
+    if (shuffleId.current) clearInterval(shuffleId.current);
+    shuffleId.current = null;
   }, []);
+
+  const skip = useCallback(() => {
+    clearAll();
+    setDisplayed(SETTLED);
+    setBeat(99);
+  }, [clearAll]);
 
   const step = useCallback((dir: number) => {
     setOpen((cur) =>
@@ -100,13 +168,9 @@ export default function GalleryPage() {
     );
   }, []);
 
-  /* Overlay phase: hold until every thumb has decoded, so the shuffle never
-     swaps to an image the browser has not got yet and flashes an empty tile.
-     Raced against a timeout — a stalled request must not trap the visitor. */
+  /* Preload every thumb before the grid deals, then run the timeline. The
+     overlay's first 2.5s exists to cover exactly this. */
   useEffect(() => {
-    /* No setState for the reduced-motion case — `settled` below derives from
-       `reduced` directly. Setting phase here would be a synchronous setState
-       inside an effect, which cascades renders. */
     if (reduced) return;
     let cancelled = false;
 
@@ -119,12 +183,38 @@ export default function GalleryPage() {
         im.src = src;
       });
 
-    const pool = Promise.all(galleryPhotos.map((p) => decode(p.thumb)));
-    const floor = new Promise<void>((r) => setTimeout(r, OVERLAY_MIN_MS));
+    /* The hero swaps to its full-resolution file when it blows up, so that one
+       has to be decoded too — without it the tile goes blank at the swap. */
+    const pool = Promise.all([
+      ...galleryPhotos.map((p) => decode(p.thumb)),
+      decode(galleryPhotos[SETTLED[HERO_POS]].full),
+    ]);
     const ceiling = new Promise<void>((r) => setTimeout(r, PRELOAD_TIMEOUT_MS));
 
-    Promise.all([Promise.race([pool, ceiling]), floor]).then(() => {
-      if (!cancelled) setPhase("reveal");
+    Promise.race([pool, ceiling]).then(() => {
+      if (cancelled) return;
+      setBeat(1);
+      const at = (s: number, fn: () => void) => {
+        timers.current.push(setTimeout(fn, s * 1000));
+      };
+      at(T.gridIn, () => setBeat(2));
+      at(T.rotate, () => {
+        setBeat(3);
+        let cycle = 0;
+        shuffleId.current = setInterval(() => {
+          cycle += 1;
+          if (cycle >= SHUFFLE_CYCLES) {
+            if (shuffleId.current) clearInterval(shuffleId.current);
+            setDisplayed(SETTLED);
+            return;
+          }
+          setDisplayed((prev) => pickNine(cycle, prev));
+        }, SHUFFLE_MS);
+      });
+      at(T.collapse, () => setBeat(4));
+      at(T.heroLift, () => setBeat(5));
+      at(T.heroBlow, () => setBeat(6));
+      at(T.done, () => setBeat(99));
     });
 
     return () => {
@@ -132,35 +222,9 @@ export default function GalleryPage() {
     };
   }, [reduced]);
 
-  useEffect(() => {
-    if (phase !== "reveal") return;
-    const t = setTimeout(() => setPhase("shuffle"), (1 + 8 * 0.05) * 1000);
-    timers.current.push(t);
-    return () => clearTimeout(t);
-  }, [phase]);
+  useEffect(() => clearAll, [clearAll]);
 
-  /* The shuffle is not an animation — hero-24 uses a zero-duration GSAP tween
-     purely as a timer, and this is the same thing: a scheduled src swap. */
-  useEffect(() => {
-    if (phase !== "shuffle") return;
-    let cycle = 0;
-    const id = setInterval(() => {
-      cycle += 1;
-      if (cycle >= SHUFFLE_CYCLES) {
-        clearInterval(id);
-        setDisplayed(SETTLED);
-        setPhase("settled");
-        return;
-      }
-      setDisplayed((prev) => pickNine(cycle, prev));
-    }, SHUFFLE_MS);
-    return () => clearInterval(id);
-  }, [phase]);
-
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
-
-  /* Focus trap for the opened frame. Focus moves to the close control, Tab is
-     confined to the panel, and focus returns to whatever opened it. */
+  /* Focus trap for the opened frame. */
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
@@ -172,18 +236,9 @@ export default function GalleryPage() {
     document.body.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(null);
-        return;
-      }
-      if (e.key === "ArrowRight") {
-        step(1);
-        return;
-      }
-      if (e.key === "ArrowLeft") {
-        step(-1);
-        return;
-      }
+      if (e.key === "Escape") return setOpen(null);
+      if (e.key === "ArrowRight") return step(1);
+      if (e.key === "ArrowLeft") return step(-1);
       if (e.key !== "Tab") return;
       const panel = panelRef.current;
       if (!panel) return;
@@ -210,108 +265,236 @@ export default function GalleryPage() {
     };
   }, [open, step]);
 
-  /* Derived, not stored: reduced motion lands on the settled grid without the
-     sequence ever having to run or set state. */
-  const settled = Boolean(reduced) || phase === "settled";
-  const revealed = Boolean(reduced) || phase !== "overlay";
-  const showOverlay = !reduced && phase === "overlay";
-  /* Index and photo together, so guarding on this narrows both — guarding on a
-     derived photo alone leaves `open` as number | null inside the block. */
+  const r = Boolean(reduced);
+  const started = r || beat >= 1;
+  const revealed = r || beat >= 2;
+  const collapsed = r || beat >= 4;
+  const lifted = r || beat >= 5;
+  const blown = r || beat >= 6;
+  const done = r || beat >= 99;
   const openView = open === null ? null : { i: open, p: galleryPhotos[open] };
+  const inSheet = view === "sheet";
 
   return (
     <main className="gl-page">
       <div className="gl-safelight" aria-hidden />
       <div className="gl-grain" aria-hidden />
 
-      {!showOverlay ? (
-        <Link href="/" className="gl-back">
-          FrameFlow <span aria-hidden>←</span> back
-        </Link>
-      ) : null}
-
-      {/* ---------------- SELECTS ---------------- */}
-      {view === "selects" ? (
-        <>
-          <div className="gl-grid">
-            {tiles.map((p, i) => (
-              <motion.button
-                key={SETTLED[i]}
-                type="button"
-                className="gl-tile"
-                onClick={() => settled && setOpen(displayed[i])}
-                aria-label={`Open frame ${frameNo(displayed[i])}: ${p.slate}`}
-                disabled={!settled}
-                initial={false}
-                animate={{ clipPath: revealed ? CLIP_SHOWN : CLIP_HIDDEN }}
-                transition={{ duration: reduced ? 0 : 1, delay: reduced ? 0 : i * 0.05, ease: HOP }}
+      {/* ---------- overlay: black ground, loader, two lists ---------- */}
+      {!r && !inSheet ? (
+        <motion.div
+          className="gl-overlay"
+          aria-hidden
+          initial={{ opacity: 1 }}
+          animate={{ opacity: beat >= 5 ? 0 : 1 }}
+          transition={{ duration: 0.5, ease: "linear" }}
+          style={{ pointerEvents: "none" }}
+        >
+          <div className="gl-col gl-col-left">
+            <div className="gl-col-head">
+              <p>Frame</p>
+              <p>Roll</p>
+            </div>
+            {ROWS.map((row, i) => (
+              <motion.div
+                className="gl-row"
+                key={`l-${i}`}
+                initial={{ opacity: 0 }}
+                animate={started ? rowKeyframes(i + 1) : { opacity: 0 }}
+                transition={{ duration: LIST_SPAN, ease: "linear" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.thumb} alt={p.alt} width={p.w} height={p.h} />
-                <span className="gl-frameno" aria-hidden>
-                  {frameNo(displayed[i])}
-                </span>
-              </motion.button>
+                <p>{row.slate}</p>
+                <p>{row.client}</p>
+              </motion.div>
             ))}
           </div>
 
-          <div className="gl-caption">
-            <p className="gl-eyebrow">
-              <span className="gl-line">
-                <motion.span
+          <div className="gl-loader">
+            <motion.h1
+              className="gl-logo"
+              initial={{ backgroundPosition: "0% 100%" }}
+              animate={started ? { backgroundPosition: "0% 0%" } : {}}
+              transition={{ duration: 1, delay: 0.5, ease: "linear" }}
+            >
+              Frame
+            </motion.h1>
+            <motion.h1
+              className="gl-logo"
+              initial={{ backgroundPosition: "0% 100%" }}
+              animate={started ? { backgroundPosition: "0% 0%" } : {}}
+              transition={{ duration: 1, delay: T.logo2, ease: "linear" }}
+            >
+              Flow
+            </motion.h1>
+          </div>
+
+          <div className="gl-col gl-col-right">
+            <div className="gl-col-head">
+              <p>Location</p>
+            </div>
+            {ROWS.map((row, i) => (
+              <motion.div
+                className="gl-row"
+                key={`r-${i}`}
+                initial={{ opacity: 0 }}
+                animate={started ? rowKeyframes(i + 1) : { opacity: 0 }}
+                transition={{ duration: LIST_SPAN, ease: "linear" }}
+              >
+                <p>{row.location}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ) : null}
+
+      {/* ---------- the grid, which sits ON TOP of the overlay ---------- */}
+      {!inSheet ? (
+        <div className={`gl-grid${blown ? " blown" : ""}`}>
+          {tiles.map((p, i) => {
+            const isHero = i === HERO_POS;
+            const clip = isHero
+              ? blown
+                ? CLIP_HERO
+                : revealed
+                  ? CLIP_SHOWN
+                  : CLIP_HIDDEN
+              : collapsed
+                ? CLIP_HIDDEN
+                : revealed
+                  ? CLIP_SHOWN
+                  : CLIP_HIDDEN;
+            return (
+              <motion.button
+                key={isHero ? "hero" : `t-${i}`}
+                type="button"
+                className={`gl-tile${isHero ? " hero" : ""}`}
+                onClick={() => done && setOpen(isHero ? SETTLED[HERO_POS] : displayed[i])}
+                aria-label={`Open frame ${frameNo(displayed[i])}: ${p.slate}`}
+                disabled={!done}
+                initial={false}
+                animate={{
+                  clipPath: clip,
+                  scale: isHero && blown ? 4 : 1,
+                  y: isHero && lifted ? -50 : 0,
+                }}
+                transition={{
+                  clipPath: {
+                    duration: r ? 0 : 1,
+                    delay: r ? 0 : revealed && !collapsed ? i * 0.05 : 0,
+                    ease: HOP,
+                  },
+                  scale: { duration: r ? 0 : 1.5, ease: HOP },
+                  y: { duration: r ? 0 : 1, ease: HOP },
+                }}
+              >
+                <motion.img
+                  src={isHero && blown ? hero.full : p.thumb}
+                  alt={p.alt}
+                  width={p.w}
+                  height={p.h}
                   initial={false}
-                  animate={{ y: settled ? "0%" : "110%" }}
-                  transition={{ duration: reduced ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  FrameFlow — Photography
-                </motion.span>
-              </span>
-            </p>
-            <h1 className="gl-title">
-              {TITLE.split(" ").map((word, i) => (
+                  animate={{ scale: isHero ? (blown ? 1 : 2) : 1 }}
+                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                />
+              </motion.button>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {/* ---------- the two frames that fan out behind the hero ---------- */}
+      {!inSheet
+        ? BANNERS.map((b, i) => (
+            <motion.div
+              className="gl-banner"
+              key={b.src}
+              aria-hidden
+              initial={{ scale: 0, left: "50%", rotate: 0 }}
+              animate={
+                blown
+                  ? { scale: 1, left: i === 0 ? "40%" : "60%", rotate: i === 0 ? -20 : 20 }
+                  : { scale: 0, left: "50%", rotate: 0 }
+              }
+              transition={{
+                scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 0.5, ease: "easeOut" },
+                left: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+                rotate: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={b.thumb} alt="" width={b.w} height={b.h} />
+            </motion.div>
+          ))
+        : null}
+
+      {/* ---------- nav: drops in like hero-24's ---------- */}
+      <motion.div
+        className="gl-nav"
+        initial={{ y: "-125%" }}
+        animate={{ y: r || inSheet || beat >= 6 ? "0%" : "-125%" }}
+        transition={{ duration: r ? 0 : 1, delay: r || inSheet ? 0 : 0.25, ease: HOP }}
+      >
+        <Link href="/" className="gl-back">
+          FrameFlow <span aria-hidden>←</span> back
+        </Link>
+        {done || inSheet ? (
+          <button type="button" className="gl-sheet-toggle" onClick={() => setView(inSheet ? "reveal" : "sheet")}>
+            {inSheet ? "← Selects" : `◎ Contact sheet — all ${galleryPhotos.length} frames`}
+          </button>
+        ) : (
+          <span />
+        )}
+      </motion.div>
+
+      {/* ---------- intro copy + title ---------- */}
+      {!inSheet ? (
+        <>
+          <div className="gl-intro">
+            {["FrameFlow — Photography", "2024 — 2026"].map((line, i) => (
+              <h3 key={line}>
+                <span className="gl-line">
+                  <motion.span
+                    initial={{ y: "110%" }}
+                    animate={{ y: done ? "0%" : "110%" }}
+                    transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {line}
+                  </motion.span>
+                </span>
+              </h3>
+            ))}
+          </div>
+
+          <div className="gl-title">
+            <h2>
+              {"Five rolls. Seventy-six frames.".split(" ").map((word, i) => (
                 <span className="gl-line" key={`${word}-${i}`}>
                   <motion.span
-                    initial={false}
-                    animate={{ y: settled ? "0%" : "110%" }}
-                    transition={{
-                      duration: reduced ? 0 : 1,
-                      delay: reduced ? 0 : i * 0.1,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
+                    initial={{ y: "110%" }}
+                    animate={{ y: done ? "0%" : "110%" }}
+                    transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {word}
                   </motion.span>
                 </span>
               ))}
-            </h1>
-            {settled ? (
-              <motion.button
-                type="button"
-                className="gl-sheet-toggle"
-                onClick={() => setView("sheet")}
-                initial={reduced ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.5 }}
-              >
-                ◎ Contact sheet — all {galleryPhotos.length} frames
-              </motion.button>
-            ) : null}
+            </h2>
           </div>
         </>
       ) : null}
 
-      {/* ---------------- CONTACT SHEET ---------------- */}
-      {view === "sheet" ? (
-        <div className="gl-sheet-scroll">
-          <div className="gl-sheet-head">
-            <button type="button" className="gl-sheet-toggle" onClick={() => setView("selects")}>
-              ← Selects
-            </button>
-            <p className="gl-sheet-meta">
-              Contact sheet · {galleryPhotos.length} frames · five rolls
-            </p>
-          </div>
+      {!done && !inSheet ? (
+        <button type="button" className="gl-skip" onClick={skip}>
+          skip
+        </button>
+      ) : null}
 
+      {/* ---------- contact sheet ---------- */}
+      {inSheet ? (
+        <div className="gl-sheet-scroll">
+          <p className="gl-sheet-meta">
+            Contact sheet · {galleryPhotos.length} frames · five rolls
+          </p>
           {STRIPS.map((strip, s) => (
             <div className="gl-strip" key={s}>
               {strip.map(({ photo, index }) => (
@@ -325,8 +508,8 @@ export default function GalleryPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={photo.thumb} alt={photo.alt} width={photo.w} height={photo.h} loading="lazy" />
                   </button>
-                  {/* Printed on the film edge, the way a proof sheet numbers
-                      its frames — over the image it washes out on bright ones. */}
+                  {/* Printed on the film edge, the way a proof sheet numbers its
+                      frames — over the image it washes out on bright ones. */}
                   <span className="gl-edge" aria-hidden>
                     {frameNo(index)}
                     {SELECTED.has(index) ? <i>◎</i> : null}
@@ -335,63 +518,35 @@ export default function GalleryPage() {
               ))}
             </div>
           ))}
-
-          <p className="gl-sheet-foot">
-            ◎ marks the nine selects · click any frame to enlarge
-          </p>
+          <p className="gl-sheet-foot">◎ marks the nine the grid dealt · click any frame to enlarge</p>
         </div>
       ) : null}
 
-      {!settled ? (
-        <button type="button" className="gl-skip" onClick={skip}>
-          skip
-        </button>
-      ) : null}
-
-      {showOverlay ? (
-        <div className="gl-overlay" aria-hidden>
-          <h2 className="gl-loader">Gallery</h2>
-        </div>
-      ) : null}
-
-      {/* ---------------- OPEN FRAME ---------------- */}
+      {/* ---------- open frame ---------- */}
       {openView ? (
         <motion.div
           className="gl-open"
           role="dialog"
           aria-modal="true"
           aria-label={openView.p.slate}
-          initial={{ opacity: reduced ? 1 : 0 }}
+          initial={{ opacity: r ? 1 : 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: reduced ? 0 : 0.4 }}
+          transition={{ duration: r ? 0 : 0.4 }}
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(null);
           }}
         >
           <div className="gl-open-panel" ref={panelRef}>
             <figure className="gl-open-figure">
-              {/* hero-24's opening move: the frame scales up behind an insetting
-                  clip-path while the image inside counter-scales 2 -> 1. The two
-                  transforms in opposition are what make it read as the photo
-                  opening rather than merely growing. */}
               <motion.div
                 key={openView.i}
                 className="gl-open-frame"
-                initial={
-                  reduced
-                    ? false
-                    : { scale: 0.42, clipPath: "polygon(28% 18%, 72% 18%, 72% 82%, 28% 82%)" }
-                }
-                animate={{ scale: 1, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
-                transition={{ duration: reduced ? 0 : 1.5, ease: HOP }}
-                /* Three caps, all of which must hold at once:
-                   - natural width, because 16 of the 76 originals are 700-900px
-                     wide and turn to mush stretched full-bleed;
-                   - 92vw, so it never touches the sides;
-                   - 74vh x aspect, so a tall portrait fits by height instead of
-                     being cropped by the frame's overflow. That third term is
-                     the one whose absence crops 2850px-tall frames to a third
-                     of themselves. aspect-ratio then fixes the height. */
+                initial={r ? false : { scale: 0.42, clipPath: CLIP_HERO }}
+                animate={{ scale: 1, clipPath: CLIP_SHOWN }}
+                transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                /* Three caps at once: natural width (16 originals are 700-900px
+                   and turn to mush stretched), 92vw, and 74vh x aspect so a tall
+                   portrait fits by height instead of being cropped. */
                 style={{
                   width: `min(${openView.p.w}px, 92vw, calc(74vh * ${(
                     openView.p.w / openView.p.h
@@ -404,9 +559,9 @@ export default function GalleryPage() {
                   alt={openView.p.alt}
                   width={openView.p.w}
                   height={openView.p.h}
-                  initial={reduced ? false : { scale: 2 }}
+                  initial={r ? false : { scale: 2 }}
                   animate={{ scale: 1 }}
-                  transition={{ duration: reduced ? 0 : 1.5, ease: HOP }}
+                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
                 />
               </motion.div>
               <figcaption>
@@ -442,10 +597,8 @@ export default function GalleryPage() {
       ) : null}
 
       <style jsx global>{`
-        /* A darkroom, not a void: warm near-black film base, an amber safelight
-           bleeding in from one corner, and grain over the whole thing. The
-           gallery pins its own ground rather than following the theme toggle —
-           there is no navbar here to toggle from. */
+        /* A darkroom rather than a void: warm near-black film base, an amber
+           safelight bleeding in from one corner, grain over everything. */
         .gl-page {
           --gl-base: #14100e;
           --gl-film: #0c0a09;
@@ -459,7 +612,6 @@ export default function GalleryPage() {
           overflow: hidden;
           font-family: var(--font-mono);
         }
-
         .gl-safelight {
           position: fixed;
           inset: 0;
@@ -469,8 +621,6 @@ export default function GalleryPage() {
             radial-gradient(60% 50% at 82% 8%, rgba(211, 143, 44, 0.16), transparent 70%),
             radial-gradient(50% 45% at 12% 92%, rgba(212, 89, 56, 0.1), transparent 72%);
         }
-        /* Film grain. feTurbulence rendered once into a tile, held at low
-           opacity — enough to sit on the images without dirtying them. */
         .gl-grain {
           position: fixed;
           inset: 0;
@@ -482,60 +632,234 @@ export default function GalleryPage() {
           background-size: 160px 160px;
         }
 
+        /* The overlay is BELOW the grid, exactly as hero-24 orders them — the
+           grid reveals and shuffles against black, and only then does the
+           overlay drop to expose the page. */
         .gl-overlay {
           position: fixed;
           inset: 0;
-          z-index: 30;
-          background: #0a0807;
+          z-index: 4;
+          background: #080706;
           display: flex;
-          align-items: center;
-          justify-content: center;
+          gap: 2em;
+          padding: 2em;
+          overflow: hidden;
         }
-        /* hero-24's wipe: a 200%-tall gradient painted into transparent-filled
-           text, revealed by sliding background-position from bottom to top.
-           Here it develops from safelight amber into paper white. */
+        .gl-col,
         .gl-loader {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0.85em;
+        }
+        .gl-loader {
+          align-items: center;
+          gap: 0;
+        }
+        .gl-logo {
           margin: 0;
+          text-align: center;
           font-family: var(--font-editorial);
           font-weight: 300;
-          font-size: clamp(38px, 7vw, 96px);
-          line-height: 0.9;
+          font-size: clamp(30px, 3.4vw, 52px);
+          line-height: 0.92;
           letter-spacing: -0.02em;
           -webkit-text-fill-color: transparent;
           background-clip: text;
           -webkit-background-clip: text;
           background-image: linear-gradient(0deg, #4a3a24, #4a3a24 50%, #ffffeb 0);
           background-size: 100% 200%;
-          background-position: 0% 100%;
-          /* A keyframe rather than a class toggle, so no state has to be set
-             from an effect just to start it. */
-          animation: gl-wipe 1.4s linear forwards;
         }
-        @keyframes gl-wipe {
-          from {
-            background-position: 0% 100%;
-          }
-          to {
-            background-position: 0% 0%;
-          }
+        .gl-col-head,
+        .gl-row {
+          display: flex;
+          gap: 2em;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+        .gl-col-head {
+          color: var(--gl-safe);
+          opacity: 0.9;
+        }
+        .gl-col-head p,
+        .gl-row p {
+          margin: 0;
+        }
+        .gl-col-left .gl-col-head > *,
+        .gl-col-left .gl-row > * {
+          flex: 1;
+        }
+        .gl-col-right {
+          align-items: center;
+        }
+        .gl-col-right .gl-col-head,
+        .gl-col-right .gl-row {
+          width: 62%;
         }
 
-        .gl-back {
+        /* Above the overlay — this is the ordering that makes the reveal read
+           against black instead of against the page. */
+        .gl-grid {
           position: fixed;
-          top: 22px;
-          left: 24px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: min(30vw, 430px);
+          aspect-ratio: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(3, 1fr);
+          gap: 1em;
+          z-index: 6;
+        }
+        .gl-tile {
+          position: relative;
+          padding: 0;
+          border: 0;
+          background: rgba(255, 255, 235, 0.05);
+          cursor: pointer;
+          overflow: hidden;
+          aspect-ratio: 1;
+          clip-path: ${CLIP_HIDDEN};
+        }
+        .gl-tile[disabled] {
+          cursor: default;
+        }
+        .gl-tile.hero {
+          z-index: 3;
+        }
+        .gl-tile img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .gl-tile:focus-visible,
+        .gl-frame:focus-visible {
+          outline: 2px solid var(--gl-safe);
+          outline-offset: 3px;
+        }
+
+        .gl-banner {
+          position: fixed;
+          top: 45%;
+          left: 50%;
+          width: 20%;
+          max-width: 260px;
+          aspect-ratio: 4 / 5;
+          translate: -50% -50%;
+          z-index: 5;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .gl-banner img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .gl-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
           z-index: 20;
+          padding: 18px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+        }
+        .gl-back {
           font-family: var(--font-mono);
           font-size: 10.5px;
           font-weight: 500;
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: rgba(255, 255, 235, 0.72);
+          color: rgba(255, 255, 235, 0.78);
           text-decoration: none;
           transition: color 200ms ease;
         }
         .gl-back:hover {
           color: var(--gl-safe);
+        }
+        .gl-sheet-toggle {
+          background: none;
+          border: 1px solid rgba(211, 143, 44, 0.4);
+          color: rgba(255, 255, 235, 0.9);
+          padding: 8px 16px;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+        }
+        .gl-sheet-toggle:hover {
+          border-color: var(--gl-safe);
+          color: var(--gl-safe);
+          background: rgba(211, 143, 44, 0.07);
+        }
+
+        .gl-intro {
+          position: fixed;
+          top: 45%;
+          left: 0;
+          right: 0;
+          translate: 0 -50%;
+          padding: 0 clamp(24px, 7vw, 120px);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          z-index: 7;
+          pointer-events: none;
+        }
+        .gl-intro h3 {
+          margin: 0;
+          font-family: var(--font-mono);
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.26em;
+          text-transform: uppercase;
+          color: var(--gl-safe);
+        }
+        .gl-title {
+          position: fixed;
+          bottom: 8%;
+          left: 0;
+          right: 0;
+          text-align: center;
+          z-index: 7;
+          pointer-events: none;
+          padding: 0 24px;
+        }
+        .gl-title h2 {
+          margin: 0;
+          font-family: var(--font-editorial);
+          font-weight: 300;
+          font-size: clamp(24px, 3.2vw, 44px);
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: var(--gl-ink);
+        }
+        .gl-line {
+          display: inline-block;
+          overflow: hidden;
+          vertical-align: bottom;
+          padding-bottom: 0.14em;
+          margin-bottom: -0.14em;
+        }
+        .gl-line > span {
+          display: inline-block;
+          will-change: transform;
+        }
+        .gl-title .gl-line {
+          margin-right: 0.22em;
         }
 
         .gl-skip {
@@ -553,152 +877,25 @@ export default function GalleryPage() {
           letter-spacing: 0.22em;
           text-transform: uppercase;
           cursor: pointer;
-          transition: border-color 180ms ease, color 180ms ease;
         }
         .gl-skip:hover {
           border-color: rgba(255, 255, 235, 0.7);
           color: var(--gl-ink);
         }
 
-        .gl-grid {
-          position: absolute;
-          top: 46%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: min(44vw, 580px);
-          aspect-ratio: 1;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: repeat(3, 1fr);
-          gap: 0.9em;
-          z-index: 2;
-        }
-
-        .gl-tile {
-          position: relative;
-          padding: 0;
-          border: 0;
-          background: rgba(255, 255, 235, 0.04);
-          cursor: pointer;
-          overflow: hidden;
-          aspect-ratio: 1;
-        }
-        .gl-tile[disabled] {
-          cursor: default;
-        }
-        .gl-tile img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .gl-tile:focus-visible,
-        .gl-frame:focus-visible {
-          outline: 2px solid var(--gl-safe);
-          outline-offset: 3px;
-        }
-
-        /* Frame number on a select tile sits over the image, so it carries its
-           own scrim — amber alone disappears against a bright frame. */
-        .gl-frameno {
-          position: absolute;
-          top: 7px;
-          left: 7px;
-          padding: 2px 5px;
-          background: rgba(10, 8, 7, 0.72);
-          font-family: var(--font-mono);
-          font-size: 8.5px;
-          font-weight: 600;
-          letter-spacing: 0.18em;
-          color: var(--gl-safe);
-          pointer-events: none;
-        }
-
-        .gl-caption {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 5%;
-          text-align: center;
-          z-index: 3;
-          padding: 0 24px;
-        }
-        .gl-line {
-          display: inline-block;
-          overflow: hidden;
-          vertical-align: bottom;
-          padding-bottom: 0.12em;
-          margin-bottom: -0.12em;
-        }
-        .gl-line > span {
-          display: inline-block;
-          will-change: transform;
-        }
-        .gl-eyebrow {
-          margin: 0 0 10px;
-          font-family: var(--font-mono);
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.28em;
-          text-transform: uppercase;
-          color: rgba(211, 143, 44, 0.85);
-        }
-        .gl-title {
-          margin: 0;
-          font-family: var(--font-editorial);
-          font-weight: 300;
-          font-size: clamp(22px, 3.1vw, 42px);
-          line-height: 1;
-          letter-spacing: -0.02em;
-          color: var(--gl-ink);
-        }
-        .gl-title .gl-line {
-          margin-right: 0.22em;
-        }
-
-        .gl-sheet-toggle {
-          margin-top: 22px;
-          background: none;
-          border: 1px solid rgba(211, 143, 44, 0.4);
-          color: rgba(255, 255, 235, 0.9);
-          padding: 9px 18px;
-          font-family: var(--font-mono);
-          font-size: 9.5px;
-          font-weight: 500;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
-        }
-        .gl-sheet-toggle:hover {
-          border-color: var(--gl-safe);
-          color: var(--gl-safe);
-          background: rgba(211, 143, 44, 0.07);
-        }
-
         /* ---- contact sheet ---- */
         .gl-sheet-scroll {
-          position: absolute;
+          position: fixed;
           inset: 0;
           overflow-y: auto;
-          z-index: 4;
-          padding: 74px 22px 80px;
+          z-index: 8;
+          padding: 78px 22px 80px;
+          background: var(--gl-base);
           scrollbar-width: thin;
         }
-        .gl-sheet-head {
-          max-width: 1180px;
-          margin: 0 auto 22px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 18px;
-          flex-wrap: wrap;
-        }
-        .gl-sheet-head .gl-sheet-toggle {
-          margin-top: 0;
-        }
         .gl-sheet-meta {
-          margin: 0;
+          max-width: 1180px;
+          margin: 0 auto 20px;
           font-family: var(--font-mono);
           font-size: 9.5px;
           font-weight: 500;
@@ -706,8 +903,6 @@ export default function GalleryPage() {
           text-transform: uppercase;
           color: rgba(255, 255, 235, 0.62);
         }
-        /* Each row is a strip of film: darker base, frames sitting in it with
-           their numbers printed on the edge. */
         .gl-strip {
           max-width: 1180px;
           margin: 0 auto 10px;
@@ -754,13 +949,12 @@ export default function GalleryPage() {
           height: 100%;
           object-fit: cover;
           display: block;
-          transition: opacity 200ms ease;
           opacity: 0.88;
+          transition: opacity 200ms ease;
         }
         .gl-frame:hover img {
           opacity: 1;
         }
-        /* The nine selects, ringed the way a photographer rings a proof. */
         .gl-frame.picked {
           outline: 1px solid rgba(212, 89, 56, 0.85);
           outline-offset: -1px;
@@ -777,7 +971,7 @@ export default function GalleryPage() {
           font-weight: 500;
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: rgba(255, 255, 235, 0.55);
+          color: rgba(255, 255, 235, 0.62);
         }
 
         /* ---- open frame ---- */
@@ -807,10 +1001,8 @@ export default function GalleryPage() {
           gap: 14px;
           max-width: 100%;
         }
-        /* The frame carries the scale + clip and is sized by the three caps set
-           inline; the image inside carries the counter-scale. No max-height
-           here — the width formula already accounts for viewport height, and a
-           max-height would crop rather than fit. */
+        /* No max-height here — the width formula already accounts for viewport
+           height, and a max-height would crop rather than fit. */
         .gl-open-frame {
           overflow: hidden;
           line-height: 0;
@@ -836,7 +1028,7 @@ export default function GalleryPage() {
           margin-right: 10px;
         }
         .gl-open-client {
-          color: rgba(255, 255, 235, 0.5);
+          color: rgba(255, 255, 235, 0.62);
         }
         .gl-open-nav {
           display: flex;
@@ -852,7 +1044,6 @@ export default function GalleryPage() {
           color: rgba(255, 255, 235, 0.85);
           font-size: 18px;
           cursor: pointer;
-          transition: border-color 160ms ease, color 160ms ease;
         }
         .gl-open-nav button:hover {
           border-color: var(--gl-safe);
@@ -863,7 +1054,7 @@ export default function GalleryPage() {
           font-size: 9.5px;
           font-weight: 500;
           letter-spacing: 0.22em;
-          color: rgba(255, 255, 235, 0.62);
+          color: rgba(255, 255, 235, 0.72);
         }
         .gl-open-x {
           position: fixed;
@@ -879,7 +1070,6 @@ export default function GalleryPage() {
         .gl-open-x:hover {
           color: var(--gl-safe);
         }
-        /* The trap focuses this on open, so it must not show a raw UA ring. */
         .gl-open-x:focus-visible,
         .gl-open-nav button:focus-visible,
         .gl-sheet-toggle:focus-visible,
@@ -897,10 +1087,19 @@ export default function GalleryPage() {
             grid-template-columns: repeat(4, 1fr);
           }
         }
-        @media (max-width: 900px) {
+        @media (max-width: 940px) {
           .gl-grid {
-            width: min(86vw, 500px);
-            gap: 0.5em;
+            width: min(68vw, 420px);
+          }
+          .gl-col,
+          .gl-intro {
+            display: none;
+          }
+          .gl-loader {
+            flex: 1;
+          }
+          .gl-banner {
+            width: 30%;
           }
         }
         @media (max-width: 640px) {
@@ -908,24 +1107,19 @@ export default function GalleryPage() {
             grid-template-columns: repeat(3, 1fr);
           }
           .gl-sheet-scroll {
-            padding: 64px 14px 70px;
+            padding: 70px 14px 70px;
           }
-        }
-        @media (max-width: 560px) {
           .gl-grid {
-            width: 92vw;
+            width: 78vw;
+            gap: 0.5em;
           }
-          .gl-caption {
-            bottom: 4%;
+          .gl-nav {
+            padding: 14px 16px;
+            gap: 10px;
           }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          /* The overlay never renders under reduced motion, but belt-and-braces
-             in case the media query and framer-motion's hook disagree. */
-          .gl-loader {
-            animation: none;
-            background-position: 0% 0%;
+          .gl-sheet-toggle {
+            padding: 7px 10px;
+            letter-spacing: 0.16em;
           }
         }
       `}</style>
