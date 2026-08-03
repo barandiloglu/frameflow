@@ -27,6 +27,7 @@ import { EsmaPage } from "@/components/portfolio/featured/EsmaPage";
 import { MinAutoPage } from "@/components/portfolio/featured/MinAutoPage";
 import { HarbourLoomPage } from "@/components/portfolio/featured/HarbourLoomPage";
 import { BerilSedatHomesPage } from "@/components/portfolio/featured/BerilSedatHomesPage";
+import { GoldenHornPage } from "@/components/portfolio/featured/GoldenHornPage";
 
 export type FeaturedPageProps = { client: Client };
 
@@ -46,4 +47,5 @@ export const FEATURED_PAGES: Record<string, ComponentType<FeaturedPageProps>> = 
   "minauto":                        MinAutoPage,
   "harbourloom":                    HarbourLoomPage,
   "beril-sedat-homes":              BerilSedatHomesPage,
+  "goldenhorn-construction":        GoldenHornPage,
 };

@@ -2,19 +2,46 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
   clients,
   getFrameNumber,
   getServiceCounts,
-  getDistinctServiceCount,
   type Client,
 } from "@/data/clients";
 
 const TOTAL_CLIENTS = clients.length;
-const DISTINCT_SERVICES = getDistinctServiceCount();
 const TOP_SERVICES = getServiceCounts().slice(0, 6);
+
+/* Clients with imagery in the repo. Each has three frames under
+   /portfolio/_marquee, so the band carries their own work rather than the same
+   picture on a loop. The other four have none — their band runs on facts
+   alone rather than borrowing someone else's photograph. */
+const MARQUEE_CLIENTS = new Set([
+  "adrians-wasaga-beach",
+  "asd-laminate",
+  "aydin-cpa",
+  "big-bears-baked-potato",
+  "canapy-furniture",
+  "connectr",
+  "ctbdh",
+  "destan-turkish-cuisine",
+  "esma-fine-foods",
+  "fidan-construction",
+  "goldenhorn-construction",
+  "harbourloom",
+  "iyn",
+  "minauto",
+  "northern-pathways-immigration",
+  "beril-sedat-homes",
+]);
+
+/* Constant scroll speed in px/sec. The track length varies sevenfold between
+   the shortest client and the longest, so a fixed duration made rows scroll at
+   wildly different rates. */
+const MARQUEE_SPEED = 84;
 
 export default function PortfolioPage() {
   return (
@@ -122,50 +149,8 @@ export default function PortfolioPage() {
                 Selected work from the FrameFlow studio — branding, digital, social,
                 and film. No filters. Just the reel, front to back.
               </p>
-              <div className="grid grid-cols-3 gap-8 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60">
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Clients</span>
-                  <span className="font-editorial font-[300] text-[44px] text-amber leading-none tracking-[-0.02em]">
-                    {String(TOTAL_CLIENTS).padStart(3, "0")}
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Years</span>
-                  <span className="font-editorial font-[300] text-[44px] text-on-surface leading-none tracking-[-0.02em]">
-                    05
-                  </span>
-                </div>
-                <div>
-                  <span className="block text-on-surface-30 mb-2">Services</span>
-                  <span className="font-editorial font-[300] text-[44px] text-on-surface leading-none tracking-[-0.02em]">
-                    {String(DISTINCT_SERVICES).padStart(2, "0")}
-                  </span>
-                </div>
-              </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* TITLES MARQUEE */}
-      <section className="relative overflow-hidden bg-surface-alt border-y border-on-alt-10">
-        <div className="flex w-max animate-ticker-slow items-center py-9">
-          {[...clients, ...clients, ...clients].map((c, i) => (
-            <span key={i} className="flex items-center gap-12 pr-12 shrink-0">
-              <span
-                className="font-editorial italic font-[300] leading-none text-on-alt"
-                style={{ fontSize: "clamp(44px, 7vw, 110px)" }}
-              >
-                {c.name}
-              </span>
-              <span
-                className="font-editorial not-italic text-ember font-[300] leading-none"
-                style={{ fontSize: "clamp(30px, 5vw, 76px)" }}
-              >
-                ✦
-              </span>
-            </span>
-          ))}
         </div>
       </section>
 
@@ -327,11 +312,100 @@ export default function PortfolioPage() {
 
 function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string }) {
   const services = client.services.map((s) => s.toUpperCase()).join(" · ");
+  const hasArt = MARQUEE_CLIENTS.has(client.slug);
+
+  /* Three segments of real data, so a client with two services fills the band
+     as well as one with seven. Facts that a client does not carry are dropped
+     rather than padded. */
+  const facts = [
+    services,
+    client.year && client.location ? `${client.year} · ${client.location.toUpperCase()}` : null,
+    `FRAME ${frameNumber}${client.runtime ? ` · ${client.runtime.toUpperCase()}` : ""}`,
+  ].filter((x): x is string => Boolean(x));
+
+  /* Enough copies that the shortest client still overflows the widest row.
+     Estimated from the content rather than measured, so the server and the
+     client render the same markup. */
+  const estimate = facts.reduce((w, f) => w + f.length * 13 + (hasArt ? 104 : 0), 0);
+  const copies = Math.max(2, Math.min(8, Math.ceil(1800 / Math.max(estimate, 1)) + 1));
+
+  const rowRef = useRef<HTMLAnchorElement | null>(null);
+  const outerRef = useRef<HTMLSpanElement | null>(null);
+  const innerRef = useRef<HTMLSpanElement | null>(null);
+  const trackRef = useRef<HTMLSpanElement | null>(null);
+
+  /* One half of the track is measured and the duration set from it, so every
+     row scrolls at the same px/sec however much content it carries. Written to
+     style rather than held in state — this must not cause a re-render. */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const half = track.scrollWidth / 2;
+    if (half > 0) track.style.animationDuration = `${(half / MARQUEE_SPEED).toFixed(2)}s`;
+  }, [copies]);
+
+  /* nav-5's split-layer reveal. The two layers are parked on opposite sides —
+     the outer on the edge the cursor crossed, the inner on the far one — and
+     both slide to 0, so they meet in the middle rather than sweeping past each
+     other. Positions are set with the transition suppressed and a reflow
+     forced between, which is what GSAP's set() then to() does. */
+  const place = useCallback((clientY: number, entering: boolean) => {
+    const row = rowRef.current;
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!row || !outer || !inner) return;
+
+    const b = row.getBoundingClientRect();
+    const fromAbove = clientY < b.top + b.height / 2;
+
+    if (entering) {
+      outer.style.transition = "none";
+      inner.style.transition = "none";
+      outer.style.top = fromAbove ? "-100%" : "100%";
+      inner.style.top = fromAbove ? "100%" : "-100%";
+      void outer.offsetHeight;
+      outer.style.transition = "";
+      inner.style.transition = "";
+      outer.style.top = "0%";
+      inner.style.top = "0%";
+      return;
+    }
+
+    outer.style.top = fromAbove ? "-100%" : "100%";
+    inner.style.top = fromAbove ? "100%" : "-100%";
+  }, []);
+
+  const half = (
+    <span className="px-half" aria-hidden>
+      {Array.from({ length: copies }).flatMap((_, c) =>
+        facts.map((fact, f) => (
+          <span className="px-seg" key={`${c}-${f}`}>
+            {hasArt ? (
+              <span className="px-pill">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/portfolio/_marquee/${client.slug}-${(f % 3) + 1}.webp`}
+                  alt=""
+                  width={320}
+                  height={200}
+                  loading="lazy"
+                />
+              </span>
+            ) : null}
+            <span className="px-word">{fact}</span>
+          </span>
+        )),
+      )}
+    </span>
+  );
 
   return (
     <Link
+      ref={rowRef}
       href={`/portfolio/${client.slug}`}
-      className="group relative grid grid-cols-[60px_1fr] md:grid-cols-[80px_minmax(0,3fr)_minmax(0,1.5fr)_80px] gap-x-6 gap-y-2 border-b border-on-alt-10 py-6 md:py-7 items-baseline cursor-pointer transition-colors duration-300 hover:bg-on-alt-05 no-underline"
+      onMouseEnter={(e) => place(e.clientY, true)}
+      onMouseLeave={(e) => place(e.clientY, false)}
+      className="px-row group relative grid grid-cols-[60px_1fr] md:grid-cols-[80px_minmax(0,3fr)_minmax(0,1.5fr)_80px] gap-x-6 gap-y-2 border-b border-on-alt-10 py-6 md:py-7 items-baseline cursor-pointer transition-colors duration-300 hover:bg-on-alt-05 no-underline"
     >
       <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
         {frameNumber}
@@ -372,6 +446,103 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
       <div className="md:hidden col-start-2 font-mono text-[10px] uppercase tracking-[0.22em] text-on-alt-60 leading-[1.7]">
         {services}
       </div>
+
+      {/* the band */}
+      <span className="px-outer" ref={outerRef} aria-hidden>
+        <span className="px-inner" ref={innerRef}>
+          <span className="px-track" ref={trackRef}>
+            {half}
+            {half}
+          </span>
+        </span>
+      </span>
+
+      <style jsx global>{`
+        /* nav-5's hover band, ported. Two layers park on opposite edges and
+           slide to 0 so they meet in the middle, rather than one sweeping
+           past. Inside runs an infinite marquee of the client's own frame and
+           the services we actually delivered. */
+        .px-row {
+          position: relative;
+          overflow: hidden;
+        }
+        .px-outer,
+        .px-inner {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          top: 100%;
+          overflow: hidden;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          transition: top 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          will-change: top;
+        }
+        .px-inner {
+          background: var(--color-amber);
+        }
+        .px-track {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          animation: px-marquee 18s linear infinite;
+        }
+        .px-half {
+          display: flex;
+          align-items: center;
+        }
+        .px-seg {
+          display: flex;
+          align-items: center;
+          gap: clamp(14px, 1.6vw, 28px);
+          padding-right: clamp(14px, 1.6vw, 28px);
+        }
+        .px-pill {
+          display: block;
+          flex: none;
+          width: clamp(64px, 7vw, 108px);
+          height: clamp(40px, 4.4vw, 68px);
+          border-radius: 999px;
+          overflow: hidden;
+        }
+        .px-pill img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .px-word {
+          font-family: var(--font-mono);
+          font-size: clamp(15px, 1.9vw, 30px);
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          /* graphite on amber measures 4.69:1 — the only pairing of the two
+             brand colours that clears AA at this size. */
+          color: var(--color-graphite);
+          white-space: nowrap;
+        }
+        @keyframes px-marquee {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .px-outer,
+          .px-inner {
+            transition-duration: 0.01ms;
+          }
+          .px-track {
+            animation: none;
+          }
+        }
+      `}</style>
     </Link>
   );
 }

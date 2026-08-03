@@ -42,42 +42,20 @@ const values = [
   },
 ];
 
-const cast = [
-  {
-    name: "Alex K.",
-    role: "Director & Founder",
-    credit: "Creative Direction",
-    initials: "AK",
-    scene: "INT. STUDIO — DAY",
-    bio: "A brand strategist with a decade of design experience. Alex founded FrameFlow to help small businesses tell bigger stories.",
-  },
-  {
-    name: "Sara M.",
-    role: "Producer",
-    credit: "Social & Content",
-    initials: "SM",
-    scene: "EXT. FEED — CONTINUOUS",
-    bio: "Sara turns followers into communities. With a background in content strategy and analytics, she makes every post count.",
-  },
-  {
-    name: "Jordan P.",
-    role: "Lead Engineer",
-    credit: "Web & Product",
-    initials: "JP",
-    scene: "INT. DEV BAY — DAY",
-    bio: "Jordan builds fast, accessible, and beautiful digital experiences — from marketing sites to full-stack applications.",
-  },
-];
-
-const creditsReel = [
-  ["Studio", "FrameFlow"],
-  ["Established", "2021"],
-  ["Headquarters", "Toronto · ON"],
-  ["Crew Size", "12"],
-  ["Brands Shipped", "047"],
-  ["Retention", "98%"],
-  ["Languages", "EN / FR / KO / TR"],
-  ["Operating Hours", "Mon–Fri 9–6 EST"],
+/* The studio. Roles and bios are intentionally absent until they are supplied —
+   the cards below render without them rather than carrying invented copy. */
+const cast: {
+  name: string;
+  initials: string;
+  scene: string;
+  role?: string;
+  credit?: string;
+  bio?: string;
+}[] = [
+  { name: "Baran D.",  initials: "BD", scene: "INT. STUDIO — DAY" },
+  { name: "Yiğit P.",  initials: "YP", scene: "INT. DEV BAY — DAY" },
+  { name: "Kübra B.",  initials: "KB", scene: "EXT. FEED — CONTINUOUS" },
+  { name: "Bartu H.",  initials: "BH", scene: "INT. EDIT SUITE — NIGHT" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -142,7 +120,7 @@ export default function AboutPage() {
               className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
               style={{ fontSize: "clamp(54px, 10vw, 168px)" }}
             >
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   initial={{ y: "108%" }}
                   animate={{ y: "0%" }}
@@ -152,7 +130,7 @@ export default function AboutPage() {
                   A small studio.
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   initial={{ y: "108%" }}
                   animate={{ y: "0%" }}
@@ -162,7 +140,7 @@ export default function AboutPage() {
                   Making <em className="italic text-amber">big</em> stories
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   initial={{ y: "108%" }}
                   animate={{ y: "0%" }}
@@ -208,111 +186,32 @@ export default function AboutPage() {
       </section>
 
       {/* ============================================================ */}
-      {/*  LOGLINE — Mission & Vision                                  */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[140px] overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-50"
-          style={{
-            backgroundImage:
-              "linear-gradient(var(--color-graphite-20) 1px, transparent 1px), linear-gradient(90deg, var(--color-graphite-20) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-            maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)",
-            WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 90%)",
-          }}
-        />
-        <div className="relative max-w-[1500px] mx-auto">
-          <p className="mb-14 font-mono text-[11px] uppercase tracking-[0.32em] text-on-alt-60 flex items-center gap-3">
-            <span className="block h-px w-10 bg-on-alt-30" />
-            Frame · 01 — Logline
-          </p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {[
-              {
-                tag: "Our mission",
-                title: "Empower growing businesses through authentic branding.",
-                body: "We exist to give small and medium-sized businesses the same caliber of branding, design, and marketing that the big players have — without the impersonal experience. Every strategy starts with listening, every deliverable is rooted in your story.",
-              },
-              {
-                tag: "Our vision",
-                title: "A world where every brand tells a story worth hearing.",
-                body: "We envision a creative landscape where no business is held back by generic marketing or forgettable visuals. Where authenticity wins, partnerships thrive, and every brand — no matter the size — gets the spotlight it deserves.",
-              },
-            ].map((b, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8, delay: i * 0.12 }}
-                className="relative border border-on-alt-10 bg-surface-alt p-10 md:p-12"
-              >
-                <div className="absolute inset-3 border border-dashed border-on-alt-10 pointer-events-none" />
-                <div className="relative">
-                  <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.28em] text-ember flex items-center gap-3">
-                    <span className="block h-px w-8 bg-ember" />
-                    {b.tag}
-                  </p>
-                  <h3
-                    className="font-editorial font-[300] text-on-alt leading-[1.05] tracking-[-0.01em] mb-6"
-                    style={{ fontSize: "clamp(30px, 3.4vw, 48px)" }}
-                  >
-                    {b.title}
-                  </h3>
-                  <p className="font-warm text-[14px] font-[300] leading-[1.85] text-on-alt-80">
-                    {b.body}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Founding quote */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-            className="mt-24 relative max-w-[1000px] mx-auto pl-4 md:pl-24"
-          >
-            <span
-              aria-hidden
-              className="absolute -top-16 -left-2 md:left-0 font-editorial italic text-ember/80 font-[300] leading-none select-none"
-              style={{ fontSize: "clamp(150px, 16vw, 260px)" }}
-            >
-              &ldquo;
-            </span>
-            <blockquote className="relative">
-              <p
-                className="font-editorial italic font-[300] leading-[1.1] text-on-alt tracking-[-0.01em]"
-                style={{ fontSize: "clamp(28px, 4vw, 60px)" }}
-              >
-                Your brand is more than a logo — it&apos;s the entire experience your
-                customers have with your business. We&apos;re here to make that{" "}
-                <span className="not-italic text-amber">unforgettable</span>.
-              </p>
-              <footer className="mt-8 flex items-center gap-4">
-                <span className="h-[1px] w-10 bg-amber" />
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-on-alt-60">
-                  FrameFlow · Founding principle
-                </p>
-              </footer>
-            </blockquote>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
       {/*  DIRECTIONS — Core values                                    */}
       {/* ============================================================ */}
-      <section className="relative bg-surface px-6 md:px-[52px] py-[140px]">
+      <section
+        className="relative bg-ivory border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]"
+        /* Brand ivory, pinned in both themes. Left theme-relative it would flip
+           to graphite in light mode and merge with the graphite Cast band below. */
+        style={{
+          "--surface": "#ffffeb",
+          "--surface-alt": "#ffffeb",
+          "--on-surface": "#353230",
+          "--on-surface-60": "rgba(53, 50, 48, 0.6)",
+          "--on-surface-30": "rgba(53, 50, 48, 0.3)",
+          "--on-surface-10": "rgba(53, 50, 48, 0.1)",
+          "--on-surface-05": "rgba(53, 50, 48, 0.05)",
+          "--on-alt": "#353230",
+          "--on-alt-80": "rgba(53, 50, 48, 0.8)",
+          "--on-alt-60": "rgba(53, 50, 48, 0.6)",
+          "--on-alt-30": "rgba(53, 50, 48, 0.3)",
+          "--on-alt-10": "rgba(53, 50, 48, 0.1)",
+        } as React.CSSProperties}
+      >
         <div className="max-w-[1500px] mx-auto">
           <div className="mb-20">
             <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
               <span className="block h-px w-10 bg-amber" />
-              Frame · 02 — Director&apos;s Notes
+              Frame · 01 — Director&apos;s Notes
             </p>
             <h2
               className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1100px]"
@@ -358,12 +257,28 @@ export default function AboutPage() {
       {/* ============================================================ */}
       {/*  CAST — Team                                                 */}
       {/* ============================================================ */}
-      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]">
+      <section
+        className="relative bg-graphite px-6 md:px-[52px] py-[140px]"
+        /* The brand graphite — the navbar's colour — held fixed in both themes,
+           so the ink tokens below are pinned to ivory rather than flipped. */
+        style={{
+          "--surface": "#353230",
+          "--surface-alt": "#353230",
+          "--on-surface": "#ffffeb",
+          "--on-surface-60": "rgba(255, 255, 235, 0.6)",
+          "--on-surface-30": "rgba(255, 255, 235, 0.3)",
+          "--on-alt": "#ffffeb",
+          "--on-alt-80": "rgba(255, 255, 235, 0.8)",
+          "--on-alt-60": "rgba(255, 255, 235, 0.6)",
+          "--on-alt-30": "rgba(255, 255, 235, 0.3)",
+          "--on-alt-10": "rgba(255, 255, 235, 0.1)",
+        } as React.CSSProperties}
+      >
         <div className="max-w-[1500px] mx-auto">
           <div className="mb-20">
-            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
-              <span className="block h-px w-10 bg-ember" />
-              Frame · 03 — The Cast
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
+              <span className="block h-px w-10 bg-amber" />
+              Frame · 02 — The Cast
             </p>
             <h2
               className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-alt"
@@ -375,7 +290,7 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {cast.map((m, i) => (
               <motion.div
                 key={m.initials}
@@ -417,54 +332,29 @@ export default function AboutPage() {
                   <div className="absolute bottom-4 left-4 font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/60">
                     {m.scene}
                   </div>
-                  <div className="absolute bottom-4 right-4 font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/40">
-                    {m.credit}
-                  </div>
+                  {m.credit ? (
+                    <div className="absolute bottom-4 right-4 font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/40">
+                      {m.credit}
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* info */}
                 <div className="p-7">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber mb-3">
-                    {m.role}
-                  </p>
+                  {m.role ? (
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber mb-3">
+                      {m.role}
+                    </p>
+                  ) : null}
                   <h3 className="font-editorial font-[400] text-on-alt text-[30px] leading-none mb-4">
                     {m.name}
                   </h3>
-                  <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-alt-80">
-                    {m.bio}
-                  </p>
+                  {m.bio ? (
+                    <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-alt-80">
+                      {m.bio}
+                    </p>
+                  ) : null}
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  CREDITS REEL                                                */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface px-6 md:px-[52px] py-[100px]">
-        <div className="max-w-[1500px] mx-auto">
-          <p className="mb-12 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
-            <span className="block h-px w-10 bg-amber" />
-            Frame · 04 — Credits Reel
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border-subtle border border-border-subtle">
-            {creditsReel.map(([k, v], i) => (
-              <motion.div
-                key={k}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: i * 0.05 }}
-                className="bg-surface p-6 md:p-8"
-              >
-                <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-on-surface-30 mb-3">
-                  {k}
-                </p>
-                <p className="font-editorial text-[22px] md:text-[26px] text-on-surface leading-none">
-                  {v}
-                </p>
               </motion.div>
             ))}
           </div>
@@ -475,7 +365,7 @@ export default function AboutPage() {
       {/*  CTA                                                         */}
       {/* ============================================================ */}
       <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
-        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
+        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-ivory px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
           <div
             aria-hidden
             className="absolute top-0 left-0 right-0 h-9"
@@ -487,12 +377,12 @@ export default function AboutPage() {
           <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-graphite" />
 
           <div className="pt-10">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
-              <span className="block h-px w-10 bg-graphite/60" />
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-ivory flex items-center gap-3">
+              <span className="block h-px w-10 bg-ivory/60" />
               Ready for your close-up?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6vw, 96px)" }}
             >
               Let&apos;s grow <em className="italic">together</em>.
@@ -502,7 +392,7 @@ export default function AboutPage() {
           <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
+              className="group inline-flex items-center gap-4 bg-ivory text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-graphite hover:text-ivory"
             >
               <span className="w-2 h-2 rounded-full bg-ember animate-pulse-dot" />
               Book a free call
@@ -510,7 +400,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/portfolio"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/80 hover:text-graphite underline decoration-graphite/30 underline-offset-4"
+              className="font-mono text-[10px] uppercase tracking-[0.22em] text-ivory hover:text-graphite underline decoration-ivory/40 underline-offset-4"
             >
               / see the reel
             </Link>

@@ -22,17 +22,6 @@ const clients = [
   "Harbor Digital",
 ];
 
-const marqueeWords = [
-  "Identity",
-  "Websites",
-  "Campaigns",
-  "Social",
-  "Film",
-  "Photo",
-  "Ads",
-  "Apps",
-];
-
 type Scene = {
   id: string;
   slug: string;
@@ -103,13 +92,6 @@ const reel: Scene[] = [
   },
 ];
 
-const metrics = [
-  { code: "05:00:00", label: "Years rolling", sub: "Since 2021 · Toronto" },
-  { code: "047", label: "Brands framed", sub: "And still counting" },
-  { code: "12.4M", label: "Impressions", sub: "Delivered last year" },
-  { code: "98%", label: "Retention", sub: "Clients who re-up" },
-];
-
 const storyboard = [
   {
     step: "I",
@@ -174,7 +156,7 @@ export default function Home() {
       {/* ============================================================ */}
       {/*  REEL 01 — HERO                                              */}
       {/* ============================================================ */}
-      <section className="relative h-screen min-h-[780px] w-full overflow-hidden bg-surface flex flex-col">
+      <section className="relative min-h-screen w-full overflow-hidden bg-surface flex flex-col">
         {/* Background: scanlines */}
         <div
           aria-hidden
@@ -276,9 +258,9 @@ export default function Home() {
 
             <h1
               className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
-              style={{ fontSize: "clamp(54px, 10.2vw, 168px)" }}
+              style={{ fontSize: "clamp(40px, 8.2vw, 132px)" }}
             >
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={0}
                   initial="hidden"
@@ -289,7 +271,7 @@ export default function Home() {
                   We roll cameras
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={1}
                   initial="hidden"
@@ -301,7 +283,7 @@ export default function Home() {
                   <em className="italic font-[400] text-amber">brands</em>
                 </motion.span>
               </span>
-              <span className="block overflow-hidden">
+              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
                 <motion.span
                   custom={2}
                   initial="hidden"
@@ -373,33 +355,21 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  MARQUEE RIBBON                                              */}
-      {/* ============================================================ */}
-      <section className="relative overflow-hidden bg-surface-alt border-b border-on-alt-10">
-        <div className="flex w-max animate-ticker-slow items-center py-10">
-          {[...marqueeWords, ...marqueeWords, ...marqueeWords].map((w, i) => (
-            <span key={i} className="flex items-center gap-14 pr-14 shrink-0">
-              <span
-                className="font-editorial italic font-[300] leading-none text-on-alt"
-                style={{ fontSize: "clamp(56px, 9.5vw, 140px)" }}
-              >
-                {w}
-              </span>
-              <span
-                className="font-editorial not-italic text-ember font-[300] leading-none"
-                style={{ fontSize: "clamp(40px, 7vw, 108px)" }}
-              >
-                ✦
-              </span>
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* ============================================================ */}
       {/*  REEL 02 — THE REEL (services)                               */}
       {/* ============================================================ */}
-      <section className="relative bg-surface py-[140px] px-6 md:px-[52px]">
+      {/* Light ground. Re-pointing the on-surface tokens at the alt palette flips
+          every descendant — including ReelCard — without touching the cards. */}
+      <section
+        className="relative bg-surface-alt py-[140px] px-6 md:px-[52px] border-y border-on-alt-10"
+        style={{
+          "--surface": "var(--surface-alt)",
+          "--on-surface": "var(--on-alt)",
+          "--on-surface-60": "var(--on-alt-60)",
+          "--on-surface-30": "var(--on-alt-30)",
+          "--on-surface-10": "var(--on-alt-10)",
+          "--on-surface-05": "var(--on-alt-05)",
+        } as React.CSSProperties}
+      >
         <div className="max-w-[1500px] mx-auto">
           <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
             <div>
@@ -436,57 +406,14 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  REEL 03 — TIMECODES (metrics)                               */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-24">
-        <div className="max-w-[1500px] mx-auto">
-          <div className="mb-14 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-on-alt-60">
-            <span className="h-px w-10 bg-on-alt-30" />
-            <span>Frame · 03 — Timecodes</span>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
-            {metrics.map((m, i) => (
-              <motion.div
-                key={m.code}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8, delay: i * 0.1 }}
-                className="relative"
-              >
-                <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-on-alt-60 mb-3">
-                  {String(i + 1).padStart(2, "0")} / 04
-                </span>
-                <div
-                  className="font-editorial font-[300] leading-none text-on-alt tracking-[-0.03em]"
-                  style={{ fontSize: "clamp(46px, 6vw, 104px)" }}
-                >
-                  {m.code}
-                </div>
-                <div className="mt-5 flex items-center gap-3">
-                  <span className="h-[1px] w-6 bg-ember" />
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-on-alt">
-                    {m.label}
-                  </span>
-                </div>
-                <p className="mt-1 ml-9 font-warm text-[12px] font-[300] text-on-alt-60">
-                  {m.sub}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  REEL 04 — STORYBOARD (process)                              */}
+      {/*  REEL 03 — STORYBOARD (process)                              */}
       {/* ============================================================ */}
       <section className="relative bg-surface py-[140px] px-6 md:px-[52px]">
         <div className="max-w-[1500px] mx-auto">
           <div className="mb-20">
             <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
               <span className="block h-px w-10 bg-amber" />
-              Frame · 04 — Storyboard
+              Frame · 03 — Storyboard
             </p>
             <h2
               className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1000px]"
@@ -553,7 +480,7 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  REEL 05 — CONTROL ROOM (dashboard)                          */}
+      {/*  REEL 04 — CONTROL ROOM (dashboard)                          */}
       {/* ============================================================ */}
       <section className="relative bg-surface-alt text-on-alt py-[140px] px-6 md:px-[52px] border-y border-on-alt-10 overflow-hidden">
         {/* graphite grid backdrop */}
@@ -574,9 +501,13 @@ export default function Home() {
         <div className="relative max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[0.85fr_1fr] gap-16 lg:gap-20 items-center">
           {/* Left — copy */}
           <div>
-            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
+            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex flex-wrap items-center gap-3">
               <span className="block h-px w-10 bg-ember" />
-              Frame · 05 — Control Room
+              Frame · 04 — Control Room
+              <span className="inline-flex items-center gap-2 border border-ember/40 bg-ember/10 px-3 py-[5px] text-[10px] tracking-[0.22em] text-ember">
+                <span className="block h-[5px] w-[5px] rounded-full bg-ember" />
+                Coming soon
+              </span>
             </p>
             <h2
               className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-alt"
@@ -606,13 +537,18 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <Link
-              href="/login"
-              className="mt-12 inline-flex items-center gap-3 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-8 no-underline transition-colors duration-300 hover:bg-ember"
-            >
-              Enter the Control Room
-              <span className="font-editorial text-[18px] leading-none">→</span>
-            </Link>
+            <div className="mt-12 flex flex-wrap items-center gap-5">
+              <span
+                aria-disabled="true"
+                className="inline-flex items-center gap-3 border border-on-alt-20 text-on-alt-60 font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-8 cursor-default select-none"
+              >
+                <span className="block h-[6px] w-[6px] rounded-full bg-ember" />
+                In the edit
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-alt-60">
+                / Rolling out to clients shortly
+              </span>
+            </div>
           </div>
 
           {/* Right — monitor */}
@@ -754,62 +690,11 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  REEL 06 — DIRECTOR'S NOTES (pull quote)                     */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface py-[140px] px-6 md:px-[52px] overflow-hidden">
-        {/* decorative wash */}
-        <div className="pointer-events-none absolute -top-10 right-0 h-[320px] w-[320px] rounded-full bg-ember-10 blur-[140px]" />
-
-        <div className="relative max-w-[1200px] mx-auto">
-          <p className="mb-12 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
-            <span className="block h-px w-10 bg-amber" />
-            Frame · 06 — Director&apos;s Notes
-          </p>
-
-          <div className="relative">
-            <span
-              aria-hidden
-              className="absolute -top-20 -left-2 md:-left-8 font-editorial italic text-ember/80 font-[300] leading-none select-none"
-              style={{ fontSize: "clamp(160px, 18vw, 300px)" }}
-            >
-              &ldquo;
-            </span>
-
-            <blockquote className="relative pl-4 md:pl-28">
-              <p
-                className="font-editorial font-[300] italic text-on-surface leading-[1.05] tracking-[-0.01em]"
-                style={{ fontSize: "clamp(34px, 5vw, 76px)" }}
-              >
-                FrameFlow didn&apos;t just make us look good —
-                <br className="hidden md:block" /> they made us look{" "}
-                <span className="not-italic text-amber">inevitable</span>.
-              </p>
-              <footer className="mt-12 flex items-center gap-5">
-                <span className="h-[1px] w-12 bg-amber" />
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-surface">
-                    Sun-Hee Park
-                  </p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-on-surface-60 mt-1">
-                    Creative Director · Meridian Foods
-                  </p>
-                </div>
-                <div className="ml-auto hidden md:flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-30">
-                  <span>Take</span>
-                  <span className="text-amber">001 / 047</span>
-                </div>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  REEL 07 — ACTION! (CTA clapperboard)                        */}
+      {/*  REEL 05 — ACTION! (CTA clapperboard)                        */}
       {/* ============================================================ */}
       <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
         {/* Left — ember clapperboard */}
-        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
+        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-ivory px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
           {/* clapper stripes */}
           <div
             aria-hidden
@@ -825,12 +710,12 @@ export default function Home() {
           />
 
           <div className="pt-10">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
-              <span className="block h-px w-10 bg-graphite/60" />
-              Frame · 07 — Action
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-ivory/75 flex items-center gap-3">
+              <span className="block h-px w-10 bg-ivory/60" />
+              Frame · 05 — Action
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(48px, 6.8vw, 112px)" }}
             >
               Ready when you are.
@@ -842,7 +727,7 @@ export default function Home() {
           <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
+              className="group inline-flex items-center gap-4 bg-ivory text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-graphite hover:text-ivory"
             >
               <span className="relative flex h-2 w-2">
                 <span className="absolute inset-0 rounded-full bg-ember animate-pulse-dot" />
@@ -853,7 +738,7 @@ export default function Home() {
                 →
               </span>
             </Link>
-            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/70">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ivory/75">
               / 30 min · free consult
             </span>
           </div>
@@ -881,7 +766,7 @@ export default function Home() {
               },
               {
                 k: "Budget",
-                v: "Starting at $2.5k / month. Custom from there.",
+                v: "Custom-tailored to the scope of the work.",
               },
             ].map((row, i, arr) => (
               <div key={row.k}>

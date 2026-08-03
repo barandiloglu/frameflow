@@ -19,6 +19,16 @@
   --border-subtle: rgba(211, 143, 44, 0.12);
   --border-faint:  rgba(211, 143, 44, 0.06);
   --border-ember:  rgba(212, 89, 56, 0.25);
+  /* Amber that survives the surface it sits on. --color-amber (#d38f2c) is
+     4.69:1 on graphite but only 2.68:1 on ivory, so it fails as TEXT in light
+     theme — below even the 3:1 large-text floor. Use this for amber text;
+     --color-amber stays correct for fills and rules. */
+  --accent-ink:    #d38f2c;
+  /* Muted ink that still passes as body text. --on-surface-60 is translucent,
+     so it lands at 3.71:1 on ivory; mixing toward the surface instead keeps it
+     quiet and clears 4.5:1 in both themes. Declared once — it re-resolves from
+     --on-surface/--surface, which flip together on the same element. */
+  --quiet-ink:     color-mix(in srgb, var(--on-surface) 78%, var(--surface));
 }
 
 [data-theme="light"] {
@@ -39,6 +49,7 @@
   --border-subtle: rgba(211, 143, 44, 0.1);
   --border-faint:  rgba(211, 143, 44, 0.05);
   --border-ember:  rgba(212, 89, 56, 0.3);
+  --accent-ink:    #a06210;
 }
 
 @theme inline {

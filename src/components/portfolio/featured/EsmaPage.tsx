@@ -263,6 +263,9 @@ export function EsmaPage({ client }: Props) {
 
         .es-rail{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 22px;
           background:var(--maroon);color:var(--cream);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .es-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .es-back{color:var(--cream);text-decoration:none;opacity:.82}
         .es-back:hover{opacity:1;color:#fff}
         .es-rail-end{opacity:.6}

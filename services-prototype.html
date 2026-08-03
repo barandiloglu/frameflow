@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FrameFlow — Services · The Cutting Room (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FrameFlow · Services — "The Cutting Room"
+   Prototype. The services page as the studio's own edit timeline.
+
+   The conceit is not decorative: every measurement on the timeline is
+   real. A clip's LENGTH is the number of client engagements that
+   service has actually run, read off src/data/clients.ts. So the
+   CONTENT track is visibly the longest because that is genuinely where
+   most of the work is, and Web & Mobile Apps is a two-frame sliver
+   because it genuinely is.
+
+   And service 07 has no imagery in the repo at all — one client is
+   still in production, the other has no captures. In an edit that is
+   not an empty slot, it is MEDIA OFFLINE: the striped clip you get
+   when the timeline knows a shot exists but the footage is not cut
+   yet. It is the honest state, rendered in the metaphor's own language.
+   ============================================================ */
+
+:root{
+  --graphite:#353230;
+  --graphite-lift:#3d3936;
+  --graphite-deep:#2b2826;
+  --ivory:#ffffeb;
+  --amber:#d38f2c;
+  --ember:#d45938;
+  --ink:var(--ivory);
+  --quiet:color-mix(in srgb, var(--ivory) 72%, var(--graphite));
+  --faint:color-mix(in srgb, var(--ivory) 42%, var(--graphite));
+  --rule:color-mix(in srgb, var(--ivory) 16%, var(--graphite));
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* html only. A fixed height on body pins it to exactly one viewport, so any
+   later min-height:auto is meaningless and the flex children get compressed
+   into each other instead of the document growing. */
+html{height:100%}
+body{
+  background:var(--graphite);color:var(--ink);
+  font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+  min-height:100svh;overflow-x:hidden;
+}
+/* The cutting room owns the first screen; everything after it scrolls. The
+   pin is on the room, not the body, or there would be nothing to scroll to. */
+.room{display:flex;flex-direction:column;min-height:100svh}
+@media (min-width:1021px){ .room{height:100svh} }
+/* The bin is taller than four tracks. Rather than squeeze the monitor until
+   the inspector clips, the room grows — all seven rows visible at once is the
+   entire reason the bin exists. */
+@media (min-width:1021px){ .room[data-view="bin"]{height:auto;min-height:100svh} }
+@media (max-width:1020px){ .room{min-height:0} }
+
+/* ---------- slate strip ---------- */
+.slate{
+  flex:none;display:flex;align-items:center;gap:22px;
+  padding:11px clamp(16px,3vw,40px);
+  border-bottom:1px solid var(--rule);
+  font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--faint);
+}
+.slate b{color:var(--amber);font-weight:600;display:flex;align-items:center;gap:8px}
+.slate b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);
+  animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.slate .sep{color:color-mix(in srgb,var(--ivory) 22%,var(--graphite))}
+.slate .tc{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--quiet)}
+
+/* ---------- program monitor ---------- */
+.monitor{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+  gap:clamp(18px,3vw,52px);
+  padding:clamp(18px,2.6vh,34px) clamp(16px,3vw,40px);
+}
+
+/* media well — one hero frame, two支 frames beside it */
+/* minmax(0,1fr) on both axes, or the images resolve at natural size and the
+   well grows straight through the timeline below it. */
+.well{position:relative;min-width:0;min-height:0;height:100%;display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(0,1fr);
+  grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.plate{position:relative;overflow:hidden;min-width:0;min-height:0;
+  background:var(--graphite-deep);border:1px solid var(--rule);border-radius:2px}
+.plate:first-child{grid-row:1 / span 2}
+.plate img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;
+  opacity:0;transform:scale(1.04);
+  transition:opacity .55s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.plate.in img{opacity:1;transform:none}
+.plate[data-fit="contain"]{background:var(--ivory)}
+.plate[data-fit="contain"] img{object-fit:contain;object-position:center;padding:10%}
+.plate .tag{position:absolute;left:0;bottom:0;padding:5px 9px;
+  background:color-mix(in srgb,var(--graphite-deep) 88%,transparent);
+  font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--quiet);opacity:0;transition:opacity .4s ease .2s}
+.plate.in .tag{opacity:1}
+
+/* the offline state — real NLE convention, and literally true here */
+.well.offline,.well.single{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.well.single .plate:first-child{grid-row:auto}
+.well.offline .plate{grid-row:auto;display:grid;place-items:center;text-align:center;padding:28px;
+  background:
+    repeating-linear-gradient(-45deg,
+      color-mix(in srgb,var(--ember) 16%,var(--graphite-deep)) 0 14px,
+      var(--graphite-deep) 14px 30px);
+  border-color:color-mix(in srgb,var(--ember) 42%,var(--graphite))}
+.offline-txt{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ember);line-height:2.4}
+.offline-txt small{display:block;font-size:9px;letter-spacing:.16em;color:var(--quiet);
+  text-transform:none;max-width:34ch;margin:14px auto 0;line-height:1.9}
+
+/* inspector */
+.inspector{min-width:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.scene{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.scene i{font-style:normal;color:var(--faint)}
+.scene::before{content:"";width:26px;height:1px;background:currentColor;flex:none}
+h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.98;
+  font-size:clamp(34px,4.4vw,68px);}
+.tagline{font-family:var(--serif);font-style:italic;font-weight:300;color:var(--amber);
+  font-size:clamp(15px,1.5vw,23px);margin-top:12px;line-height:1.25}
+.desc{margin-top:16px;max-width:52ch;font-size:clamp(13px,.95vw,15px);line-height:1.8;color:var(--quiet)}
+.feat{margin-top:22px;display:grid;gap:9px}
+.feat li{list-style:none;display:flex;gap:12px;font-size:13.5px;line-height:1.55;color:var(--ink)}
+.feat li::before{content:"";flex:none;margin-top:.62em;width:14px;height:1px;background:var(--amber)}
+.meta{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px 26px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.meta b{color:var(--ink);font-weight:500}
+
+/* fade the inspector between clips */
+.swap{opacity:1;transform:translateY(0);
+  transition:opacity .34s ease,transform .44s cubic-bezier(.2,.8,.2,1)}
+.swap.out{opacity:0;transform:translateY(10px)}
+
+/* ---------- timeline ---------- */
+.timeline{position:relative;z-index:5;flex:none;border-top:1px solid var(--rule);
+  background:var(--graphite-deep);
+  padding:0 clamp(16px,3vw,40px) clamp(12px,2vh,20px)}
+.ruler{position:relative;height:26px;margin-left:var(--gutter);
+  border-bottom:1px solid var(--rule)}
+.ruler span{position:absolute;top:8px;transform:translateX(-50%);
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--faint)}
+.ruler span::after{content:"";position:absolute;left:50%;top:-8px;width:1px;height:6px;background:var(--rule)}
+.tl-head{display:flex;align-items:baseline;gap:14px;padding:12px 0 8px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint)}
+.tl-head b{color:var(--quiet);font-weight:500}
+
+.tracks{position:relative;display:grid;gap:5px}
+.track{display:grid;grid-template-columns:var(--gutter) 1fr;align-items:center;gap:0}
+.tname{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);display:flex;align-items:center;gap:7px;padding-right:12px}
+.tname em{font-style:normal;color:var(--amber);font-weight:600}
+.lane{position:relative;height:var(--clipH);background:
+  linear-gradient(90deg,var(--rule) 1px,transparent 1px) 0 0/ calc(100%/23) 100%;
+  border-left:1px solid var(--rule)}
+
+.clip{position:absolute;top:0;height:100%;border:1px solid var(--rule);border-radius:2px;
+  background:var(--graphite-lift);overflow:hidden;cursor:pointer;
+  display:flex;align-items:center;padding:0 10px;gap:9px;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s ease,border-color .3s ease;
+  font:inherit;color:inherit;text-align:left}
+/* An NLE draws a clip's thumbnail as a repeating filmstrip, not one stretched
+   still — cover on a 36px-tall bar magnifies the frame into noise. */
+.clip-bg{position:absolute;inset:0;opacity:.26;filter:grayscale(.7) contrast(.9);
+  background-size:auto 100%;background-repeat:repeat-x;background-position:left center;
+  pointer-events:none}
+.clip .lbl{position:relative;text-shadow:0 1px 3px rgba(0,0,0,.55);font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.clip .n{position:relative;font-family:var(--mono);font-size:8.5px;color:var(--amber);flex:none}
+.clip:hover,.clip:focus-visible{background:color-mix(in srgb,var(--amber) 22%,var(--graphite-lift));
+  border-color:var(--amber);outline:none;transform:translateY(-2px)}
+.clip[aria-current="true"]{background:var(--amber);border-color:var(--amber)}
+.clip[aria-current="true"] .clip-bg{opacity:.14;filter:grayscale(1)}
+.clip[aria-current="true"] .lbl{color:var(--graphite);font-weight:600}
+.clip[aria-current="true"] .n{color:color-mix(in srgb,var(--graphite) 70%,var(--amber))}
+.clip.offline{background:
+  repeating-linear-gradient(-45deg,
+    color-mix(in srgb,var(--ember) 30%,var(--graphite-lift)) 0 7px,
+    var(--graphite-lift) 7px 15px);
+  border-color:color-mix(in srgb,var(--ember) 55%,var(--graphite))}
+.clip.offline .n{color:var(--ember)}
+.clip.offline[aria-current="true"]{border-color:var(--ember)}
+.clip.offline[aria-current="true"] .lbl{color:var(--ink)}
+
+/* playhead */
+.playhead{position:absolute;top:-26px;bottom:0;width:1px;background:var(--ember);
+  pointer-events:none;z-index:4}
+#play[aria-pressed="true"]{background:var(--ember);color:var(--ivory);border-color:var(--ember)}
+.playhead::before{content:"";position:absolute;top:0;left:-5px;
+  border:5px solid transparent;border-top-color:var(--ember);border-bottom:0;height:0}
+
+.tl-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding-top:12px;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.transport{display:flex;gap:6px;margin-right:6px}
+.transport button{width:26px;height:22px;border:1px solid var(--rule);background:none;
+  color:var(--quiet);cursor:pointer;border-radius:1px;font-size:10px;line-height:1;
+  transition:background .2s ease,color .2s ease,border-color .2s ease}
+.transport button:hover{background:var(--amber);color:var(--graphite);border-color:var(--amber)}
+.key{border:1px solid var(--rule);padding:2px 5px;border-radius:1px;color:var(--quiet)}
+.note{margin-left:auto;text-transform:none;letter-spacing:.04em;font-size:9px;max-width:52ch;
+  line-height:1.7;text-align:right;color:color-mix(in srgb,var(--ivory) 34%,var(--graphite))}
+
+/* ---------- view switcher + bin ---------- */
+.views{margin-left:auto;display:flex;gap:0;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.views button{font:inherit;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;padding:5px 12px;background:none;border:0;color:var(--faint);
+  cursor:pointer;transition:background .2s ease,color .2s ease}
+.views button[aria-pressed="true"]{background:var(--amber);color:var(--graphite);font-weight:600}
+.views button:hover:not([aria-pressed="true"]){color:var(--ink)}
+
+.bin{display:none}
+.timeline[data-view="bin"] .tracks,
+.timeline[data-view="bin"] .ruler{display:none}
+.timeline[data-view="bin"] .bin{display:block}
+.bin-row{display:grid;
+  grid-template-columns:34px minmax(120px,1.5fr) minmax(78px,.7fr) minmax(120px,1.4fr) 88px 76px;
+  align-items:center;gap:14px;width:100%;text-align:left;
+  padding:7px 10px;background:none;border:0;border-bottom:1px solid var(--rule);
+  font:inherit;color:inherit;cursor:pointer;transition:background .2s ease}
+.bin-row:hover,.bin-row:focus-visible{background:color-mix(in srgb,var(--amber) 12%,transparent);outline:none}
+.bin-row[aria-current="true"]{background:color-mix(in srgb,var(--amber) 20%,transparent)}
+.bin-row[aria-current="true"] .b-name{color:var(--amber)}
+.bin-head{color:var(--faint);font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;border-bottom:1px solid var(--rule);cursor:default}
+.bin-head:hover{background:none}
+.b-n{font-family:var(--mono);font-size:9px;color:var(--amber)}
+.b-name{font-family:var(--serif);font-size:16px;font-weight:300;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-track,.b-media,.b-status{font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint)}
+.b-status[data-off="true"]{color:var(--ember)}
+.b-bar{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;color:var(--quiet)}
+.b-bar i{display:block;height:7px;background:var(--amber);border-radius:1px;flex:none}
+.bin-row[data-off="true"] .b-bar i{background:repeating-linear-gradient(-45deg,
+  var(--ember) 0 4px,color-mix(in srgb,var(--ember) 40%,var(--graphite)) 4px 8px)}
+
+/* ---------- all scenes (the plain read) ---------- */
+.scenes{border-top:1px solid var(--rule);background:var(--graphite)}
+.scenes-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+  padding:clamp(28px,5vh,60px) clamp(16px,3vw,40px) 8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint)}
+.scenes-head b{color:var(--amber);font-weight:600}
+.scene-row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:clamp(20px,3vw,56px);align-items:center;
+  padding:clamp(26px,4vh,46px) clamp(16px,3vw,40px);
+  border-top:1px solid var(--rule)}
+.scene-row:nth-child(even){background:color-mix(in srgb,var(--ivory) 3%,var(--graphite))}
+.scene-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.scene-strip .plate{aspect-ratio:4/5}
+.scene-strip .plate img{opacity:1;transform:none}
+.scene-copy h2{font-family:var(--serif);font-weight:300;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(26px,3vw,44px);margin-bottom:6px}
+.scene-copy .tagline{margin-top:6px;font-size:clamp(14px,1.3vw,19px)}
+.scene-copy .desc{margin-top:12px}
+.scene-copy .feat{margin-top:16px}
+.scene-copy .meta{margin-top:16px}
+.scene-off{grid-column:1 / -1;display:grid;place-items:center;padding:34px;text-align:center;
+  background:repeating-linear-gradient(-45deg,
+    color-mix(in srgb,var(--ember) 12%,var(--graphite-deep)) 0 12px,var(--graphite-deep) 12px 26px);
+  border:1px solid color-mix(in srgb,var(--ember) 38%,var(--graphite));border-radius:2px}
+.cue{display:flex;align-items:center;gap:10px;padding:0 clamp(16px,3vw,40px) 14px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.cue a{color:var(--amber);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
+
+/* ---------- responsive ---------- */
+/* Once the monitor stacks, its auto rows get compressed below their content
+   by the fixed flex height and the inspector lands on top of the images. The
+   one-screen lock only holds while the two-column layout does, so below this
+   the document scrolls. */
+@media (max-width:1020px){
+  .scene-row{grid-template-columns:minmax(0,1fr)}
+  .bin-row{grid-template-columns:30px minmax(0,1fr) 84px;row-gap:4px}
+  .bin-row .b-track,.bin-row .b-media{display:none}
+  .monitor{grid-template-columns:1fr;gap:20px;padding-bottom:24px;overflow:visible}
+  .inspector{overflow:visible}
+  /* height:100% resolves against an auto row once the grid stacks, so the
+     well reports less height than it draws and the copy lands on top of it. */
+  .well{height:auto;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+        grid-template-rows:130px 130px}
+  .plate:first-child{grid-row:auto;grid-column:1 / span 2}
+  .well.offline{height:auto;grid-template-rows:minmax(150px,auto)}
+  .inspector{justify-content:flex-start}
+  .desc{max-width:none}
+}
+@media (max-width:720px){
+  .timeline{--gutter:0px}
+  .tname{display:none}
+  .track{grid-template-columns:1fr}
+  .ruler{margin-left:0}
+  .note{margin-left:0;text-align:left}
+  .well{height:auto;grid-template-rows:118px 118px}
+  .plate img{object-position:center}
+  .slate .sep,.slate span:nth-of-type(1),.slate span:nth-of-type(2){display:none}
+  .slate{gap:14px}
+  .monitor{padding-bottom:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .plate img{opacity:1;transform:none}
+  .plate .tag{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<div class="room">
+<div class="slate">
+  <b>Services</b>
+  <span>FF_DOC_SVC</span>
+  <span class="sep">/</span>
+  <span>The cutting room</span>
+  <span class="tc" id="tc">07 CLIPS · 4 TRACKS</span>
+</div>
+
+<main class="monitor">
+  <div class="well" id="well"></div>
+  <div class="inspector">
+    <div class="swap" id="swap">
+      <p class="scene" id="scene"></p>
+      <h1 id="name"></h1>
+      <p class="tagline" id="tagline"></p>
+      <p class="desc" id="desc"></p>
+      <ul class="feat" id="feat"></ul>
+      <p class="meta" id="metaRow"></p>
+    </div>
+  </div>
+</main>
+
+<section class="timeline" id="timeline" style="--gutter:118px;--clipH:36px">
+  <div class="tl-head">
+    <b id="viewLabel">Timeline</b>
+    <span id="viewHint">Clip length = client engagements run</span>
+    <span class="views">
+      <button type="button" id="vTimeline" aria-pressed="true">Timeline</button>
+      <button type="button" id="vBin" aria-pressed="false">Bin</button>
+    </span>
+  </div>
+  <div class="ruler" id="ruler"></div>
+  <div class="tracks" id="tracks"></div>
+  <div class="bin" id="bin"></div>
+  <div class="tl-foot">
+    <span class="transport">
+      <button type="button" id="prev" aria-label="Previous clip">◀</button>
+      <button type="button" id="play" aria-label="Pause" aria-pressed="true">❚❚</button>
+      <button type="button" id="next" aria-label="Next clip">▶</button>
+    </span>
+    <span><span class="key">←</span> <span class="key">→</span> step clips <span class="key">space</span> play</span>
+    <span class="note">
+      Engagements overlap — one client can appear on several tracks — so the
+      lengths describe workload per service, not a headcount of the roster.
+    </span>
+  </div>
+</section>
+
+<p class="cue">Prefer to just read? <a href="#scenes">Every scene, in full ↓</a></p>
+</div><!-- /.room -->
+
+<section class="scenes" id="scenes">
+  <div class="scenes-head"><b>All scenes</b><span>Seven services, start to finish</span></div>
+  <div id="sceneList"></div>
+</section>
+
+<script>
+/* -------------------------------------------------------------
+   Data. Copy, scene headings and features are the live strings from
+   src/app/services/page.tsx. Client counts and frame picks are the
+   audited values from src/data/serviceFolders.ts — every path below
+   was checked to exist under public/.
+   ------------------------------------------------------------- */
+const SERVICES = [
+  { id:1, track:0, name:"Logo Design", cat:"Branding", sub:"the signature shot",
+    scene:"INT. STUDIO — INSERT", clients:5,
+    tagline:"Your brand starts here.",
+    desc:"Your logo is the face of your brand — the first thing customers see and the weight of your identity, values, and promise. We craft strategic visual assets that set you up for lasting recognition.",
+    features:["Custom logo concepts from scratch — no templates","Full brand mark suite (primary, secondary, icon)","Color palette & typography recommendations","All files delivered: SVG, PNG, PDF, EPS"],
+    frames:[
+      {src:"public/portfolio/big-bears/logo/big-bears-primary.png",fit:"contain",who:"Big Bears Baked Potato"},
+      {src:"public/portfolio/ctbdh/logo/ctbdh-primary.png",fit:"contain",who:"CTBDH"},
+      {src:"public/portfolio/goldenhorn-construction/logo/primary.png",fit:"contain",who:"Golden Horn"}]},
+
+  { id:2, track:0, name:"Brand Identity", cat:"Branding", sub:"the core frame",
+    scene:"INT. STUDIO — DAY", clients:3,
+    tagline:"Built to connect, built to last.",
+    desc:"Your brand is more than a logo — it's the entire experience. Voice, visuals, values, all working together. We build complete brand identities that make you memorable and magnetic.",
+    features:["Full visual identity system with brand guidelines","Typography & color system","Brand voice & messaging strategy","Business cards, stationery & collateral design"],
+    frames:[
+      {src:"public/portfolio/ctbdh/brand/wordmark-sheet.png",fit:"contain",who:"CTBDH"},
+      {src:"public/portfolio/harbourloom/brand/logo-primary.png",fit:"contain",who:"Harbour Loom"},
+      {src:"public/portfolio/beril-sedat-homes/brand/logo-navy.png",fit:"contain",who:"Beril & Sedat"}]},
+
+  { id:3, track:1, name:"Website Design", cat:"Digital", sub:"the main stage",
+    scene:"EXT. WEB — CONTINUOUS", clients:10,
+    tagline:"Your business is unique. Your site should be too.",
+    desc:"Your website is your central hub. We build custom sites that look incredible, function flawlessly, and are engineered from the ground up to help your business thrive online.",
+    features:["Custom design — no page builders or generic themes","Mobile-responsive & performance optimized","SEO-ready structure & on-page optimization","CMS integration so you can manage content easily"],
+    frames:[
+      {src:"public/portfolio/aydin-cpa/website/home.png",fit:"cover",who:"Aydın CPA"},
+      {src:"public/portfolio/goldenhorn-construction/website/services.jpg",fit:"cover",who:"Golden Horn"},
+      {src:"public/portfolio/goldenhorn-construction/website/home.jpg",fit:"cover",who:"Golden Horn"}]},
+
+  { id:7, track:1, name:"Web & Mobile Apps", cat:"Development", sub:"the sequel",
+    scene:"INT. DEV BAY — DAY", clients:3,
+    tagline:"Got an app idea? Let's build it.",
+    desc:"A killer app idea can solve a problem, create a community, or transform an industry. FrameFlow is your end-to-end partner — from UX/UI design through development to launch and beyond.",
+    features:["UX/UI design & interactive prototyping","Web & mobile app development (iOS & Android)","API integrations & backend development","Ongoing maintenance, updates & support"],
+    frames:[
+      {src:"public/portfolio/iyn/posts/06-portal-lansman.jpg",fit:"cover",who:"IYN"}]},
+
+  { id:5, track:2, name:"Video & Photo", cat:"Content", sub:"principal photography",
+    scene:"EXT. LOCATION — GOLDEN HR", clients:11,
+    tagline:"Your story is worth seeing.",
+    desc:"Stock photos and shaky smartphone videos don't cut it. We create high-quality photography and videography that stops the scroll, tells your story, and makes a genuine connection.",
+    features:["Product, food, lifestyle & event photography","Promotional & social media videos","Professional editing & post-production","Delivered in all formats for web, social & print"],
+    frames:[
+      {src:"public/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg",fit:"cover",who:"Destan"},
+      {src:"public/portfolio/big-bears/photos/04-build-corn.jpg",fit:"cover",who:"Big Bears"},
+      {src:"public/portfolio/connectr/photos/06-mavi-booth.jpg",fit:"cover",who:"ConnecTR"}]},
+
+  { id:4, track:2, name:"Social Media", cat:"Marketing", sub:"the daily rushes",
+    scene:"EXT. FEED — CONTINUOUS", clients:15,
+    tagline:"Your social? Consider it handled.",
+    desc:"You know you need social media — but who has time? FrameFlow is your dedicated social strategist, content creator, and community manager all in one results-driven package.",
+    features:["Monthly content calendars & post scheduling","Custom graphic design & video editing per post","Community management & comment responses","Monthly analytics reports & strategy adjustments"],
+    frames:[
+      {src:"public/portfolio/harbourloom/posts/01-beach-triptych.jpg",fit:"cover",who:"Harbour Loom"},
+      {src:"public/portfolio/asd-laminate/posts/02-carbon.png",fit:"cover",who:"ASD Laminat"},
+      {src:"public/portfolio/adrians-wasaga-beach/social/01-now-booking.png",fit:"cover",who:"Adrian's"}]},
+
+  { id:6, track:3, name:"Ad Management", cat:"Advertising", sub:"the wide release",
+    scene:"INT. WAR ROOM — NIGHT", clients:5,
+    tagline:"Stop burning budget on ads that don't convert.",
+    desc:"Throwing money at Google or Meta without a strategy burns budget fast. We build intelligent, data-driven campaigns designed for one thing: the best possible ROI for your business.",
+    features:["Google, Meta & TikTok ads setup & management","Audience research & targeting strategy","Ad creative design & copywriting","Weekly performance reporting & optimization"],
+    frames:[
+      {src:"public/portfolio/fidan-construction/ads/01-demo-to-clean-finish.jpg",fit:"cover",who:"Fidan"},
+      {src:"public/portfolio/fidan-construction/ads/02-turnover-ready.jpg",fit:"cover",who:"Fidan"},
+      {src:"public/portfolio/fidan-construction/ads/04-one-team.jpg",fit:"cover",who:"Fidan"}]},
+];
+
+const TRACKS = [
+  {code:"V1", name:"Brand"},
+  {code:"V2", name:"Digital"},
+  {code:"V3", name:"Content"},
+  {code:"A1", name:"Growth"},
+];
+
+/* The scale is the longest track, so the lanes are directly comparable:
+   CONTENT is visibly the longest because it genuinely is. */
+const SCALE = Math.max(...TRACKS.map((_,t)=>
+  SERVICES.filter(s=>s.track===t).reduce((n,s)=>n+s.clients,0)));
+
+const order = [];
+const tracksEl = document.getElementById('tracks');
+const rulerEl  = document.getElementById('ruler');
+
+TRACKS.forEach((tr,ti)=>{
+  const row = document.createElement('div');
+  row.className='track';
+  row.innerHTML = `<div class="tname"><em>${tr.code}</em> ${tr.name}</div>`;
+  const lane = document.createElement('div');
+  lane.className='lane';
+
+  let cursor = 0;
+  SERVICES.filter(s=>s.track===ti).forEach(s=>{
+    const btn = document.createElement('button');
+    btn.type='button';
+    btn.className='clip'+(s.offline?' offline':'');
+    btn.style.left  = (cursor/SCALE*100)+'%';
+    btn.style.width = (s.clients/SCALE*100)+'%';
+    btn.dataset.id  = s.id;
+    btn.setAttribute('aria-label',
+      `${s.name} — ${s.clients} client engagement${s.clients===1?'':'s'}${s.offline?', media offline':''}`);
+    btn.innerHTML = `<span class="n">${String(s.id).padStart(2,'0')}</span><span class="lbl">${s.name}</span>`;
+    if(s.frames[0]){
+      const bg=document.createElement('span');
+      bg.className='clip-bg';
+      bg.style.backgroundImage=`url("${s.frames[0].src}")`;
+      btn.prepend(bg);
+    }
+    btn.addEventListener('click',()=>{setPlaying(false);select(s.id)});
+    lane.appendChild(btn);
+    order.push(s.id);
+    cursor += s.clients;
+  });
+
+  row.appendChild(lane);
+  tracksEl.appendChild(row);
+});
+
+/* ruler ticks in engagements */
+for(let v=0; v<=SCALE; v+=4){
+  const t=document.createElement('span');
+  t.style.left=(v/SCALE*100)+'%';
+  t.textContent=v===0?'0':String(v);
+  rulerEl.appendChild(t);
+}
+const play=document.createElement('div');
+play.className='playhead'; play.id='playhead';
+tracksEl.appendChild(play);
+
+/* -------- bin: every service on one screen, nothing truncated -------- */
+const binEl=document.getElementById('bin');
+binEl.innerHTML=`<div class="bin-row bin-head">
+  <span>#</span><span>Service</span><span>Track</span><span>Engagements</span>
+  <span>Media</span><span>Status</span></div>`;
+[...SERVICES].sort((a,b)=>a.id-b.id).forEach(s=>{
+  const b=document.createElement('button');
+  b.type='button'; b.className='bin-row'; b.dataset.id=s.id;
+  if(s.offline) b.dataset.off='true';
+  b.innerHTML=`
+    <span class="b-n">${String(s.id).padStart(2,'0')}</span>
+    <span class="b-name">${s.name}</span>
+    <span class="b-track">${TRACKS[s.track].code} ${TRACKS[s.track].name}</span>
+    <span class="b-bar"><i style="width:${s.clients/SCALE*100*1.6}%"></i>${s.clients}</span>
+    <span class="b-media">${s.frames.length?s.frames.length+' frame'+(s.frames.length===1?'':'s'):'—'}</span>
+    <span class="b-status" data-off="${!!s.offline}">${s.offline?'Offline':'Online'}</span>`;
+  b.addEventListener('click',()=>{setPlaying(false);select(s.id)});
+  binEl.appendChild(b);
+});
+
+/* -------- all scenes: the plain, no-interaction read -------- */
+const listEl=document.getElementById('sceneList');
+[...SERVICES].sort((a,b)=>a.id-b.id).forEach(s=>{
+  const row=document.createElement('article');
+  row.className='scene-row'; row.id='scene-'+s.id;
+  const strip = s.offline
+    ? `<div class="scene-off"><p class="offline-txt">Media offline
+         <small>Two builds on the desk, one still in production. Nothing is cut
+         yet, so there is nothing here to show.</small></p></div>`
+    : `<div class="scene-strip">`+s.frames.map(f=>
+        `<div class="plate" data-fit="${f.fit}"><img src="${f.src}" alt="" loading="lazy">
+         <span class="tag">${f.who}</span></div>`).join('')+`</div>`;
+  row.innerHTML = (s.offline?'':strip) + `
+    <div class="scene-copy">
+      <p class="scene">Scene ${String(s.id).padStart(2,'0')} <i>·</i> ${s.cat} <i>·</i> ${s.scene}</p>
+      <h2>${s.name}</h2>
+      <p class="tagline">${s.tagline}</p>
+      <p class="desc">${s.desc}</p>
+      <ul class="feat">${s.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <p class="meta"><span><b>${s.clients}</b> engagements</span>
+        <span>${s.offline?'<span style="color:var(--ember)">Media offline</span>':'<b>'+s.frames.length+'</b> frame'+(s.frames.length===1?'':'s')+' on file'}</span>
+        <span>${s.sub}</span></p>
+    </div>` + (s.offline?strip:'');
+  row.querySelectorAll('.plate').forEach(pl=>pl.classList.add('in'));
+  listEl.appendChild(row);
+});
+
+/* -------- view switcher -------- */
+const tlEl=document.getElementById('timeline');
+const roomEl=document.querySelector('.room');
+function setView(v){
+  tlEl.dataset.view=v;
+  roomEl.dataset.view=v;
+  document.getElementById('vTimeline').setAttribute('aria-pressed',String(v==='timeline'));
+  document.getElementById('vBin').setAttribute('aria-pressed',String(v==='bin'));
+  document.getElementById('viewLabel').textContent = v==='bin'?'Bin':'Timeline';
+  document.getElementById('viewHint').textContent = v==='bin'
+    ? 'Every service, sorted by scene'
+    : 'Clip length = client engagements run';
+  if(v==='bin') setPlaying(false);
+  if(v==='timeline'){const c=current;current=null;select(c);}
+}
+document.getElementById('vTimeline').addEventListener('click',()=>setView('timeline'));
+document.getElementById('vBin').addEventListener('click',()=>setView('bin'));
+
+/* -------- playback --------
+   The sequence plays itself: the playhead travels the length of the clip it is
+   on, and when it reaches the out point the next scene loads. Dwell is
+   proportional to clip length, so the long clips genuinely take longer to play
+   through — the timeline reads as a real edit rather than a slideshow. */
+const MS_PER_UNIT = 420;
+const DWELL_MIN = 2600;
+let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let playTimer = null;
+
+function dwellFor(s){ return s ? Math.max(DWELL_MIN, s.clients * MS_PER_UNIT) : DWELL_MIN; }
+function currentService(){ return SERVICES.find(x=>x.id===current); }
+
+function runPlayhead(id, ms, animate){
+  const clip=document.querySelector(`.clip[data-id="${id}"]`);
+  if(!clip || tlEl.dataset.view==='bin') return;
+  const lane=clip.parentElement;
+  const gutter=parseFloat(getComputedStyle(tlEl).getPropertyValue('--gutter'))||0;
+  const from=gutter+lane.offsetLeft+clip.offsetLeft;
+  const to=from+clip.offsetWidth;
+  play.style.transition='none';
+  play.style.left=from+'px';
+  void play.offsetWidth;                       /* commit the jump before easing */
+  if(animate){
+    play.style.transition=`left ${ms}ms linear`;
+    play.style.left=to+'px';
+  }
+}
+
+function schedule(){
+  clearTimeout(playTimer);
+  if(!playing || current===null) return;
+  playTimer=setTimeout(()=>step(1), dwellFor(currentService()));
+}
+
+function setPlaying(on){
+  playing=on;
+  const b=document.getElementById('play');
+  b.textContent = on ? '❚❚' : '▶';
+  b.setAttribute('aria-pressed', String(on));
+  b.setAttribute('aria-label', on ? 'Pause' : 'Play');
+  /* Called once at boot before anything is selected, so everything past the
+     button state has to tolerate current === null. */
+  if(current===null){ clearTimeout(playTimer); return; }
+  if(on){ runPlayhead(current, dwellFor(currentService()), true); schedule(); }
+  else { clearTimeout(playTimer); runPlayhead(current, 0, false); }
+}
+
+/* -------- selection -------- */
+const $=id=>document.getElementById(id);
+let current=null;
+
+function select(id){
+  if(id===current) return;
+  const s=SERVICES.find(x=>x.id===id);
+  current=id;
+
+  document.querySelectorAll('.clip').forEach(c=>
+    c.setAttribute('aria-current', c.dataset.id===String(id) ? 'true':'false'));
+  document.querySelectorAll('.bin-row[data-id]').forEach(r=>
+    r.setAttribute('aria-current', r.dataset.id===String(id) ? 'true':'false'));
+
+  runPlayhead(id, dwellFor(s), playing);
+  schedule();
+
+  const sw=$('swap');
+  sw.classList.add('out');
+  setTimeout(()=>{
+    $('scene').innerHTML   = `Scene ${String(s.id).padStart(2,'0')} <i>·</i> ${s.cat} <i>·</i> ${s.scene}`;
+    $('name').textContent  = s.name;
+    $('tagline').textContent = s.tagline;
+    $('desc').textContent  = s.desc;
+    $('feat').innerHTML    = s.features.map(f=>`<li>${f}</li>`).join('');
+    $('metaRow').innerHTML = s.offline
+      ? `<span><b>${s.clients}</b> engagements</span><span style="color:var(--ember)">Media offline</span><span>${s.sub}</span>`
+      : `<span><b>${s.clients}</b> engagements</span><span><b>${s.frames.length}</b> frame${s.frames.length===1?'':'s'} on file</span><span>${s.sub}</span>`;
+
+    /* media well */
+    const well=$('well');
+    /* A lone frame owns the whole well rather than sitting in a two-column
+       grid with an empty cell beside it. */
+    well.className='well'+(s.offline?' offline':'')+(s.frames.length===1?' single':'');
+    well.innerHTML='';
+    if(s.offline){
+      well.innerHTML=`<div class="plate"><p class="offline-txt">Media offline
+        <small>Two builds on the desk, one still in production. Nothing is cut yet,
+        so there is nothing here to show — rather than borrow a frame from another
+        service.</small></p></div>`;
+    }else{
+      s.frames.forEach((f,i)=>{
+        const p=document.createElement('div');
+        p.className='plate'; p.dataset.fit=f.fit;
+        p.innerHTML=`<img src="${f.src}" alt=""><span class="tag">${f.who}</span>`;
+        well.appendChild(p);
+        const img=p.querySelector('img');
+        const show=()=>requestAnimationFrame(()=>setTimeout(()=>p.classList.add('in'), i*90));
+        img.complete ? show() : img.addEventListener('load',show,{once:true});
+      });
+    }
+    sw.classList.remove('out');
+  },240);
+}
+
+function step(d){
+  const i=order.indexOf(current);
+  select(order[(i+d+order.length)%order.length]);
+}
+$('next').addEventListener('click',()=>{setPlaying(false);step(1)});
+$('prev').addEventListener('click',()=>{setPlaying(false);step(-1)});
+$('play').addEventListener('click',()=>setPlaying(!playing));
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){e.preventDefault();setPlaying(false);step(1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();setPlaying(false);step(-1)}
+  if(e.code==='Space' && !/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)){
+    e.preventDefault();setPlaying(!playing);}
+});
+/* Playback is for the hero. Once the visitor is reading the scenes below,
+   a monitor cycling behind them is only a distraction. */
+if('IntersectionObserver' in window){
+  new IntersectionObserver(([e])=>{ if(!e.isIntersecting && playing) setPlaying(false); },
+    {threshold:0}).observe(document.querySelector('.timeline'));
+}
+addEventListener('resize',()=>{const c=current;current=null;select(c)});
+
+setView('timeline');
+setPlaying(playing);
+select(5); /* open on Video & Photo — the longest clip on the longest track */
+</script>
+</body>
+</html>

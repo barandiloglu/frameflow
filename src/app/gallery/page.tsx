@@ -1,992 +1,1302 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { galleryPhotos } from "@/data/gallery";
 
 /* ------------------------------------------------------------------ */
-/*  Types                                                              */
+/*  hero-24, ported beat for beat                                      */
 /* ------------------------------------------------------------------ */
 
-type Tone = "warm" | "ember" | "dusk" | "shadow" | "amber" | "cool";
-type Aspect = "4/5" | "5/4" | "1/1" | "16/10" | "3/4" | "4/3" | "7/5" | "2/1";
+/* The nine the grid deals from, hero at centre. Fixed rather than random:
+   picking at render time desynchronises server and client markup.
 
-type Print = {
-  num: string;
-  title: string;
-  location: string;
-  date: string;
-  aperture: string;
-  shutter: string;
-  iso: string;
-  film: string;
-  lens: string;
-  tone: Tone;
-  aspect: Aspect;
+   Centre is 47 (Doner — Contrast); the hero ends up clipped to its middle
+   60% x 80%, and that frame fills the crop edge to edge. */
+const SETTLED = [0, 42, 28, 27, 47, 69, 34, 19, 41] as const;
+const SELECTED = new Set<number>(SETTLED);
+const HERO_POS = 4;
+
+/* CustomEase("hop", "0.9, 0, 0.1, 1") verbatim. A hard hold at both ends with
+   a fast middle — this is why the whole sequence reads mechanical. */
+const HOP = [0.9, 0, 0.1, 1] as const;
+
+const CLIP_HIDDEN = "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
+const CLIP_SHOWN = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+/* The open frame's starting inset — hero-24's own 60% x 80% crop. */
+const CLIP_OPEN_FROM = "polygon(20% 10%, 80% 10%, 80% 90%, 20% 90%)";
+
+/* The hero's final frame. The tile is square, so a 9:16 photograph laid into
+   it with object-fit:contain occupies a centred column of (w/h) x 100%; the
+   clip is trimmed to exactly that column, which shows the whole photograph
+   instead of a cover-crop of its middle. */
+function heroClip(w: number, h: number) {
+  const inset = (100 - (w / h) * 100) / 2;
+  return `polygon(${inset.toFixed(2)}% 0%, ${(100 - inset).toFixed(2)}% 0%, ${(100 - inset).toFixed(2)}% 100%, ${inset.toFixed(2)}% 100%)`;
+}
+
+/* Absolute times in seconds, derived from the GSAP timelines rather than
+   guessed: overlayTimeline, imagesTimeline and textTimeline all run in
+   parallel from t=0, and each .to() starts where the previous one ended. */
+const T = {
+  logo2: 1.5,
+  listsIn: 2.5,
+  gridIn: 2.5,
+  rotate: 3.5,
+  collapse: 6.4,
+  heroLift: 7.75,
+  overlayOut: 7.975,
+  heroBlow: 8.75,
+  navIn: 9.0,
+  bannersIn: 9.25,
+  words: 9.5,
+  done: 10.75,
+} as const;
+
+const ROW_D = 0.15;
+const ROW_STAGGER = 0.075;
+const LIST_ROWS = 16;
+/* Normalising window for the list keyframes — must outlast the last row's
+   fade-out at 5.125 + 16 * 0.075 + 0.15. */
+const LIST_SPAN = 7;
+
+const SHUFFLE_CYCLES = 20;
+const SHUFFLE_MS = 150;
+const PRELOAD_TIMEOUT_MS = 4000;
+
+type View = "reveal" | "grid";
+
+const frameNo = (i: number) => String(i + 1).padStart(2, "0");
+
+const CLIENT_META: Record<string, { name: string; location: string }> = {
+  "adrians-wasaga-beach": { name: "Adrian's Wasaga Beach", location: "Wasaga Beach, ON" },
+  "big-bears": { name: "Big Bears Baked Potato", location: "Toronto, ON" },
+  "canapy-furniture": { name: "Canapy Furniture", location: "Toronto, ON" },
+  connectr: { name: "ConnecTR", location: "Vaughan, ON" },
+  "destan-turkish-cuisine": { name: "Destan Turkish Cuisine", location: "Toronto, ON" },
 };
 
-/* ------------------------------------------------------------------ */
-/*  Data — prints are metadata-only for now                            */
-/* ------------------------------------------------------------------ */
+/* The two columns that flank the loader. Real frames, real clients, real
+   locations — hero-24 fills this space with its own project list. */
+const ROWS = Array.from({ length: LIST_ROWS }, (_, i) => {
+  const p = galleryPhotos[Math.floor((i * galleryPhotos.length) / LIST_ROWS)];
+  const meta = CLIENT_META[p.client];
+  return { slate: p.slate, client: meta.name, location: meta.location };
+});
 
-const featuredPrint: Print = {
-  num: "001",
-  title: "Acadia · Morning Rush",
-  location: "Toronto · ON · Canada",
-  date: "2025.11.14",
-  aperture: "f/2.0",
-  shutter: "1/500s",
-  iso: "ISO 400",
-  film: "Kodak Portra 400",
-  lens: "Summilux 50mm",
-  tone: "warm",
-  aspect: "4/5",
-};
+/* The two frames that fan out behind the hero, each at its own ratio so the
+   photograph fits rather than being cropped to a shared box.
 
-const contactSheet: Print[] = [
-  {
-    num: "002",
-    title: "Meridian · Hay Rows",
-    location: "Niagara · ON",
-    date: "2025.09.04",
-    aperture: "f/5.6",
-    shutter: "1/250s",
-    iso: "ISO 100",
-    film: "Kodak Ektar 100",
-    lens: "80mm",
-    tone: "dusk",
-    aspect: "4/5",
-  },
-  {
-    num: "003",
-    title: "Lune · Counter",
-    location: "Toronto · ON",
-    date: "2025.08.22",
-    aperture: "f/1.4",
-    shutter: "1/2000s",
-    iso: "ISO 800",
-    film: "Cinestill 800T",
-    lens: "35mm",
-    tone: "ember",
-    aspect: "1/1",
-  },
-  {
-    num: "004",
-    title: "Velour · Fitting Room",
-    location: "Montréal · QC",
-    date: "2025.07.18",
-    aperture: "f/2.8",
-    shutter: "1/125s",
-    iso: "ISO 400",
-    film: "Ilford HP5+",
-    lens: "50mm",
-    tone: "shadow",
-    aspect: "4/5",
-  },
-  {
-    num: "005",
-    title: "Harbor · Rooftop",
-    location: "Toronto · ON",
-    date: "2025.06.02",
-    aperture: "f/8",
-    shutter: "1/1000s",
-    iso: "ISO 200",
-    film: "Fujifilm Pro 400H",
-    lens: "24mm",
-    tone: "cool",
-    aspect: "16/10",
-  },
-  {
-    num: "006",
-    title: "Trove · Clay Studio",
-    location: "Toronto · ON",
-    date: "2025.05.19",
-    aperture: "f/2.8",
-    shutter: "1/60s",
-    iso: "ISO 1600",
-    film: "Kodak Tri-X 400",
-    lens: "28mm",
-    tone: "amber",
-    aspect: "1/1",
-  },
-  {
-    num: "007",
-    title: "Apex · Ceramic No. 3",
-    location: "Calgary · AB",
-    date: "2025.04.11",
-    aperture: "f/11",
-    shutter: "1/125s",
-    iso: "ISO 100",
-    film: "Kodak Ektar 100",
-    lens: "90mm macro",
-    tone: "warm",
-    aspect: "4/5",
-  },
-  {
-    num: "008",
-    title: "Acadia · Cinnamon",
-    location: "Toronto · ON",
-    date: "2025.04.04",
-    aperture: "f/4",
-    shutter: "1/250s",
-    iso: "ISO 400",
-    film: "Kodak Portra 400",
-    lens: "80mm",
-    tone: "ember",
-    aspect: "1/1",
-  },
-  {
-    num: "009",
-    title: "Birchfield · Linens",
-    location: "Ottawa · ON",
-    date: "2025.03.22",
-    aperture: "f/4",
-    shutter: "1/500s",
-    iso: "ISO 400",
-    film: "Fujifilm Pro 400H",
-    lens: "50mm",
-    tone: "dusk",
-    aspect: "4/5",
-  },
-  {
-    num: "010",
-    title: "Meridian · Greenhouse",
-    location: "Niagara · ON",
-    date: "2025.03.09",
-    aperture: "f/5.6",
-    shutter: "1/1000s",
-    iso: "ISO 200",
-    film: "Kodak Gold 200",
-    lens: "35mm",
-    tone: "warm",
-    aspect: "2/1",
-  },
-  {
-    num: "011",
-    title: "Sola · Morning Light",
-    location: "Toronto · ON",
-    date: "2025.02.17",
-    aperture: "f/2.0",
-    shutter: "1/250s",
-    iso: "ISO 400",
-    film: "Fujifilm Pro 400H",
-    lens: "50mm",
-    tone: "cool",
-    aspect: "5/4",
-  },
+   38 (Vessel — From Above) is the only landscape original of the three. It is
+   used here rotated 90 degrees clockwise, which turns 2160x1216 into
+   1216x2160 — a true 9:16 that stands beside the other two and still fits
+   whole. Derivatives live under /gallery/rot. */
+const BANNERS = [
+  { src: galleryPhotos[28].thumb, alt: galleryPhotos[28].alt, w: galleryPhotos[28].w, h: galleryPhotos[28].h },
+  { src: "/gallery/rot/vessel-vertical-thumb.webp", alt: galleryPhotos[38].alt, w: 1216, h: 2160 },
 ];
 
-const rolls = [
-  {
-    id: "R01",
-    num: "Roll · 01",
-    title: "Acadia Bakes",
-    subtitle: "On location · before open",
-    location: "Toronto · Late Autumn",
-    date: "November 2025",
-    stock: "Kodak Portra 400",
-    camera: "Leica M6",
-    frames: [
-      { num: "001", label: "Morning Rush", tone: "warm" as Tone, aspect: "4/5" as Aspect },
-      { num: "002", label: "Proof & Rest", tone: "ember" as Tone, aspect: "4/5" as Aspect },
-      { num: "003", label: "Counter Crop", tone: "amber" as Tone, aspect: "4/5" as Aspect },
-      { num: "004", label: "Oven Glow", tone: "ember" as Tone, aspect: "4/5" as Aspect },
+/* Closing the triptych. The hero does not move — only the two frames behind it
+   fold back in, playing their fan-out exactly in reverse.
+
+   The fan-out runs scale 0->1 over 0.5s starting at +0.5, and left/rotate
+   outward over 1.5s starting at +0.5, so it spans +0.5 to +2.0. Reversed over
+   that same 1.5s: left/rotate travel back for the whole span, and the scale
+   collapses in the final 0.5s — mirroring the entrance, where it was the first
+   thing to happen. */
+const FOLD_MS = 1500;
+
+/* Layout effect in the browser, plain effect on the server render — the delays
+   have to be written before paint or the first cards appear already placed. */
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const ROW_TOLERANCE = 40;
+const ROW_STEP = 0.085;
+const COL_STEP = 0.032;
+const DEAL_CAP = 2.2;
+
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pickNine(cycle: number, prev: readonly number[]): number[] {
+  const rand = mulberry32(cycle * 2654435761);
+  const out: number[] = [];
+  for (let pos = 0; pos < 9; pos += 1) {
+    let candidate = 0;
+    for (let attempt = 0; attempt < 24; attempt += 1) {
+      candidate = Math.floor(rand() * galleryPhotos.length);
+      if (candidate !== prev[pos] && !out.includes(candidate)) break;
+    }
+    out.push(candidate);
+  }
+  return out;
+}
+
+/* One row's opacity/colour keyframes, staggered like the GSAP version: fade in
+   at 2.5, brighten at 3.85, fade out at 5.125, each offset by 0.075 per row. */
+function rowKeyframes(i: number) {
+  const at = (t: number) => (t + i * ROW_STAGGER) / LIST_SPAN;
+  return {
+    times: [0, at(2.5), at(2.5 + ROW_D), at(3.85), at(3.85 + ROW_D), at(5.125), at(5.125 + ROW_D)],
+    opacity: [0, 0, 1, 1, 1, 1, 0],
+    color: [
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.34)",
+      "rgba(255,255,235,0.95)",
+      "rgba(255,255,235,0.95)",
+      "rgba(255,255,235,0.95)",
     ],
-  },
-  {
-    id: "R02",
-    num: "Roll · 02",
-    title: "Meridian Foods",
-    subtitle: "Brand film stills",
-    location: "Niagara · Golden Hour",
-    date: "September 2025",
-    stock: "Kodak Ektar 100",
-    camera: "Hasselblad 500C/M",
-    frames: [
-      { num: "005", label: "First Light", tone: "dusk" as Tone, aspect: "4/5" as Aspect },
-      { num: "006", label: "Hay Rows", tone: "warm" as Tone, aspect: "4/5" as Aspect },
-      { num: "007", label: "Greenhouse", tone: "cool" as Tone, aspect: "4/5" as Aspect },
-      { num: "008", label: "Harvest Crate", tone: "amber" as Tone, aspect: "4/5" as Aspect },
-    ],
-  },
-  {
-    id: "R03",
-    num: "Roll · 03",
-    title: "Lune Café",
-    subtitle: "Blue hour to last pour",
-    location: "Toronto · Dusk",
-    date: "August 2025",
-    stock: "Cinestill 800T",
-    camera: "Canon A-1",
-    frames: [
-      { num: "009", label: "Neon Signage", tone: "ember" as Tone, aspect: "4/5" as Aspect },
-      { num: "010", label: "Counter", tone: "shadow" as Tone, aspect: "4/5" as Aspect },
-      { num: "011", label: "Last Pour", tone: "ember" as Tone, aspect: "4/5" as Aspect },
-      { num: "012", label: "Closing Light", tone: "dusk" as Tone, aspect: "4/5" as Aspect },
-    ],
-  },
-];
-
-const marqueeStocks = [
-  "Portra 400",
-  "Ektar 100",
-  "Tri-X 400",
-  "HP5+",
-  "Cinestill 800T",
-  "Pro 400H",
-  "Gold 200",
-  "Velvia 50",
-];
-
-const archiveStats: [string, string][] = [
-  ["Prints developed", "284"],
-  ["Rolls shot", "47"],
-  ["Film stocks", "11"],
-  ["Cameras in rotation", "06"],
-  ["Cities on set", "08"],
-  ["Years in the dark", "05"],
-];
-
-/* ------------------------------------------------------------------ */
-/*  Tone styles                                                        */
-/* ------------------------------------------------------------------ */
-
-const toneStyles: Record<Tone, { bg: string; beam: string; vignette: string; tag: string }> = {
-  warm: {
-    bg: "linear-gradient(135deg, rgba(211,143,44,0.35) 0%, rgba(212,89,56,0.2) 50%, rgba(53,50,48,1) 100%)",
-    beam: "from-amber/30 via-ember/15 to-transparent",
-    vignette: "radial-gradient(ellipse 80% 60% at 30% 30%, transparent 0%, rgba(53,50,48,0.8) 100%)",
-    tag: "text-amber",
-  },
-  ember: {
-    bg: "linear-gradient(155deg, rgba(212,89,56,0.5) 0%, rgba(211,143,44,0.18) 50%, rgba(53,50,48,1) 100%)",
-    beam: "from-ember/40 via-amber/15 to-transparent",
-    vignette: "radial-gradient(ellipse 70% 55% at 65% 35%, transparent 0%, rgba(53,50,48,0.85) 100%)",
-    tag: "text-ember",
-  },
-  dusk: {
-    bg: "linear-gradient(170deg, rgba(211,143,44,0.22) 0%, rgba(53,50,48,0.9) 45%, rgba(53,50,48,1) 100%)",
-    beam: "from-amber/20 via-transparent to-transparent",
-    vignette: "radial-gradient(ellipse 60% 70% at 50% 40%, transparent 0%, rgba(53,50,48,0.9) 100%)",
-    tag: "text-amber",
-  },
-  shadow: {
-    bg: "linear-gradient(190deg, rgba(53,50,48,0.6) 0%, rgba(0,0,0,0.9) 100%)",
-    beam: "from-ivory/10 via-transparent to-transparent",
-    vignette: "radial-gradient(ellipse 80% 90% at 50% 50%, transparent 0%, rgba(0,0,0,0.7) 100%)",
-    tag: "text-on-surface-60",
-  },
-  amber: {
-    bg: "linear-gradient(140deg, rgba(211,143,44,0.55) 0%, rgba(211,143,44,0.2) 40%, rgba(53,50,48,1) 100%)",
-    beam: "from-amber/45 via-amber/10 to-transparent",
-    vignette: "radial-gradient(ellipse 60% 50% at 40% 30%, transparent 0%, rgba(53,50,48,0.85) 100%)",
-    tag: "text-amber",
-  },
-  cool: {
-    bg: "linear-gradient(200deg, rgba(255,255,235,0.18) 0%, rgba(53,50,48,0.85) 50%, rgba(53,50,48,1) 100%)",
-    beam: "from-ivory/15 via-transparent to-transparent",
-    vignette: "radial-gradient(ellipse 65% 60% at 35% 35%, transparent 0%, rgba(53,50,48,0.9) 100%)",
-    tag: "text-on-surface-60",
-  },
-};
-
-const aspectClass: Record<Aspect, string> = {
-  "4/5": "aspect-[4/5]",
-  "5/4": "aspect-[5/4]",
-  "1/1": "aspect-square",
-  "16/10": "aspect-[16/10]",
-  "3/4": "aspect-[3/4]",
-  "4/3": "aspect-[4/3]",
-  "7/5": "aspect-[7/5]",
-  "2/1": "aspect-[2/1]",
-};
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                               */
-/* ------------------------------------------------------------------ */
+  };
+}
 
 export default function GalleryPage() {
+  const reduced = useReducedMotion();
+  const [beat, setBeat] = useState(0);
+  const [view, setView] = useState<View>("reveal");
+  const [displayed, setDisplayed] = useState<readonly number[]>(SETTLED);
+  const [open, setOpen] = useState<number | null>(null);
+  const [closing, setClosing] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const shuffleId = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const tiles = useMemo(() => displayed.map((i) => galleryPhotos[i]), [displayed]);
+  const hero = galleryPhotos[SETTLED[HERO_POS]];
+
+  const clearAll = useCallback(() => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    if (shuffleId.current) clearInterval(shuffleId.current);
+    shuffleId.current = null;
+  }, []);
+
+  const skip = useCallback(() => {
+    clearAll();
+    setDisplayed(SETTLED);
+    setBeat(99);
+  }, [clearAll]);
+
+  /* Leaving the reel folds the triptych shut before the grid deals. Coming
+     back is immediate — there is nothing to close. */
+  const toggleView = useCallback(() => {
+    if (view === "grid") {
+      setView("reveal");
+      return;
+    }
+    setClosing(true);
+  }, [view]);
+
+  const step = useCallback((dir: number) => {
+    setOpen((cur) =>
+      cur === null ? cur : (cur + dir + galleryPhotos.length) % galleryPhotos.length,
+    );
+  }, []);
+
+  /* Preload every thumb before the grid deals, then run the timeline. The
+     overlay's first 2.5s exists to cover exactly this. */
+  useEffect(() => {
+    if (reduced) return;
+    let cancelled = false;
+
+    const decode = (src: string) =>
+      new Promise<void>((resolve) => {
+        const im = new Image();
+        const done = () => resolve();
+        im.onload = () => im.decode().then(done, done);
+        im.onerror = done;
+        im.src = src;
+      });
+
+    /* The hero swaps to its full-resolution file when it blows up, so that one
+       has to be decoded too — without it the tile goes blank at the swap. */
+    const pool = Promise.all([
+      ...galleryPhotos.map((p) => decode(p.thumb)),
+      decode(galleryPhotos[SETTLED[HERO_POS]].full),
+      ...BANNERS.map((b) => decode(b.src)),
+    ]);
+    const ceiling = new Promise<void>((r) => setTimeout(r, PRELOAD_TIMEOUT_MS));
+
+    Promise.race([pool, ceiling]).then(() => {
+      if (cancelled) return;
+      setBeat(1);
+      const at = (s: number, fn: () => void) => {
+        timers.current.push(setTimeout(fn, s * 1000));
+      };
+      at(T.gridIn, () => setBeat(2));
+      at(T.rotate, () => {
+        setBeat(3);
+        let cycle = 0;
+        shuffleId.current = setInterval(() => {
+          cycle += 1;
+          if (cycle >= SHUFFLE_CYCLES) {
+            if (shuffleId.current) clearInterval(shuffleId.current);
+            setDisplayed(SETTLED);
+            return;
+          }
+          setDisplayed((prev) => pickNine(cycle, prev));
+        }, SHUFFLE_MS);
+      });
+      at(T.collapse, () => setBeat(4));
+      at(T.heroLift, () => setBeat(5));
+      at(T.heroBlow, () => setBeat(6));
+      at(T.done, () => setBeat(99));
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [reduced]);
+
+  useEffect(() => clearAll, [clearAll]);
+
+  /* The fold runs, then the view swaps. Kept in an effect rather than a
+     setTimeout inside the click handler so a fast second click cannot leave a
+     stray timer behind. */
+  useEffect(() => {
+    if (!closing) return;
+    const t = setTimeout(() => {
+      setView((cur) => (cur === "reveal" ? "grid" : cur));
+      setClosing(false);
+    }, reduced ? 0 : FOLD_MS);
+    return () => clearTimeout(t);
+  }, [closing, reduced]);
+
+  /* The deal sweeps across visual rows. Multi-column flows in DOM order down
+     each column, so an index-based stagger would deal column by column; the
+     cards are measured after layout and bucketed into rows by their top edge
+     instead. Written straight to style rather than through state — 76 cells do
+     not need a re-render, and this has to land before paint. */
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useIsoLayoutEffect(() => {
+    if (view !== "grid") return;
+    const root = gridRef.current;
+    if (!root) return;
+    const cells = Array.from(root.querySelectorAll<HTMLElement>(".gl-cell"));
+    if (!cells.length) return;
+
+    if (reduced) {
+      cells.forEach((el) => {
+        el.style.animationDelay = "";
+      });
+      root.classList.add("dealt");
+      return;
+    }
+
+    const base = root.getBoundingClientRect();
+    const placed = cells.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { el, top: r.top - base.top, left: r.left - base.left };
+    });
+
+    const rows: { top: number; items: typeof placed }[] = [];
+    for (const item of placed) {
+      const row = rows.find((x) => Math.abs(x.top - item.top) < ROW_TOLERANCE);
+      if (row) {
+        row.items.push(item);
+        row.top = Math.min(row.top, item.top);
+      } else {
+        rows.push({ top: item.top, items: [item] });
+      }
+    }
+    rows.sort((a, b) => a.top - b.top);
+    rows.forEach((row, ri) => {
+      row.items.sort((a, b) => a.left - b.left);
+      row.items.forEach((item, ci) => {
+        const delay = Math.min(ri * ROW_STEP + ci * COL_STEP, DEAL_CAP);
+        item.el.style.animationDelay = `${delay.toFixed(3)}s`;
+      });
+    });
+    root.classList.add("dealing");
+
+    return () => {
+      root.classList.remove("dealing", "dealt");
+    };
+  }, [view, reduced]);
+
+  /* Focus trap for the opened frame. */
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (open === null) return;
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") return setOpen(null);
+      if (e.key === "ArrowRight") return step(1);
+      if (e.key === "ArrowLeft") return step(-1);
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const f = panel.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!f.length) return;
+      const first = f[0];
+      const last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      prev?.focus();
+    };
+  }, [open, step]);
+
+  const r = Boolean(reduced);
+  const started = r || beat >= 1;
+  const revealed = r || beat >= 2;
+  const collapsed = r || beat >= 4;
+  const lifted = r || beat >= 5;
+  const blown = r || beat >= 6;
+  const done = r || beat >= 99;
+  const openView = open === null ? null : { i: open, p: galleryPhotos[open] };
+  const inGrid = view === "grid";
+
   return (
-    <>
-      <Navbar />
+    <main className="gl-page">
+      <div className="gl-safelight" aria-hidden />
+      <div className="gl-grain" aria-hidden />
 
-      {/* ============================================================ */}
-      {/*  HERO                                                        */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface overflow-hidden pt-[76px]">
-        <div
+      {/* ---------- overlay: black ground, loader, two lists ---------- */}
+      {!r && !inGrid ? (
+        <motion.div
+          className="gl-overlay"
           aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-overlay animate-scan opacity-[0.05]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg, var(--color-ivory) 0 1px, transparent 1px 4px)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage:
-              "radial-gradient(var(--color-amber-10) 1px, transparent 1px)",
-            backgroundSize: "38px 38px",
-            maskImage:
-              "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
-          }}
-        />
-        <div className="pointer-events-none absolute top-[16%] right-[8%] h-[360px] w-[360px] rounded-full bg-ember-10 blur-[140px]" />
-        <div className="pointer-events-none absolute bottom-[6%] left-[4%] h-[260px] w-[260px] rounded-full bg-amber-10 blur-[130px]" />
-
-        {/* REC strip */}
-        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em] text-on-surface-60">
-          <span className="flex items-center gap-2 text-ember font-semibold">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inset-0 rounded-full bg-ember animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-ember" />
-            </span>
-            DEVELOPING
-          </span>
-          <span>FF_DARKROOM</span>
-          <span className="hidden sm:inline text-on-surface-30">/</span>
-          <span className="hidden sm:inline">284 PRINTS · 47 ROLLS</span>
-          <span className="ml-auto hidden md:flex items-center gap-2">
-            <span className="text-on-surface-30">TEMP</span>
-            <span className="text-amber">20°C · SAFELIGHT</span>
-          </span>
-        </div>
-
-        <div className="relative z-10 px-6 md:px-[52px] pt-24 md:pt-32 pb-24">
-          <div className="relative max-w-[1500px] mx-auto">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -top-10 -left-3 md:-left-8 w-8 h-8 md:w-10 md:h-10 border-t border-l border-amber/50"
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -top-10 -right-3 md:-right-8 w-8 h-8 md:w-10 md:h-10 border-t border-r border-amber/50"
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
-            >
-              <span className="block h-px w-10 bg-amber" />
-              <span>
-                <Link
-                  href="/"
-                  className="text-on-surface-60 hover:text-amber transition-colors"
-                >
-                  Home
-                </Link>
-                <span className="mx-2 text-on-surface-30">/</span>
-                Gallery
-              </span>
-            </motion.p>
-
-            <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
-              style={{ fontSize: "clamp(56px, 10vw, 172px)" }}
-            >
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "108%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.95, delay: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="block"
-                >
-                  Prints from
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "108%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.95, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="block"
-                >
-                  the <em className="italic text-amber">darkroom</em>.
-                </motion.span>
-              </span>
-            </h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-12 flex flex-col md:flex-row md:items-end justify-between gap-10 border-t border-border-subtle pt-10"
-            >
-              <p className="max-w-[560px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60">
-                Photography from the FrameFlow studio — shot on location, mostly on film,
-                mostly at golden hour. Every frame tagged with its roll, stock, and lens.
-              </p>
-              <div className="grid grid-cols-3 gap-8 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60">
-                {[
-                  ["Prints", "284"],
-                  ["Rolls", "047"],
-                  ["Cameras", "06"],
-                ].map(([k, v]) => (
-                  <div key={k}>
-                    <span className="block text-on-surface-30 mb-2">{k}</span>
-                    <span className="font-editorial font-[300] text-[42px] md:text-[52px] text-amber leading-none tracking-[-0.02em]">
-                      {v}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  FILM STOCK MARQUEE                                          */}
-      {/* ============================================================ */}
-      <section className="relative overflow-hidden bg-surface-alt border-y border-on-alt-10">
-        <div className="flex w-max animate-ticker-slow items-center py-9">
-          {[...marqueeStocks, ...marqueeStocks, ...marqueeStocks].map((stock, i) => (
-            <span key={i} className="flex items-center gap-12 pr-12 shrink-0">
-              <span
-                className="font-editorial italic font-[300] leading-none text-on-alt"
-                style={{ fontSize: "clamp(44px, 7vw, 108px)" }}
-              >
-                {stock}
-              </span>
-              <span
-                className="font-editorial not-italic text-ember font-[300] leading-none"
-                style={{ fontSize: "clamp(30px, 5vw, 72px)" }}
-              >
-                ✦
-              </span>
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  FEATURED PRINT                                              */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface px-6 md:px-[52px] py-[140px] overflow-hidden">
-        <div className="pointer-events-none absolute top-[10%] left-[-5%] h-[400px] w-[400px] rounded-full bg-amber-10 blur-[160px]" />
-
-        <div className="relative max-w-[1500px] mx-auto">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="mb-12 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3"
-          >
-            <span className="block h-px w-10 bg-amber" />
-            Frame · 01 — Featured Print
-          </motion.p>
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-10 lg:gap-16 items-start">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.9 }}
-            >
-              <PrintBlock print={featuredPrint} size="hero" />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.9, delay: 0.15 }}
-              className="lg:sticky lg:top-[96px]"
-            >
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ember mb-4 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
-                Print · {featuredPrint.num}
-              </p>
-
-              <h2
-                className="font-editorial font-[300] italic leading-[0.92] tracking-[-0.025em] text-on-surface mb-8"
-                style={{ fontSize: "clamp(40px, 5vw, 80px)" }}
-              >
-                {featuredPrint.title}
-              </h2>
-
-              <p className="font-warm text-[14px] font-[300] leading-[1.85] text-on-surface-60 mb-10 max-w-[440px]">
-                Shot on {featuredPrint.film} at 6:48 AM, before the first loaves came out of the
-                oven. Ambient only, pushed one stop in the scan. Printed at 16×20 on
-                fiber-based paper.
-              </p>
-
-              {/* EXIF slate */}
-              <div className="border-y border-border-subtle">
-                {[
-                  ["Date", featuredPrint.date],
-                  ["Location", featuredPrint.location],
-                  ["Film stock", featuredPrint.film],
-                  ["Lens", featuredPrint.lens],
-                  ["Aperture", featuredPrint.aperture],
-                  ["Shutter", featuredPrint.shutter],
-                  ["ISO", featuredPrint.iso],
-                ].map(([k, v]) => (
-                  <div
-                    key={k}
-                    className="flex items-baseline justify-between gap-6 py-3 border-b border-border-subtle last:border-b-0"
-                  >
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-30">
-                      {k}
-                    </span>
-                    <span className="font-warm text-[13px] text-on-surface text-right">
-                      {v}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  CONTACT SHEET                                               */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]">
-        <div className="max-w-[1500px] mx-auto">
-          <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-            <div>
-              <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
-                <span className="block h-px w-10 bg-ember" />
-                Frame · 02 — The Contact Sheet
-              </p>
-              <h2
-                className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-on-alt"
-                style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
-              >
-                Every print,
-                <br />
-                on the <em className="italic text-amber">table</em>.
-              </h2>
+          initial={{ opacity: 1 }}
+          animate={{ opacity: beat >= 5 ? 0 : 1 }}
+          transition={{ duration: 0.5, ease: "linear" }}
+          style={{ pointerEvents: "none" }}
+        >
+          <div className="gl-col gl-col-left">
+            <div className="gl-col-head">
+              <p>Frame</p>
+              <p>Roll</p>
             </div>
-            <p className="max-w-[380px] font-warm text-[13px] font-[300] leading-[1.75] text-on-alt-80 md:text-right">
-              Arrange as you like. Hover for EXIF. Each frame is developed, fixed, and
-              ready for print.
-            </p>
-          </div>
-
-          {/* grid — asymmetric, matches photo sizes */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-5">
-            <div className="col-span-2 row-span-2 md:col-span-2 md:row-span-2">
-              <PrintBlock print={contactSheet[0]} />
-            </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-2">
-              <PrintBlock print={contactSheet[1]} />
-            </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2">
-              <PrintBlock print={contactSheet[2]} />
-            </div>
-
-            <div className="col-span-2 md:col-span-2 lg:col-span-2">
-              <PrintBlock print={contactSheet[3]} />
-            </div>
-
-            <div className="col-span-2 md:col-span-2 lg:col-span-3">
-              <PrintBlock print={contactSheet[4]} />
-            </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-1">
-              <PrintBlock print={contactSheet[5]} />
-            </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-2">
-              <PrintBlock print={contactSheet[6]} />
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-2">
-              <PrintBlock print={contactSheet[7]} />
-            </div>
-            <div className="col-span-1 md:col-span-2 lg:col-span-2">
-              <PrintBlock print={contactSheet[8]} />
-            </div>
-            <div className="col-span-2 md:col-span-4 lg:col-span-2">
-              <PrintBlock print={contactSheet[9]} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  ROLLS — grouped shoots                                      */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface px-6 md:px-[52px] py-[140px]">
-        <div className="max-w-[1500px] mx-auto">
-          <div className="mb-20">
-            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-amber flex items-center gap-3">
-              <span className="block h-px w-10 bg-amber" />
-              Frame · 03 — The Rolls
-            </p>
-            <h2
-              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1100px]"
-              style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
-            >
-              Shot as <em className="italic text-amber">one</em>,
-              <br />
-              printed as a series.
-            </h2>
-          </div>
-
-          <div className="flex flex-col gap-28">
-            {rolls.map((roll, rollIdx) => (
-              <RollStrip key={roll.id} roll={roll} index={rollIdx} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  ARCHIVE MANIFEST                                            */}
-      {/* ============================================================ */}
-      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[110px]">
-        <div className="max-w-[1500px] mx-auto">
-          <p className="mb-14 font-mono text-[11px] uppercase tracking-[0.32em] text-on-alt-60 flex items-center gap-3">
-            <span className="block h-px w-10 bg-on-alt-30" />
-            Frame · 04 — Archive Manifest
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-on-alt-10 border border-on-alt-10">
-            {archiveStats.map(([k, v], i) => (
+            {ROWS.map((row, i) => (
               <motion.div
-                key={k}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, delay: i * 0.05 }}
-                className="bg-surface-alt p-8"
+                className="gl-row"
+                key={`l-${i}`}
+                initial={{ opacity: 0 }}
+                animate={started ? rowKeyframes(i + 1) : { opacity: 0 }}
+                transition={{ duration: LIST_SPAN, ease: "linear" }}
               >
-                <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-on-alt-60 mb-3">
-                  {k}
-                </p>
-                <p className="font-editorial font-[300] text-on-alt leading-none tracking-[-0.02em] text-[48px] md:text-[56px]">
-                  {v}
-                </p>
+                <p>{row.slate}</p>
+                <p>{row.client}</p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ============================================================ */}
-      {/*  CTA                                                         */}
-      {/* ============================================================ */}
-      <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
-        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
-          <div
-            aria-hidden
-            className="absolute top-0 left-0 right-0 h-9"
-            style={{
-              background:
-                "repeating-linear-gradient(-68deg, #ffffeb 0 28px, #353230 28px 56px)",
-            }}
-          />
-          <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-graphite" />
-
-          <div className="pt-10">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
-              <span className="block h-px w-10 bg-graphite/60" />
-              Need photos of your own?
-            </p>
-            <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
-              style={{ fontSize: "clamp(44px, 6vw, 98px)" }}
+          <div className="gl-loader">
+            <motion.h1
+              className="gl-logo"
+              initial={{ backgroundPosition: "0% 100%" }}
+              animate={started ? { backgroundPosition: "0% 0%" } : {}}
+              transition={{ duration: 1, delay: 0.5, ease: "linear" }}
             >
-              Let&apos;s load
-              <br />
-              a <em className="italic">fresh roll</em>.
-            </h2>
+              Frame
+            </motion.h1>
+            <motion.h1
+              className="gl-logo"
+              initial={{ backgroundPosition: "0% 100%" }}
+              animate={started ? { backgroundPosition: "0% 0%" } : {}}
+              transition={{ duration: 1, delay: T.logo2, ease: "linear" }}
+            >
+              Flow
+            </motion.h1>
           </div>
 
-          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
-            >
-              <span className="w-2 h-2 rounded-full bg-ember animate-pulse-dot" />
-              Book a shoot
-              <span className="font-editorial text-[18px] leading-none">→</span>
-            </Link>
-            <Link
-              href="/services"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/80 hover:text-graphite underline decoration-graphite/30 underline-offset-4"
-            >
-              / see all services
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative flex flex-col justify-center bg-surface-alt px-6 md:px-[60px] py-20 lg:py-[100px]">
-          <p className="mb-10 font-mono text-[11px] uppercase tracking-[0.28em] text-on-alt-60 flex items-center gap-3">
-            <span className="block h-px w-10 bg-on-alt-30" />
-            What we shoot
-          </p>
-          <div className="flex flex-col gap-6">
-            {[
-              { k: "01 · Brand", v: "Product, food, lifestyle and portrait sessions, on location." },
-              { k: "02 · Events", v: "Coverage of launches, pop-ups, shoots, and editorial stories." },
-              { k: "03 · Assets", v: "Social-ready stills delivered in every crop you need." },
-            ].map((row, i, arr) => (
-              <div key={row.k}>
-                <div className="flex items-baseline gap-6">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber w-24 shrink-0">
-                    {row.k}
-                  </span>
-                  <p className="font-warm text-[14px] font-[300] leading-[1.7] text-on-alt flex-1">
-                    {row.v}
-                  </p>
-                </div>
-                {i < arr.length - 1 && <div className="mt-6 h-[1px] w-full bg-on-alt-10" />}
-              </div>
+          <div className="gl-col gl-col-right">
+            <div className="gl-col-head">
+              <p>Location</p>
+            </div>
+            {ROWS.map((row, i) => (
+              <motion.div
+                className="gl-row"
+                key={`r-${i}`}
+                initial={{ opacity: 0 }}
+                animate={started ? rowKeyframes(i + 1) : { opacity: 0 }}
+                transition={{ duration: LIST_SPAN, ease: "linear" }}
+              >
+                <p>{row.location}</p>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </motion.div>
+      ) : null}
 
-      <Footer />
-    </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  PrintBlock — decorative photograph placeholder                     */
-/* ------------------------------------------------------------------ */
-
-function PrintBlock({
-  print,
-  size = "default",
-}: {
-  print: Print;
-  size?: "default" | "hero";
-}) {
-  const tone = toneStyles[print.tone];
-  const aspect = size === "hero" ? "aspect-[4/5]" : aspectClass[print.aspect];
-
-  return (
-    <div
-      className={`group relative ${aspect} w-full h-full overflow-hidden border border-amber/20 hover:border-amber/60 bg-graphite transition-all duration-500 cursor-pointer`}
-    >
-      {/* tone gradient */}
-      <div
-        aria-hidden
-        className="absolute inset-0 transition-transform duration-[1500ms] group-hover:scale-[1.04]"
-        style={{ background: tone.bg }}
-      />
-
-      {/* vignette */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{ background: tone.vignette }}
-      />
-
-      {/* diagonal beam */}
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute -top-1/4 -right-1/3 h-[180%] w-1/2 bg-gradient-to-b ${tone.beam} blur-[30px] rotate-[18deg]`}
-      />
-
-      {/* grid wash */}
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,235,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,235,0.7) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      {/* scanlines */}
-      <div
-        aria-hidden
-        className="absolute inset-0 mix-blend-overlay opacity-[0.08]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, #ffffeb 0 1px, transparent 1px 3px)",
-        }}
-      />
-
-      {/* dashed inset */}
-      <div
-        aria-hidden
-        className="absolute inset-3 border border-dashed border-ivory/10 pointer-events-none"
-      />
-
-      {/* faint italic number */}
-      <span
-        className="pointer-events-none absolute bottom-[-10%] right-[-4%] font-editorial italic font-[300] text-ivory/10 leading-none select-none"
-        style={{
-          fontSize: size === "hero" ? "clamp(240px, 30vw, 480px)" : "clamp(120px, 14vw, 260px)",
-        }}
-      >
-        {print.num}
-      </span>
-
-      {/* top-left meta */}
-      <div className="absolute top-4 left-4 flex flex-col gap-1 font-mono text-[9px] uppercase tracking-[0.22em]">
-        <span className={tone.tag}>/ {print.num}</span>
-        <span className="text-ivory/40">{print.lens}</span>
-      </div>
-
-      {/* top-right — film stock */}
-      <div className="absolute top-4 right-4 text-right font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/40">
-        {print.film}
-      </div>
-
-      {/* EXIF strip — always visible for hero, hover-reveal for others */}
-      <div
-        className={`absolute left-4 right-4 bottom-4 flex items-end justify-between gap-4 ${
-          size === "hero"
-            ? "opacity-100"
-            : "opacity-0 translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
-        }`}
-      >
-        <div className="min-w-0">
-          <p className={`font-mono text-[9px] uppercase tracking-[0.22em] ${tone.tag} mb-1`}>
-            / {print.location.split(" · ")[0]}
-          </p>
-          <h3
-            className="font-editorial italic font-[300] text-ivory leading-[0.95] truncate"
-            style={{
-              fontSize:
-                size === "hero" ? "clamp(36px, 4vw, 64px)" : "clamp(18px, 2vw, 28px)",
-            }}
-          >
-            {print.title}
-          </h3>
-        </div>
-        <div className="shrink-0 text-right font-mono text-[9px] uppercase tracking-[0.22em] text-ivory/50 leading-tight">
-          <div>{print.aperture}</div>
-          <div>{print.shutter}</div>
-          <div>{print.iso}</div>
-        </div>
-      </div>
-
-      {/* corner brackets */}
-      <span
-        aria-hidden
-        className="absolute top-3 left-3 w-3 h-3 border-t border-l border-amber/40 group-hover:border-amber transition-colors duration-500"
-      />
-      <span
-        aria-hidden
-        className="absolute top-3 right-3 w-3 h-3 border-t border-r border-amber/40 group-hover:border-amber transition-colors duration-500"
-      />
-      <span
-        aria-hidden
-        className="absolute bottom-3 left-3 w-3 h-3 border-b border-l border-amber/40 group-hover:border-amber transition-colors duration-500"
-      />
-      <span
-        aria-hidden
-        className="absolute bottom-3 right-3 w-3 h-3 border-b border-r border-amber/40 group-hover:border-amber transition-colors duration-500"
-      />
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  RollStrip — a horizontal roll of 4 frames                          */
-/* ------------------------------------------------------------------ */
-
-function RollStrip({
-  roll,
-  index,
-}: {
-  roll: (typeof rolls)[number];
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.9 }}
-    >
-      {/* Roll header — slate bar */}
-      <div className="mb-8 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-y border-border-subtle py-5 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60">
-        <span className="flex items-center gap-2 text-ember font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
-          {roll.num}
-        </span>
-        <span className="text-on-surface-30">·</span>
-        <span className="text-amber">{roll.location}</span>
-        <span className="text-on-surface-30">·</span>
-        <span>{roll.stock}</span>
-        <span className="text-on-surface-30 hidden md:inline">·</span>
-        <span className="hidden md:inline">{roll.camera}</span>
-        <span className="ml-auto text-on-surface-30 hidden md:inline">
-          TC 00:{String(index + 1).padStart(2, "0")}:00:00
-        </span>
-      </div>
-
-      {/* Roll title */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <h3
-          className="font-editorial font-[300] italic leading-[0.95] tracking-[-0.02em] text-on-surface"
-          style={{ fontSize: "clamp(40px, 5vw, 84px)" }}
-        >
-          {roll.title}
-        </h3>
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60 md:text-right">
-          {roll.subtitle}
-          <span className="block text-on-surface-30 mt-1">{roll.date}</span>
-        </p>
-      </div>
-
-      {/* Film strip with perforations */}
-      <div className="relative">
-        {/* top perforations */}
-        <div
-          aria-hidden
-          className="h-4 flex items-center justify-between px-4 border-x border-t border-border-subtle bg-graphite/60"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,235,0.15) 14px 18px, transparent 18px 32px)",
-          }}
-        />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-x border-border-subtle">
-          {roll.frames.map((frame, i) => {
-            const fullPrint: Print = {
-              num: frame.num,
-              title: frame.label,
-              location: roll.location,
-              date: roll.date,
-              aperture: ["f/2.0", "f/2.8", "f/4", "f/5.6"][i % 4],
-              shutter: ["1/500s", "1/250s", "1/1000s", "1/125s"][i % 4],
-              iso: roll.stock.includes("800") ? "ISO 800" : roll.stock.includes("100") ? "ISO 100" : "ISO 400",
-              film: roll.stock,
-              lens: ["35mm", "50mm", "85mm", "28mm"][i % 4],
-              tone: frame.tone,
-              aspect: frame.aspect,
-            };
+      {/* ---------- the grid, which sits ON TOP of the overlay ---------- */}
+      {!inGrid ? (
+        <div className={`gl-grid${blown ? " blown" : ""}`}>
+          {tiles.map((p, i) => {
+            const isHero = i === HERO_POS;
+            const clip = isHero
+              ? blown
+                ? heroClip(hero.w, hero.h)
+                : revealed
+                  ? CLIP_SHOWN
+                  : CLIP_HIDDEN
+              : collapsed
+                ? CLIP_HIDDEN
+                : revealed
+                  ? CLIP_SHOWN
+                  : CLIP_HIDDEN;
             return (
-              <div
-                key={frame.num}
-                className={`${i > 0 ? "border-t sm:border-t-0 sm:border-l" : ""} ${
-                  i > 1 ? "lg:border-t-0 lg:border-l" : ""
-                } ${i === 2 ? "sm:border-t lg:border-t-0" : ""} border-border-subtle`}
+              <motion.button
+                key={isHero ? "hero" : `t-${i}`}
+                type="button"
+                className={`gl-tile${isHero ? " hero" : ""}`}
+                onClick={() => done && setOpen(isHero ? SETTLED[HERO_POS] : displayed[i])}
+                aria-label={`Open frame ${frameNo(displayed[i])}: ${p.slate}`}
+                disabled={!done}
+                initial={false}
+                animate={{
+                  clipPath: clip,
+                  scale: isHero && blown ? 4 : 1,
+                  y: isHero && lifted ? -50 : 0,
+                  /* The hero holds through the whole fold and only releases in
+                     the last 300ms, once the two behind it are away — so the
+                     handover to the grid is not a hard cut. */
+                  opacity: isHero && closing ? 0 : 1,
+                }}
+                transition={{
+                  clipPath: {
+                    duration: r ? 0 : 1,
+                    delay: r ? 0 : revealed && !collapsed ? i * 0.05 : 0,
+                    ease: HOP,
+                  },
+                  scale: { duration: r ? 0 : 1.5, ease: HOP },
+                  y: { duration: r ? 0 : 1, ease: HOP },
+                  opacity: {
+                    duration: r ? 0 : 0.3,
+                    delay: r ? 0 : FOLD_MS / 1000 - 0.3,
+                    ease: "linear",
+                  },
+                }}
               >
-                <PrintBlock print={fullPrint} />
-              </div>
+                <motion.img
+                  src={isHero && blown ? hero.full : p.thumb}
+                  alt={p.alt}
+                  width={p.w}
+                  height={p.h}
+                  initial={false}
+                  animate={{ scale: isHero ? (blown ? 1 : 2) : 1 }}
+                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                  /* contain once it is the hero: the clip above is trimmed to
+                     the letterbox, so the whole frame shows. */
+                  style={isHero && blown ? { objectFit: "contain" } : undefined}
+                />
+              </motion.button>
             );
           })}
         </div>
+      ) : null}
 
-        {/* bottom perforations */}
-        <div
-          aria-hidden
-          className="h-4 flex items-center justify-between px-4 border-x border-b border-border-subtle bg-graphite/60"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,235,0.15) 14px 18px, transparent 18px 32px)",
+      {/* ---------- the two frames that fan out behind the hero ---------- */}
+      {!inGrid
+        ? BANNERS.map((b, i) => (
+            <motion.div
+              className="gl-banner"
+              key={b.src}
+              aria-hidden
+              style={{ aspectRatio: `${b.w} / ${b.h}` }}
+              initial={{ scale: 0, left: "50%", rotate: 0 }}
+              animate={
+                blown && !closing
+                  ? { scale: 1, left: i === 0 ? "40%" : "60%", rotate: i === 0 ? -20 : 20 }
+                  : { scale: 0, left: "50%", rotate: 0 }
+              }
+              transition={
+                closing
+                  ? {
+                      left: { duration: r ? 0 : 1.5, ease: HOP },
+                      rotate: { duration: r ? 0 : 1.5, ease: HOP },
+                      scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 1, ease: "easeIn" },
+                    }
+                  : {
+                      scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 0.5, ease: "easeOut" },
+                      left: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+                      rotate: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+                    }
+              }
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={b.src} alt="" width={b.w} height={b.h} />
+            </motion.div>
+          ))
+        : null}
+
+      {/* ---------- nav: drops in like hero-24's ---------- */}
+      <motion.div
+        className="gl-nav"
+        initial={{ y: "-125%" }}
+        animate={{ y: r || inGrid || beat >= 6 ? "0%" : "-125%" }}
+        transition={{ duration: r ? 0 : 1, delay: r || inGrid ? 0 : 0.25, ease: HOP }}
+      >
+        <Link href="/" className="gl-back">
+          FrameFlow <span aria-hidden>←</span> back
+        </Link>
+        {done || inGrid ? (
+          <button type="button" className="gl-sheet-toggle" onClick={toggleView}>
+            {inGrid ? "← The reel" : `All ${galleryPhotos.length} frames →`}
+          </button>
+        ) : (
+          <span />
+        )}
+      </motion.div>
+
+      {/* ---------- intro copy + title ---------- */}
+      {!inGrid ? (
+        <>
+          <div className="gl-intro">
+            {["FrameFlow — Photography", "2024 — 2026"].map((line, i) => (
+              <h3 key={line}>
+                <span className="gl-line">
+                  <motion.span
+                    initial={{ y: "110%" }}
+                    animate={{ y: done && !closing ? "0%" : "110%" }}
+                    transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {line}
+                  </motion.span>
+                </span>
+              </h3>
+            ))}
+          </div>
+
+          <div className="gl-title">
+            <h2>
+              {"Five rolls. Seventy-six frames.".split(" ").map((word, i) => (
+                <span className="gl-line" key={`${word}-${i}`}>
+                  <motion.span
+                    initial={{ y: "110%" }}
+                    animate={{ y: done && !closing ? "0%" : "110%" }}
+                    transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
+            </h2>
+          </div>
+        </>
+      ) : null}
+
+      {!done && !inGrid ? (
+        <button type="button" className="gl-skip" onClick={skip}>
+          skip
+        </button>
+      ) : null}
+
+      {/* ---------- the full grid ---------- */}
+      {inGrid ? (
+        <div className="gl-full-scroll">
+          <div className="gl-full-head">
+            <p className="gl-full-meta">
+              {galleryPhotos.length} frames · five rolls · 2024 — 2026
+            </p>
+          </div>
+          <div className="gl-full" ref={gridRef}>
+            {galleryPhotos.map((photo, index) => (
+              <button
+                key={photo.src}
+                type="button"
+                className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
+                onClick={() => setOpen(index)}
+                aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photo.thumb}
+                  alt={photo.alt}
+                  width={photo.w}
+                  height={photo.h}
+                  loading="lazy"
+                  /* grid-1 sizes every item by its own ratio rather than
+                     cropping everything square. */
+                  style={{ aspectRatio: `${photo.w} / ${photo.h}` }}
+                />
+                <span className="gl-cell-meta" aria-hidden>
+                  <b>
+                    {frameNo(index)}
+                    {SELECTED.has(index) ? <i>◎</i> : null}
+                  </b>
+                  <span>{photo.slate}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {/* ---------- open frame ---------- */}
+      {openView ? (
+        <motion.div
+          className="gl-open"
+          role="dialog"
+          aria-modal="true"
+          aria-label={openView.p.slate}
+          initial={{ opacity: r ? 1 : 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: r ? 0 : 0.4 }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(null);
           }}
-        />
-      </div>
-    </motion.div>
+        >
+          <div className="gl-open-panel" ref={panelRef}>
+            <figure className="gl-open-figure">
+              <motion.div
+                key={openView.i}
+                className="gl-open-frame"
+                initial={r ? false : { scale: 0.42, clipPath: CLIP_OPEN_FROM }}
+                animate={{ scale: 1, clipPath: CLIP_SHOWN }}
+                transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                /* Three caps at once: natural width (16 originals are 700-900px
+                   and turn to mush stretched), 92vw, and 74vh x aspect so a tall
+                   portrait fits by height instead of being cropped. */
+                style={{
+                  width: `min(${openView.p.w}px, 92vw, calc(74vh * ${(
+                    openView.p.w / openView.p.h
+                  ).toFixed(4)}))`,
+                  aspectRatio: `${openView.p.w} / ${openView.p.h}`,
+                }}
+              >
+                <motion.img
+                  src={openView.p.full}
+                  alt={openView.p.alt}
+                  width={openView.p.w}
+                  height={openView.p.h}
+                  initial={r ? false : { scale: 2 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                />
+              </motion.div>
+              <figcaption>
+                <span className="gl-open-no">{frameNo(openView.i)}</span>
+                {openView.p.slate}
+                <span className="gl-open-client"> · {openView.p.client.replace(/-/g, " ")}</span>
+              </figcaption>
+            </figure>
+
+            <div className="gl-open-nav">
+              <button type="button" onClick={() => step(-1)} aria-label="Previous frame">
+                ‹
+              </button>
+              <span>
+                {frameNo(openView.i)} / {galleryPhotos.length}
+              </span>
+              <button type="button" onClick={() => step(1)} aria-label="Next frame">
+                ›
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="gl-open-x"
+              ref={closeRef}
+              onClick={() => setOpen(null)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+        </motion.div>
+      ) : null}
+
+      <style jsx global>{`
+        /* A darkroom rather than a void: warm near-black film base, an amber
+           safelight bleeding in from one corner, grain over everything. */
+        .gl-page {
+          --gl-base: #14100e;
+          --gl-film: #0c0a09;
+          --gl-ink: #ffffeb;
+          --gl-safe: #d38f2c;
+          --gl-mark: #d45938;
+          position: fixed;
+          inset: 0;
+          background: var(--gl-base);
+          color: var(--gl-ink);
+          overflow: hidden;
+          font-family: var(--font-mono);
+        }
+        .gl-safelight {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          background:
+            radial-gradient(60% 50% at 82% 8%, rgba(211, 143, 44, 0.16), transparent 70%),
+            radial-gradient(50% 45% at 12% 92%, rgba(212, 89, 56, 0.1), transparent 72%);
+        }
+        .gl-grain {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 12;
+          opacity: 0.05;
+          mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+          background-size: 160px 160px;
+        }
+
+        /* The overlay is BELOW the grid, exactly as hero-24 orders them — the
+           grid reveals and shuffles against black, and only then does the
+           overlay drop to expose the page. */
+        .gl-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 4;
+          background: #080706;
+          display: flex;
+          gap: 2em;
+          padding: 2em;
+          overflow: hidden;
+        }
+        .gl-col,
+        .gl-loader {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0.85em;
+        }
+        .gl-loader {
+          align-items: center;
+          gap: 0;
+        }
+        .gl-logo {
+          margin: 0;
+          text-align: center;
+          font-family: var(--font-editorial);
+          font-weight: 300;
+          font-size: clamp(30px, 3.4vw, 52px);
+          line-height: 0.92;
+          letter-spacing: -0.02em;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          -webkit-background-clip: text;
+          background-image: linear-gradient(0deg, #4a3a24, #4a3a24 50%, #ffffeb 0);
+          background-size: 100% 200%;
+        }
+        .gl-col-head,
+        .gl-row {
+          display: flex;
+          gap: 2em;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+        .gl-col-head {
+          color: var(--gl-safe);
+          opacity: 0.9;
+        }
+        .gl-col-head p,
+        .gl-row p {
+          margin: 0;
+        }
+        .gl-col-left .gl-col-head > *,
+        .gl-col-left .gl-row > * {
+          flex: 1;
+        }
+        .gl-col-right {
+          align-items: center;
+        }
+        .gl-col-right .gl-col-head,
+        .gl-col-right .gl-row {
+          width: 62%;
+        }
+
+        /* Above the overlay — this is the ordering that makes the reveal read
+           against black instead of against the page. */
+        .gl-grid {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: min(30vw, 430px);
+          aspect-ratio: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(3, 1fr);
+          gap: 1em;
+          z-index: 6;
+        }
+        .gl-tile {
+          position: relative;
+          padding: 0;
+          border: 0;
+          background: rgba(255, 255, 235, 0.05);
+          cursor: pointer;
+          overflow: hidden;
+          aspect-ratio: 1;
+          clip-path: ${CLIP_HIDDEN};
+        }
+        .gl-tile[disabled] {
+          cursor: default;
+        }
+        .gl-tile.hero {
+          z-index: 3;
+        }
+        .gl-tile img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .gl-tile:focus-visible,
+        .gl-cell:focus-visible {
+          outline: 2px solid var(--gl-safe);
+          outline-offset: 3px;
+        }
+
+        .gl-banner {
+          position: fixed;
+          top: 45%;
+          left: 50%;
+          width: 20%;
+          max-width: 250px;
+          /* aspect-ratio comes from each frame inline, so the photograph fits
+             its box instead of being cropped into a shared one. */
+          translate: -50% -50%;
+          z-index: 5;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .gl-banner img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        /* The preload set must cover the rotated vessel too. */
+
+        .gl-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 20;
+          padding: 18px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+        }
+        .gl-back {
+          font-family: var(--font-mono);
+          font-size: 10.5px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 235, 0.78);
+          text-decoration: none;
+          transition: color 200ms ease;
+        }
+        .gl-back:hover {
+          color: var(--gl-safe);
+        }
+        .gl-sheet-toggle {
+          background: none;
+          border: 1px solid rgba(211, 143, 44, 0.4);
+          color: rgba(255, 255, 235, 0.9);
+          padding: 8px 16px;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+        }
+        .gl-sheet-toggle:hover {
+          border-color: var(--gl-safe);
+          color: var(--gl-safe);
+          background: rgba(211, 143, 44, 0.07);
+        }
+
+        .gl-intro {
+          position: fixed;
+          top: 45%;
+          left: 0;
+          right: 0;
+          translate: 0 -50%;
+          padding: 0 clamp(24px, 7vw, 120px);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          z-index: 7;
+          pointer-events: none;
+        }
+        .gl-intro h3 {
+          margin: 0;
+          font-family: var(--font-mono);
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.26em;
+          text-transform: uppercase;
+          color: var(--gl-safe);
+        }
+        .gl-title {
+          position: fixed;
+          bottom: 8%;
+          left: 0;
+          right: 0;
+          text-align: center;
+          z-index: 7;
+          pointer-events: none;
+          padding: 0 24px;
+        }
+        .gl-title h2 {
+          margin: 0;
+          font-family: var(--font-editorial);
+          font-weight: 300;
+          font-size: clamp(24px, 3.2vw, 44px);
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: var(--gl-ink);
+        }
+        .gl-line {
+          display: inline-block;
+          overflow: hidden;
+          vertical-align: bottom;
+          padding-bottom: 0.14em;
+          margin-bottom: -0.14em;
+        }
+        .gl-line > span {
+          display: inline-block;
+          will-change: transform;
+        }
+        .gl-title .gl-line {
+          margin-right: 0.22em;
+        }
+
+        .gl-skip {
+          position: fixed;
+          right: 24px;
+          bottom: 22px;
+          z-index: 31;
+          background: none;
+          border: 1px solid rgba(255, 255, 235, 0.28);
+          color: rgba(255, 255, 235, 0.82);
+          padding: 7px 14px;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+        .gl-skip:hover {
+          border-color: rgba(255, 255, 235, 0.7);
+          color: var(--gl-ink);
+        }
+
+        /* ---- the full grid, laid out like grid-1 ---- */
+        .gl-full-scroll {
+          position: fixed;
+          inset: 0;
+          overflow-y: auto;
+          z-index: 8;
+          padding: 84px 22px 90px;
+          background: var(--gl-base);
+          scrollbar-width: thin;
+        }
+        .gl-full-head {
+          max-width: 1300px;
+          margin: 0 auto 22px;
+        }
+        .gl-full-meta {
+          margin: 0;
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          font-weight: 500;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 235, 0.66);
+        }
+        /* Masonry columns rather than a row grid. Every column is the same
+           width, so two photographs of the same ratio are always the same
+           size, and each one keeps its own height — which is what grid-1's
+           per-item aspect ratio is for. A row grid sized every row to its
+           tallest item and left voids across the page. */
+        .gl-full {
+          max-width: 1300px;
+          margin: 0 auto;
+          columns: 5;
+          column-gap: 1.1rem;
+        }
+        .gl-cell {
+          position: relative;
+          padding: 0;
+          border: 0;
+          background: none;
+          cursor: pointer;
+          display: block;
+          width: 100%;
+          text-align: left;
+          break-inside: avoid;
+          -webkit-column-break-inside: avoid;
+          margin: 0 0 1.1rem;
+        }
+        /* Dealt, not faded in: each card arrives from above, angled like one
+           coming off the deck, and squares up as it lands. The per-card delay
+           is written in from the measured row order. */
+        .gl-full.dealing .gl-cell {
+          animation: gl-deal 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .gl-full.dealing .gl-cell:nth-child(even) {
+          animation-name: gl-deal-alt;
+        }
+        @keyframes gl-deal {
+          from {
+            transform: translate3d(-46px, -220px, 0) rotate(-9deg) scale(0.72);
+            opacity: 0;
+          }
+          to {
+            transform: none;
+            opacity: 1;
+          }
+        }
+        @keyframes gl-deal-alt {
+          from {
+            transform: translate3d(46px, -220px, 0) rotate(9deg) scale(0.72);
+            opacity: 0;
+          }
+          to {
+            transform: none;
+            opacity: 1;
+          }
+        }
+        .gl-cell img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: cover;
+          /* grid-1 holds its images at 0.8 and lifts them on hover. */
+          filter: brightness(0.8);
+          transition: filter 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .gl-cell:hover img,
+        .gl-cell:focus-visible img {
+          filter: brightness(1.04);
+        }
+        /* The nine the reel dealt are marked by the outline and the glyph
+           only. Sizing them differently made identical ratios render at
+           different sizes, which is exactly what a gallery should not do. */
+        .gl-cell.picked img {
+          outline: 1px solid rgba(212, 89, 56, 0.9);
+          outline-offset: -1px;
+        }
+        .gl-cell-meta {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding-top: 8px;
+          font-family: var(--font-mono);
+          font-size: 8.5px;
+          font-weight: 500;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 235, 0.72);
+          transition: color 220ms ease;
+        }
+        .gl-cell:hover .gl-cell-meta,
+        .gl-cell:focus-visible .gl-cell-meta {
+          color: rgba(255, 255, 235, 0.95);
+        }
+        .gl-cell-meta b {
+          color: var(--gl-safe);
+          font-weight: 600;
+        }
+        .gl-cell-meta b i {
+          font-style: normal;
+          margin-left: 4px;
+          color: var(--gl-mark);
+        }
+        .gl-cell-meta > span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        /* ---- open frame ---- */
+        .gl-open {
+          position: fixed;
+          inset: 0;
+          z-index: 40;
+          background: rgba(8, 6, 5, 0.95);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px;
+        }
+        .gl-open-panel {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 18px;
+          max-width: 100%;
+        }
+        .gl-open-figure {
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+          max-width: 100%;
+        }
+        /* No max-height here — the width formula already accounts for viewport
+           height, and a max-height would crop rather than fit. */
+        .gl-open-frame {
+          overflow: hidden;
+          line-height: 0;
+          display: block;
+        }
+        .gl-open-figure img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .gl-open-figure figcaption {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 235, 0.86);
+          text-align: center;
+        }
+        .gl-open-no {
+          color: var(--gl-safe);
+          margin-right: 10px;
+        }
+        .gl-open-client {
+          color: rgba(255, 255, 235, 0.62);
+        }
+        .gl-open-nav {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .gl-open-nav button {
+          width: 34px;
+          height: 34px;
+          line-height: 1;
+          background: none;
+          border: 1px solid rgba(255, 255, 235, 0.24);
+          color: rgba(255, 255, 235, 0.85);
+          font-size: 18px;
+          cursor: pointer;
+        }
+        .gl-open-nav button:hover {
+          border-color: var(--gl-safe);
+          color: var(--gl-safe);
+        }
+        .gl-open-nav span {
+          font-family: var(--font-mono);
+          font-size: 9.5px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          color: rgba(255, 255, 235, 0.72);
+        }
+        .gl-open-x {
+          position: fixed;
+          top: 20px;
+          right: 24px;
+          background: none;
+          border: 0;
+          color: rgba(255, 255, 235, 0.8);
+          font-size: 22px;
+          line-height: 1;
+          cursor: pointer;
+        }
+        .gl-open-x:hover {
+          color: var(--gl-safe);
+        }
+        .gl-open-x:focus-visible,
+        .gl-open-nav button:focus-visible,
+        .gl-sheet-toggle:focus-visible,
+        .gl-skip:focus-visible,
+        .gl-back:focus-visible {
+          outline: 2px solid var(--gl-safe);
+          outline-offset: 3px;
+        }
+        .gl-open-x:focus:not(:focus-visible) {
+          outline: none;
+        }
+
+        @media (max-width: 1100px) {
+          .gl-full {
+            columns: 4;
+          }
+        }
+        @media (max-width: 940px) {
+          .gl-full {
+            columns: 3;
+          }
+          .gl-grid {
+            width: min(68vw, 420px);
+          }
+          .gl-col,
+          .gl-intro {
+            display: none;
+          }
+          .gl-loader {
+            flex: 1;
+          }
+          .gl-banner {
+            width: 30%;
+          }
+        }
+        @media (max-width: 640px) {
+          .gl-full {
+            columns: 2;
+            column-gap: 0.7rem;
+          }
+          .gl-cell {
+            margin-bottom: 0.7rem;
+          }
+          .gl-full-scroll {
+            padding: 74px 12px 70px;
+          }
+          .gl-grid {
+            width: 78vw;
+            gap: 0.5em;
+          }
+          .gl-nav {
+            padding: 14px 16px;
+            gap: 10px;
+          }
+          .gl-sheet-toggle {
+            padding: 7px 10px;
+            letter-spacing: 0.16em;
+          }
+        }
+      `}</style>
+    </main>
   );
 }

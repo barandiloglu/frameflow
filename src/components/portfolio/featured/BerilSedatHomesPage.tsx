@@ -584,6 +584,9 @@ export function BerilSedatHomesPage({ client }: Props) {
 
         .bs-rail{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 26px;
           background:var(--cloud);color:var(--navy);border-bottom:1px solid var(--rule);font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase}
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .bs-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .bs-back{color:var(--navy);text-decoration:none;opacity:.75}
         .bs-back:hover{opacity:1;color:var(--bronze)}
         .bs-rail-end{opacity:.75}
