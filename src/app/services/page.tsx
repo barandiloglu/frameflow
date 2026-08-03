@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ServicesHero } from "@/components/services/ServicesHero";
-import { FolderWall } from "@/components/services/FolderWall";
+import { CuttingRoom } from "@/components/services/CuttingRoom";
+import { SceneList } from "@/components/services/SceneList";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -138,43 +138,25 @@ export default function ServicesPage() {
       {/* ============================================================ */}
       {/*  HERO                                                        */}
       {/* ============================================================ */}
-      <section className="relative bg-surface overflow-hidden pt-[76px] min-h-[100svh] flex flex-col">
-        {/* backdrops */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage:
-              "radial-gradient(var(--color-amber-10) 1px, transparent 1px)",
-            backgroundSize: "38px 38px",
-            maskImage:
-              "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
-          }}
-        />
-        <div className="pointer-events-none absolute top-[10%] right-[6%] h-[340px] w-[340px] rounded-full bg-ember-10 blur-[140px]" />
-
-        {/* Slate strip */}
-        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em] text-on-surface-60">
-          <span className="flex items-center gap-2 text-amber font-semibold">
+      <div className="pt-[76px] bg-surface lg:h-[100svh] lg:flex lg:flex-col">
+        {/* Slate strip — the page's own header furniture, kept from the
+            previous design because it is brand, not layout. */}
+        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em]"
+             style={{ color: "var(--quiet-ink)" }}>
+          <span className="flex items-center gap-2 font-semibold" style={{ color: "var(--accent-ink)" }}>
             <span className="w-2 h-2 rounded-full bg-amber animate-pulse-dot" />
             SERVICES
           </span>
           <span>FF_DOC_SVC</span>
-          <span className="hidden sm:inline text-on-surface-30">/</span>
-          <span className="hidden sm:inline">07 SCENES IN ROTATION</span>
-          <span className="ml-auto hidden md:flex items-center gap-2">
-            <span className="text-on-surface-30">ACT</span>
-            <span className="text-amber">I / III</span>
-          </span>
+          <span className="hidden sm:inline opacity-50">/</span>
+          <span className="hidden sm:inline">The cutting room</span>
+          <span className="ml-auto hidden md:inline">07 SCENES · 4 TRACKS</span>
         </div>
 
-        <ServicesHero services={services} />
+        <CuttingRoom services={services} />
+      </div>
 
-      </section>
-
-      <FolderWall services={services} />
+      <SceneList services={services} />
 
       {/* ============================================================ */}
       {/*  CTA — Clapperboard                                          */}

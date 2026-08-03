@@ -21,9 +21,19 @@ export type FolderFrame = {
   client: string;
 };
 
+/** The timeline's tracks, in render order. */
+export const TRACKS = [
+  { code: "V1", name: "Brand" },
+  { code: "V2", name: "Digital" },
+  { code: "V3", name: "Content" },
+  { code: "A1", name: "Growth" },
+] as const;
+
 export type ServiceFolder = {
   /** Matches the `id` in the services list on the page. */
   id: number;
+  /** Index into TRACKS. Clips sit end to end along their own track. */
+  track: number;
   /** Roster `services` tag(s) this folder counts clients from. */
   tags: readonly string[];
   /** Live client count from src/data/clients.ts. Re-audited 2026-08-03 with a
@@ -39,6 +49,7 @@ export type ServiceFolder = {
 export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 1,
+    track: 0,
     tags: ["Logo"],
     clients: 5,
     frames: [
@@ -61,6 +72,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 2,
+    track: 0,
     tags: ["Branding"],
     clients: 3,
     frames: [
@@ -83,6 +95,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 3,
+    track: 1,
     tags: ["Website Design"],
     clients: 10,
     frames: [
@@ -105,6 +118,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 4,
+    track: 2,
     tags: ["Social Media"],
     clients: 15,
     frames: [
@@ -127,6 +141,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 5,
+    track: 2,
     tags: ["Videography", "Photography"],
     clients: 11,
     frames: [
@@ -149,6 +164,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 6,
+    track: 3,
     tags: ["Ad Management"],
     clients: 5,
     frames: [
@@ -171,6 +187,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 7,
+    track: 1,
     tags: ["App", "Web Application"],
     clients: 3,
     /* IYN is tagged "App" in the roster — a second tag for the same service
