@@ -26,7 +26,10 @@ export type ServiceFolder = {
   id: number;
   /** Roster `services` tag(s) this folder counts clients from. */
   tags: readonly string[];
-  /** Live client count from src/data/clients.ts, audited 2026-08-03. */
+  /** Live client count from src/data/clients.ts. Re-audited 2026-08-03 with a
+   *  per-entry parse; the previous figures came from a regex that reached past
+   *  entries lacking a nearby `services:` and swallowed the next one, so six of
+   *  the seven were wrong. */
   clients: number;
   frames: readonly FolderFrame[];
   /** Shown instead of frames when there is no honest image to fan. */
@@ -37,7 +40,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 1,
     tags: ["Logo"],
-    clients: 4,
+    clients: 5,
     frames: [
       {
         src: "/portfolio/big-bears/logo/big-bears-primary.png",
@@ -59,7 +62,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 2,
     tags: ["Branding"],
-    clients: 2,
+    clients: 3,
     frames: [
       {
         src: "/portfolio/harbourloom/brand/logo-primary.png",
@@ -81,7 +84,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 3,
     tags: ["Website Design"],
-    clients: 8,
+    clients: 10,
     frames: [
       {
         src: "/portfolio/aydin-cpa/website/home.png",
@@ -103,7 +106,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 4,
     tags: ["Social Media"],
-    clients: 11,
+    clients: 15,
     frames: [
       {
         src: "/portfolio/harbourloom/posts/01-beach-triptych.jpg",
@@ -125,7 +128,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 5,
     tags: ["Videography", "Photography"],
-    clients: 12,
+    clients: 11,
     frames: [
       {
         src: "/portfolio/destan-turkish-cuisine/photos/05-carving-cag.jpg",
@@ -168,14 +171,23 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 7,
-    tags: ["Web Application"],
-    clients: 2,
-    /* Acorn Accounting is wip:true and has no directory under public/portfolio;
-       Northern Pathways has no app or site captures. There is no honest image
-       to fan here, so the folder states where the work stands instead. Do not
-       fill it with unrelated photography to match its neighbours. */
-    frames: [],
-    note: "Two builds on the desk · one still in production",
+    tags: ["App", "Web Application"],
+    clients: 3,
+    /* IYN is tagged "App" in the roster — a second tag for the same service
+       that an earlier count missed entirely, which is why this folder was
+       previously shown as having no work at all. Its education-portal launch
+       is genuine, on-point evidence, so this is no longer an empty folder.
+       Acorn Accounting remains wip:true with no directory under
+       public/portfolio, and Northern Pathways has no app captures, so one
+       frame is all there honestly is. */
+    frames: [
+      {
+        src: "/portfolio/iyn/posts/06-portal-lansman.jpg",
+        alt: "IYN post — \u201c\u0130YN E\u011fitim Portal\u0131 ile tan\u0131\u015f\u0131n\u201d with laptop, tablet and phone mockups",
+        client: "IYN",
+      },
+    ],
+    note: "Three builds on the desk · one still in production",
   },
 ];
 

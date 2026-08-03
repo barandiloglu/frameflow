@@ -108,7 +108,8 @@ body{
 .plate.in .tag{opacity:1}
 
 /* the offline state — real NLE convention, and literally true here */
-.well.offline{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.well.offline,.well.single{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.well.single .plate:first-child{grid-row:auto}
 .well.offline .plate{grid-row:auto;display:grid;place-items:center;text-align:center;padding:28px;
   background:
     repeating-linear-gradient(-45deg,
@@ -195,7 +196,8 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
 
 /* playhead */
 .playhead{position:absolute;top:-26px;bottom:0;width:1px;background:var(--ember);
-  pointer-events:none;transition:left .42s cubic-bezier(.65,0,.35,1);z-index:4}
+  pointer-events:none;z-index:4}
+#play[aria-pressed="true"]{background:var(--ember);color:var(--ivory);border-color:var(--ember)}
 .playhead::before{content:"";position:absolute;top:0;left:-5px;
   border:5px solid transparent;border-top-color:var(--ember);border-bottom:0;height:0}
 
@@ -351,9 +353,10 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
   <div class="tl-foot">
     <span class="transport">
       <button type="button" id="prev" aria-label="Previous clip">◀</button>
+      <button type="button" id="play" aria-label="Pause" aria-pressed="true">❚❚</button>
       <button type="button" id="next" aria-label="Next clip">▶</button>
     </span>
-    <span><span class="key">←</span> <span class="key">→</span> step clips</span>
+    <span><span class="key">←</span> <span class="key">→</span> step clips <span class="key">space</span> play</span>
     <span class="note">
       Engagements overlap — one client can appear on several tracks — so the
       lengths describe workload per service, not a headcount of the roster.
@@ -378,7 +381,7 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
    ------------------------------------------------------------- */
 const SERVICES = [
   { id:1, track:0, name:"Logo Design", cat:"Branding", sub:"the signature shot",
-    scene:"INT. STUDIO — INSERT", clients:4,
+    scene:"INT. STUDIO — INSERT", clients:5,
     tagline:"Your brand starts here.",
     desc:"Your logo is the face of your brand — the first thing customers see and the weight of your identity, values, and promise. We craft strategic visual assets that set you up for lasting recognition.",
     features:["Custom logo concepts from scratch — no templates","Full brand mark suite (primary, secondary, icon)","Color palette & typography recommendations","All files delivered: SVG, PNG, PDF, EPS"],
@@ -388,7 +391,7 @@ const SERVICES = [
       {src:"public/portfolio/goldenhorn-construction/logo/primary.png",fit:"contain",who:"Golden Horn"}]},
 
   { id:2, track:0, name:"Brand Identity", cat:"Branding", sub:"the core frame",
-    scene:"INT. STUDIO — DAY", clients:2,
+    scene:"INT. STUDIO — DAY", clients:3,
     tagline:"Built to connect, built to last.",
     desc:"Your brand is more than a logo — it's the entire experience. Voice, visuals, values, all working together. We build complete brand identities that make you memorable and magnetic.",
     features:["Full visual identity system with brand guidelines","Typography & color system","Brand voice & messaging strategy","Business cards, stationery & collateral design"],
@@ -398,7 +401,7 @@ const SERVICES = [
       {src:"public/portfolio/beril-sedat-homes/brand/logo-navy.png",fit:"contain",who:"Beril & Sedat"}]},
 
   { id:3, track:1, name:"Website Design", cat:"Digital", sub:"the main stage",
-    scene:"EXT. WEB — CONTINUOUS", clients:8,
+    scene:"EXT. WEB — CONTINUOUS", clients:10,
     tagline:"Your business is unique. Your site should be too.",
     desc:"Your website is your central hub. We build custom sites that look incredible, function flawlessly, and are engineered from the ground up to help your business thrive online.",
     features:["Custom design — no page builders or generic themes","Mobile-responsive & performance optimized","SEO-ready structure & on-page optimization","CMS integration so you can manage content easily"],
@@ -408,14 +411,15 @@ const SERVICES = [
       {src:"public/portfolio/goldenhorn-construction/website/home.jpg",fit:"cover",who:"Golden Horn"}]},
 
   { id:7, track:1, name:"Web & Mobile Apps", cat:"Development", sub:"the sequel",
-    scene:"INT. DEV BAY — DAY", clients:2, offline:true,
+    scene:"INT. DEV BAY — DAY", clients:3,
     tagline:"Got an app idea? Let's build it.",
     desc:"A killer app idea can solve a problem, create a community, or transform an industry. FrameFlow is your end-to-end partner — from UX/UI design through development to launch and beyond.",
     features:["UX/UI design & interactive prototyping","Web & mobile app development (iOS & Android)","API integrations & backend development","Ongoing maintenance, updates & support"],
-    frames:[]},
+    frames:[
+      {src:"public/portfolio/iyn/posts/06-portal-lansman.jpg",fit:"cover",who:"IYN"}]},
 
   { id:5, track:2, name:"Video & Photo", cat:"Content", sub:"principal photography",
-    scene:"EXT. LOCATION — GOLDEN HR", clients:12,
+    scene:"EXT. LOCATION — GOLDEN HR", clients:11,
     tagline:"Your story is worth seeing.",
     desc:"Stock photos and shaky smartphone videos don't cut it. We create high-quality photography and videography that stops the scroll, tells your story, and makes a genuine connection.",
     features:["Product, food, lifestyle & event photography","Promotional & social media videos","Professional editing & post-production","Delivered in all formats for web, social & print"],
@@ -425,7 +429,7 @@ const SERVICES = [
       {src:"public/portfolio/connectr/photos/06-mavi-booth.jpg",fit:"cover",who:"ConnecTR"}]},
 
   { id:4, track:2, name:"Social Media", cat:"Marketing", sub:"the daily rushes",
-    scene:"EXT. FEED — CONTINUOUS", clients:11,
+    scene:"EXT. FEED — CONTINUOUS", clients:15,
     tagline:"Your social? Consider it handled.",
     desc:"You know you need social media — but who has time? FrameFlow is your dedicated social strategist, content creator, and community manager all in one results-driven package.",
     features:["Monthly content calendars & post scheduling","Custom graphic design & video editing per post","Community management & comment responses","Monthly analytics reports & strategy adjustments"],
@@ -485,7 +489,7 @@ TRACKS.forEach((tr,ti)=>{
       bg.style.backgroundImage=`url("${s.frames[0].src}")`;
       btn.prepend(bg);
     }
-    btn.addEventListener('click',()=>select(s.id));
+    btn.addEventListener('click',()=>{setPlaying(false);select(s.id)});
     lane.appendChild(btn);
     order.push(s.id);
     cursor += s.clients;
@@ -520,9 +524,9 @@ binEl.innerHTML=`<div class="bin-row bin-head">
     <span class="b-name">${s.name}</span>
     <span class="b-track">${TRACKS[s.track].code} ${TRACKS[s.track].name}</span>
     <span class="b-bar"><i style="width:${s.clients/SCALE*100*1.6}%"></i>${s.clients}</span>
-    <span class="b-media">${s.frames.length?s.frames.length+' frames':'—'}</span>
+    <span class="b-media">${s.frames.length?s.frames.length+' frame'+(s.frames.length===1?'':'s'):'—'}</span>
     <span class="b-status" data-off="${!!s.offline}">${s.offline?'Offline':'Online'}</span>`;
-  b.addEventListener('click',()=>select(s.id));
+  b.addEventListener('click',()=>{setPlaying(false);select(s.id)});
   binEl.appendChild(b);
 });
 
@@ -546,7 +550,7 @@ const listEl=document.getElementById('sceneList');
       <p class="desc">${s.desc}</p>
       <ul class="feat">${s.features.map(f=>`<li>${f}</li>`).join('')}</ul>
       <p class="meta"><span><b>${s.clients}</b> engagements</span>
-        <span>${s.offline?'<span style="color:var(--ember)">Media offline</span>':'<b>'+s.frames.length+'</b> frames on file'}</span>
+        <span>${s.offline?'<span style="color:var(--ember)">Media offline</span>':'<b>'+s.frames.length+'</b> frame'+(s.frames.length===1?'':'s')+' on file'}</span>
         <span>${s.sub}</span></p>
     </div>` + (s.offline?strip:'');
   row.querySelectorAll('.plate').forEach(pl=>pl.classList.add('in'));
@@ -565,10 +569,59 @@ function setView(v){
   document.getElementById('viewHint').textContent = v==='bin'
     ? 'Every service, sorted by scene'
     : 'Clip length = client engagements run';
+  if(v==='bin') setPlaying(false);
   if(v==='timeline'){const c=current;current=null;select(c);}
 }
 document.getElementById('vTimeline').addEventListener('click',()=>setView('timeline'));
 document.getElementById('vBin').addEventListener('click',()=>setView('bin'));
+
+/* -------- playback --------
+   The sequence plays itself: the playhead travels the length of the clip it is
+   on, and when it reaches the out point the next scene loads. Dwell is
+   proportional to clip length, so the long clips genuinely take longer to play
+   through — the timeline reads as a real edit rather than a slideshow. */
+const MS_PER_UNIT = 420;
+const DWELL_MIN = 2600;
+let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let playTimer = null;
+
+function dwellFor(s){ return s ? Math.max(DWELL_MIN, s.clients * MS_PER_UNIT) : DWELL_MIN; }
+function currentService(){ return SERVICES.find(x=>x.id===current); }
+
+function runPlayhead(id, ms, animate){
+  const clip=document.querySelector(`.clip[data-id="${id}"]`);
+  if(!clip || tlEl.dataset.view==='bin') return;
+  const lane=clip.parentElement;
+  const gutter=parseFloat(getComputedStyle(tlEl).getPropertyValue('--gutter'))||0;
+  const from=gutter+lane.offsetLeft+clip.offsetLeft;
+  const to=from+clip.offsetWidth;
+  play.style.transition='none';
+  play.style.left=from+'px';
+  void play.offsetWidth;                       /* commit the jump before easing */
+  if(animate){
+    play.style.transition=`left ${ms}ms linear`;
+    play.style.left=to+'px';
+  }
+}
+
+function schedule(){
+  clearTimeout(playTimer);
+  if(!playing || current===null) return;
+  playTimer=setTimeout(()=>step(1), dwellFor(currentService()));
+}
+
+function setPlaying(on){
+  playing=on;
+  const b=document.getElementById('play');
+  b.textContent = on ? '❚❚' : '▶';
+  b.setAttribute('aria-pressed', String(on));
+  b.setAttribute('aria-label', on ? 'Pause' : 'Play');
+  /* Called once at boot before anything is selected, so everything past the
+     button state has to tolerate current === null. */
+  if(current===null){ clearTimeout(playTimer); return; }
+  if(on){ runPlayhead(current, dwellFor(currentService()), true); schedule(); }
+  else { clearTimeout(playTimer); runPlayhead(current, 0, false); }
+}
 
 /* -------- selection -------- */
 const $=id=>document.getElementById(id);
@@ -584,13 +637,8 @@ function select(id){
   document.querySelectorAll('.bin-row[data-id]').forEach(r=>
     r.setAttribute('aria-current', r.dataset.id===String(id) ? 'true':'false'));
 
-  /* playhead sits at the head of the selected clip (timeline view only) */
-  const clip=document.querySelector(`.clip[data-id="${id}"]`);
-  if(clip && tlEl.dataset.view!=='bin'){
-    const lane=clip.parentElement;
-    const gutter=parseFloat(getComputedStyle($('timeline')).getPropertyValue('--gutter'))||0;
-    play.style.left=(gutter + lane.offsetLeft + clip.offsetLeft)+'px';
-  }
+  runPlayhead(id, dwellFor(s), playing);
+  schedule();
 
   const sw=$('swap');
   sw.classList.add('out');
@@ -602,11 +650,13 @@ function select(id){
     $('feat').innerHTML    = s.features.map(f=>`<li>${f}</li>`).join('');
     $('metaRow').innerHTML = s.offline
       ? `<span><b>${s.clients}</b> engagements</span><span style="color:var(--ember)">Media offline</span><span>${s.sub}</span>`
-      : `<span><b>${s.clients}</b> engagements</span><span><b>${s.frames.length}</b> frames on file</span><span>${s.sub}</span>`;
+      : `<span><b>${s.clients}</b> engagements</span><span><b>${s.frames.length}</b> frame${s.frames.length===1?'':'s'} on file</span><span>${s.sub}</span>`;
 
     /* media well */
     const well=$('well');
-    well.className='well'+(s.offline?' offline':'');
+    /* A lone frame owns the whole well rather than sitting in a two-column
+       grid with an empty cell beside it. */
+    well.className='well'+(s.offline?' offline':'')+(s.frames.length===1?' single':'');
     well.innerHTML='';
     if(s.offline){
       well.innerHTML=`<div class="plate"><p class="offline-txt">Media offline
@@ -632,15 +682,25 @@ function step(d){
   const i=order.indexOf(current);
   select(order[(i+d+order.length)%order.length]);
 }
-$('next').addEventListener('click',()=>step(1));
-$('prev').addEventListener('click',()=>step(-1));
+$('next').addEventListener('click',()=>{setPlaying(false);step(1)});
+$('prev').addEventListener('click',()=>{setPlaying(false);step(-1)});
+$('play').addEventListener('click',()=>setPlaying(!playing));
 addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'){e.preventDefault();step(1)}
-  if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}
+  if(e.key==='ArrowRight'){e.preventDefault();setPlaying(false);step(1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();setPlaying(false);step(-1)}
+  if(e.code==='Space' && !/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)){
+    e.preventDefault();setPlaying(!playing);}
 });
+/* Playback is for the hero. Once the visitor is reading the scenes below,
+   a monitor cycling behind them is only a distraction. */
+if('IntersectionObserver' in window){
+  new IntersectionObserver(([e])=>{ if(!e.isIntersecting && playing) setPlaying(false); },
+    {threshold:0}).observe(document.querySelector('.timeline'));
+}
 addEventListener('resize',()=>{const c=current;current=null;select(c)});
 
 setView('timeline');
+setPlaying(playing);
 select(5); /* open on Video & Photo — the longest clip on the longest track */
 </script>
 </body>
