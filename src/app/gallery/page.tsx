@@ -61,8 +61,6 @@ const LIST_ROWS = 16;
    fade-out at 5.125 + 16 * 0.075 + 0.15. */
 const LIST_SPAN = 7;
 
-const SHUFFLE_CYCLES = 20;
-const SHUFFLE_MS = 150;
 const PRELOAD_TIMEOUT_MS = 4000;
 
 type View = "reveal" | "grid";
@@ -116,29 +114,7 @@ const ROW_STEP = 0.085;
 const COL_STEP = 0.032;
 const DEAL_CAP = 2.2;
 
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
-function pickNine(cycle: number, prev: readonly number[]): number[] {
-  const rand = mulberry32(cycle * 2654435761);
-  const out: number[] = [];
-  for (let pos = 0; pos < 9; pos += 1) {
-    let candidate = 0;
-    for (let attempt = 0; attempt < 24; attempt += 1) {
-      candidate = Math.floor(rand() * galleryPhotos.length);
-      if (candidate !== prev[pos] && !out.includes(candidate)) break;
-    }
-    out.push(candidate);
-  }
-  return out;
-}
 
 /* One row's opacity/colour keyframes, staggered like the GSAP version: fade in
    at 2.5, brighten at 3.85, fade out at 5.125, each offset by 0.075 per row. */
@@ -161,11 +137,13 @@ function rowKeyframes(i: number) {
 
 export default function GalleryPage() {
   const reduced = useReducedMotion();
-  const [beat, setBeat] = useState(0);
-  const [view, setView] = useState<View>("reveal");
+  const [beat] = useState(99);
+  /* The gallery opens on the full roll. The staged reveal it used to play
+     first is gone — this never leaves the grid. */
+  const [view] = useState<View>("grid");
   const [displayed, setDisplayed] = useState<readonly number[]>(SETTLED);
   const [open, setOpen] = useState<number | null>(null);
-  const [closing, setClosing] = useState(false);
+  const closing = false;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const shuffleId = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -179,21 +157,7 @@ export default function GalleryPage() {
     shuffleId.current = null;
   }, []);
 
-  const skip = useCallback(() => {
-    clearAll();
-    setDisplayed(SETTLED);
-    setBeat(99);
-  }, [clearAll]);
 
-  /* Leaving the reel folds the triptych shut before the grid deals. Coming
-     back is immediate — there is nothing to close. */
-  const toggleView = useCallback(() => {
-    if (view === "grid") {
-      setView("reveal");
-      return;
-    }
-    setClosing(true);
-  }, [view]);
 
   const step = useCallback((dir: number) => {
     setOpen((cur) =>
@@ -224,31 +188,11 @@ export default function GalleryPage() {
       ...BANNERS.map((b) => decode(b.src)),
     ]);
     const ceiling = new Promise<void>((r) => setTimeout(r, PRELOAD_TIMEOUT_MS));
-
+    /* Nothing is staged any more, so the preload only has to settle before the
+       grid's first paint. */
     Promise.race([pool, ceiling]).then(() => {
       if (cancelled) return;
-      setBeat(1);
-      const at = (s: number, fn: () => void) => {
-        timers.current.push(setTimeout(fn, s * 1000));
-      };
-      at(T.gridIn, () => setBeat(2));
-      at(T.rotate, () => {
-        setBeat(3);
-        let cycle = 0;
-        shuffleId.current = setInterval(() => {
-          cycle += 1;
-          if (cycle >= SHUFFLE_CYCLES) {
-            if (shuffleId.current) clearInterval(shuffleId.current);
-            setDisplayed(SETTLED);
-            return;
-          }
-          setDisplayed((prev) => pickNine(cycle, prev));
-        }, SHUFFLE_MS);
-      });
-      at(T.collapse, () => setBeat(4));
-      at(T.heroLift, () => setBeat(5));
-      at(T.heroBlow, () => setBeat(6));
-      at(T.done, () => setBeat(99));
+      setDisplayed(SETTLED);
     });
 
     return () => {
@@ -258,17 +202,6 @@ export default function GalleryPage() {
 
   useEffect(() => clearAll, [clearAll]);
 
-  /* The fold runs, then the view swaps. Kept in an effect rather than a
-     setTimeout inside the click handler so a fast second click cannot leave a
-     stray timer behind. */
-  useEffect(() => {
-    if (!closing) return;
-    const t = setTimeout(() => {
-      setView((cur) => (cur === "reveal" ? "grid" : cur));
-      setClosing(false);
-    }, reduced ? 0 : FOLD_MS);
-    return () => clearTimeout(t);
-  }, [closing, reduced]);
 
   /* The deal sweeps across visual rows. Multi-column flows in DOM order down
      each column, so an index-based stagger would deal column by column; the
@@ -557,13 +490,7 @@ export default function GalleryPage() {
         <Link href="/" className="gl-back">
           FrameFlow <span aria-hidden>←</span> back
         </Link>
-        {done || inGrid ? (
-          <button type="button" className="gl-sheet-toggle" onClick={toggleView}>
-            {inGrid ? "← The reel" : `All ${galleryPhotos.length} frames →`}
-          </button>
-        ) : (
-          <span />
-        )}
+        <span />
       </motion.div>
 
       {/* ---------- intro copy + title ---------- */}
@@ -603,11 +530,6 @@ export default function GalleryPage() {
         </>
       ) : null}
 
-      {!done && !inGrid ? (
-        <button type="button" className="gl-skip" onClick={skip}>
-          skip
-        </button>
-      ) : null}
 
       {/* ---------- the full grid ---------- */}
       {inGrid ? (
