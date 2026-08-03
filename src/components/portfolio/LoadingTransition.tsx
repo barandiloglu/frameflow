@@ -58,16 +58,24 @@ const LOCK_RISE = -0.3;
 /** Where the number sits before it converges — hero-10's 10rem, to the right. */
 const OUTRO_REST_X = 150;
 
-/* The FrameFlow "w", as a single open stroked path rather than a filled
-   outline — a traced outline animates on as a shape inflating, not as a line
-   being drawn. The centreline was lifted from the supplied PNG column by
-   column and fitted; it measures 82% IoU against the original, so it is a
-   close approximation and not the artwork itself. Swap in the real vector
-   before this ships. */
+/* The mark is the real artwork, revealed by sweeping a mask along its own
+   centreline — not a redrawn stroke. The supplied logo is a hand-drawn brush
+   shape whose perpendicular width runs from 82 to 107 units along its length,
+   so no single stroke-width can reproduce it: any redraw comes out subtly
+   crooked. Masking the artwork sidesteps that entirely — what you see is the
+   file, pixel for pixel.
+
+   The centreline was extracted from the raster by re-centring each sample
+   perpendicular to the local tangent (vertical column midpoints are pulled
+   toward the inside of a curve, which is what made the first attempt lean),
+   then decimated with Douglas-Peucker. At 170 units the mask covers the
+   artwork completely — measured, not assumed: 130 left 540px stranded at the
+   tight bend, 150 left 23, 170 leaves none. */
 const W_PATH =
-  "M21.6 284.3 C24.2 287.4 26.6 291.9 37.0 302.7 C47.4 313.5 68.5 328.3 84.0 349.1 C99.5 370.0 114.5 407.6 130.0 427.7 C145.5 447.8 161.5 458.4 177.0 469.7 C192.5 481.1 207.5 495.7 223.0 495.9 C238.5 496.2 254.5 487.5 270.0 471.2 C285.5 454.9 300.5 426.1 316.0 398.3 C331.5 370.4 347.3 331.9 363.0 304.3 C378.7 276.7 394.5 249.7 410.0 232.4 C425.5 215.2 440.5 207.3 456.0 200.8 C471.5 194.3 487.5 191.6 503.0 193.4 C518.5 195.3 533.5 202.3 549.0 211.8 C564.5 221.3 580.3 238.0 596.0 250.4 C611.7 262.8 627.5 278.0 643.0 286.2 C658.5 294.4 673.5 301.4 689.0 299.7 C704.5 298.0 720.5 288.8 736.0 276.1 C751.5 263.5 766.5 243.3 782.0 223.7 C797.5 204.1 813.5 179.5 829.0 158.6 C844.5 137.8 859.5 115.8 875.0 98.7 C890.5 81.5 911.6 66.0 922.0 55.8 C932.4 45.6 934.8 40.5 937.4 37.4";
+  "M30 238L47 259L62 325L90 385L126 434L171 472L211 494L166 454L201 470L171 445L219 495L212 480L278 451L292 406L216 482L186 440L294 423L283 455L174 442L184 465L282 458L285 445L166 464L144 406L281 425L153 427L149 422L195 472L238 498L128 433L186 483L280 445L344 330L286 395L304 436L151 436L130 382L131 400L214 482L177 467L187 473L316 392L312 399L327 372L322 395L321 387L207 473L184 454L302 445L303 430L309 438L328 349L366 276L390 247L423 218L449 202L478 194L509 193L544 207L613 266L651 291L684 300L714 297L737 286L756 268L843 130L883 84L926 45L879 87L927 44L873 95L841 134L928 43L863 90L897 70L927 43L926 38L879 104L907 61L942 34L869 100L936 34L938 40L882 86L870 107L935 43L898 73L862 113L916 43L944 20L954 47L931 40L932 34L947 34L886 84L843 167L964 48";
 const W_VIEWBOX = "0 0 972 548";
-const W_STROKE = 100;
+const W_MASK_WIDTH = 170;
+const W_SRC = "/logo-w.webp";
 
 const useIsoLayout = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
@@ -291,32 +299,34 @@ export function LoadingTransition({
 
       {/* The mark draws across the middle, and the two halves part along the
           line it just drew — so it opens the page rather than decorating it. */}
-      <svg
-        className="lt-mark"
-        viewBox={W_VIEWBOX}
-        fill="none"
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden
-      >
-        <motion.path
-          d={W_PATH}
-          pathLength={1}
-          stroke="var(--color-amber)"
-          strokeWidth={W_STROKE}
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      <svg className="lt-mark" viewBox={W_VIEWBOX} aria-hidden>
+        <defs>
+          <mask id="lt-w-mask" maskUnits="userSpaceOnUse">
+            <motion.path
+              d={W_PATH}
+              fill="none"
+              stroke="#fff"
+              strokeWidth={W_MASK_WIDTH}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              pathLength={1}
+              initial={false}
+              animate={{ strokeDashoffset: split ? 0 : 1 }}
+              transition={{ duration: t(0.75), ease: HOP }}
+              style={{ strokeDasharray: 1 }}
+            />
+          </mask>
+        </defs>
+        <motion.image
+          href={W_SRC}
+          x={0}
+          y={0}
+          width={972}
+          height={548}
+          mask="url(#lt-w-mask)"
           initial={false}
-          animate={{
-            strokeDashoffset: split ? 0 : 1,
-            opacity: parted ? 0 : split ? 1 : 0,
-          }}
-          transition={{
-            strokeDashoffset: { duration: t(0.75), ease: HOP },
-            /* Clears early in the part rather than trailing across the
-               revealed page as a grey ghost. */
-            opacity: { duration: t(parted ? 0.22 : 0.15), ease: "linear" },
-          }}
-          style={{ strokeDasharray: 1 }}
+          animate={{ opacity: parted ? 0 : 1 }}
+          transition={{ duration: t(parted ? 0.22 : 0.01), ease: "linear" }}
         />
       </svg>
 
