@@ -109,6 +109,7 @@ export function FolderWall({ services }: { services: readonly Service[] }) {
         .fw-item {
           position: relative;
           min-width: 0;
+          scroll-margin-top: 120px;
         }
         /* Room above the folder for the frames to fan into. Reserved always so
            the grid does not reflow when one opens. */
@@ -446,6 +447,9 @@ function Folder({
   return (
     <>
       <li
+        /* The hero's tiles link here by scene number; without these ids those
+           anchors go nowhere. */
+        id={`scene-${service.id}`}
         className="fw-item"
         data-skin={index % 3}
         data-fan={fanOn ? "on" : "off"}

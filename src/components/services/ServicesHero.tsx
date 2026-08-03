@@ -1,88 +1,80 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { serviceFolders } from "@/data/serviceFolders";
 
-/* Ported from awwwards hero-3 (Expanding Image Band).
+/* Ported from awwwards hero-2 (Portrait Card Row), reinterpreted.
  *
- * The source's shape: a small centred frame in which images wipe in one after
- * another via clip-path inset(0 0 100% 0) → inset(0), staggered 0.25s; the
- * frame then expands to fill the viewport (width 100%, height 100dvh); a radial
- * scrim fades up; then the headline words rise into place.
+ * The source's row of five portraits flies in scattered (rotations
+ * -10/-5/0/5/10, x offsets -80/-40/0/40/80, y 18%, scale 0.72, opacity 0),
+ * settles, closes its gap to 0.75vw, scales to 1 — and then clips every tile
+ * except the centre one away and blows that one up to fill the screen.
  *
- * Timings are the source's own — 0.35s lead-in, 0.25s stagger, 1s wipe, 1s
- * expand on power3.inOut (≈ cubic-bezier(0.68, 0, 0.27, 1)), words at 0.075s
- * stagger. GSAP is not used; this runs on CSS transitions and one state flip.
+ * Steps 1-5 are kept; 6-8 are dropped. The whole point here is the row: seven
+ * tiles, one per service, so the hero IS the showcase rather than a curtain
+ * that opens onto a single photograph. The scatter values and timings are the
+ * source's, widened from five slots to seven.
  *
- * The point of choosing it: the frame ends at exactly one viewport, full bleed,
- * so the hero cannot be empty at the edges and cannot overflow the fold. */
+ * No GSAP — CSS transitions and one state flip. */
 
-/* Order matters: the last plate is the one that stays on screen once the
-   sequence finishes, so it has to carry the page. The close-ups lead; the
-   wide golden-hour frame rests, and its dark lower-left is where the
-   headline sits. */
-const PLATES = [
-  {
-    src: "/gallery/full/destan-turkish-cuisine__05-carving-cag.webp",
-    alt: "The chef carves the ca\u011f with a long blade",
-  },
-  {
-    src: "/gallery/full/big-bears__04-build-corn.webp",
-    alt: "Black-gloved hands scooping corn into a takeaway",
-  },
-  {
-    src: "/gallery/full/canapy-furniture__11-vessel-topdown.webp",
-    alt: "Glazed vessel from above on a walnut sideboard.",
-  },
-  {
-    src: "/gallery/full/connectr__01-guests-portrait.webp",
-    alt: "Two guests at the ConnecTR 2025 fair, posing for a portrait",
-  },
-  {
-    src: "/gallery/full/destan-turkish-cuisine__15-table-spread.webp",
-    alt: "A table set with mezze, lavash and adana, top-down",
-  },
-  {
-    src: "/gallery/full/adrians-wasaga-beach__01-courtyard-firepit-sunset.webp",
-    alt: "The courtyard at golden hour, firepit lit, cabins around",
-  },
-] as const;
+type Service = { id: number; name: string; category: string; subtitle: string };
 
-/* 0.35 lead + 5 × 0.25 stagger + 1s wipe, then the 1s expand. */
-const EXPAND_AT = (0.35 + (PLATES.length - 1) * 0.25 + 1) * 1000;
+/* The source's scatter, widened to seven slots and kept symmetrical. */
+const ROT = [-12, -8, -4, 0, 4, 8, 12];
+const OFF = [-96, -64, -32, 0, 32, 64, 96];
 
-export function ServicesHero() {
-  /* Read once at mount rather than inside the effect — setting state
-     synchronously in an effect body cascades a second render. */
+export function ServicesHero({ services }: { services: readonly Service[] }) {
   const [reduced] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
-  const [open, setOpen] = useState(reduced);
+  const [settled, setSettled] = useState(reduced);
 
   useEffect(() => {
     if (reduced) return;
-    const t = setTimeout(() => setOpen(true), EXPAND_AT);
+    const t = setTimeout(() => setSettled(true), 60);
     return () => clearTimeout(t);
   }, [reduced]);
 
   return (
-    <div className="sh" data-open={open ? "on" : "off"}>
-      <div className="sh-frame">
-        {PLATES.map((p, i) => (
-          <img
-            key={p.src}
-            className="sh-plate"
-            src={p.src}
-            alt={i === PLATES.length - 1 ? p.alt : ""}
-            aria-hidden={i === PLATES.length - 1 ? undefined : true}
-            style={{ ["--i" as string]: i }}
-            fetchPriority={i === 0 || i === PLATES.length - 1 ? "high" : "low"}
-            decoding="async"
-          />
-        ))}
-        <span className="sh-scrim" aria-hidden />
-      </div>
+    <div className="sh" data-settled={settled ? "on" : "off"}>
+      <ul className="sh-strip">
+        {services.map((s, i) => {
+          const folder = serviceFolders.find((f) => f.id === s.id);
+          const plate = folder?.frames[0];
+          return (
+            <li
+              key={s.id}
+              className="sh-tile"
+              style={
+                {
+                  "--rot": `${ROT[i % ROT.length]}deg`,
+                  "--off": `${OFF[i % OFF.length]}px`,
+                  "--i": i,
+                } as React.CSSProperties
+              }
+            >
+              <a href={`#scene-${s.id}`} className="sh-card">
+                <span className="sh-plate" data-fit={i < 2 ? "contain" : "cover"}>
+                  {plate ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={plate.src} alt="" loading="lazy" decoding="async" />
+                  ) : (
+                    /* No honest image for Web & Mobile Apps — see
+                       serviceFolders.ts. The tile says where the work stands
+                       rather than borrowing a photograph from another service. */
+                    <span className="sh-empty">{folder?.note}</span>
+                  )}
+                </span>
+                <span className="sh-no">{String(i + 1).padStart(2, "0")}</span>
+                <span className="sh-name">{s.name}</span>
+                <span className="sh-cat">{s.category}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
 
       <div className="sh-copy">
         <h1 className="sh-title">
@@ -93,11 +85,10 @@ export function ServicesHero() {
           </span>
           <span className="sh-mask">
             <span className="sh-word" style={{ ["--w" as string]: 1 }}>
-              One full <em className="sh-plain">reel</em>.
+              One full reel.
             </span>
           </span>
         </h1>
-
         <p className="sh-sub">
           Every service in the FrameFlow catalog, shot from the same script: strategy first,
           craft always, no templates, no filler.
@@ -107,111 +98,156 @@ export function ServicesHero() {
       <style jsx global>{`
         .sh {
           position: relative;
-          /* Fills whatever the section has left after the navbar offset and
-             the slate strip, so the hero is exactly one screen without
-             hard-coding either of their heights. */
+          /* Fills what the section has left under the navbar offset and the
+             slate strip, so the hero is exactly one screen. */
           flex: 1 1 auto;
-          min-height: 440px;
-          overflow: hidden;
+          min-height: 460px;
           display: flex;
-          align-items: flex-end;
-        }
-
-        /* Starts as a small portrait plate at the centre, ends as the whole
-           viewport — the source's move, and why nothing can be left empty. */
-        .sh-frame {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: min(74vw, 300px);
-          height: min(56svh, 400px);
-          transform: translate(-50%, -50%);
+          flex-direction: column;
+          justify-content: center;
+          gap: clamp(24px, 4vh, 52px);
+          padding: clamp(20px, 3vh, 44px) clamp(18px, 3.4vw, 56px) clamp(28px, 4vh, 56px);
           overflow: hidden;
-          background: var(--surface);
-          transition:
-            width 1s cubic-bezier(0.68, 0, 0.27, 1),
-            height 1s cubic-bezier(0.68, 0, 0.27, 1);
-        }
-        .sh[data-open="on"] .sh-frame {
-          width: 100%;
-          height: 100%;
         }
 
+        .sh-strip {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          align-items: stretch;
+          justify-content: center;
+          /* Step 4 of the source: the strip closes its gap as the tiles land. */
+          gap: clamp(26px, 3vw, 54px);
+          transition: gap 1s cubic-bezier(0.68, 0, 0.27, 1) 0.7s;
+        }
+        .sh[data-settled="on"] .sh-strip {
+          gap: clamp(6px, 0.75vw, 12px);
+        }
+
+        .sh-tile {
+          flex: 1 1 0;
+          min-width: 0;
+          max-width: 260px;
+          /* Steps 2, 3 and 5: in from scattered, settle, then up to full size. */
+          transform: translate(var(--off), 18%) rotate(var(--rot)) scale(0.72);
+          opacity: 0;
+          transition:
+            transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.9s ease;
+          transition-delay: calc(var(--i) * 0.06s);
+        }
+        .sh[data-settled="on"] .sh-tile {
+          transform: translate(0, 0) rotate(0deg) scale(1);
+          opacity: 1;
+        }
+
+        .sh-card {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          text-decoration: none;
+          color: inherit;
+        }
         .sh-plate {
-          position: absolute;
-          inset: 0;
+          position: relative;
+          display: block;
+          width: 100%;
+          aspect-ratio: 5 / 7;
+          overflow: hidden;
+          background: color-mix(in srgb, var(--on-surface) 8%, var(--surface));
+          border: 1px solid var(--border-subtle);
+        }
+        .sh-plate img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          clip-path: inset(0% 0% 100% 0%);
-          transition: clip-path 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-          transition-delay: calc(0.35s + var(--i) * 0.25s);
+          object-position: top center;
+          display: block;
+          filter: grayscale(0.28);
+          transition:
+            transform 620ms cubic-bezier(0.2, 0.8, 0.2, 1),
+            filter 320ms ease;
         }
-        /* Each plate wipes up over the one before it; the last is what stays. */
-        .sh[data-open="off"] .sh-plate,
-        .sh[data-open="on"] .sh-plate {
-          clip-path: inset(0% 0% 0% 0%);
+        /* Logos and identity sheets are artwork, not photographs — contain
+           them on a paper ground rather than cropping into the mark. */
+        .sh-plate[data-fit="contain"] {
+          background: var(--color-ivory);
         }
-
-        .sh-scrim {
+        .sh-plate[data-fit="contain"] img {
+          object-fit: contain;
+          object-position: center;
+          padding: 12px;
+        }
+        .sh-empty {
           position: absolute;
           inset: 0;
-          opacity: 0;
-          transition: opacity 0.85s ease-out;
-          /* Two layers: a radial lift from the source, plus a graphite ramp up
-             the left where the headline sits — the type has to clear 4.5:1 over
-             photographs, not just look moody. */
-          background:
-            radial-gradient(120% 100% at 70% 30%, transparent 20%, rgba(20, 18, 17, 0.5) 100%),
-            linear-gradient(
-              to top,
-              rgba(20, 18, 17, 0.92) 0%,
-              rgba(20, 18, 17, 0.72) 38%,
-              rgba(20, 18, 17, 0.28) 70%,
-              rgba(20, 18, 17, 0.12) 100%
-            );
+          display: flex;
+          align-items: flex-end;
+          padding: 14px;
+          font-family: var(--font-mono);
+          font-size: 9px;
+          line-height: 1.6;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--quiet-ink);
         }
-        .sh[data-open="on"] .sh-scrim {
-          opacity: 1;
+
+        .sh-no {
+          margin-top: 12px;
+          font-family: var(--font-mono);
+          font-size: 9px;
+          letter-spacing: 0.24em;
+          color: var(--accent-ink);
         }
-        /* The phone crop lifts the headline onto brighter parts of the frame —
-           measured 2.1:1 against the brightest pixels under it there, so the
-           ramp has to carry further up. */
-        @media (max-width: 700px) {
-          .sh-scrim {
-            background: linear-gradient(
-              to top,
-              rgba(20, 18, 17, 0.95) 0%,
-              rgba(20, 18, 17, 0.9) 46%,
-              rgba(20, 18, 17, 0.6) 76%,
-              rgba(20, 18, 17, 0.25) 100%
-            );
-          }
+        .sh-name {
+          margin-top: 4px;
+          font-family: var(--font-editorial);
+          font-weight: 300;
+          font-size: clamp(13px, 1.05vw, 19px);
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          color: var(--on-surface);
+        }
+        .sh-cat {
+          margin-top: 3px;
+          font-family: var(--font-mono);
+          font-size: 8px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--quiet-ink);
+        }
+
+        /* A light touch only — the folder wall below owns the real interaction. */
+        .sh-card:hover .sh-plate img,
+        .sh-card:focus-visible .sh-plate img {
+          transform: scale(1.06);
+          filter: grayscale(0);
+        }
+        .sh-card:focus-visible {
+          outline: 2px solid var(--accent-ink);
+          outline-offset: 4px;
         }
 
         .sh-copy {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-          padding: 0 clamp(22px, 5vw, 72px) clamp(40px, 6vh, 88px);
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: clamp(20px, 4vw, 64px);
+          flex-wrap: wrap;
         }
         .sh-title {
           margin: 0;
           font-family: var(--font-editorial);
           font-weight: 300;
-          font-size: clamp(44px, 8.4vw, 132px);
+          font-size: clamp(34px, 5.4vw, 86px);
           line-height: 0.94;
           letter-spacing: -0.035em;
-          /* Ivory over the scrim regardless of theme — this sits on a
-             photograph, not on the page ground. */
-          color: #ffffeb;
+          color: var(--on-surface);
         }
         .sh-title em {
           font-style: italic;
-          color: var(--color-amber);
-        }
-        .sh-title em.sh-plain {
-          color: inherit;
+          color: var(--accent-ink);
         }
         .sh-mask {
           display: block;
@@ -220,34 +256,61 @@ export function ServicesHero() {
         .sh-word {
           display: block;
           transform: translateY(108%);
-          transition: transform 0.95s cubic-bezier(0.2, 0.8, 0.2, 1);
-          transition-delay: calc(var(--w) * 0.075s + 0.25s);
+          transition: transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+          transition-delay: calc(1.4s + var(--w) * 0.1s);
         }
-        .sh[data-open="on"] .sh-word {
+        .sh[data-settled="on"] .sh-word {
           transform: translateY(0);
         }
-
         .sh-sub {
-          margin: clamp(18px, 2.4vh, 30px) 0 0;
-          max-width: 620px;
+          margin: 0;
+          max-width: 440px;
           font-family: var(--font-warm);
-          font-size: clamp(14px, 1.05vw, 16px);
+          font-size: clamp(13px, 0.95vw, 15px);
           font-weight: 300;
-          line-height: 1.75;
-          color: rgba(255, 255, 235, 0.86);
+          line-height: 1.7;
+          color: var(--quiet-ink);
           opacity: 0;
-          transition: opacity 0.7s ease 0.55s;
+          transition: opacity 0.7s ease 1.7s;
         }
-        .sh[data-open="on"] .sh-sub {
+        .sh[data-settled="on"] .sh-sub {
           opacity: 1;
         }
 
+        /* Seven portrait tiles stop fitting side by side well before phone
+           widths; the strip becomes a swipeable showcase rather than shrinking
+           the tiles into stamps. */
+        @media (max-width: 899px) {
+          .sh-strip {
+            justify-content: flex-start;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 8px;
+            /* No negative-margin full bleed: inside a scroll container the
+               start padding is not honoured and the first tile ends up flush
+               against the viewport edge. The strip scrolls within the page
+               padding instead. */
+            -webkit-overflow-scrolling: touch;
+          }
+          .sh-tile {
+            flex: 0 0 auto;
+            width: clamp(132px, 42vw, 190px);
+            scroll-snap-align: start;
+          }
+          .sh-copy {
+            display: block;
+          }
+          .sh-sub {
+            margin-top: 16px;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .sh-frame,
-          .sh-plate,
+          .sh-strip,
+          .sh-tile,
           .sh-word,
           .sh-sub,
-          .sh-scrim {
+          .sh-plate img {
             transition: none;
           }
         }

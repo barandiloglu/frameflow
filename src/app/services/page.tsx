@@ -170,7 +170,7 @@ export default function ServicesPage() {
           </span>
         </div>
 
-        <ServicesHero />
+        <ServicesHero services={services} />
 
       </section>
 
