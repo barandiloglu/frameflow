@@ -44,8 +44,15 @@ const LABEL: Record<string, string> = {
 };
 
 const LINES = 11;
-const COVER_MS = 900;
-const REVEAL_MS = 950;
+
+/* The source's own durations, not compressed.
+ *   in()  lines tween 1s + 1.5s = 2.5s, stagger 0.04 x 10 = 0.4  -> 2.9s total
+ *   out() lines tween 2.3s + stagger 0.4                          -> 2.7s total
+ * index.js swaps the content at in().totalDuration() * 0.75 and shows the new
+ * content at out().totalDuration() * 0.7; the push below sits at the same 75%. */
+const COVER_MS = 2900;
+const PUSH_AT = 2175;
+const REVEAL_MS = 2700;
 
 type Phase = "idle" | "cover" | "reveal";
 
@@ -57,6 +64,7 @@ export function PageTransition() {
   const [word, setWord] = useState("FrameFlow");
   const pending = useRef<string | null>(null);
   const revealTimer = useRef<number | null>(null);
+  const startedAt = useRef(0);
 
   const reducedRef = useRef(false);
   useEffect(() => {
@@ -70,11 +78,12 @@ export function PageTransition() {
   const start = useCallback(
     (href: string) => {
       pending.current = href;
+      startedAt.current = Date.now();
       setWord(LABEL[href] ?? "FrameFlow");
       setPhase("cover");
-      window.setTimeout(() => {
-        router.push(href);
-      }, COVER_MS);
+      /* 75% through in(), where index.js swaps its content. The ground is
+         opaque by then, so the swap itself is never seen. */
+      window.setTimeout(() => router.push(href), PUSH_AT);
     },
     [router],
   );
@@ -121,18 +130,20 @@ export function PageTransition() {
     return () => document.removeEventListener("click", onClick, true);
   }, [start]);
 
-  /* The route has changed under the cover — reveal it. Deferred one frame so
-     the incoming page has actually painted before the type sweeps back, which
-     also keeps the state change out of the effect body. */
+  /* The push lands at 75% of in(), so the route changes well before the cover
+     animation has finished. Waiting on the route alone would cut in() short —
+     the reveal only starts once BOTH the route has changed and in() has run
+     its full 2.9s. */
   useEffect(() => {
     if (phase !== "cover" || !pending.current) return;
     if (pathname !== new URL(pending.current, window.location.href).pathname) return;
     pending.current = null;
-    const raf = requestAnimationFrame(() => {
+    const remaining = Math.max(0, COVER_MS - (Date.now() - startedAt.current));
+    const t = window.setTimeout(() => {
       setPhase("reveal");
       revealTimer.current = window.setTimeout(() => setPhase("idle"), REVEAL_MS);
-    });
-    return () => cancelAnimationFrame(raf);
+    }, remaining);
+    return () => window.clearTimeout(t);
   }, [pathname, phase]);
 
   useEffect(() => {
@@ -145,7 +156,7 @@ export function PageTransition() {
      behind an opaque overlay. */
   useEffect(() => {
     if (phase !== "cover") return;
-    const bail = window.setTimeout(() => setPhase("idle"), COVER_MS + 4000);
+    const bail = window.setTimeout(() => setPhase("idle"), COVER_MS + 6000);
     return () => window.clearTimeout(bail);
   }, [phase]);
 
@@ -171,12 +182,14 @@ export function PageTransition() {
         .pt[data-phase="idle"] {
           visibility: hidden;
         }
-        .pt[data-phase="cover"],
-        .pt[data-phase="reveal"] {
+        .pt[data-phase="cover"] {
           pointer-events: all;
         }
 
-        /* The overlay's own ground — the source never needed one. */
+        /* The overlay's own ground — the source never needed one because its
+           type sits permanently on a solid page. It covers for in(), then
+           clears at the start of out() so the type sweeps back over the new
+           page exactly as it sweeps over content in the source. */
         .pt-ground {
           position: absolute;
           inset: 0;
@@ -186,15 +199,16 @@ export function PageTransition() {
         }
         .pt[data-phase="cover"] .pt-ground {
           opacity: 1;
-          transition-duration: 300ms;
+          transition-duration: 320ms;
         }
         .pt[data-phase="reveal"] .pt-ground {
           opacity: 0;
-          transition-delay: 260ms;
+          transition-duration: 420ms;
         }
 
-        /* .type: 100vmax square, centred, so the -90° rotation never exposes a
-           corner. */
+        /* .type: 100vmax square, centred, so the -90deg rotation never exposes
+           a corner. Container tween is 1.4s power2.inOut in both directions;
+           out() starts it at t=1.2. */
         .pt-type {
           position: absolute;
           top: 50%;
@@ -208,66 +222,84 @@ export function PageTransition() {
           text-align: center;
           will-change: transform;
           transform: scale(1) rotate(0deg);
-          transition: transform 900ms cubic-bezier(0.65, 0, 0.35, 1);
+          transition: transform 1.4s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
         .pt[data-phase="cover"] .pt-type {
           transform: scale(2.7) rotate(-90deg);
         }
         .pt[data-phase="reveal"] .pt-type {
           transform: scale(1) rotate(0deg);
-          transition-delay: 120ms;
+          transition-delay: 1.2s;
         }
 
         .pt-line {
           white-space: nowrap;
-          font-family: var(--font-display, var(--ff-display));
+          font-family: var(--ff-display);
           font-size: clamp(3.4rem, 12vh, 9rem);
           line-height: 0.75;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: -0.02em;
           color: var(--color-ivory);
-          opacity: 0.06;
+          opacity: 0.05;
           transform: translateX(0%);
           will-change: transform, opacity;
           user-select: none;
         }
-        /* lines: x → 20%, then hard out to -200%; stagger 0.04 */
+
+        /* in(): x 0 -> 20% over 1s (power1.inOut), then -> -200% over 1.5s
+           (power1.in); opacity 0.05 -> 1 -> 0 across the same 2.5s. 40% of
+           2.5s is the 1s hand-off. Stagger 0.04 forward. */
         .pt[data-phase="cover"] .pt-line {
-          animation: pt-in 900ms cubic-bezier(0.4, 0, 1, 1) forwards;
+          animation: pt-in 2.5s forwards;
           animation-delay: calc(var(--i) * 0.04s);
         }
         @keyframes pt-in {
           0% {
             transform: translateX(0%);
-            opacity: 0.06;
+            opacity: 0.05;
+            animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
           }
           40% {
             transform: translateX(20%);
             opacity: 1;
+            animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
           }
           100% {
             transform: translateX(-200%);
             opacity: 0;
           }
         }
-        /* out(): back to x 0 on an overshoot, stagger reversed */
+
+        /* out(): x -> 0% over 2.3s on a back ease; opacity -> 1 over 1s then
+           back to the resting 0.05 over 1.5s. 2.3s of the 2.5s span is 92%.
+           Stagger reversed. */
         .pt[data-phase="reveal"] .pt-line {
-          animation: pt-out 950ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          animation: pt-out 2.5s forwards;
           animation-delay: calc((10 - var(--i)) * 0.04s);
         }
         @keyframes pt-out {
           0% {
-            transform: translateX(120%);
+            transform: translateX(-200%);
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+          40% {
             opacity: 1;
           }
-          60% {
-            opacity: 1;
+          92% {
+            transform: translateX(0%);
           }
           100% {
             transform: translateX(0%);
-            opacity: 0;
+            opacity: 0.05;
           }
+        }
+
+        /* Once the ground has cleared the page is live again, so the type must
+           stop swallowing clicks even though it is still sweeping. */
+        .pt[data-phase="reveal"] {
+          pointer-events: none;
         }
 
         /* The whole effect is motion; there is nothing to degrade to, so it is
