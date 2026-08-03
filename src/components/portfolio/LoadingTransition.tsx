@@ -58,6 +58,17 @@ const LOCK_RISE = -0.3;
 /** Where the number sits before it converges — hero-10's 10rem, to the right. */
 const OUTRO_REST_X = 150;
 
+/* The FrameFlow "w", as a single open stroked path rather than a filled
+   outline — a traced outline animates on as a shape inflating, not as a line
+   being drawn. The centreline was lifted from the supplied PNG column by
+   column and fitted; it measures 82% IoU against the original, so it is a
+   close approximation and not the artwork itself. Swap in the real vector
+   before this ships. */
+const W_PATH =
+  "M21.6 284.3 C24.2 287.4 26.6 291.9 37.0 302.7 C47.4 313.5 68.5 328.3 84.0 349.1 C99.5 370.0 114.5 407.6 130.0 427.7 C145.5 447.8 161.5 458.4 177.0 469.7 C192.5 481.1 207.5 495.7 223.0 495.9 C238.5 496.2 254.5 487.5 270.0 471.2 C285.5 454.9 300.5 426.1 316.0 398.3 C331.5 370.4 347.3 331.9 363.0 304.3 C378.7 276.7 394.5 249.7 410.0 232.4 C425.5 215.2 440.5 207.3 456.0 200.8 C471.5 194.3 487.5 191.6 503.0 193.4 C518.5 195.3 533.5 202.3 549.0 211.8 C564.5 221.3 580.3 238.0 596.0 250.4 C611.7 262.8 627.5 278.0 643.0 286.2 C658.5 294.4 673.5 301.4 689.0 299.7 C704.5 298.0 720.5 288.8 736.0 276.1 C751.5 263.5 766.5 243.3 782.0 223.7 C797.5 204.1 813.5 179.5 829.0 158.6 C844.5 137.8 859.5 115.8 875.0 98.7 C890.5 81.5 911.6 66.0 922.0 55.8 C932.4 45.6 934.8 40.5 937.4 37.4";
+const W_VIEWBOX = "0 0 972 548";
+const W_STROKE = 100;
+
 const useIsoLayout = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export function LoadingTransition({
@@ -166,8 +177,15 @@ export function LoadingTransition({
         <motion.div
           className="lt-intro"
           initial={false}
-          animate={{ x: atMove && lock ? lock.first : 0 }}
-          transition={{ duration: t(atLock ? 0.75 : 1), ease: HOP }}
+          animate={{
+            x: atMove && lock ? lock.first : 0,
+            /* Hands over to the mark rather than sharing the centre with it. */
+            opacity: beat >= 6 ? 0 : 1,
+          }}
+          transition={{
+            x: { duration: t(atLock ? 0.75 : 1), ease: HOP },
+            opacity: { duration: t(0.18), ease: "linear" },
+          }}
         >
           <h1>
             {chars.map((c, i) => {
@@ -206,8 +224,13 @@ export function LoadingTransition({
           animate={{
             x: atMove && lock ? lock.outro : OUTRO_REST_X,
             scale: atLock ? LOCK_SCALE.outro : 1,
+            opacity: beat >= 6 ? 0 : 1,
           }}
-          transition={{ duration: t(atLock ? 0.75 : 1), ease: HOP }}
+          transition={{
+            x: { duration: t(atLock ? 0.75 : 1), ease: HOP },
+            scale: { duration: t(atLock ? 0.75 : 1), ease: HOP },
+            opacity: { duration: t(0.18), ease: "linear" },
+          }}
         >
           <h1>
             {outro.map((c, i) => (
@@ -266,6 +289,37 @@ export function LoadingTransition({
         {monogram(false)}
       </motion.div>
 
+      {/* The mark draws across the middle, and the two halves part along the
+          line it just drew — so it opens the page rather than decorating it. */}
+      <svg
+        className="lt-mark"
+        viewBox={W_VIEWBOX}
+        fill="none"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden
+      >
+        <motion.path
+          d={W_PATH}
+          pathLength={1}
+          stroke="var(--color-amber)"
+          strokeWidth={W_STROKE}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={false}
+          animate={{
+            strokeDashoffset: split ? 0 : 1,
+            opacity: parted ? 0 : split ? 1 : 0,
+          }}
+          transition={{
+            strokeDashoffset: { duration: t(0.75), ease: HOP },
+            /* Clears early in the part rather than trailing across the
+               revealed page as a grey ghost. */
+            opacity: { duration: t(parted ? 0.22 : 0.15), ease: "linear" },
+          }}
+          style={{ strokeDasharray: 1 }}
+        />
+      </svg>
+
       <div className="lt-tags">
         {tags.map((tag, i) => (
           <p className={`lt-tag lt-tag-${i + 1}`} key={tag}>
@@ -313,6 +367,18 @@ export function LoadingTransition({
           inset: 0;
           z-index: 3;
           pointer-events: none;
+        }
+        /* Sits above both halves, on the line they part along. */
+        .lt-mark {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          translate: -50% -50%;
+          z-index: 4;
+          width: min(24vw, 300px);
+          height: auto;
+          pointer-events: none;
+          overflow: visible;
         }
 
         /* Both titles occupy the same grid cell, so each starts centred and the
