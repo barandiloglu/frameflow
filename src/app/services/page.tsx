@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { FolderWall } from "@/components/services/FolderWall";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -224,43 +225,11 @@ export default function ServicesPage() {
               craft always, no templates, no filler. Scroll the reel to see each scene in detail.
             </motion.p>
 
-            {/* Scene index rail */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px border border-border-subtle bg-border-subtle"
-            >
-              {services.map((s, i) => (
-                <a
-                  key={s.id}
-                  href={`#scene-${s.id}`}
-                  className="group bg-surface p-5 transition-colors hover:bg-amber-10 flex items-center justify-between"
-                >
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-amber">
-                      Scene {String(i + 1).padStart(2, "0")}
-                    </p>
-                    <p className="font-editorial text-[18px] text-on-surface mt-1 leading-none">
-                      {s.name}
-                    </p>
-                  </div>
-                  <span className="font-editorial text-[18px] text-on-surface-30 group-hover:text-amber group-hover:translate-x-1 transition-all">
-                    →
-                  </span>
-                </a>
-              ))}
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/*  SERVICE SLATES                                              */}
-      {/* ============================================================ */}
-      {services.map((service, idx) => (
-        <ServiceSlate key={service.id} service={service} index={idx} />
-      ))}
+      <FolderWall services={services} />
 
       {/* ============================================================ */}
       {/*  CTA — Clapperboard                                          */}
@@ -339,130 +308,5 @@ export default function ServicesPage() {
 
       <Footer />
     </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  ServiceSlate                                                       */
-/* ------------------------------------------------------------------ */
-
-function ServiceSlate({
-  service,
-  index,
-}: {
-  service: (typeof services)[number];
-  index: number;
-}) {
-  const num = String(index + 1).padStart(2, "0");
-  const flipped = index % 2 === 1;
-
-  return (
-    <section
-      id={`scene-${service.id}`}
-      className="relative bg-surface border-t border-border-subtle px-6 md:px-[52px] py-[120px]"
-    >
-      <div className="max-w-[1500px] mx-auto">
-        {/* Slate bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-          className="mb-12 flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-border-subtle py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-60"
-        >
-          <span className="flex items-center gap-2 text-ember font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-ember animate-pulse-dot" />
-            Scene {num}
-          </span>
-          <span className="text-on-surface-30">·</span>
-          <span className="text-amber">{service.category}</span>
-          <span className="text-on-surface-30">·</span>
-          <span>{service.scene}</span>
-          <span className="ml-auto text-on-surface-30 hidden md:inline">
-            TC 00:{num}:00:00
-          </span>
-        </motion.div>
-
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start ${flipped ? "lg:flex-row-reverse" : ""}`}>
-          {/* Big numeral + scene card */}
-          <motion.div
-            initial={{ opacity: 0, x: flipped ? 30 : -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.9 }}
-            className={`lg:col-span-5 relative ${flipped ? "lg:order-2" : ""}`}
-          >
-            <div className="relative aspect-[4/5] border border-amber/30 bg-on-surface-05 overflow-hidden">
-              <div className="absolute inset-3 border border-dashed border-amber/25" />
-
-              {/* big italic numeral */}
-              <span
-                className="absolute inset-0 flex items-center justify-center font-editorial italic font-[300] text-amber/60 leading-none select-none"
-                style={{ fontSize: "clamp(200px, 24vw, 360px)" }}
-              >
-                {num}
-              </span>
-
-              {/* corner meta */}
-              <div className="absolute top-4 left-4 font-mono text-[9px] uppercase tracking-[0.22em] text-amber">
-                Scene · {num}
-              </div>
-              <div className="absolute top-4 right-4 font-mono text-[9px] uppercase tracking-[0.22em] text-on-surface-30">
-                {service.category}
-              </div>
-              <div className="absolute bottom-4 left-4 font-mono text-[9px] uppercase tracking-[0.22em] text-ember flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-ember" />
-                /{service.subtitle}
-              </div>
-              <div className="absolute bottom-4 right-4 font-mono text-[9px] uppercase tracking-[0.22em] text-on-surface-30">
-                {service.scene}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Body */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.9, delay: 0.15 }}
-            className={`lg:col-span-7 ${flipped ? "lg:order-1" : ""}`}
-          >
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-ember mb-4">
-              / {service.subtitle}
-            </p>
-            <h2
-              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface mb-5"
-              style={{ fontSize: "clamp(44px, 5.5vw, 92px)" }}
-            >
-              {service.name}
-            </h2>
-            <p className="font-editorial italic text-amber text-[20px] md:text-[24px] leading-[1.2] mb-8 max-w-[560px]">
-              {service.tagline}
-            </p>
-            <p className="font-warm text-[14px] font-[300] leading-[1.85] text-on-surface-60 max-w-[580px] mb-10">
-              {service.description}
-            </p>
-
-            <div className="border-t border-border-subtle pt-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-amber mb-5 flex items-center gap-3">
-                <span className="block h-px w-8 bg-amber" />
-                What&apos;s in the frame
-              </p>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                {service.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="mt-[8px] block h-[1px] w-5 shrink-0 bg-ember" />
-                    <span className="font-warm text-[13px] font-[300] leading-[1.7] text-on-surface">
-                      {f}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
   );
 }
