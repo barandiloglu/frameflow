@@ -12,12 +12,9 @@ import { galleryPhotos } from "@/data/gallery";
 /* The nine the grid deals from, hero at centre. Fixed rather than random:
    picking at render time desynchronises server and client markup.
 
-   Centre is 56 (Guests · Portrait) because the hero ends up clipped to its
-   middle 60% x 80%, and a frame has to survive that crop. Measured mean
-   luminance through the real crop: 56 reads at 78, where Destan's cag — which
-   sat here first — falls to 35 and goes essentially black. hero-24 centres a
-   face for the same reason. */
-const SETTLED = [0, 42, 28, 27, 56, 69, 34, 19, 41] as const;
+   Centre is 47 (Doner — Contrast); the hero ends up clipped to its middle
+   60% x 80%, and that frame fills the crop edge to edge. */
+const SETTLED = [0, 42, 28, 27, 47, 69, 34, 19, 41] as const;
 const SELECTED = new Set<number>(SETTLED);
 const HERO_POS = 4;
 
@@ -80,9 +77,15 @@ const ROWS = Array.from({ length: LIST_ROWS }, (_, i) => {
   return { slate: p.slate, client: meta.name, location: meta.location };
 });
 
-/* Two frames that fan out behind the hero at the end. Both read at small size
-   and at 20 degrees; hero-24 likewise reuses frames already in the grid. */
-const BANNERS = [galleryPhotos[42], galleryPhotos[27]];
+/* The two frames that fan out behind the hero. 38 (Vessel — From Above) is the
+   only landscape original of the three; the 4/5 banner covers it, which centre
+   crops the pot and stands it upright. */
+const BANNERS = [galleryPhotos[28], galleryPhotos[38]];
+
+/* Closing the triptych: the hero's clip meets in the middle like two panels
+   folding shut, rather than dropping away. */
+const CLIP_FOLD = "polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)";
+const FOLD_MS = 900;
 
 function mulberry32(seed: number) {
   return () => {
@@ -133,6 +136,7 @@ export default function GalleryPage() {
   const [view, setView] = useState<View>("reveal");
   const [displayed, setDisplayed] = useState<readonly number[]>(SETTLED);
   const [open, setOpen] = useState<number | null>(null);
+  const [closing, setClosing] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const shuffleId = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -151,6 +155,16 @@ export default function GalleryPage() {
     setDisplayed(SETTLED);
     setBeat(99);
   }, [clearAll]);
+
+  /* Leaving the reel folds the triptych shut before the grid deals. Coming
+     back is immediate — there is nothing to close. */
+  const toggleView = useCallback(() => {
+    if (view === "grid") {
+      setView("reveal");
+      return;
+    }
+    setClosing(true);
+  }, [view]);
 
   const step = useCallback((dir: number) => {
     setOpen((cur) =>
@@ -213,6 +227,18 @@ export default function GalleryPage() {
   }, [reduced]);
 
   useEffect(() => clearAll, [clearAll]);
+
+  /* The fold runs, then the view swaps. Kept in an effect rather than a
+     setTimeout inside the click handler so a fast second click cannot leave a
+     stray timer behind. */
+  useEffect(() => {
+    if (!closing) return;
+    const t = setTimeout(() => {
+      setView((cur) => (cur === "reveal" ? "grid" : cur));
+      setClosing(false);
+    }, reduced ? 0 : FOLD_MS);
+    return () => clearTimeout(t);
+  }, [closing, reduced]);
 
   /* Focus trap for the opened frame. */
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -343,11 +369,13 @@ export default function GalleryPage() {
           {tiles.map((p, i) => {
             const isHero = i === HERO_POS;
             const clip = isHero
-              ? blown
-                ? CLIP_HERO
-                : revealed
-                  ? CLIP_SHOWN
-                  : CLIP_HIDDEN
+              ? closing
+                ? CLIP_FOLD
+                : blown
+                  ? CLIP_HERO
+                  : revealed
+                    ? CLIP_SHOWN
+                    : CLIP_HIDDEN
               : collapsed
                 ? CLIP_HIDDEN
                 : revealed
@@ -401,15 +429,19 @@ export default function GalleryPage() {
               aria-hidden
               initial={{ scale: 0, left: "50%", rotate: 0 }}
               animate={
-                blown
+                blown && !closing
                   ? { scale: 1, left: i === 0 ? "40%" : "60%", rotate: i === 0 ? -20 : 20 }
-                  : { scale: 0, left: "50%", rotate: 0 }
+                  : { scale: closing ? 0.9 : 0, left: "50%", rotate: 0 }
               }
-              transition={{
-                scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 0.5, ease: "easeOut" },
-                left: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
-                rotate: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
-              }}
+              transition={
+                closing
+                  ? { duration: r ? 0 : FOLD_MS / 1000, ease: HOP }
+                  : {
+                      scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 0.5, ease: "easeOut" },
+                      left: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+                      rotate: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
+                    }
+              }
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={b.thumb} alt="" width={b.w} height={b.h} />
@@ -428,7 +460,7 @@ export default function GalleryPage() {
           FrameFlow <span aria-hidden>←</span> back
         </Link>
         {done || inGrid ? (
-          <button type="button" className="gl-sheet-toggle" onClick={() => setView(inGrid ? "reveal" : "grid")}>
+          <button type="button" className="gl-sheet-toggle" onClick={toggleView}>
             {inGrid ? "← The reel" : `All ${galleryPhotos.length} frames →`}
           </button>
         ) : (
@@ -445,7 +477,7 @@ export default function GalleryPage() {
                 <span className="gl-line">
                   <motion.span
                     initial={{ y: "110%" }}
-                    animate={{ y: done ? "0%" : "110%" }}
+                    animate={{ y: done && !closing ? "0%" : "110%" }}
                     transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {line}
@@ -461,7 +493,7 @@ export default function GalleryPage() {
                 <span className="gl-line" key={`${word}-${i}`}>
                   <motion.span
                     initial={{ y: "110%" }}
-                    animate={{ y: done ? "0%" : "110%" }}
+                    animate={{ y: done && !closing ? "0%" : "110%" }}
                     transition={{ duration: r ? 0 : 1, delay: r ? 0 : i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {word}
@@ -495,19 +527,32 @@ export default function GalleryPage() {
                 className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
                 onClick={() => setOpen(index)}
                 aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
-                initial={r ? false : { clipPath: CLIP_HIDDEN, opacity: 0 }}
-                animate={{ clipPath: CLIP_SHOWN, opacity: 1 }}
-                /* Same deal as the nine — clip down from the top on the "hop"
-                   ease. Stagger capped so the last frame is not two seconds
-                   behind the first. */
+                /* Dealt, not faded in: each card arrives from the middle of the
+                   screen where the triptych just folded shut, angled like a card
+                   coming off the deck, and squares up as it lands. */
+                initial={
+                  r
+                    ? false
+                    : { y: -220, x: index % 2 ? 46 : -46, rotate: index % 2 ? 9 : -9, scale: 0.72, opacity: 0 }
+                }
+                animate={{ y: 0, x: 0, rotate: 0, scale: 1, opacity: 1 }}
                 transition={{
-                  duration: r ? 0 : 0.9,
-                  delay: r ? 0 : Math.min(index * 0.022, 1.1),
-                  ease: HOP,
+                  duration: r ? 0 : 0.72,
+                  delay: r ? 0 : Math.min(index * 0.035, 1.5),
+                  ease: [0.16, 1, 0.3, 1],
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo.thumb} alt={photo.alt} width={photo.w} height={photo.h} loading="lazy" />
+                <img
+                  src={photo.thumb}
+                  alt={photo.alt}
+                  width={photo.w}
+                  height={photo.h}
+                  loading="lazy"
+                  /* grid-1 sizes every item by its own ratio rather than
+                     cropping everything square. */
+                  style={{ aspectRatio: `${photo.w} / ${photo.h}` }}
+                />
                 <span className="gl-cell-meta" aria-hidden>
                   <b>
                     {frameNo(index)}
@@ -882,7 +927,7 @@ export default function GalleryPage() {
           color: var(--gl-ink);
         }
 
-        /* ---- the full grid ---- */
+        /* ---- the full grid, laid out like grid-1 ---- */
         .gl-full-scroll {
           position: fixed;
           inset: 0;
@@ -893,8 +938,8 @@ export default function GalleryPage() {
           scrollbar-width: thin;
         }
         .gl-full-head {
-          max-width: 1500px;
-          margin: 0 auto 20px;
+          max-width: 1300px;
+          margin: 0 auto 22px;
         }
         .gl-full-meta {
           margin: 0;
@@ -905,76 +950,68 @@ export default function GalleryPage() {
           text-transform: uppercase;
           color: rgba(255, 255, 235, 0.66);
         }
+        /* Fixed column count with items at their own aspect ratio, the way
+           grid-1 builds its gallery — not uniform square crops. */
         .gl-full {
-          max-width: 1500px;
+          max-width: 1300px;
           margin: 0 auto;
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(208px, 1fr));
-          gap: 10px;
+          grid-template-columns: repeat(5, 1fr);
+          align-items: start;
+          gap: 1.35rem;
         }
         .gl-cell {
           position: relative;
           padding: 0;
           border: 0;
-          background: rgba(255, 255, 235, 0.05);
+          background: none;
           cursor: pointer;
-          overflow: hidden;
-          aspect-ratio: 1;
-          clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+          display: flex;
+          flex-direction: column;
+          text-align: left;
         }
         .gl-cell img {
           width: 100%;
-          height: 100%;
-          object-fit: cover;
+          height: auto;
           display: block;
-          transition: transform 620ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 260ms ease;
-          opacity: 0.92;
+          object-fit: cover;
+          /* grid-1 holds its images at 0.8 and lifts them on hover. */
+          filter: brightness(0.8);
+          transition: filter 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
         }
         .gl-cell:hover img,
         .gl-cell:focus-visible img {
-          opacity: 1;
-          transform: scale(1.04);
+          filter: brightness(1.04);
         }
-        /* The nine the reel dealt, ringed the way a photographer rings a proof. */
+        /* The nine the reel dealt run two columns wide. */
         .gl-cell.picked {
-          outline: 1px solid rgba(212, 89, 56, 0.9);
-          outline-offset: -1px;
+          grid-column: span 2;
         }
         .gl-cell-meta {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
           display: flex;
           align-items: baseline;
           gap: 8px;
-          padding: 22px 10px 9px;
-          background: linear-gradient(0deg, rgba(8, 6, 5, 0.88), transparent);
+          padding-top: 8px;
           font-family: var(--font-mono);
           font-size: 8.5px;
           font-weight: 500;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: rgba(255, 255, 235, 0.9);
-          opacity: 0;
-          transition: opacity 220ms ease;
-          pointer-events: none;
+          color: rgba(255, 255, 235, 0.72);
+          transition: color 220ms ease;
         }
         .gl-cell:hover .gl-cell-meta,
         .gl-cell:focus-visible .gl-cell-meta {
-          opacity: 1;
+          color: rgba(255, 255, 235, 0.95);
         }
         .gl-cell-meta b {
           color: var(--gl-safe);
           font-weight: 600;
         }
-        /* Every number stays amber: ember here measures 4.26:1 at 8.5px
-           against the scrim, under the small-text floor. The pick is signalled
-           by the glyph and the outline instead of by colour. */
         .gl-cell-meta b i {
           font-style: normal;
           margin-left: 4px;
-          color: var(--gl-ink);
+          color: var(--gl-mark);
         }
         .gl-cell-meta > span {
           overflow: hidden;
@@ -1092,7 +1129,7 @@ export default function GalleryPage() {
 
         @media (max-width: 1100px) {
           .gl-full {
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
           }
         }
         @media (max-width: 940px) {
@@ -1113,7 +1150,7 @@ export default function GalleryPage() {
         @media (max-width: 640px) {
           .gl-full {
             grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
+            gap: 0.7rem;
           }
           .gl-full-scroll {
             padding: 74px 12px 70px;
