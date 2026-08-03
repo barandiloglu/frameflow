@@ -683,6 +683,9 @@ export function GoldenHornPage({ client }: Props) {
           text-transform: uppercase;
           border-bottom: 3px solid var(--gold);
         }
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .gh-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .gh-back {
           color: var(--wash);
           text-decoration: none;

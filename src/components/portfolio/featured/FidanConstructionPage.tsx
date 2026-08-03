@@ -319,6 +319,9 @@ export function FidanConstructionPage({ client }: Props) {
         .fx-rail{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;
           padding:10px 22px;background:var(--ink);color:var(--paper);font-family:"JetBrains Mono",monospace;font-size:11px;
           letter-spacing:.14em;text-transform:uppercase;border-bottom:3px solid var(--red)}
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .fx-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .fx-back{color:var(--paper);text-decoration:none;opacity:.8}
         .fx-back:hover{opacity:1;color:var(--red)}
         .fx-rail-mid b{color:var(--red);font-weight:700}

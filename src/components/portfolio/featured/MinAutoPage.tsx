@@ -345,6 +345,9 @@ export function MinAutoPage({ client }: Props) {
 
         .ma-rail{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 22px;
           background:var(--navy);color:#fff;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .ma-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .ma-back{color:#fff;text-decoration:none;opacity:.85}
         .ma-back:hover{opacity:1;color:var(--orange)}
         .ma-rail-end{opacity:.62}

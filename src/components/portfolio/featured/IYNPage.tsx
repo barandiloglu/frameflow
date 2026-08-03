@@ -267,6 +267,9 @@ export function IYNPage({ client }: Props) {
 
         .iy-rail{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 22px;
           background:var(--grad);color:#fff;font-family:"Oswald",sans-serif;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+        /* Centred against the rail, not against its siblings — space-between
+           offsets it by half the difference between the two end blocks. */
+        .iy-rail-mid{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
         .iy-back{color:#fff;text-decoration:none;opacity:.85}
         .iy-back:hover{opacity:1;color:var(--amber)}
         .iy-rail-end{opacity:.6}

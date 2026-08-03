@@ -223,7 +223,13 @@ export function HarbourLoomPage({ client }: Props) {
           background:var(--paper);color:var(--ink);border-bottom:1px solid var(--rule);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
         .hl-back{color:var(--ink);text-decoration:none;opacity:.7}
         .hl-back:hover{opacity:1;color:var(--coral)}
-        .hl-rail-mid{font-family:"Juana","Cormorant Garamond",Georgia,serif;font-size:15px;letter-spacing:.28em;text-transform:uppercase}
+        /* Centred against the rail, not against its siblings. space-between put
+           it half the difference between the two end blocks off centre — 131px
+           left on desktop — and once the right block hides below 940 it was
+           flung to the far right instead. */
+        .hl-rail-mid{position:absolute;left:50%;transform:translateX(-50%);
+          font-family:"Juana","Cormorant Garamond",Georgia,serif;font-size:15px;letter-spacing:.28em;text-transform:uppercase;
+          white-space:nowrap;pointer-events:none}
         .hl-rail-end{opacity:.5}
 
         .hl-hero{background:var(--shell);padding:92px 22px 0}
@@ -324,6 +330,8 @@ export function HarbourLoomPage({ client }: Props) {
           .hl-rail-end{display:none}
         }
         @media(max-width:560px){
+          /* Tightened so the centred title clears the back link on a phone. */
+          .hl-rail-mid{font-size:12px;letter-spacing:.14em}
           .hl-hero{padding-top:56px}
           .hl-sign-grid{grid-template-columns:1fr;gap:16px}
           .hl-modal{padding:12px}
