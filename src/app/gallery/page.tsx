@@ -159,7 +159,12 @@ export default function GalleryPage() {
 
 
 
+  /* State, not a ref: this is read while rendering the frame's `initial`, and
+     refs may not be read during render. True only for a fresh open, so the
+     push-in belongs to opening and stepping just cross-fades. */
+  const [zoomOnOpen, setZoomOnOpen] = useState(true);
   const step = useCallback((dir: number) => {
+    setZoomOnOpen(false);
     setOpen((cur) =>
       cur === null ? cur : (cur + dir + galleryPhotos.length) % galleryPhotos.length,
     );
@@ -268,7 +273,10 @@ export default function GalleryPage() {
     document.body.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return setOpen(null);
+      if (e.key === "Escape") {
+        setZoomOnOpen(true);
+        return setOpen(null);
+      }
       if (e.key === "ArrowRight") return step(1);
       if (e.key === "ArrowLeft") return step(-1);
       if (e.key !== "Tab") return;
@@ -400,7 +408,11 @@ export default function GalleryPage() {
                 key={isHero ? "hero" : `t-${i}`}
                 type="button"
                 className={`gl-tile${isHero ? " hero" : ""}`}
-                onClick={() => done && setOpen(isHero ? SETTLED[HERO_POS] : displayed[i])}
+                onClick={() => {
+                  if (!done) return;
+                  setZoomOnOpen(true);
+                  setOpen(isHero ? SETTLED[HERO_POS] : displayed[i]);
+                }}
                 aria-label={`Open frame ${frameNo(displayed[i])}: ${p.slate}`}
                 disabled={!done}
                 initial={false}
@@ -545,7 +557,10 @@ export default function GalleryPage() {
                 key={photo.src}
                 type="button"
                 className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
-                onClick={() => setOpen(index)}
+                onClick={() => {
+                  setZoomOnOpen(true);
+                  setOpen(index);
+                }}
                 aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -583,13 +598,20 @@ export default function GalleryPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: r ? 0 : 0.4 }}
           onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(null);
+            if (e.target === e.currentTarget) {
+              setZoomOnOpen(true);
+              setOpen(null);
+            }
           }}
         >
           <div className="gl-open-panel" ref={panelRef}>
             <figure className="gl-open-figure">
+              {/* Deliberately unkeyed. Keying this on the frame index remounted
+                  it on every arrow press, so the whole 1.5s open — scale 0.42
+                  and the clip reveal — replayed for each step. It mounts when
+                  the lightbox opens and stays put; only the picture inside
+                  changes as you move through the roll. */}
               <motion.div
-                key={openView.i}
                 className="gl-open-frame"
                 initial={r ? false : { scale: 0.42, clipPath: CLIP_OPEN_FROM }}
                 animate={{ scale: 1, clipPath: CLIP_SHOWN }}
@@ -604,14 +626,18 @@ export default function GalleryPage() {
                   aspectRatio: `${openView.p.w} / ${openView.p.h}`,
                 }}
               >
+                {/* Keyed, so stepping cross-fades the picture rather than
+                    cutting to it. The scale-2 push-in belongs to the opening
+                    only, so it is skipped once a frame is already on screen. */}
                 <motion.img
+                  key={openView.i}
                   src={openView.p.full}
                   alt={openView.p.alt}
                   width={openView.p.w}
                   height={openView.p.h}
-                  initial={r ? false : { scale: 2 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                  initial={r ? false : zoomOnOpen ? { scale: 2 } : { opacity: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: r ? 0 : zoomOnOpen ? 1.5 : 0.3, ease: HOP }}
                 />
               </motion.div>
               <figcaption>
@@ -637,7 +663,10 @@ export default function GalleryPage() {
               type="button"
               className="gl-open-x"
               ref={closeRef}
-              onClick={() => setOpen(null)}
+              onClick={() => {
+                setZoomOnOpen(true);
+                setOpen(null);
+              }}
               aria-label="Close"
             >
               ✕
