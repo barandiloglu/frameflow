@@ -53,9 +53,15 @@ body{
   display:flex;flex-direction:column;
   min-height:100svh;overflow-x:hidden;
 }
-/* The one-screen cutting-room layout is pinned only where the two-column
-   monitor actually holds; below that the document is free to grow. */
-@media (min-width:1021px){ body{height:100svh} }
+/* The cutting room owns the first screen; everything after it scrolls. The
+   pin is on the room, not the body, or there would be nothing to scroll to. */
+.room{display:flex;flex-direction:column;min-height:100svh}
+@media (min-width:1021px){ .room{height:100svh} }
+/* The bin is taller than four tracks. Rather than squeeze the monitor until
+   the inspector clips, the room grows — all seven rows visible at once is the
+   entire reason the bin exists. */
+@media (min-width:1021px){ .room[data-view="bin"]{height:auto;min-height:100svh} }
+@media (max-width:1020px){ .room{min-height:0} }
 
 /* ---------- slate strip ---------- */
 .slate{
@@ -204,12 +210,77 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
 .note{margin-left:auto;text-transform:none;letter-spacing:.04em;font-size:9px;max-width:52ch;
   line-height:1.7;text-align:right;color:color-mix(in srgb,var(--ivory) 34%,var(--graphite))}
 
+/* ---------- view switcher + bin ---------- */
+.views{margin-left:auto;display:flex;gap:0;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.views button{font:inherit;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;padding:5px 12px;background:none;border:0;color:var(--faint);
+  cursor:pointer;transition:background .2s ease,color .2s ease}
+.views button[aria-pressed="true"]{background:var(--amber);color:var(--graphite);font-weight:600}
+.views button:hover:not([aria-pressed="true"]){color:var(--ink)}
+
+.bin{display:none}
+.timeline[data-view="bin"] .tracks,
+.timeline[data-view="bin"] .ruler{display:none}
+.timeline[data-view="bin"] .bin{display:block}
+.bin-row{display:grid;
+  grid-template-columns:34px minmax(120px,1.5fr) minmax(78px,.7fr) minmax(120px,1.4fr) 88px 76px;
+  align-items:center;gap:14px;width:100%;text-align:left;
+  padding:7px 10px;background:none;border:0;border-bottom:1px solid var(--rule);
+  font:inherit;color:inherit;cursor:pointer;transition:background .2s ease}
+.bin-row:hover,.bin-row:focus-visible{background:color-mix(in srgb,var(--amber) 12%,transparent);outline:none}
+.bin-row[aria-current="true"]{background:color-mix(in srgb,var(--amber) 20%,transparent)}
+.bin-row[aria-current="true"] .b-name{color:var(--amber)}
+.bin-head{color:var(--faint);font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;border-bottom:1px solid var(--rule);cursor:default}
+.bin-head:hover{background:none}
+.b-n{font-family:var(--mono);font-size:9px;color:var(--amber)}
+.b-name{font-family:var(--serif);font-size:16px;font-weight:300;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-track,.b-media,.b-status{font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint)}
+.b-status[data-off="true"]{color:var(--ember)}
+.b-bar{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;color:var(--quiet)}
+.b-bar i{display:block;height:7px;background:var(--amber);border-radius:1px;flex:none}
+.bin-row[data-off="true"] .b-bar i{background:repeating-linear-gradient(-45deg,
+  var(--ember) 0 4px,color-mix(in srgb,var(--ember) 40%,var(--graphite)) 4px 8px)}
+
+/* ---------- all scenes (the plain read) ---------- */
+.scenes{border-top:1px solid var(--rule);background:var(--graphite)}
+.scenes-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+  padding:clamp(28px,5vh,60px) clamp(16px,3vw,40px) 8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint)}
+.scenes-head b{color:var(--amber);font-weight:600}
+.scene-row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:clamp(20px,3vw,56px);align-items:center;
+  padding:clamp(26px,4vh,46px) clamp(16px,3vw,40px);
+  border-top:1px solid var(--rule)}
+.scene-row:nth-child(even){background:color-mix(in srgb,var(--ivory) 3%,var(--graphite))}
+.scene-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.scene-strip .plate{aspect-ratio:4/5}
+.scene-strip .plate img{opacity:1;transform:none}
+.scene-copy h2{font-family:var(--serif);font-weight:300;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(26px,3vw,44px);margin-bottom:6px}
+.scene-copy .tagline{margin-top:6px;font-size:clamp(14px,1.3vw,19px)}
+.scene-copy .desc{margin-top:12px}
+.scene-copy .feat{margin-top:16px}
+.scene-copy .meta{margin-top:16px}
+.scene-off{grid-column:1 / -1;display:grid;place-items:center;padding:34px;text-align:center;
+  background:repeating-linear-gradient(-45deg,
+    color-mix(in srgb,var(--ember) 12%,var(--graphite-deep)) 0 12px,var(--graphite-deep) 12px 26px);
+  border:1px solid color-mix(in srgb,var(--ember) 38%,var(--graphite));border-radius:2px}
+.cue{display:flex;align-items:center;gap:10px;padding:0 clamp(16px,3vw,40px) 14px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.cue a{color:var(--amber);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
+
 /* ---------- responsive ---------- */
 /* Once the monitor stacks, its auto rows get compressed below their content
    by the fixed flex height and the inspector lands on top of the images. The
    one-screen lock only holds while the two-column layout does, so below this
    the document scrolls. */
 @media (max-width:1020px){
+  .scene-row{grid-template-columns:minmax(0,1fr)}
+  .bin-row{grid-template-columns:30px minmax(0,1fr) 84px;row-gap:4px}
+  .bin-row .b-track,.bin-row .b-media{display:none}
   .monitor{grid-template-columns:1fr;gap:20px;padding-bottom:24px;overflow:visible}
   .inspector{overflow:visible}
   /* height:100% resolves against an auto row once the grid stacks, so the
@@ -242,6 +313,7 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
 </head>
 <body>
 
+<div class="room">
 <div class="slate">
   <b>Services</b>
   <span>FF_DOC_SVC</span>
@@ -266,11 +338,16 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
 
 <section class="timeline" id="timeline" style="--gutter:118px;--clipH:36px">
   <div class="tl-head">
-    <b>Timeline</b>
-    <span>Clip length = client engagements run</span>
+    <b id="viewLabel">Timeline</b>
+    <span id="viewHint">Clip length = client engagements run</span>
+    <span class="views">
+      <button type="button" id="vTimeline" aria-pressed="true">Timeline</button>
+      <button type="button" id="vBin" aria-pressed="false">Bin</button>
+    </span>
   </div>
   <div class="ruler" id="ruler"></div>
   <div class="tracks" id="tracks"></div>
+  <div class="bin" id="bin"></div>
   <div class="tl-foot">
     <span class="transport">
       <button type="button" id="prev" aria-label="Previous clip">◀</button>
@@ -282,6 +359,14 @@ h1{font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.
       lengths describe workload per service, not a headcount of the roster.
     </span>
   </div>
+</section>
+
+<p class="cue">Prefer to just read? <a href="#scenes">Every scene, in full ↓</a></p>
+</div><!-- /.room -->
+
+<section class="scenes" id="scenes">
+  <div class="scenes-head"><b>All scenes</b><span>Seven services, start to finish</span></div>
+  <div id="sceneList"></div>
 </section>
 
 <script>
@@ -421,6 +506,70 @@ const play=document.createElement('div');
 play.className='playhead'; play.id='playhead';
 tracksEl.appendChild(play);
 
+/* -------- bin: every service on one screen, nothing truncated -------- */
+const binEl=document.getElementById('bin');
+binEl.innerHTML=`<div class="bin-row bin-head">
+  <span>#</span><span>Service</span><span>Track</span><span>Engagements</span>
+  <span>Media</span><span>Status</span></div>`;
+[...SERVICES].sort((a,b)=>a.id-b.id).forEach(s=>{
+  const b=document.createElement('button');
+  b.type='button'; b.className='bin-row'; b.dataset.id=s.id;
+  if(s.offline) b.dataset.off='true';
+  b.innerHTML=`
+    <span class="b-n">${String(s.id).padStart(2,'0')}</span>
+    <span class="b-name">${s.name}</span>
+    <span class="b-track">${TRACKS[s.track].code} ${TRACKS[s.track].name}</span>
+    <span class="b-bar"><i style="width:${s.clients/SCALE*100*1.6}%"></i>${s.clients}</span>
+    <span class="b-media">${s.frames.length?s.frames.length+' frames':'—'}</span>
+    <span class="b-status" data-off="${!!s.offline}">${s.offline?'Offline':'Online'}</span>`;
+  b.addEventListener('click',()=>select(s.id));
+  binEl.appendChild(b);
+});
+
+/* -------- all scenes: the plain, no-interaction read -------- */
+const listEl=document.getElementById('sceneList');
+[...SERVICES].sort((a,b)=>a.id-b.id).forEach(s=>{
+  const row=document.createElement('article');
+  row.className='scene-row'; row.id='scene-'+s.id;
+  const strip = s.offline
+    ? `<div class="scene-off"><p class="offline-txt">Media offline
+         <small>Two builds on the desk, one still in production. Nothing is cut
+         yet, so there is nothing here to show.</small></p></div>`
+    : `<div class="scene-strip">`+s.frames.map(f=>
+        `<div class="plate" data-fit="${f.fit}"><img src="${f.src}" alt="" loading="lazy">
+         <span class="tag">${f.who}</span></div>`).join('')+`</div>`;
+  row.innerHTML = (s.offline?'':strip) + `
+    <div class="scene-copy">
+      <p class="scene">Scene ${String(s.id).padStart(2,'0')} <i>·</i> ${s.cat} <i>·</i> ${s.scene}</p>
+      <h2>${s.name}</h2>
+      <p class="tagline">${s.tagline}</p>
+      <p class="desc">${s.desc}</p>
+      <ul class="feat">${s.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <p class="meta"><span><b>${s.clients}</b> engagements</span>
+        <span>${s.offline?'<span style="color:var(--ember)">Media offline</span>':'<b>'+s.frames.length+'</b> frames on file'}</span>
+        <span>${s.sub}</span></p>
+    </div>` + (s.offline?strip:'');
+  row.querySelectorAll('.plate').forEach(pl=>pl.classList.add('in'));
+  listEl.appendChild(row);
+});
+
+/* -------- view switcher -------- */
+const tlEl=document.getElementById('timeline');
+const roomEl=document.querySelector('.room');
+function setView(v){
+  tlEl.dataset.view=v;
+  roomEl.dataset.view=v;
+  document.getElementById('vTimeline').setAttribute('aria-pressed',String(v==='timeline'));
+  document.getElementById('vBin').setAttribute('aria-pressed',String(v==='bin'));
+  document.getElementById('viewLabel').textContent = v==='bin'?'Bin':'Timeline';
+  document.getElementById('viewHint').textContent = v==='bin'
+    ? 'Every service, sorted by scene'
+    : 'Clip length = client engagements run';
+  if(v==='timeline'){const c=current;current=null;select(c);}
+}
+document.getElementById('vTimeline').addEventListener('click',()=>setView('timeline'));
+document.getElementById('vBin').addEventListener('click',()=>setView('bin'));
+
 /* -------- selection -------- */
 const $=id=>document.getElementById(id);
 let current=null;
@@ -432,12 +581,16 @@ function select(id){
 
   document.querySelectorAll('.clip').forEach(c=>
     c.setAttribute('aria-current', c.dataset.id===String(id) ? 'true':'false'));
+  document.querySelectorAll('.bin-row[data-id]').forEach(r=>
+    r.setAttribute('aria-current', r.dataset.id===String(id) ? 'true':'false'));
 
-  /* playhead sits at the head of the selected clip */
+  /* playhead sits at the head of the selected clip (timeline view only) */
   const clip=document.querySelector(`.clip[data-id="${id}"]`);
-  const lane=clip.parentElement;
-  const gutter=parseFloat(getComputedStyle($('timeline')).getPropertyValue('--gutter'))||0;
-  play.style.left=(gutter + lane.offsetLeft + clip.offsetLeft)+'px';
+  if(clip && tlEl.dataset.view!=='bin'){
+    const lane=clip.parentElement;
+    const gutter=parseFloat(getComputedStyle($('timeline')).getPropertyValue('--gutter'))||0;
+    play.style.left=(gutter + lane.offsetLeft + clip.offsetLeft)+'px';
+  }
 
   const sw=$('swap');
   sw.classList.add('out');
@@ -487,6 +640,7 @@ addEventListener('keydown',e=>{
 });
 addEventListener('resize',()=>{const c=current;current=null;select(c)});
 
+setView('timeline');
 select(5); /* open on Video & Photo — the longest clip on the longest track */
 </script>
 </body>
