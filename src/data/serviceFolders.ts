@@ -106,14 +106,14 @@ export const serviceFolders: readonly ServiceFolder[] = [
     clients: 11,
     frames: [
       {
-        src: "/portfolio/asd-laminate/posts/02-carbon.png",
-        alt: "ASD social post — a matte grey Carbon-surface kitchen and bedroom, headline 'Carbon by ASD Laminat'",
-        client: "ASD Laminat",
-      },
-      {
         src: "/portfolio/harbourloom/posts/01-beach-triptych.jpg",
         alt: "Three-panel Harbour Loom post — a fish-print towel on sand, footprints through sunlit dunes, and a fringed woven edge",
         client: "Harbour Loom",
+      },
+      {
+        src: "/portfolio/asd-laminate/posts/02-carbon.png",
+        alt: "ASD social post — a matte grey Carbon-surface kitchen and bedroom, headline 'Carbon by ASD Laminat'",
+        client: "ASD Laminat",
       },
       {
         src: "/portfolio/adrians-wasaga-beach/social/01-now-booking.png",
