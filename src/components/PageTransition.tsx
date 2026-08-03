@@ -53,6 +53,11 @@ const LINES = 11;
 const COVER_MS = 2900;
 const PUSH_AT = 2175;
 const REVEAL_MS = 2700;
+/* index.js brings its content back at out().totalDuration() * 0.7. Clearing the
+   ground at 0 instead put the page on screen while the type was still at full
+   opacity — 1.25s of it sweeping over a loaded page, which reads as a fault
+   rather than a transition. */
+const GROUND_OUT_AT = Math.round(REVEAL_MS * 0.7);
 
 type Phase = "idle" | "cover" | "reveal";
 
@@ -61,9 +66,13 @@ export function PageTransition() {
   const pathname = usePathname();
 
   const [phase, setPhase] = useState<Phase>("idle");
+  /* Tracked separately from `phase` so lifting the ground does not restart the
+     line animation, which is keyed off data-phase. */
+  const [ground, setGround] = useState(false);
   const [word, setWord] = useState("FrameFlow");
   const pending = useRef<string | null>(null);
   const revealTimer = useRef<number | null>(null);
+  const groundTimer = useRef<number | null>(null);
   const startedAt = useRef(0);
 
   const reducedRef = useRef(false);
@@ -80,6 +89,7 @@ export function PageTransition() {
       pending.current = href;
       startedAt.current = Date.now();
       setWord(LABEL[href] ?? "FrameFlow");
+      setGround(true);
       setPhase("cover");
       /* 75% through in(), where index.js swaps its content. The ground is
          opaque by then, so the swap itself is never seen. */
@@ -141,6 +151,7 @@ export function PageTransition() {
     const remaining = Math.max(0, COVER_MS - (Date.now() - startedAt.current));
     const t = window.setTimeout(() => {
       setPhase("reveal");
+      groundTimer.current = window.setTimeout(() => setGround(false), GROUND_OUT_AT);
       revealTimer.current = window.setTimeout(() => setPhase("idle"), REVEAL_MS);
     }, remaining);
     return () => window.clearTimeout(t);
@@ -149,6 +160,7 @@ export function PageTransition() {
   useEffect(() => {
     return () => {
       if (revealTimer.current) window.clearTimeout(revealTimer.current);
+      if (groundTimer.current) window.clearTimeout(groundTimer.current);
     };
   }, []);
 
@@ -156,12 +168,15 @@ export function PageTransition() {
      behind an opaque overlay. */
   useEffect(() => {
     if (phase !== "cover") return;
-    const bail = window.setTimeout(() => setPhase("idle"), COVER_MS + 6000);
+    const bail = window.setTimeout(() => {
+      setPhase("idle");
+      setGround(false);
+    }, COVER_MS + 6000);
     return () => window.clearTimeout(bail);
   }, [phase]);
 
   return (
-    <div className="pt" data-phase={phase} aria-hidden>
+    <div className="pt" data-phase={phase} data-ground={ground ? "on" : "off"} aria-hidden>
       <div className="pt-ground" />
       <div className="pt-type">
         {Array.from({ length: LINES }, (_, i) => (
@@ -182,7 +197,8 @@ export function PageTransition() {
         .pt[data-phase="idle"] {
           visibility: hidden;
         }
-        .pt[data-phase="cover"] {
+        /* Clicks are swallowed only while the ground is actually covering. */
+        .pt[data-ground="on"] {
           pointer-events: all;
         }
 
@@ -197,13 +213,13 @@ export function PageTransition() {
           opacity: 0;
           transition: opacity 420ms ease;
         }
-        .pt[data-phase="cover"] .pt-ground {
+        .pt[data-ground="on"] .pt-ground {
           opacity: 1;
           transition-duration: 320ms;
         }
-        .pt[data-phase="reveal"] .pt-ground {
+        .pt[data-ground="off"] .pt-ground {
           opacity: 0;
-          transition-duration: 420ms;
+          transition-duration: 560ms;
         }
 
         /* .type: 100vmax square, centred, so the -90deg rotation never exposes
@@ -294,12 +310,6 @@ export function PageTransition() {
             transform: translateX(0%);
             opacity: 0.05;
           }
-        }
-
-        /* Once the ground has cleared the page is live again, so the type must
-           stop swallowing clicks even though it is still sweeping. */
-        .pt[data-phase="reveal"] {
-          pointer-events: none;
         }
 
         /* The whole effect is motion; there is nothing to degrade to, so it is
