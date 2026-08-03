@@ -81,12 +81,21 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <ThemeToggle />
 
-          <Link
-            href="/login"
-            className="hidden md:inline-block font-body text-[12px] font-medium tracking-[0.1em] uppercase text-graphite bg-amber py-[11px] px-6 rounded-[1px] no-underline transition-colors duration-200 hover:bg-[#e09f3a]"
+          {/* The client portal is not built yet. This is deliberately a
+              disabled control rather than a link: outlined instead of filled so
+              it does not read as active at rest, and it says why on hover. */}
+          <button
+            type="button"
+            aria-disabled="true"
+            onClick={(e) => e.preventDefault()}
+            className="nv-soon hidden md:inline-flex items-center justify-center relative overflow-hidden font-body text-[12px] font-medium tracking-[0.1em] uppercase py-[11px] px-6 rounded-[1px] border cursor-not-allowed"
           >
-            Client Login
-          </Link>
+            <span className="nv-soon-a">Client Login</span>
+            <span className="nv-soon-b" aria-hidden>
+              In production
+            </span>
+            <span className="sr-only">— the client portal is not available yet</span>
+          </button>
 
           {/* Hamburger — mobile only */}
           <button
@@ -293,20 +302,18 @@ export function Navbar() {
                 }}
                 className="px-5 pt-8 pb-6"
               >
-                <Link
-                  href="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="group relative w-full flex items-center justify-center gap-3 bg-amber text-graphite font-mono text-[11px] font-medium tracking-[0.24em] uppercase py-[18px] px-5 no-underline transition-all duration-300 hover:bg-ember hover:text-ivory"
+                <button
+                  type="button"
+                  aria-disabled="true"
+                  onClick={(e) => e.preventDefault()}
+                  className="nv-soon w-full flex items-center justify-center gap-3 font-mono text-[11px] font-medium tracking-[0.24em] uppercase py-[18px] px-5 border rounded-[1px] cursor-not-allowed"
                 >
                   <span className="relative flex h-2 w-2">
-                    <span className="absolute inset-0 rounded-full bg-graphite/40 animate-ping group-hover:bg-ivory/40" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-graphite group-hover:bg-ivory" />
+                    <span className="nv-soon-dot relative inline-flex h-2 w-2 rounded-full" />
                   </span>
                   Client Login
-                  <span className="font-editorial not-italic text-[18px] leading-none transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                  <span className="nv-soon-tag">· in production</span>
+                </button>
               </motion.div>
             </nav>
 
@@ -334,6 +341,61 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style jsx global>{`
+        /* Outlined and muted at rest so it never reads as an active control,
+           amber on hover with the reason in place of the label. */
+        .nv-soon {
+          background: none;
+          border-color: var(--border-subtle);
+          color: var(--quiet-ink);
+          transition: color 220ms ease, border-color 220ms ease, background 220ms ease;
+        }
+        .nv-soon:hover,
+        .nv-soon:focus-visible {
+          color: var(--accent-ink);
+          border-color: var(--accent-ink);
+          background: color-mix(in srgb, var(--color-amber) 10%, transparent);
+          outline: none;
+        }
+        .nv-soon-a {
+          display: block;
+          transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms ease;
+        }
+        .nv-soon-b {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: translateY(105%);
+          opacity: 0;
+          transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms ease;
+        }
+        .nv-soon:hover .nv-soon-a,
+        .nv-soon:focus-visible .nv-soon-a {
+          transform: translateY(-105%);
+          opacity: 0;
+        }
+        .nv-soon:hover .nv-soon-b,
+        .nv-soon:focus-visible .nv-soon-b {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        .nv-soon-dot {
+          background: currentColor;
+        }
+        .nv-soon-tag {
+          opacity: 0.72;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .nv-soon-a,
+          .nv-soon-b,
+          .nv-soon {
+            transition: none;
+          }
+        }
+      `}</style>
     </>
   );
 }

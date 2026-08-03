@@ -8,9 +8,9 @@ import { serviceFolders, TRACKS, type ServiceFolder } from "@/data/serviceFolder
  * The metaphor carries real data rather than decorating it: a clip's LENGTH is
  * the number of client engagements that service has actually run, so the
  * Content track is visibly the longest because that is genuinely where most of
- * the work is. The ruler is that same scale. Engagements overlap — one client
- * can appear on several tracks — which the footnote states outright, because
- * the lengths describe workload per service and not a headcount of the roster.
+ * the work is. The ruler is that same scale. Note that engagements overlap —
+ * one client can appear on several tracks — so the lengths describe workload
+ * per service rather than a headcount of the roster.
  *
  * The sequence plays itself: the playhead travels the length of the clip it is
  * on and the next scene loads at the out point, with dwell proportional to clip
@@ -278,10 +278,6 @@ export function CuttingRoom({ services }: { services: readonly Service[] }) {
           </span>
           <span className="cr-keys">
             <i>←</i> <i>→</i> step scenes
-          </span>
-          <span className="cr-note">
-            Engagements overlap — one client can appear on several tracks — so the lengths
-            describe workload per service, not a headcount of the roster.
           </span>
         </div>
       </div>
@@ -710,17 +706,6 @@ export function CuttingRoom({ services }: { services: readonly Service[] }) {
           border-radius: 1px;
           padding: 2px 5px;
         }
-        .cr-note {
-          margin-left: auto;
-          max-width: 52ch;
-          text-align: right;
-          text-transform: none;
-          letter-spacing: 0.04em;
-          font-size: 9px;
-          line-height: 1.7;
-          color: var(--quiet-ink);
-        }
-
         .cr-cue {
           margin: 0;
           padding: 0 clamp(16px, 3vw, 40px) 16px;
@@ -781,10 +766,6 @@ export function CuttingRoom({ services }: { services: readonly Service[] }) {
           }
           .cr-ruler {
             margin-left: 0;
-          }
-          .cr-note {
-            margin-left: 0;
-            text-align: left;
           }
           .cr-well {
             grid-template-rows: 118px 118px;

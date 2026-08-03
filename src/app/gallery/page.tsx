@@ -61,8 +61,6 @@ const LIST_ROWS = 16;
    fade-out at 5.125 + 16 * 0.075 + 0.15. */
 const LIST_SPAN = 7;
 
-const SHUFFLE_CYCLES = 20;
-const SHUFFLE_MS = 150;
 const PRELOAD_TIMEOUT_MS = 4000;
 
 type View = "reveal" | "grid";
@@ -116,29 +114,7 @@ const ROW_STEP = 0.085;
 const COL_STEP = 0.032;
 const DEAL_CAP = 2.2;
 
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
-function pickNine(cycle: number, prev: readonly number[]): number[] {
-  const rand = mulberry32(cycle * 2654435761);
-  const out: number[] = [];
-  for (let pos = 0; pos < 9; pos += 1) {
-    let candidate = 0;
-    for (let attempt = 0; attempt < 24; attempt += 1) {
-      candidate = Math.floor(rand() * galleryPhotos.length);
-      if (candidate !== prev[pos] && !out.includes(candidate)) break;
-    }
-    out.push(candidate);
-  }
-  return out;
-}
 
 /* One row's opacity/colour keyframes, staggered like the GSAP version: fade in
    at 2.5, brighten at 3.85, fade out at 5.125, each offset by 0.075 per row. */
@@ -161,11 +137,13 @@ function rowKeyframes(i: number) {
 
 export default function GalleryPage() {
   const reduced = useReducedMotion();
-  const [beat, setBeat] = useState(0);
-  const [view, setView] = useState<View>("reveal");
+  const [beat] = useState(99);
+  /* The gallery opens on the full roll. The staged reveal it used to play
+     first is gone — this never leaves the grid. */
+  const [view] = useState<View>("grid");
   const [displayed, setDisplayed] = useState<readonly number[]>(SETTLED);
   const [open, setOpen] = useState<number | null>(null);
-  const [closing, setClosing] = useState(false);
+  const closing = false;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const shuffleId = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -179,23 +157,14 @@ export default function GalleryPage() {
     shuffleId.current = null;
   }, []);
 
-  const skip = useCallback(() => {
-    clearAll();
-    setDisplayed(SETTLED);
-    setBeat(99);
-  }, [clearAll]);
 
-  /* Leaving the reel folds the triptych shut before the grid deals. Coming
-     back is immediate — there is nothing to close. */
-  const toggleView = useCallback(() => {
-    if (view === "grid") {
-      setView("reveal");
-      return;
-    }
-    setClosing(true);
-  }, [view]);
 
+  /* State, not a ref: this is read while rendering the frame's `initial`, and
+     refs may not be read during render. True only for a fresh open, so the
+     push-in belongs to opening and stepping just cross-fades. */
+  const [zoomOnOpen, setZoomOnOpen] = useState(true);
   const step = useCallback((dir: number) => {
+    setZoomOnOpen(false);
     setOpen((cur) =>
       cur === null ? cur : (cur + dir + galleryPhotos.length) % galleryPhotos.length,
     );
@@ -224,31 +193,11 @@ export default function GalleryPage() {
       ...BANNERS.map((b) => decode(b.src)),
     ]);
     const ceiling = new Promise<void>((r) => setTimeout(r, PRELOAD_TIMEOUT_MS));
-
+    /* Nothing is staged any more, so the preload only has to settle before the
+       grid's first paint. */
     Promise.race([pool, ceiling]).then(() => {
       if (cancelled) return;
-      setBeat(1);
-      const at = (s: number, fn: () => void) => {
-        timers.current.push(setTimeout(fn, s * 1000));
-      };
-      at(T.gridIn, () => setBeat(2));
-      at(T.rotate, () => {
-        setBeat(3);
-        let cycle = 0;
-        shuffleId.current = setInterval(() => {
-          cycle += 1;
-          if (cycle >= SHUFFLE_CYCLES) {
-            if (shuffleId.current) clearInterval(shuffleId.current);
-            setDisplayed(SETTLED);
-            return;
-          }
-          setDisplayed((prev) => pickNine(cycle, prev));
-        }, SHUFFLE_MS);
-      });
-      at(T.collapse, () => setBeat(4));
-      at(T.heroLift, () => setBeat(5));
-      at(T.heroBlow, () => setBeat(6));
-      at(T.done, () => setBeat(99));
+      setDisplayed(SETTLED);
     });
 
     return () => {
@@ -258,17 +207,6 @@ export default function GalleryPage() {
 
   useEffect(() => clearAll, [clearAll]);
 
-  /* The fold runs, then the view swaps. Kept in an effect rather than a
-     setTimeout inside the click handler so a fast second click cannot leave a
-     stray timer behind. */
-  useEffect(() => {
-    if (!closing) return;
-    const t = setTimeout(() => {
-      setView((cur) => (cur === "reveal" ? "grid" : cur));
-      setClosing(false);
-    }, reduced ? 0 : FOLD_MS);
-    return () => clearTimeout(t);
-  }, [closing, reduced]);
 
   /* The deal sweeps across visual rows. Multi-column flows in DOM order down
      each column, so an index-based stagger would deal column by column; the
@@ -335,7 +273,10 @@ export default function GalleryPage() {
     document.body.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return setOpen(null);
+      if (e.key === "Escape") {
+        setZoomOnOpen(true);
+        return setOpen(null);
+      }
       if (e.key === "ArrowRight") return step(1);
       if (e.key === "ArrowLeft") return step(-1);
       if (e.key !== "Tab") return;
@@ -467,7 +408,11 @@ export default function GalleryPage() {
                 key={isHero ? "hero" : `t-${i}`}
                 type="button"
                 className={`gl-tile${isHero ? " hero" : ""}`}
-                onClick={() => done && setOpen(isHero ? SETTLED[HERO_POS] : displayed[i])}
+                onClick={() => {
+                  if (!done) return;
+                  setZoomOnOpen(true);
+                  setOpen(isHero ? SETTLED[HERO_POS] : displayed[i]);
+                }}
                 aria-label={`Open frame ${frameNo(displayed[i])}: ${p.slate}`}
                 disabled={!done}
                 initial={false}
@@ -557,13 +502,7 @@ export default function GalleryPage() {
         <Link href="/" className="gl-back">
           FrameFlow <span aria-hidden>←</span> back
         </Link>
-        {done || inGrid ? (
-          <button type="button" className="gl-sheet-toggle" onClick={toggleView}>
-            {inGrid ? "← The reel" : `All ${galleryPhotos.length} frames →`}
-          </button>
-        ) : (
-          <span />
-        )}
+        <span />
       </motion.div>
 
       {/* ---------- intro copy + title ---------- */}
@@ -603,11 +542,6 @@ export default function GalleryPage() {
         </>
       ) : null}
 
-      {!done && !inGrid ? (
-        <button type="button" className="gl-skip" onClick={skip}>
-          skip
-        </button>
-      ) : null}
 
       {/* ---------- the full grid ---------- */}
       {inGrid ? (
@@ -623,7 +557,10 @@ export default function GalleryPage() {
                 key={photo.src}
                 type="button"
                 className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
-                onClick={() => setOpen(index)}
+                onClick={() => {
+                  setZoomOnOpen(true);
+                  setOpen(index);
+                }}
                 aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -661,13 +598,20 @@ export default function GalleryPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: r ? 0 : 0.4 }}
           onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(null);
+            if (e.target === e.currentTarget) {
+              setZoomOnOpen(true);
+              setOpen(null);
+            }
           }}
         >
           <div className="gl-open-panel" ref={panelRef}>
             <figure className="gl-open-figure">
+              {/* Deliberately unkeyed. Keying this on the frame index remounted
+                  it on every arrow press, so the whole 1.5s open — scale 0.42
+                  and the clip reveal — replayed for each step. It mounts when
+                  the lightbox opens and stays put; only the picture inside
+                  changes as you move through the roll. */}
               <motion.div
-                key={openView.i}
                 className="gl-open-frame"
                 initial={r ? false : { scale: 0.42, clipPath: CLIP_OPEN_FROM }}
                 animate={{ scale: 1, clipPath: CLIP_SHOWN }}
@@ -682,14 +626,18 @@ export default function GalleryPage() {
                   aspectRatio: `${openView.p.w} / ${openView.p.h}`,
                 }}
               >
+                {/* Keyed, so stepping cross-fades the picture rather than
+                    cutting to it. The scale-2 push-in belongs to the opening
+                    only, so it is skipped once a frame is already on screen. */}
                 <motion.img
+                  key={openView.i}
                   src={openView.p.full}
                   alt={openView.p.alt}
                   width={openView.p.w}
                   height={openView.p.h}
-                  initial={r ? false : { scale: 2 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                  initial={r ? false : zoomOnOpen ? { scale: 2 } : { opacity: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: r ? 0 : zoomOnOpen ? 1.5 : 0.3, ease: HOP }}
                 />
               </motion.div>
               <figcaption>
@@ -715,7 +663,10 @@ export default function GalleryPage() {
               type="button"
               className="gl-open-x"
               ref={closeRef}
-              onClick={() => setOpen(null)}
+              onClick={() => {
+                setZoomOnOpen(true);
+                setOpen(null);
+              }}
               aria-label="Close"
             >
               ✕

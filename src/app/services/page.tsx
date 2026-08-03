@@ -162,7 +162,7 @@ export default function ServicesPage() {
       {/*  CTA — Clapperboard                                          */}
       {/* ============================================================ */}
       <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
-        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-graphite px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
+        <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-ivory px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
           <div
             aria-hidden
             className="absolute top-0 left-0 right-0 h-9"
@@ -171,15 +171,15 @@ export default function ServicesPage() {
                 "repeating-linear-gradient(-68deg, #ffffeb 0 28px, #353230 28px 56px)",
             }}
           />
-          <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-graphite" />
+          <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-ivory/70" />
 
           <div className="pt-10">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-graphite/70 flex items-center gap-3">
-              <span className="block h-px w-10 bg-graphite/60" />
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.28em] text-ivory flex items-center gap-3">
+              <span className="block h-px w-10 bg-ivory/70" />
               Not sure which scene?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6vw, 98px)" }}
             >
               Let&apos;s write it
@@ -191,7 +191,7 @@ export default function ServicesPage() {
           <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-4 bg-graphite text-ivory font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-ivory hover:text-graphite"
+              className="group inline-flex items-center gap-4 bg-ivory text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[18px] pl-7 pr-9 no-underline transition-all duration-300 hover:bg-graphite hover:text-ivory"
             >
               <span className="w-2 h-2 rounded-full bg-ember animate-pulse-dot" />
               Book a free call
@@ -199,7 +199,7 @@ export default function ServicesPage() {
             </Link>
             <Link
               href="/"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-graphite/80 hover:text-graphite underline decoration-graphite/30 underline-offset-4"
+              className="font-mono text-[10px] uppercase tracking-[0.22em] text-ivory hover:text-ivory underline decoration-ivory/50 underline-offset-4"
             >
               / back to home
             </Link>
