@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
@@ -15,27 +15,33 @@ import {
 const TOTAL_CLIENTS = clients.length;
 const TOP_SERVICES = getServiceCounts().slice(0, 6);
 
-/* One frame per client for the hover marquee. Four clients have no imagery in
-   the repo — their band runs as text alone rather than borrowing someone
-   else's picture. */
-const MARQUEE_THUMBS: Record<string, string> = {
-  "adrians-wasaga-beach": "/portfolio/_marquee/adrians-wasaga-beach.webp",
-  "asd-laminate": "/portfolio/_marquee/asd-laminate.webp",
-  "aydin-cpa": "/portfolio/_marquee/aydin-cpa.webp",
-  "big-bears-baked-potato": "/portfolio/_marquee/big-bears-baked-potato.webp",
-  "canapy-furniture": "/portfolio/_marquee/canapy-furniture.webp",
-  connectr: "/portfolio/_marquee/connectr.webp",
-  ctbdh: "/portfolio/_marquee/ctbdh.webp",
-  "destan-turkish-cuisine": "/portfolio/_marquee/destan-turkish-cuisine.webp",
-  "esma-fine-foods": "/portfolio/_marquee/esma-fine-foods.webp",
-  "fidan-construction": "/portfolio/_marquee/fidan-construction.webp",
-  "goldenhorn-construction": "/portfolio/_marquee/goldenhorn-construction.webp",
-  harbourloom: "/portfolio/_marquee/harbourloom.webp",
-  iyn: "/portfolio/_marquee/iyn.webp",
-  minauto: "/portfolio/_marquee/minauto.webp",
-  "northern-pathways-immigration": "/portfolio/_marquee/northern-pathways-immigration.webp",
-  "beril-sedat-homes": "/portfolio/_marquee/beril-sedat-homes.webp",
-};
+/* Clients with imagery in the repo. Each has three frames under
+   /portfolio/_marquee, so the band carries their own work rather than the same
+   picture on a loop. The other four have none — their band runs on facts
+   alone rather than borrowing someone else's photograph. */
+const MARQUEE_CLIENTS = new Set([
+  "adrians-wasaga-beach",
+  "asd-laminate",
+  "aydin-cpa",
+  "big-bears-baked-potato",
+  "canapy-furniture",
+  "connectr",
+  "ctbdh",
+  "destan-turkish-cuisine",
+  "esma-fine-foods",
+  "fidan-construction",
+  "goldenhorn-construction",
+  "harbourloom",
+  "iyn",
+  "minauto",
+  "northern-pathways-immigration",
+  "beril-sedat-homes",
+]);
+
+/* Constant scroll speed in px/sec. The track length varies sevenfold between
+   the shortest client and the longest, so a fixed duration made rows scroll at
+   wildly different rates. */
+const MARQUEE_SPEED = 84;
 
 export default function PortfolioPage() {
   return (
@@ -306,11 +312,37 @@ export default function PortfolioPage() {
 
 function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string }) {
   const services = client.services.map((s) => s.toUpperCase()).join(" · ");
-  const thumb = MARQUEE_THUMBS[client.slug];
+  const hasArt = MARQUEE_CLIENTS.has(client.slug);
+
+  /* Three segments of real data, so a client with two services fills the band
+     as well as one with seven. Facts that a client does not carry are dropped
+     rather than padded. */
+  const facts = [
+    services,
+    client.year && client.location ? `${client.year} · ${client.location.toUpperCase()}` : null,
+    `FRAME ${frameNumber}${client.runtime ? ` · ${client.runtime.toUpperCase()}` : ""}`,
+  ].filter((x): x is string => Boolean(x));
+
+  /* Enough copies that the shortest client still overflows the widest row.
+     Estimated from the content rather than measured, so the server and the
+     client render the same markup. */
+  const estimate = facts.reduce((w, f) => w + f.length * 13 + (hasArt ? 104 : 0), 0);
+  const copies = Math.max(2, Math.min(8, Math.ceil(1800 / Math.max(estimate, 1)) + 1));
 
   const rowRef = useRef<HTMLAnchorElement | null>(null);
   const outerRef = useRef<HTMLSpanElement | null>(null);
   const innerRef = useRef<HTMLSpanElement | null>(null);
+  const trackRef = useRef<HTMLSpanElement | null>(null);
+
+  /* One half of the track is measured and the duration set from it, so every
+     row scrolls at the same px/sec however much content it carries. Written to
+     style rather than held in state — this must not cause a re-render. */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const half = track.scrollWidth / 2;
+    if (half > 0) track.style.animationDuration = `${(half / MARQUEE_SPEED).toFixed(2)}s`;
+  }, [copies]);
 
   /* nav-5's split-layer reveal. The two layers are parked on opposite sides —
      the outer on the edge the cursor crossed, the inner on the far one — and
@@ -343,16 +375,27 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
     inner.style.top = fromAbove ? "100%" : "-100%";
   }, []);
 
-  /* Two copies of the strip, so the -100% translate loops seamlessly. */
-  const strip = (
-    <span className="px-strip" aria-hidden>
-      {thumb ? (
-        <span className="px-pill">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={thumb} alt="" width={320} height={200} loading="lazy" />
-        </span>
-      ) : null}
-      <span className="px-word">{services}</span>
+  const half = (
+    <span className="px-half" aria-hidden>
+      {Array.from({ length: copies }).flatMap((_, c) =>
+        facts.map((fact, f) => (
+          <span className="px-seg" key={`${c}-${f}`}>
+            {hasArt ? (
+              <span className="px-pill">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/portfolio/_marquee/${client.slug}-${(f % 3) + 1}.webp`}
+                  alt=""
+                  width={320}
+                  height={200}
+                  loading="lazy"
+                />
+              </span>
+            ) : null}
+            <span className="px-word">{fact}</span>
+          </span>
+        )),
+      )}
     </span>
   );
 
@@ -407,9 +450,9 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
       {/* the band */}
       <span className="px-outer" ref={outerRef} aria-hidden>
         <span className="px-inner" ref={innerRef}>
-          <span className="px-track">
-            {strip}
-            {strip}
+          <span className="px-track" ref={trackRef}>
+            {half}
+            {half}
           </span>
         </span>
       </span>
@@ -446,11 +489,15 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
           white-space: nowrap;
           animation: px-marquee 18s linear infinite;
         }
-        .px-strip {
+        .px-half {
           display: flex;
           align-items: center;
-          gap: clamp(14px, 1.6vw, 30px);
-          padding-right: clamp(14px, 1.6vw, 30px);
+        }
+        .px-seg {
+          display: flex;
+          align-items: center;
+          gap: clamp(14px, 1.6vw, 28px);
+          padding-right: clamp(14px, 1.6vw, 28px);
         }
         .px-pill {
           display: block;
