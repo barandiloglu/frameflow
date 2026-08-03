@@ -24,9 +24,17 @@ const HOP = [0.9, 0, 0.1, 1] as const;
 
 const CLIP_HIDDEN = "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
 const CLIP_SHOWN = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-/* The hero's final crop — a square tile scaled 4x and clipped to 60% x 80%
-   becomes the tall banner the sequence lands on. */
-const CLIP_HERO = "polygon(20% 10%, 80% 10%, 80% 90%, 20% 90%)";
+/* The open frame's starting inset — hero-24's own 60% x 80% crop. */
+const CLIP_OPEN_FROM = "polygon(20% 10%, 80% 10%, 80% 90%, 20% 90%)";
+
+/* The hero's final frame. The tile is square, so a 9:16 photograph laid into
+   it with object-fit:contain occupies a centred column of (w/h) x 100%; the
+   clip is trimmed to exactly that column, which shows the whole photograph
+   instead of a cover-crop of its middle. */
+function heroClip(w: number, h: number) {
+  const inset = (100 - (w / h) * 100) / 2;
+  return `polygon(${inset.toFixed(2)}% 0%, ${(100 - inset).toFixed(2)}% 0%, ${(100 - inset).toFixed(2)}% 100%, ${inset.toFixed(2)}% 100%)`;
+}
 
 /* Absolute times in seconds, derived from the GSAP timelines rather than
    guessed: overlayTimeline, imagesTimeline and textTimeline all run in
@@ -77,10 +85,17 @@ const ROWS = Array.from({ length: LIST_ROWS }, (_, i) => {
   return { slate: p.slate, client: meta.name, location: meta.location };
 });
 
-/* The two frames that fan out behind the hero. 38 (Vessel — From Above) is the
-   only landscape original of the three; the 4/5 banner covers it, which centre
-   crops the pot and stands it upright. */
-const BANNERS = [galleryPhotos[28], galleryPhotos[38]];
+/* The two frames that fan out behind the hero, each at its own ratio so the
+   photograph fits rather than being cropped to a shared box.
+
+   38 (Vessel — From Above) is the only landscape original of the three. It is
+   used here rotated 90 degrees clockwise, which turns 2160x1216 into
+   1216x2160 — a true 9:16 that stands beside the other two and still fits
+   whole. Derivatives live under /gallery/rot. */
+const BANNERS = [
+  { src: galleryPhotos[28].thumb, alt: galleryPhotos[28].alt, w: galleryPhotos[28].w, h: galleryPhotos[28].h },
+  { src: "/gallery/rot/vessel-vertical-thumb.webp", alt: galleryPhotos[38].alt, w: 1216, h: 2160 },
+];
 
 /* Closing the triptych: the hero's clip meets in the middle like two panels
    folding shut, rather than dropping away. */
@@ -192,6 +207,7 @@ export default function GalleryPage() {
     const pool = Promise.all([
       ...galleryPhotos.map((p) => decode(p.thumb)),
       decode(galleryPhotos[SETTLED[HERO_POS]].full),
+      ...BANNERS.map((b) => decode(b.src)),
     ]);
     const ceiling = new Promise<void>((r) => setTimeout(r, PRELOAD_TIMEOUT_MS));
 
@@ -372,7 +388,7 @@ export default function GalleryPage() {
               ? closing
                 ? CLIP_FOLD
                 : blown
-                  ? CLIP_HERO
+                  ? heroClip(hero.w, hero.h)
                   : revealed
                     ? CLIP_SHOWN
                     : CLIP_HIDDEN
@@ -413,6 +429,9 @@ export default function GalleryPage() {
                   initial={false}
                   animate={{ scale: isHero ? (blown ? 1 : 2) : 1 }}
                   transition={{ duration: r ? 0 : 1.5, ease: HOP }}
+                  /* contain once it is the hero: the clip above is trimmed to
+                     the letterbox, so the whole frame shows. */
+                  style={isHero && blown ? { objectFit: "contain" } : undefined}
                 />
               </motion.button>
             );
@@ -427,6 +446,7 @@ export default function GalleryPage() {
               className="gl-banner"
               key={b.src}
               aria-hidden
+              style={{ aspectRatio: `${b.w} / ${b.h}` }}
               initial={{ scale: 0, left: "50%", rotate: 0 }}
               animate={
                 blown && !closing
@@ -444,7 +464,7 @@ export default function GalleryPage() {
               }
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={b.thumb} alt="" width={b.w} height={b.h} />
+              <img src={b.src} alt="" width={b.w} height={b.h} />
             </motion.div>
           ))
         : null}
@@ -585,7 +605,7 @@ export default function GalleryPage() {
               <motion.div
                 key={openView.i}
                 className="gl-open-frame"
-                initial={r ? false : { scale: 0.42, clipPath: CLIP_HERO }}
+                initial={r ? false : { scale: 0.42, clipPath: CLIP_OPEN_FROM }}
                 animate={{ scale: 1, clipPath: CLIP_SHOWN }}
                 transition={{ duration: r ? 0 : 1.5, ease: HOP }}
                 /* Three caps at once: natural width (16 originals are 700-900px
@@ -792,8 +812,9 @@ export default function GalleryPage() {
           top: 45%;
           left: 50%;
           width: 20%;
-          max-width: 260px;
-          aspect-ratio: 4 / 5;
+          max-width: 250px;
+          /* aspect-ratio comes from each frame inline, so the photograph fits
+             its box instead of being cropped into a shared one. */
           translate: -50% -50%;
           z-index: 5;
           pointer-events: none;
@@ -805,6 +826,7 @@ export default function GalleryPage() {
           object-fit: cover;
           display: block;
         }
+        /* The preload set must cover the rotated vessel too. */
 
         .gl-nav {
           position: fixed;
