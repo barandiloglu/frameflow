@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { galleryPhotos } from "@/data/gallery";
 
 /* ------------------------------------------------------------------ */
@@ -106,6 +106,15 @@ const BANNERS = [
    collapses in the final 0.5s — mirroring the entrance, where it was the first
    thing to happen. */
 const FOLD_MS = 1500;
+
+/* Layout effect in the browser, plain effect on the server render — the delays
+   have to be written before paint or the first cards appear already placed. */
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const ROW_TOLERANCE = 40;
+const ROW_STEP = 0.085;
+const COL_STEP = 0.032;
+const DEAL_CAP = 2.2;
 
 function mulberry32(seed: number) {
   return () => {
@@ -260,6 +269,59 @@ export default function GalleryPage() {
     }, reduced ? 0 : FOLD_MS);
     return () => clearTimeout(t);
   }, [closing, reduced]);
+
+  /* The deal sweeps across visual rows. Multi-column flows in DOM order down
+     each column, so an index-based stagger would deal column by column; the
+     cards are measured after layout and bucketed into rows by their top edge
+     instead. Written straight to style rather than through state — 76 cells do
+     not need a re-render, and this has to land before paint. */
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useIsoLayoutEffect(() => {
+    if (view !== "grid") return;
+    const root = gridRef.current;
+    if (!root) return;
+    const cells = Array.from(root.querySelectorAll<HTMLElement>(".gl-cell"));
+    if (!cells.length) return;
+
+    if (reduced) {
+      cells.forEach((el) => {
+        el.style.animationDelay = "";
+      });
+      root.classList.add("dealt");
+      return;
+    }
+
+    const base = root.getBoundingClientRect();
+    const placed = cells.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { el, top: r.top - base.top, left: r.left - base.left };
+    });
+
+    const rows: { top: number; items: typeof placed }[] = [];
+    for (const item of placed) {
+      const row = rows.find((x) => Math.abs(x.top - item.top) < ROW_TOLERANCE);
+      if (row) {
+        row.items.push(item);
+        row.top = Math.min(row.top, item.top);
+      } else {
+        rows.push({ top: item.top, items: [item] });
+      }
+    }
+    rows.sort((a, b) => a.top - b.top);
+    rows.forEach((row, ri) => {
+      row.items.sort((a, b) => a.left - b.left);
+      row.items.forEach((item, ci) => {
+        const delay = Math.min(ri * ROW_STEP + ci * COL_STEP, DEAL_CAP);
+        item.el.style.animationDelay = `${delay.toFixed(3)}s`;
+      });
+    });
+    root.classList.add("dealing");
+
+    return () => {
+      root.classList.remove("dealing", "dealt");
+    };
+  }, [view, reduced]);
 
   /* Focus trap for the opened frame. */
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -555,28 +617,14 @@ export default function GalleryPage() {
               {galleryPhotos.length} frames · five rolls · 2024 — 2026
             </p>
           </div>
-          <div className="gl-full">
+          <div className="gl-full" ref={gridRef}>
             {galleryPhotos.map((photo, index) => (
-              <motion.button
+              <button
                 key={photo.src}
                 type="button"
                 className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
                 onClick={() => setOpen(index)}
                 aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
-                /* Dealt, not faded in: each card arrives from the middle of the
-                   screen where the triptych just folded shut, angled like a card
-                   coming off the deck, and squares up as it lands. */
-                initial={
-                  r
-                    ? false
-                    : { y: -220, x: index % 2 ? 46 : -46, rotate: index % 2 ? 9 : -9, scale: 0.72, opacity: 0 }
-                }
-                animate={{ y: 0, x: 0, rotate: 0, scale: 1, opacity: 1 }}
-                transition={{
-                  duration: r ? 0 : 0.72,
-                  delay: r ? 0 : Math.min(index * 0.035, 1.5),
-                  ease: [0.16, 1, 0.3, 1],
-                }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -596,7 +644,7 @@ export default function GalleryPage() {
                   </b>
                   <span>{photo.slate}</span>
                 </span>
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
@@ -1011,6 +1059,35 @@ export default function GalleryPage() {
           break-inside: avoid;
           -webkit-column-break-inside: avoid;
           margin: 0 0 1.1rem;
+        }
+        /* Dealt, not faded in: each card arrives from above, angled like one
+           coming off the deck, and squares up as it lands. The per-card delay
+           is written in from the measured row order. */
+        .gl-full.dealing .gl-cell {
+          animation: gl-deal 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .gl-full.dealing .gl-cell:nth-child(even) {
+          animation-name: gl-deal-alt;
+        }
+        @keyframes gl-deal {
+          from {
+            transform: translate3d(-46px, -220px, 0) rotate(-9deg) scale(0.72);
+            opacity: 0;
+          }
+          to {
+            transform: none;
+            opacity: 1;
+          }
+        }
+        @keyframes gl-deal-alt {
+          from {
+            transform: translate3d(46px, -220px, 0) rotate(9deg) scale(0.72);
+            opacity: 0;
+          }
+          to {
+            transform: none;
+            opacity: 1;
+          }
         }
         .gl-cell img {
           width: 100%;
