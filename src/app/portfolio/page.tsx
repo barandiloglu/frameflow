@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useCallback, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
@@ -13,6 +14,28 @@ import {
 
 const TOTAL_CLIENTS = clients.length;
 const TOP_SERVICES = getServiceCounts().slice(0, 6);
+
+/* One frame per client for the hover marquee. Four clients have no imagery in
+   the repo — their band runs as text alone rather than borrowing someone
+   else's picture. */
+const MARQUEE_THUMBS: Record<string, string> = {
+  "adrians-wasaga-beach": "/portfolio/_marquee/adrians-wasaga-beach.webp",
+  "asd-laminate": "/portfolio/_marquee/asd-laminate.webp",
+  "aydin-cpa": "/portfolio/_marquee/aydin-cpa.webp",
+  "big-bears-baked-potato": "/portfolio/_marquee/big-bears-baked-potato.webp",
+  "canapy-furniture": "/portfolio/_marquee/canapy-furniture.webp",
+  connectr: "/portfolio/_marquee/connectr.webp",
+  ctbdh: "/portfolio/_marquee/ctbdh.webp",
+  "destan-turkish-cuisine": "/portfolio/_marquee/destan-turkish-cuisine.webp",
+  "esma-fine-foods": "/portfolio/_marquee/esma-fine-foods.webp",
+  "fidan-construction": "/portfolio/_marquee/fidan-construction.webp",
+  "goldenhorn-construction": "/portfolio/_marquee/goldenhorn-construction.webp",
+  harbourloom: "/portfolio/_marquee/harbourloom.webp",
+  iyn: "/portfolio/_marquee/iyn.webp",
+  minauto: "/portfolio/_marquee/minauto.webp",
+  "northern-pathways-immigration": "/portfolio/_marquee/northern-pathways-immigration.webp",
+  "beril-sedat-homes": "/portfolio/_marquee/beril-sedat-homes.webp",
+};
 
 export default function PortfolioPage() {
   return (
@@ -283,11 +306,63 @@ export default function PortfolioPage() {
 
 function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string }) {
   const services = client.services.map((s) => s.toUpperCase()).join(" · ");
+  const thumb = MARQUEE_THUMBS[client.slug];
+
+  const rowRef = useRef<HTMLAnchorElement | null>(null);
+  const outerRef = useRef<HTMLSpanElement | null>(null);
+  const innerRef = useRef<HTMLSpanElement | null>(null);
+
+  /* nav-5's split-layer reveal. The two layers are parked on opposite sides —
+     the outer on the edge the cursor crossed, the inner on the far one — and
+     both slide to 0, so they meet in the middle rather than sweeping past each
+     other. Positions are set with the transition suppressed and a reflow
+     forced between, which is what GSAP's set() then to() does. */
+  const place = useCallback((clientY: number, entering: boolean) => {
+    const row = rowRef.current;
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!row || !outer || !inner) return;
+
+    const b = row.getBoundingClientRect();
+    const fromAbove = clientY < b.top + b.height / 2;
+
+    if (entering) {
+      outer.style.transition = "none";
+      inner.style.transition = "none";
+      outer.style.top = fromAbove ? "-100%" : "100%";
+      inner.style.top = fromAbove ? "100%" : "-100%";
+      void outer.offsetHeight;
+      outer.style.transition = "";
+      inner.style.transition = "";
+      outer.style.top = "0%";
+      inner.style.top = "0%";
+      return;
+    }
+
+    outer.style.top = fromAbove ? "-100%" : "100%";
+    inner.style.top = fromAbove ? "100%" : "-100%";
+  }, []);
+
+  /* Two copies of the strip, so the -100% translate loops seamlessly. */
+  const strip = (
+    <span className="px-strip" aria-hidden>
+      {thumb ? (
+        <span className="px-pill">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={thumb} alt="" width={320} height={200} loading="lazy" />
+        </span>
+      ) : null}
+      <span className="px-word">{services}</span>
+    </span>
+  );
 
   return (
     <Link
+      ref={rowRef}
       href={`/portfolio/${client.slug}`}
-      className="group relative grid grid-cols-[60px_1fr] md:grid-cols-[80px_minmax(0,3fr)_minmax(0,1.5fr)_80px] gap-x-6 gap-y-2 border-b border-on-alt-10 py-6 md:py-7 items-baseline cursor-pointer transition-colors duration-300 hover:bg-on-alt-05 no-underline"
+      onMouseEnter={(e) => place(e.clientY, true)}
+      onMouseLeave={(e) => place(e.clientY, false)}
+      className="px-row group relative grid grid-cols-[60px_1fr] md:grid-cols-[80px_minmax(0,3fr)_minmax(0,1.5fr)_80px] gap-x-6 gap-y-2 border-b border-on-alt-10 py-6 md:py-7 items-baseline cursor-pointer transition-colors duration-300 hover:bg-on-alt-05 no-underline"
     >
       <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
         {frameNumber}
@@ -328,6 +403,99 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
       <div className="md:hidden col-start-2 font-mono text-[10px] uppercase tracking-[0.22em] text-on-alt-60 leading-[1.7]">
         {services}
       </div>
+
+      {/* the band */}
+      <span className="px-outer" ref={outerRef} aria-hidden>
+        <span className="px-inner" ref={innerRef}>
+          <span className="px-track">
+            {strip}
+            {strip}
+          </span>
+        </span>
+      </span>
+
+      <style jsx global>{`
+        /* nav-5's hover band, ported. Two layers park on opposite edges and
+           slide to 0 so they meet in the middle, rather than one sweeping
+           past. Inside runs an infinite marquee of the client's own frame and
+           the services we actually delivered. */
+        .px-row {
+          position: relative;
+          overflow: hidden;
+        }
+        .px-outer,
+        .px-inner {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          top: 100%;
+          overflow: hidden;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          transition: top 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          will-change: top;
+        }
+        .px-inner {
+          background: var(--color-amber);
+        }
+        .px-track {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          animation: px-marquee 18s linear infinite;
+        }
+        .px-strip {
+          display: flex;
+          align-items: center;
+          gap: clamp(14px, 1.6vw, 30px);
+          padding-right: clamp(14px, 1.6vw, 30px);
+        }
+        .px-pill {
+          display: block;
+          flex: none;
+          width: clamp(64px, 7vw, 108px);
+          height: clamp(40px, 4.4vw, 68px);
+          border-radius: 999px;
+          overflow: hidden;
+        }
+        .px-pill img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .px-word {
+          font-family: var(--font-mono);
+          font-size: clamp(15px, 1.9vw, 30px);
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          /* graphite on amber measures 4.69:1 — the only pairing of the two
+             brand colours that clears AA at this size. */
+          color: var(--color-graphite);
+          white-space: nowrap;
+        }
+        @keyframes px-marquee {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .px-outer,
+          .px-inner {
+            transition-duration: 0.01ms;
+          }
+          .px-track {
+            animation: none;
+          }
+        }
+      `}</style>
     </Link>
   );
 }
