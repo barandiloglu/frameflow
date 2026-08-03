@@ -988,15 +988,16 @@ export default function GalleryPage() {
           text-transform: uppercase;
           color: rgba(255, 255, 235, 0.66);
         }
-        /* Fixed column count with items at their own aspect ratio, the way
-           grid-1 builds its gallery — not uniform square crops. */
+        /* Masonry columns rather than a row grid. Every column is the same
+           width, so two photographs of the same ratio are always the same
+           size, and each one keeps its own height — which is what grid-1's
+           per-item aspect ratio is for. A row grid sized every row to its
+           tallest item and left voids across the page. */
         .gl-full {
           max-width: 1300px;
           margin: 0 auto;
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          align-items: start;
-          gap: 1.35rem;
+          columns: 5;
+          column-gap: 1.1rem;
         }
         .gl-cell {
           position: relative;
@@ -1004,9 +1005,12 @@ export default function GalleryPage() {
           border: 0;
           background: none;
           cursor: pointer;
-          display: flex;
-          flex-direction: column;
+          display: block;
+          width: 100%;
           text-align: left;
+          break-inside: avoid;
+          -webkit-column-break-inside: avoid;
+          margin: 0 0 1.1rem;
         }
         .gl-cell img {
           width: 100%;
@@ -1021,9 +1025,12 @@ export default function GalleryPage() {
         .gl-cell:focus-visible img {
           filter: brightness(1.04);
         }
-        /* The nine the reel dealt run two columns wide. */
-        .gl-cell.picked {
-          grid-column: span 2;
+        /* The nine the reel dealt are marked by the outline and the glyph
+           only. Sizing them differently made identical ratios render at
+           different sizes, which is exactly what a gallery should not do. */
+        .gl-cell.picked img {
+          outline: 1px solid rgba(212, 89, 56, 0.9);
+          outline-offset: -1px;
         }
         .gl-cell-meta {
           display: flex;
@@ -1167,10 +1174,13 @@ export default function GalleryPage() {
 
         @media (max-width: 1100px) {
           .gl-full {
-            grid-template-columns: repeat(4, 1fr);
+            columns: 4;
           }
         }
         @media (max-width: 940px) {
+          .gl-full {
+            columns: 3;
+          }
           .gl-grid {
             width: min(68vw, 420px);
           }
@@ -1187,8 +1197,11 @@ export default function GalleryPage() {
         }
         @media (max-width: 640px) {
           .gl-full {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.7rem;
+            columns: 2;
+            column-gap: 0.7rem;
+          }
+          .gl-cell {
+            margin-bottom: 0.7rem;
           }
           .gl-full-scroll {
             padding: 74px 12px 70px;
