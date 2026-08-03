@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter, Fraunces, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GrainOverlay } from "@/components/GrainOverlay";
-import { PageTransition } from "@/components/PageTransition";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -67,7 +66,6 @@ export default function RootLayout({
           <ScrollProgress />
           <ScrollToTop />
           <GrainOverlay />
-          <PageTransition />
           {children}
         </ThemeProvider>
       </body>
