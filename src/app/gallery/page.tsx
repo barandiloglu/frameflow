@@ -59,9 +59,8 @@ const LIST_SPAN = 7;
 const SHUFFLE_CYCLES = 20;
 const SHUFFLE_MS = 150;
 const PRELOAD_TIMEOUT_MS = 4000;
-const PER_STRIP = 6;
 
-type View = "reveal" | "sheet";
+type View = "reveal" | "grid";
 
 const frameNo = (i: number) => String(i + 1).padStart(2, "0");
 
@@ -108,15 +107,6 @@ function pickNine(cycle: number, prev: readonly number[]): number[] {
   }
   return out;
 }
-
-const STRIPS = Array.from(
-  { length: Math.ceil(galleryPhotos.length / PER_STRIP) },
-  (_, s) =>
-    galleryPhotos.slice(s * PER_STRIP, s * PER_STRIP + PER_STRIP).map((p, j) => ({
-      photo: p,
-      index: s * PER_STRIP + j,
-    })),
-);
 
 /* One row's opacity/colour keyframes, staggered like the GSAP version: fade in
    at 2.5, brighten at 3.85, fade out at 5.125, each offset by 0.075 per row. */
@@ -273,7 +263,7 @@ export default function GalleryPage() {
   const blown = r || beat >= 6;
   const done = r || beat >= 99;
   const openView = open === null ? null : { i: open, p: galleryPhotos[open] };
-  const inSheet = view === "sheet";
+  const inGrid = view === "grid";
 
   return (
     <main className="gl-page">
@@ -281,7 +271,7 @@ export default function GalleryPage() {
       <div className="gl-grain" aria-hidden />
 
       {/* ---------- overlay: black ground, loader, two lists ---------- */}
-      {!r && !inSheet ? (
+      {!r && !inGrid ? (
         <motion.div
           className="gl-overlay"
           aria-hidden
@@ -348,7 +338,7 @@ export default function GalleryPage() {
       ) : null}
 
       {/* ---------- the grid, which sits ON TOP of the overlay ---------- */}
-      {!inSheet ? (
+      {!inGrid ? (
         <div className={`gl-grid${blown ? " blown" : ""}`}>
           {tiles.map((p, i) => {
             const isHero = i === HERO_POS;
@@ -403,7 +393,7 @@ export default function GalleryPage() {
       ) : null}
 
       {/* ---------- the two frames that fan out behind the hero ---------- */}
-      {!inSheet
+      {!inGrid
         ? BANNERS.map((b, i) => (
             <motion.div
               className="gl-banner"
@@ -431,15 +421,15 @@ export default function GalleryPage() {
       <motion.div
         className="gl-nav"
         initial={{ y: "-125%" }}
-        animate={{ y: r || inSheet || beat >= 6 ? "0%" : "-125%" }}
-        transition={{ duration: r ? 0 : 1, delay: r || inSheet ? 0 : 0.25, ease: HOP }}
+        animate={{ y: r || inGrid || beat >= 6 ? "0%" : "-125%" }}
+        transition={{ duration: r ? 0 : 1, delay: r || inGrid ? 0 : 0.25, ease: HOP }}
       >
         <Link href="/" className="gl-back">
           FrameFlow <span aria-hidden>←</span> back
         </Link>
-        {done || inSheet ? (
-          <button type="button" className="gl-sheet-toggle" onClick={() => setView(inSheet ? "reveal" : "sheet")}>
-            {inSheet ? "← Selects" : `◎ Contact sheet — all ${galleryPhotos.length} frames`}
+        {done || inGrid ? (
+          <button type="button" className="gl-sheet-toggle" onClick={() => setView(inGrid ? "reveal" : "grid")}>
+            {inGrid ? "← The reel" : `All ${galleryPhotos.length} frames →`}
           </button>
         ) : (
           <span />
@@ -447,7 +437,7 @@ export default function GalleryPage() {
       </motion.div>
 
       {/* ---------- intro copy + title ---------- */}
-      {!inSheet ? (
+      {!inGrid ? (
         <>
           <div className="gl-intro">
             {["FrameFlow — Photography", "2024 — 2026"].map((line, i) => (
@@ -483,42 +473,51 @@ export default function GalleryPage() {
         </>
       ) : null}
 
-      {!done && !inSheet ? (
+      {!done && !inGrid ? (
         <button type="button" className="gl-skip" onClick={skip}>
           skip
         </button>
       ) : null}
 
-      {/* ---------- contact sheet ---------- */}
-      {inSheet ? (
-        <div className="gl-sheet-scroll">
-          <p className="gl-sheet-meta">
-            Contact sheet · {galleryPhotos.length} frames · five rolls
-          </p>
-          {STRIPS.map((strip, s) => (
-            <div className="gl-strip" key={s}>
-              {strip.map(({ photo, index }) => (
-                <div className="gl-cell" key={photo.src}>
-                  <button
-                    type="button"
-                    className={`gl-frame${SELECTED.has(index) ? " picked" : ""}`}
-                    onClick={() => setOpen(index)}
-                    aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo.thumb} alt={photo.alt} width={photo.w} height={photo.h} loading="lazy" />
-                  </button>
-                  {/* Printed on the film edge, the way a proof sheet numbers its
-                      frames — over the image it washes out on bright ones. */}
-                  <span className="gl-edge" aria-hidden>
+      {/* ---------- the full grid ---------- */}
+      {inGrid ? (
+        <div className="gl-full-scroll">
+          <div className="gl-full-head">
+            <p className="gl-full-meta">
+              {galleryPhotos.length} frames · five rolls · 2024 — 2026
+            </p>
+          </div>
+          <div className="gl-full">
+            {galleryPhotos.map((photo, index) => (
+              <motion.button
+                key={photo.src}
+                type="button"
+                className={`gl-cell${SELECTED.has(index) ? " picked" : ""}`}
+                onClick={() => setOpen(index)}
+                aria-label={`Open frame ${frameNo(index)}: ${photo.slate}`}
+                initial={r ? false : { clipPath: CLIP_HIDDEN, opacity: 0 }}
+                animate={{ clipPath: CLIP_SHOWN, opacity: 1 }}
+                /* Same deal as the nine — clip down from the top on the "hop"
+                   ease. Stagger capped so the last frame is not two seconds
+                   behind the first. */
+                transition={{
+                  duration: r ? 0 : 0.9,
+                  delay: r ? 0 : Math.min(index * 0.022, 1.1),
+                  ease: HOP,
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photo.thumb} alt={photo.alt} width={photo.w} height={photo.h} loading="lazy" />
+                <span className="gl-cell-meta" aria-hidden>
+                  <b>
                     {frameNo(index)}
                     {SELECTED.has(index) ? <i>◎</i> : null}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ))}
-          <p className="gl-sheet-foot">◎ marks the nine the grid dealt · click any frame to enlarge</p>
+                  </b>
+                  <span>{photo.slate}</span>
+                </span>
+              </motion.button>
+            ))}
+          </div>
         </div>
       ) : null}
 
@@ -738,7 +737,7 @@ export default function GalleryPage() {
           display: block;
         }
         .gl-tile:focus-visible,
-        .gl-frame:focus-visible {
+        .gl-cell:focus-visible {
           outline: 2px solid var(--gl-safe);
           outline-offset: 3px;
         }
@@ -883,59 +882,37 @@ export default function GalleryPage() {
           color: var(--gl-ink);
         }
 
-        /* ---- contact sheet ---- */
-        .gl-sheet-scroll {
+        /* ---- the full grid ---- */
+        .gl-full-scroll {
           position: fixed;
           inset: 0;
           overflow-y: auto;
           z-index: 8;
-          padding: 78px 22px 80px;
+          padding: 84px 22px 90px;
           background: var(--gl-base);
           scrollbar-width: thin;
         }
-        .gl-sheet-meta {
-          max-width: 1180px;
+        .gl-full-head {
+          max-width: 1500px;
           margin: 0 auto 20px;
+        }
+        .gl-full-meta {
+          margin: 0;
           font-family: var(--font-mono);
           font-size: 9.5px;
           font-weight: 500;
-          letter-spacing: 0.22em;
+          letter-spacing: 0.24em;
           text-transform: uppercase;
-          color: rgba(255, 255, 235, 0.62);
+          color: rgba(255, 255, 235, 0.66);
         }
-        .gl-strip {
-          max-width: 1180px;
-          margin: 0 auto 10px;
+        .gl-full {
+          max-width: 1500px;
+          margin: 0 auto;
           display: grid;
-          grid-template-columns: repeat(${PER_STRIP}, 1fr);
-          gap: 6px;
-          padding: 10px;
-          background: var(--gl-film);
-          border-top: 1px solid rgba(211, 143, 44, 0.16);
-          border-bottom: 1px solid rgba(211, 143, 44, 0.16);
+          grid-template-columns: repeat(auto-fill, minmax(208px, 1fr));
+          gap: 10px;
         }
         .gl-cell {
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-        /* Full amber, not a faded one: at 8px on the film base, 0.7 alpha
-           measures 4.03:1 and misses the small-text floor. */
-        .gl-edge {
-          font-family: var(--font-mono);
-          font-size: 8px;
-          font-weight: 600;
-          letter-spacing: 0.2em;
-          color: var(--gl-safe);
-          text-align: center;
-          line-height: 1.4;
-        }
-        .gl-edge i {
-          font-style: normal;
-          margin-left: 4px;
-          color: var(--gl-mark);
-        }
-        .gl-frame {
           position: relative;
           padding: 0;
           border: 0;
@@ -943,35 +920,66 @@ export default function GalleryPage() {
           cursor: pointer;
           overflow: hidden;
           aspect-ratio: 1;
+          clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
         }
-        .gl-frame img {
+        .gl-cell img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
-          opacity: 0.88;
-          transition: opacity 200ms ease;
+          transition: transform 620ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 260ms ease;
+          opacity: 0.92;
         }
-        .gl-frame:hover img {
+        .gl-cell:hover img,
+        .gl-cell:focus-visible img {
           opacity: 1;
+          transform: scale(1.04);
         }
-        .gl-frame.picked {
-          outline: 1px solid rgba(212, 89, 56, 0.85);
+        /* The nine the reel dealt, ringed the way a photographer rings a proof. */
+        .gl-cell.picked {
+          outline: 1px solid rgba(212, 89, 56, 0.9);
           outline-offset: -1px;
         }
-        .gl-frame.picked + .gl-edge {
-          color: var(--gl-mark);
-        }
-        .gl-sheet-foot {
-          max-width: 1180px;
-          margin: 24px auto 0;
-          text-align: center;
+        .gl-cell-meta {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 22px 10px 9px;
+          background: linear-gradient(0deg, rgba(8, 6, 5, 0.88), transparent);
           font-family: var(--font-mono);
-          font-size: 9px;
+          font-size: 8.5px;
           font-weight: 500;
-          letter-spacing: 0.22em;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: rgba(255, 255, 235, 0.62);
+          color: rgba(255, 255, 235, 0.9);
+          opacity: 0;
+          transition: opacity 220ms ease;
+          pointer-events: none;
+        }
+        .gl-cell:hover .gl-cell-meta,
+        .gl-cell:focus-visible .gl-cell-meta {
+          opacity: 1;
+        }
+        .gl-cell-meta b {
+          color: var(--gl-safe);
+          font-weight: 600;
+        }
+        /* Every number stays amber: ember here measures 4.26:1 at 8.5px
+           against the scrim, under the small-text floor. The pick is signalled
+           by the glyph and the outline instead of by colour. */
+        .gl-cell-meta b i {
+          font-style: normal;
+          margin-left: 4px;
+          color: var(--gl-ink);
+        }
+        .gl-cell-meta > span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         /* ---- open frame ---- */
@@ -1083,8 +1091,8 @@ export default function GalleryPage() {
         }
 
         @media (max-width: 1100px) {
-          .gl-strip {
-            grid-template-columns: repeat(4, 1fr);
+          .gl-full {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           }
         }
         @media (max-width: 940px) {
@@ -1103,11 +1111,12 @@ export default function GalleryPage() {
           }
         }
         @media (max-width: 640px) {
-          .gl-strip {
-            grid-template-columns: repeat(3, 1fr);
+          .gl-full {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
           }
-          .gl-sheet-scroll {
-            padding: 70px 14px 70px;
+          .gl-full-scroll {
+            padding: 74px 12px 70px;
           }
           .gl-grid {
             width: 78vw;
