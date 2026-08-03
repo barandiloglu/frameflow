@@ -148,6 +148,7 @@ export default function ContactPage() {
           /* Derived from the margin the 1180px column actually leaves, less a
              56px gutter, so the strips can never crowd the sentence. */
           --ct-reel-w: clamp(110px, calc((100vw - 1180px) / 2 - 56px), 220px);
+          --ct-pad: clamp(22px, 6vw, 96px);
           position: relative;
           overflow: hidden;
           min-height: 100svh;
@@ -155,7 +156,7 @@ export default function ContactPage() {
           flex-direction: column;
           justify-content: center;
           gap: 40px;
-          padding: 112px clamp(22px, 6vw, 96px) 34px;
+          padding: 112px var(--ct-pad) 34px;
           background: var(--surface);
           color: var(--on-surface);
         }
@@ -279,9 +280,11 @@ export default function ContactPage() {
         .ct-band {
           position: relative;
           z-index: 1;
-          width: 100%;
-          max-width: 1180px;
-          margin: 0 auto;
+          /* Full bleed: cancel the page padding so the strip touches both
+             edges. Stopping it at the text column made it read as a stray row
+             of pictures rather than film running past the frame. */
+          width: auto;
+          margin: 0 calc(-1 * var(--ct-pad));
           height: clamp(52px, 11vh, 112px);
           overflow: hidden;
           pointer-events: none;
@@ -506,11 +509,35 @@ export default function ContactPage() {
 
         @media (max-width: 900px) {
           .ct-page {
-            padding-top: 96px;
-            gap: 28px;
+            padding-top: 88px;
+            gap: 24px;
           }
           .ct-foot-link {
             margin-left: 0;
+          }
+        }
+        /* The sentence has to hold the screen the way it does on desktop; at
+           3.3vw it bottoms out on the 24px floor and reads as small print.
+           The footer is traded down to pay for it — five tracked-out mono
+           lines were outweighing the sentence itself. */
+        @media (max-width: 700px) {
+          .ct-sentence > p {
+            font-size: clamp(26px, 7vw, 32px);
+            line-height: 1.3;
+          }
+          .ct-actions {
+            margin-top: 26px;
+          }
+          .ct-foot {
+            gap: 6px 18px;
+            font-size: 9.5px;
+            letter-spacing: 0.13em;
+            padding-top: 16px;
+          }
+          /* Taller here: on a phone the strip is the only ornament left, and
+             at 93px it read as a stranded sliver under a large void. */
+          .ct-band {
+            height: clamp(96px, 17vh, 150px);
           }
         }
         @media (max-width: 560px) {
