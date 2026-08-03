@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
-import { WMark } from "@/components/contact/WMark";
+import { galleryPhotos } from "@/data/gallery";
 
 /* Every fact here is on the page this replaces — nothing new is promised. */
 const STUDIO = {
@@ -14,62 +13,29 @@ const STUDIO = {
   reply: "Replies within 1 business day",
 };
 
+/* The margins run two strips of real work, sampled across the roster rather
+   than taken in a block so no single client fills a column. */
+const REEL_LEFT = [0, 8, 16, 24, 32, 40, 48, 56, 64].map((i) => galleryPhotos[i]);
+const REEL_RIGHT = [4, 12, 20, 28, 36, 44, 52, 60, 68].map((i) => galleryPhotos[i]);
+
 type Field = "name" | "email" | "message";
 type Status = "idle" | "sending" | "unwired" | "sent";
 
 /* The sending seam. There is no API route and no mail handler yet, so this
    throws rather than inventing a confirmation — the page it replaces generated
    a random case number and told people they were in the queue. */
-async function submitContact(_values: Record<Field, string>): Promise<void> {
+async function submitContact(values: Record<Field, string>): Promise<void> {
+  void values;
   throw new Error("NOT_WIRED");
 }
 
 const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\|<>*—·";
 
 export default function ContactPage() {
-  const reduced = useReducedMotion();
   const [values, setValues] = useState<Record<Field, string>>({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
 
-  /* The mark is positioned under whichever blank has focus. Measured in the
-     event handlers rather than an effect — focus and typing are the only things
-     that move it. */
-  const stageRef = useRef<HTMLDivElement | null>(null);
-  const slotRefs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
-  const focusedRef = useRef<Field | null>(null);
-  const [mark, setMark] = useState<{ x: number; y: number; w: number } | null>(null);
-
-  const placeMark = useCallback((field: Field | null) => {
-    const stage = stageRef.current;
-    const slot = field ? slotRefs.current[field] : null;
-    if (!stage || !slot) {
-      setMark(null);
-      return;
-    }
-    const s = stage.getBoundingClientRect();
-    const r = slot.getBoundingClientRect();
-    setMark({ x: r.left - s.left, y: r.bottom - s.top, w: r.width });
-  }, []);
-
-  useEffect(() => {
-    const onResize = () => placeMark(focusedRef.current);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [placeMark]);
-
-  const setField = (field: Field, v: string) => {
-    setValues((p) => ({ ...p, [field]: v }));
-    requestAnimationFrame(() => placeMark(field));
-  };
-
-  const handleFocus = (f: Field) => {
-    focusedRef.current = f;
-    placeMark(f);
-  };
-  const handleBlur = () => {
-    focusedRef.current = null;
-    setMark(null);
-  };
+  const setField = (field: Field, v: string) => setValues((p) => ({ ...p, [field]: v }));
 
   const ready =
     values.name.trim().length > 0 &&
@@ -88,20 +54,17 @@ export default function ContactPage() {
     }
   };
 
-  const blankProps = {
-    onChange: setField,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
-  };
-
   return (
     <>
       <Navbar />
 
       <main className="ct-page">
-        <div className="ct-stage" ref={stageRef}>
+        <Reel photos={REEL_LEFT} side="left" />
+        <Reel photos={REEL_RIGHT} side="right" />
+
+        <div className="ct-stage">
           {status === "sent" ? (
-            <Scrambled reduced={Boolean(reduced)} name={values.name.trim() || "there"} />
+            <Scrambled name={values.name.trim() || "there"} />
           ) : (
             <form onSubmit={onSubmit} className="ct-sentence">
               <p>
@@ -110,10 +73,7 @@ export default function ContactPage() {
                   field="name"
                   value={values.name}
                   placeholder="your name"
-                  slotRef={(el) => {
-                    slotRefs.current.name = el;
-                  }}
-                  {...blankProps}
+                  onChange={setField}
                 />
                 .
               </p>
@@ -124,10 +84,7 @@ export default function ContactPage() {
                   type="email"
                   value={values.email}
                   placeholder="you@company.com"
-                  slotRef={(el) => {
-                    slotRefs.current.email = el;
-                  }}
-                  {...blankProps}
+                  onChange={setField}
                 />
                 .
               </p>
@@ -138,10 +95,7 @@ export default function ContactPage() {
                   multiline
                   value={values.message}
                   placeholder="what you're building, and where we come in"
-                  slotRef={(el) => {
-                    slotRefs.current.message = el;
-                  }}
-                  {...blankProps}
+                  onChange={setField}
                 />
               </p>
 
@@ -167,25 +121,13 @@ export default function ContactPage() {
               </div>
             </form>
           )}
-
-          {mark ? (
-            <motion.div
-              className="ct-mark"
-              aria-hidden
-              initial={reduced ? false : { opacity: 0 }}
-              animate={{ opacity: 1, x: mark.x, y: mark.y }}
-              transition={{ duration: reduced ? 0 : 0.28, ease: [0.2, 0.8, 0.2, 1] }}
-            >
-              <WMark drawn reduced={Boolean(reduced)} className="ct-mark-svg" />
-            </motion.div>
-          ) : null}
         </div>
 
         <footer className="ct-foot">
           <a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a>
           <span>{STUDIO.address}</span>
           <span>{STUDIO.hours}</span>
-          <span className="ct-reply">{STUDIO.reply}</span>
+          <span>{STUDIO.reply}</span>
           <Link href="/portfolio" className="ct-foot-link">
             See the work →
           </Link>
@@ -201,6 +143,11 @@ export default function ContactPage() {
           --ct-accent: var(--color-amber);
           --ct-quiet: color-mix(in srgb, var(--on-surface) 78%, var(--surface));
           --ct-rule: color-mix(in srgb, var(--on-surface) 55%, var(--surface));
+          /* Derived from the margin the 1180px column actually leaves, less a
+             56px gutter, so the strips can never crowd the sentence. */
+          --ct-reel-w: clamp(110px, calc((100vw - 1180px) / 2 - 56px), 220px);
+          position: relative;
+          overflow: hidden;
           min-height: 100svh;
           display: flex;
           flex-direction: column;
@@ -215,6 +162,7 @@ export default function ContactPage() {
         }
         .ct-stage {
           position: relative;
+          z-index: 1;
           max-width: 1180px;
           width: 100%;
           margin: 0 auto;
@@ -224,6 +172,111 @@ export default function ContactPage() {
           justify-content: center;
         }
 
+        /* ---- margin reels ------------------------------------------------
+           The empty sides carry the studio's own frames, running slowly in
+           opposite directions. Masked away before they reach the type, so they
+           read as texture at the edge of vision and never compete with it. */
+        .ct-reel {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: var(--ct-reel-w);
+          overflow: hidden;
+          pointer-events: none;
+          z-index: 0;
+          -webkit-mask-image: linear-gradient(
+            to bottom,
+            transparent,
+            #000 16%,
+            #000 84%,
+            transparent
+          );
+          mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+        }
+        /* The fade toward the type is painted in the page's own ground rather
+           than composited into the mask — mask-composite is where the two
+           gradients stopped intersecting and the strips ran to the top edge. */
+        .ct-reel::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to var(--ct-reel-fade), transparent 26%, var(--surface));
+        }
+        .ct-reel-left {
+          left: 0;
+          --ct-reel-fade: right;
+        }
+        .ct-reel-right {
+          right: 0;
+          --ct-reel-fade: left;
+        }
+        .ct-reel-track {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 0 26px;
+          will-change: transform;
+          animation: ct-reel-run 96s linear infinite;
+        }
+        .ct-reel-right .ct-reel-track {
+          animation-direction: reverse;
+        }
+        @keyframes ct-reel-run {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(0, -50%, 0);
+          }
+        }
+        .ct-reel-frame {
+          aspect-ratio: 4 / 5;
+          overflow: hidden;
+          /* Not --surface-alt: it is the *opposite* ground, so an unloaded
+             frame would flash ivory on the dark page. */
+          background: color-mix(in srgb, var(--on-surface) 8%, var(--surface));
+        }
+        .ct-reel-frame img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          filter: grayscale(0.55) contrast(0.92);
+          opacity: 0.34;
+        }
+        [data-theme="light"] .ct-reel-frame img {
+          opacity: 0.32;
+          filter: grayscale(0.55) contrast(0.92) brightness(0.94);
+        }
+        /* Sprocket holes down the outer edge, so the column reads as film
+           rather than a stray row of pictures. */
+        .ct-reel::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 9px;
+          background-image: repeating-linear-gradient(
+            to bottom,
+            var(--ct-rule) 0 9px,
+            transparent 9px 25px
+          );
+          opacity: 0.22;
+        }
+        .ct-reel-left::before {
+          left: 7px;
+        }
+        .ct-reel-right::before {
+          right: 7px;
+        }
+        /* Below this there is no spare margin to give them. */
+        @media (max-width: 1519px) {
+          .ct-reel {
+            display: none;
+          }
+        }
+
+        /* ---- the sentence ------------------------------------------------ */
         /* Direct children only — the fallback paragraph lives inside
            .ct-actions and must not inherit the sentence's display size. */
         .ct-sentence > p {
@@ -297,26 +350,6 @@ export default function ContactPage() {
           width: 100%;
         }
 
-        /* Fixed size, aspect preserved — the mark is the logo's own w, so it
-           is never stretched to the width of the blank. It straddles the rule
-           at the blank's left edge, the way it sits under "flow" in the mark. */
-        .ct-mark {
-          position: absolute;
-          color: var(--ct-accent);
-          top: 0;
-          left: 0;
-          width: 40px;
-          height: 23px;
-          margin-top: -8px;
-          pointer-events: none;
-          z-index: 2;
-        }
-        .ct-mark-svg {
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
-
         .ct-actions {
           margin-top: 36px;
           display: flex;
@@ -361,6 +394,8 @@ export default function ContactPage() {
         }
 
         .ct-foot {
+          position: relative;
+          z-index: 1;
           max-width: 1180px;
           width: 100%;
           margin: 0 auto;
@@ -408,10 +443,10 @@ export default function ContactPage() {
           .ct-page {
             padding-bottom: 72px;
           }
-          .ct-mark {
-            width: 32px;
-            height: 18px;
-            margin-top: -6px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ct-reel-track {
+            animation: none;
           }
         }
       `}</style>
@@ -421,14 +456,27 @@ export default function ContactPage() {
 
 /* ------------------------------------------------------------------ */
 
+function Reel({ photos, side }: { photos: typeof REEL_LEFT; side: "left" | "right" }) {
+  return (
+    <div className={`ct-reel ct-reel-${side}`} aria-hidden>
+      {/* Doubled so the loop closes on itself at -50%. */}
+      <div className="ct-reel-track">
+        {[...photos, ...photos].map((p, i) => (
+          <div className="ct-reel-frame" key={`${side}-${i}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.thumb} alt="" loading="lazy" decoding="async" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Blank({
   field,
   value,
   placeholder,
   onChange,
-  onFocus,
-  onBlur,
-  slotRef,
   type = "text",
   multiline = false,
 }: {
@@ -436,9 +484,6 @@ function Blank({
   value: string;
   placeholder: string;
   onChange: (f: Field, v: string) => void;
-  onFocus: (f: Field) => void;
-  onBlur: () => void;
-  slotRef: (el: HTMLElement | null) => void;
   type?: string;
   multiline?: boolean;
 }) {
@@ -449,8 +494,6 @@ function Blank({
     placeholder,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       onChange(field, e.target.value),
-    onFocus: () => onFocus(field),
-    onBlur,
   };
 
   return (
@@ -463,7 +506,6 @@ function Blank({
       <span
         className={`ct-slot${multiline ? " ct-slot-message" : ""}`}
         data-value={value || placeholder}
-        ref={slotRef}
       >
         {multiline ? (
           <textarea rows={1} {...shared} />
@@ -482,8 +524,17 @@ function Blank({
 
 /* The confirmation reuses the type already on screen: the sentence decodes
    into the reply rather than a success panel replacing it. */
-function Scrambled({ reduced, name }: { reduced: boolean; name: string }) {
+function Scrambled({ name }: { name: string }) {
   const target = `Thanks, ${name}. It's in — we reply within 1 business day.`;
+  /* Read once at mount rather than inside the effect — setting state
+     synchronously in an effect body cascades a second render. This component
+     only ever mounts after a send, so the initialiser never runs on the
+     server. */
+  const [reduced] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const [text, setText] = useState(reduced ? target : "");
 
   useEffect(() => {
