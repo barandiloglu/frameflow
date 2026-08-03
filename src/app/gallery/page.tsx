@@ -97,10 +97,15 @@ const BANNERS = [
   { src: "/gallery/rot/vessel-vertical-thumb.webp", alt: galleryPhotos[38].alt, w: 1216, h: 2160 },
 ];
 
-/* Closing the triptych: the hero's clip meets in the middle like two panels
-   folding shut, rather than dropping away. */
-const CLIP_FOLD = "polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)";
-const FOLD_MS = 900;
+/* Closing the triptych. The hero does not move — only the two frames behind it
+   fold back in, playing their fan-out exactly in reverse.
+
+   The fan-out runs scale 0->1 over 0.5s starting at +0.5, and left/rotate
+   outward over 1.5s starting at +0.5, so it spans +0.5 to +2.0. Reversed over
+   that same 1.5s: left/rotate travel back for the whole span, and the scale
+   collapses in the final 0.5s — mirroring the entrance, where it was the first
+   thing to happen. */
+const FOLD_MS = 1500;
 
 function mulberry32(seed: number) {
   return () => {
@@ -385,13 +390,11 @@ export default function GalleryPage() {
           {tiles.map((p, i) => {
             const isHero = i === HERO_POS;
             const clip = isHero
-              ? closing
-                ? CLIP_FOLD
-                : blown
-                  ? heroClip(hero.w, hero.h)
-                  : revealed
-                    ? CLIP_SHOWN
-                    : CLIP_HIDDEN
+              ? blown
+                ? heroClip(hero.w, hero.h)
+                : revealed
+                  ? CLIP_SHOWN
+                  : CLIP_HIDDEN
               : collapsed
                 ? CLIP_HIDDEN
                 : revealed
@@ -410,6 +413,10 @@ export default function GalleryPage() {
                   clipPath: clip,
                   scale: isHero && blown ? 4 : 1,
                   y: isHero && lifted ? -50 : 0,
+                  /* The hero holds through the whole fold and only releases in
+                     the last 300ms, once the two behind it are away — so the
+                     handover to the grid is not a hard cut. */
+                  opacity: isHero && closing ? 0 : 1,
                 }}
                 transition={{
                   clipPath: {
@@ -419,6 +426,11 @@ export default function GalleryPage() {
                   },
                   scale: { duration: r ? 0 : 1.5, ease: HOP },
                   y: { duration: r ? 0 : 1, ease: HOP },
+                  opacity: {
+                    duration: r ? 0 : 0.3,
+                    delay: r ? 0 : FOLD_MS / 1000 - 0.3,
+                    ease: "linear",
+                  },
                 }}
               >
                 <motion.img
@@ -451,11 +463,15 @@ export default function GalleryPage() {
               animate={
                 blown && !closing
                   ? { scale: 1, left: i === 0 ? "40%" : "60%", rotate: i === 0 ? -20 : 20 }
-                  : { scale: closing ? 0.9 : 0, left: "50%", rotate: 0 }
+                  : { scale: 0, left: "50%", rotate: 0 }
               }
               transition={
                 closing
-                  ? { duration: r ? 0 : FOLD_MS / 1000, ease: HOP }
+                  ? {
+                      left: { duration: r ? 0 : 1.5, ease: HOP },
+                      rotate: { duration: r ? 0 : 1.5, ease: HOP },
+                      scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 1, ease: "easeIn" },
+                    }
                   : {
                       scale: { duration: r ? 0 : 0.5, delay: r ? 0 : 0.5, ease: "easeOut" },
                       left: { duration: r ? 0 : 1.5, delay: r ? 0 : 0.5, ease: HOP },
