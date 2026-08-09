@@ -19,14 +19,22 @@ const REEL_LEFT = [0, 8, 16, 24, 32, 40, 48, 56, 64].map((i) => galleryPhotos[i]
 const REEL_RIGHT = [4, 12, 20, 28, 36, 44, 52, 60, 68].map((i) => galleryPhotos[i]);
 
 type Field = "name" | "email" | "message";
-type Status = "idle" | "sending" | "unwired" | "sent";
+type Status = "idle" | "sending" | "failed" | "sent";
 
-/* The sending seam. There is no API route and no mail handler yet, so this
-   throws rather than inventing a confirmation — the page it replaces generated
-   a random case number and told people they were in the queue. */
-async function submitContact(values: Record<Field, string>): Promise<void> {
-  void values;
-  throw new Error("NOT_WIRED");
+/* The sending seam. /api/contact hands the message to Resend; anything short
+   of a 2xx throws so the page shows the mailto fallback rather than inventing
+   a confirmation — the page this replaced generated a random case number and
+   told people they were in the queue. */
+async function submitContact(
+  values: Record<Field, string>,
+  honeypot: string,
+): Promise<void> {
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...values, company: honeypot }),
+  });
+  if (!res.ok) throw new Error(`SEND_FAILED_${res.status}`);
 }
 
 const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\|<>*—·";
@@ -34,6 +42,9 @@ const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\|<>*—·";
 export default function ContactPage() {
   const [values, setValues] = useState<Record<Field, string>>({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
+  /* Bots fill every field they can see in the markup; people never reach this
+     one. A value here tells the route to drop the message. */
+  const [honeypot, setHoneypot] = useState("");
 
   const setField = (field: Field, v: string) => setValues((p) => ({ ...p, [field]: v }));
 
@@ -47,10 +58,10 @@ export default function ContactPage() {
     if (!ready || status === "sending") return;
     setStatus("sending");
     try {
-      await submitContact(values);
+      await submitContact(values, honeypot);
       setStatus("sent");
     } catch {
-      setStatus("unwired");
+      setStatus("failed");
     }
   };
 
@@ -99,15 +110,31 @@ export default function ContactPage() {
                 />
               </p>
 
+              {/* Off-screen rather than display:none — the crawlers worth
+                  catching skip hidden inputs. Kept out of the tab order and
+                  off the accessibility tree so nobody real ever lands on it. */}
+              <div className="ct-trap" aria-hidden>
+                <label htmlFor="ct-company">Company</label>
+                <input
+                  id="ct-company"
+                  name="company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
+
               <div className="ct-actions">
                 <button type="submit" className="ct-send" disabled={!ready || status === "sending"}>
                   {status === "sending" ? "Sending…" : "Send it"}
                   <span aria-hidden>→</span>
                 </button>
 
-                {status === "unwired" ? (
+                {status === "failed" ? (
                   <p className="ct-fallback" role="status">
-                    This form isn&rsquo;t connected to a mailbox yet — send it straight to{" "}
+                    That didn&rsquo;t get through — send it straight to{" "}
                     <a
                       href={`mailto:${STUDIO.email}?subject=${encodeURIComponent(
                         "New project",
@@ -426,6 +453,15 @@ export default function ContactPage() {
         .ct-slot-message {
           display: grid;
           width: 100%;
+        }
+
+        /* The honeypot: gone from the layout without being display:none. */
+        .ct-trap {
+          position: absolute;
+          left: -9999px;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
         }
 
         .ct-actions {
