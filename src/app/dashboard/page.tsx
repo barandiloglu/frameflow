@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const stats = [
@@ -9,10 +10,10 @@ const stats = [
   { label: "Needs Edits", value: "2", sub: null, badge: "action needed", badgeColor: "bg-amber-10 text-amber" },
 ];
 
-const posts = [
-  { platform: "Instagram", color: "bg-amber", title: "Summer Menu Feature", date: "Jul 3", status: "Pending" },
-  { platform: "Facebook", color: "bg-on-surface-30", title: "Client Testimonial Carousel", date: "Jul 4", status: "Approved" },
-  { platform: "Instagram", color: "bg-amber", title: "Behind the Scenes Reel", date: "Jul 5", status: "Needs Edits" },
+const posts: { platform: string; color: string; title: string; date: string; status: string; thumb?: string }[] = [
+  { platform: "Instagram", color: "bg-amber", title: "Summer Menu Feature", thumb: "/portal/demo/summer-menu.webp", date: "Jul 3", status: "Pending" },
+  { platform: "Facebook", color: "bg-on-surface-30", title: "Client Testimonial Carousel", thumb: "/portal/demo/testimonial.webp", date: "Jul 4", status: "Approved" },
+  { platform: "Instagram", color: "bg-amber", title: "Behind the Scenes Reel", thumb: "/portal/demo/bts-reel.webp", date: "Jul 5", status: "Needs Edits" },
   { platform: "TikTok", color: "bg-on-surface", title: "Recipe Short — Croissant", date: "Jul 7", status: "Draft" },
   { platform: "Instagram", color: "bg-amber", title: "Weekend Special Promo", date: "Jul 8", status: "Pending" },
 ];
@@ -96,6 +97,9 @@ export default function DashboardPage() {
                 <div key={i} className="flex items-center gap-4 px-5 py-3.5">
                   {/* Thumbnail placeholder */}
                   <div className="w-10 h-10 rounded-[2px] bg-on-surface-05 shrink-0 flex items-center justify-center overflow-hidden">
+                    {p.thumb ? (
+                      <Image src={p.thumb} alt="" width={40} height={40} className="h-full w-full object-cover" />
+                    ) : (
                     <svg width="20" height="20" viewBox="0 0 20 20" className="text-on-surface-10">
                       <defs>
                         <pattern id={`grid-${i}`} width="5" height="5" patternUnits="userSpaceOnUse">
@@ -105,6 +109,7 @@ export default function DashboardPage() {
                       </defs>
                       <rect width="20" height="20" fill={`url(#grid-${i})`} />
                     </svg>
+                    )}
                   </div>
                   {/* Platform + title */}
                   <div className="flex-1 min-w-0">

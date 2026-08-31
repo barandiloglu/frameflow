@@ -1,0 +1,931 @@
+<title>FrameFlow Shot List</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ─── Tokens: FrameFlow brand, light-first (ivory), dark = graphite ─── */
+  :root {
+    --graphite: #353230;
+    --ivory: #ffffeb;
+    --amber: #d38f2c;
+    --ember: #d45938;
+    --crimson: #892f2a;
+
+    --bg: #ffffeb;
+    --ink: #353230;
+    --ink-70: rgba(53, 50, 48, 0.7);
+    --ink-45: rgba(53, 50, 48, 0.45);
+    --ink-20: rgba(53, 50, 48, 0.2);
+    --ink-10: rgba(53, 50, 48, 0.1);
+    --ink-05: rgba(53, 50, 48, 0.045);
+    --accent-ink: #a06210;      /* amber that passes as text on ivory */
+    --rule: rgba(211, 143, 44, 0.22);
+    --rule-faint: rgba(211, 143, 44, 0.1);
+    --panel: rgba(53, 50, 48, 0.035);
+    --code-bg: #353230;         /* the monitor: graphite in both themes */
+    --code-ink: #ffffeb;
+    --code-dim: rgba(255, 255, 235, 0.5);
+    --code-rule: rgba(211, 143, 44, 0.3);
+    --zone: rgba(212, 89, 56, 0.16);
+    --zone-line: rgba(212, 89, 56, 0.55);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #353230;
+      --ink: #ffffeb;
+      --ink-70: rgba(255, 255, 235, 0.7);
+      --ink-45: rgba(255, 255, 235, 0.45);
+      --ink-20: rgba(255, 255, 235, 0.2);
+      --ink-10: rgba(255, 255, 235, 0.1);
+      --ink-05: rgba(255, 255, 235, 0.05);
+      --accent-ink: #d38f2c;
+      --rule: rgba(211, 143, 44, 0.2);
+      --rule-faint: rgba(211, 143, 44, 0.09);
+      --panel: rgba(255, 255, 235, 0.035);
+      --code-bg: #2a2826;
+      --code-ink: #ffffeb;
+      --code-dim: rgba(255, 255, 235, 0.45);
+      --code-rule: rgba(211, 143, 44, 0.3);
+      --zone: rgba(212, 89, 56, 0.2);
+      --zone-line: rgba(212, 89, 56, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #353230;
+    --ink: #ffffeb;
+    --ink-70: rgba(255, 255, 235, 0.7);
+    --ink-45: rgba(255, 255, 235, 0.45);
+    --ink-20: rgba(255, 255, 235, 0.2);
+    --ink-10: rgba(255, 255, 235, 0.1);
+    --ink-05: rgba(255, 255, 235, 0.05);
+    --accent-ink: #d38f2c;
+    --rule: rgba(211, 143, 44, 0.2);
+    --rule-faint: rgba(211, 143, 44, 0.09);
+    --panel: rgba(255, 255, 235, 0.035);
+    --code-bg: #2a2826;
+    --code-ink: #ffffeb;
+    --code-dim: rgba(255, 255, 235, 0.45);
+    --code-rule: rgba(211, 143, 44, 0.3);
+    --zone: rgba(212, 89, 56, 0.2);
+    --zone-line: rgba(212, 89, 56, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-ink); }
+  h1, h2, h3 { font-family: "Fraunces", "Times New Roman", serif; font-weight: 300; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+  em { font-style: italic; color: var(--accent-ink); }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+  .lbl { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.24em; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); }
+  p { margin: 0; }
+
+  /* ─── Slate strip ─── */
+  .slate {
+    border-bottom: 1px solid var(--rule);
+    padding: 12px clamp(20px, 4vw, 56px);
+    display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center;
+    color: var(--ink-45);
+  }
+  .slate .rec { color: var(--ember); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+  .slate .rec i { width: 7px; height: 7px; border-radius: 50%; background: var(--ember); display: inline-block; animation: blink 1.6s ease-in-out infinite; }
+  .slate .right { margin-left: auto; color: var(--accent-ink); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @media (prefers-reduced-motion: reduce) { .slate .rec i { animation: none; } }
+
+  /* ─── Masthead ─── */
+  .mast { padding: clamp(48px, 7vw, 96px) 0 clamp(36px, 5vw, 64px); border-bottom: 1px solid var(--rule); }
+  .eyebrow { display: flex; align-items: center; gap: 12px; color: var(--accent-ink); margin-bottom: 26px; }
+  .eyebrow::before { content: ""; width: 40px; height: 1px; background: var(--amber); }
+  .mast h1 { font-size: clamp(42px, 6.6vw, 92px); line-height: 0.95; max-width: 14ch; }
+  .mast .lede { margin-top: 28px; max-width: 62ch; font-size: 15px; color: var(--ink-70); }
+  .stats { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); max-width: 760px; }
+  .stats div { background: var(--bg); padding: 16px 18px; }
+  .stats b { display: block; font-family: "Fraunces", serif; font-weight: 300; font-size: 34px; line-height: 1; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .stats span { color: var(--ink-45); }
+
+  /* ─── Index ─── */
+  .index { display: flex; flex-wrap: wrap; gap: 10px; padding: 22px 0; border-bottom: 1px solid var(--rule); }
+  .index a { text-decoration: none; border: 1px solid var(--rule); padding: 9px 14px; color: var(--ink-70); display: inline-flex; gap: 10px; align-items: baseline; transition: border-color .2s, color .2s; }
+  .index a:hover, .index a:focus-visible { border-color: var(--amber); color: var(--accent-ink); outline: none; }
+  .index a b { font-family: "Fraunces", serif; font-weight: 400; font-size: 15px; color: var(--ink); }
+
+  /* ─── Sections ─── */
+  section.part { padding: clamp(44px, 6vw, 80px) 0; border-bottom: 1px solid var(--rule); }
+  .part-head { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-bottom: 34px; }
+  .part-head h2 { font-size: clamp(30px, 4vw, 52px); line-height: 1; }
+  .part-head .where { color: var(--ink-45); }
+  .part-head .note { max-width: 70ch; color: var(--ink-70); margin-top: 6px; }
+  .part-head .note code { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent-ink); }
+
+  /* ─── Style bible ─── */
+  .bible { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; }
+  @media (max-width: 860px) { .bible { grid-template-columns: minmax(0, 1fr); } }
+  .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .sw { padding: 12px 10px 10px; min-height: 96px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+  .sw .lbl { letter-spacing: 0.14em; }
+  .sw.g { background: #353230; color: #ffffeb; }
+  .sw.i { background: #ffffeb; color: #353230; }
+  .sw.a { background: #d38f2c; color: #353230; }
+  .sw.e { background: #d45938; color: #ffffeb; }
+  .sw.c { background: #892f2a; color: #ffffeb; }
+  .bible h3 { font-size: 24px; margin-bottom: 14px; }
+  .bible ol { margin: 0; padding-left: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
+  .bible ol li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; color: var(--ink-70); }
+  .bible ol li::before { counter-increment: step; content: counter(step, upper-roman); font-family: "Fraunces", serif; font-style: italic; color: var(--accent-ink); font-size: 20px; line-height: 1.2; }
+  .bible li code, .flags code { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent-ink); }
+  .flags { margin-top: 18px; display: grid; gap: 8px; }
+  .flags div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-top: 1px solid var(--rule-faint); color: var(--ink-70); }
+  .flags div:last-child { border-bottom: 1px solid var(--rule-faint); }
+
+  /* ─── Shot rows ─── */
+  .shot { display: grid; grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr); gap: 24px 40px; padding: 30px 0; border-top: 1px solid var(--rule); }
+  .shot:last-of-type { border-bottom: 1px solid var(--rule); }
+  @media (max-width: 860px) { .shot { grid-template-columns: minmax(0, 1fr); } }
+  .shot-head { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
+  .shot-head .id { color: var(--accent-ink); }
+  .shot-head h3 { font-size: 28px; line-height: 1; }
+  .shot-head .scene { color: var(--ink-45); }
+  .chip { margin-left: auto; font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border: 1px solid var(--amber); color: var(--accent-ink); padding: 4px 10px; white-space: nowrap; }
+  .chip.dim { border-color: var(--ink-20); color: var(--ink-45); }
+
+  /* ratio preview: drawn at the slot's real aspect ratio */
+  .pv-wrap { display: grid; gap: 14px; }
+  .pv { position: relative; width: 100%; max-width: 380px; aspect-ratio: var(--ar); border: 1px solid var(--ink-20); background: var(--panel); overflow: hidden; }
+  .pv.wide { max-width: 100%; }
+  .pv .inset { position: absolute; inset: 9px; border: 1px dashed var(--rule); pointer-events: none; }
+  .pv .tl, .pv .tr, .pv .bl, .pv .br { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .pv .tl { top: 16px; left: 16px; color: var(--accent-ink); }
+  .pv .tr { top: 16px; right: 16px; color: var(--ink-45); }
+  .pv .br { bottom: 16px; right: 16px; color: var(--ink-45); }
+  .pv .zone { position: absolute; background: var(--zone); border: 1px dashed var(--zone-line); }
+  .pv .zone::after { content: "copy sits here"; position: absolute; top: 4px; left: 6px; font-family: "JetBrains Mono", monospace; font-size: 7px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember); }
+  .pv .copy { position: absolute; left: 16px; bottom: 16px; right: 16px; }
+  .pv .copy .sub { font-family: "JetBrains Mono", monospace; font-size: 7px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember); margin-bottom: 4px; }
+  .pv .copy .ttl { font-family: "Fraunces", serif; font-weight: 300; line-height: 0.95; letter-spacing: -0.02em; }
+  .pv .num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Fraunces", serif; font-style: italic; font-weight: 300; color: var(--amber); opacity: 0.55; line-height: 1; }
+  .pv .checker { position: absolute; inset: 0; background-image: linear-gradient(45deg, var(--ink-10) 25%, transparent 25%, transparent 75%, var(--ink-10) 75%), linear-gradient(45deg, var(--ink-10) 25%, transparent 25%, transparent 75%, var(--ink-10) 75%); background-size: 16px 16px; background-position: 0 0, 8px 8px; opacity: .6; }
+  .pv.dark { background: #353230; border-color: rgba(255,255,235,.15); }
+  .pv.dark .inset { border-color: rgba(211,143,44,.35); }
+  .pv.dark .tl { color: #d38f2c; }
+  .pv.dark .tr { color: #d45938; }
+  .pv.dark .br, .pv.dark .bl { color: rgba(255,255,235,.5); }
+  .pv.dark .bl { bottom: 16px; left: 16px; }
+  .pv.dark .num { color: rgba(255,255,235,.22); opacity: 1; }
+
+  .specs { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 6px 14px; font-size: 13px; color: var(--ink-70); }
+  .specs dt { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-45); padding-top: 3px; }
+  .specs dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .specs dd code { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent-ink); }
+  .specs dd .ar { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 600; color: var(--accent-ink); }
+
+  /* the monitor: prompt block */
+  .prompt-col { display: grid; gap: 14px; align-content: start; }
+  .monitor { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-rule); padding: 8px; }
+  .monitor .chrome { display: flex; align-items: center; gap: 12px; border: 1px solid var(--code-rule); padding: 8px 12px; margin-bottom: 8px; font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--code-dim); }
+  .monitor .chrome .live { color: var(--ember); display: inline-flex; align-items: center; gap: 6px; }
+  .monitor .chrome .live i { width: 5px; height: 5px; border-radius: 50%; background: var(--ember); display: inline-block; }
+  .monitor .chrome button { margin-left: auto; font: inherit; letter-spacing: inherit; text-transform: inherit; background: var(--amber); color: #353230; border: 0; padding: 6px 12px; cursor: pointer; transition: background .2s, color .2s; }
+  .monitor .chrome button:hover, .monitor .chrome button:focus-visible { background: var(--ember); color: #ffffeb; outline: none; }
+  .monitor .chrome button[data-done="1"] { background: #ffffeb; color: #353230; }
+  .prompt { margin: 0; padding: 14px 16px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; color: var(--code-ink); font-weight: 400; }
+  .prompt .p { color: var(--amber); }
+  .notes { color: var(--ink-70); font-size: 13px; }
+  .notes b { font-weight: 500; color: var(--ink); }
+  .notes ul { margin: 6px 0 0; padding-left: 18px; }
+  .notes li + li { margin-top: 4px; }
+
+  /* already shot */
+  .done { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--bg); border: 1px solid var(--rule); }
+  .done div { background: var(--bg); outline: 1px solid var(--rule); padding: 16px 18px; color: var(--ink-70); }
+  .done div b { display: block; font-family: "Fraunces", serif; font-weight: 400; font-size: 18px; color: var(--ink); margin-bottom: 4px; }
+
+  footer { padding: 40px 0 64px; color: var(--ink-45); display: flex; flex-wrap: wrap; gap: 8px 24px; }
+</style>
+
+<div class="slate lbl">
+  <span class="rec"><i></i>REC</span>
+  <span>FF_SHOTLIST</span>
+  <span>/</span>
+  <span>Midjourney brief · 20 slots · 11 drawn · 9 photographic</span>
+  <span class="right">Measured 2026-08-31 · 1280 → 1920 px</span>
+</div>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="eyebrow lbl">Frame · 00 — Shot list</p>
+    <h1>Every empty frame on the site, with the <em>prompt</em> that fills it.</h1>
+    <p class="lede">
+      Every public page and the portal were scanned for image slots that currently render blank. Each one below
+      was measured live in Chrome at four desktop widths, so the aspect ratio you generate at is the ratio the
+      layout actually paints. The marketing slots are drawn — storyboard frames in pencil, ink and one amber
+      accent, the site's own call-sheet vocabulary — because photographs on this site are reserved for real work.
+    </p>
+    <div class="stats">
+      <div><span class="lbl">Home · reel</span><b>7</b></div>
+      <div><span class="lbl">Home · storyboard</span><b>4</b></div>
+      <div><span class="lbl">About · cast</span><b>4</b></div>
+      <div><span class="lbl">Portal · demo</span><b>5</b></div>
+    </div>
+  </div>
+</header>
+
+<nav class="wrap index lbl" aria-label="Sections">
+  <a href="#bible"><b>Style bible</b> palette · suffix · workflow</a>
+  <a href="#reel"><b>Home / Reel</b> 7 service cards</a>
+  <a href="#storyboard"><b>Home / Storyboard</b> 4 panels</a>
+  <a href="#cast"><b>About / Cast</b> 4 portraits</a>
+  <a href="#portal"><b>Portal</b> 5 demo thumbs</a>
+  <a href="#done"><b>Already shot</b> nothing missing</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="bible">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">Read first</p>
+      <h2>The style bible: one look across every frame.</h2>
+      <p class="note">
+        Two registers, and every prompt below is complete on its own. <b>Drawn</b> frames (the home reel and the
+        storyboard panels) share one ink line: pencil and ink on white paper with a single amber accent, the
+        site's own call-sheet vocabulary. <b>Photographic</b> frames (the cast reference and the portal demo) share
+        a film line. Nothing in the drawn set should look like a photograph, and nothing in the photographic set
+        goes in the reel.
+      </p>
+    </div>
+
+    <div class="bible">
+      <div>
+        <h3>Palette to name in the prompt</h3>
+        <div class="swatches">
+          <div class="sw g"><span class="lbl">Graphite</span><span class="mono">#353230</span></div>
+          <div class="sw i"><span class="lbl">Ivory</span><span class="mono">#ffffeb</span></div>
+          <div class="sw a"><span class="lbl">Amber</span><span class="mono">#d38f2c</span></div>
+          <div class="sw e"><span class="lbl">Ember</span><span class="mono">#d45938</span></div>
+          <div class="sw c"><span class="lbl">Crimson</span><span class="mono">#892f2a</span></div>
+        </div>
+        <div class="flags">
+          <div><code>--ar</code><span>Set per slot below. Generate at the listed ratio, never crop from a square.</span></div>
+          <div><code>--style raw</code><span>Turns off Midjourney's default beautification: drawings stay as linework, photos read as film stills.</span></div>
+          <div><code>--no text, …</code><span>Midjourney invents lettering on screens, cards and signage. Every prompt suppresses it; the site adds its own type on top.</span></div>
+          <div><code>--sref</code><span>After the first approved image, paste its URL as <code>--sref</code> on the rest (<code>--sw 150</code>) to lock grain, light and colour.</span></div>
+          <div><code>--seed</code><span>Optional. Reusing the seed of a keeper makes variations of the same shot instead of a new one.</span></div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Workflow</h3>
+        <ol>
+          <li><span>Shoot <b>Frame 001 · Brand Identity</b> first, as a drawing. It is the largest slot and it sets the ink line for the other ten drawn frames.</span></li>
+          <li><span>Pick the keeper, upscale it, copy its image URL. Add <code>--sref &lt;url&gt; --sw 150</code> to every other prompt in this sheet.</span></li>
+          <li><span>Run the other six reel cards, then the four storyboard panels, all on that <code>--sref</code>. The cast and portal prompts are photographic and stand apart.</span></li>
+          <li><span>Upscale, crop to the exact ratio in each slot's spec, export WebP at the listed size (2× the largest measured slot).</span></li>
+          <li><span>Drop files at the suggested <code>/public</code> paths. The reel card already blends a white-paper drawing onto either ground; nothing else to wire.</span></li>
+        </ol>
+
+        <div class="monitor" style="margin-top: 22px;">
+          <div class="chrome"><span class="live"><i></i>Ink line</span><span>drawn frames · reel + storyboard</span><button type="button" class="copy-btn" data-target="inkline">Copy</button></div>
+<pre class="prompt" id="inkline">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: [scene] <span class="p">--ar [slot] --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <div class="monitor" style="margin-top: 14px;">
+          <div class="chrome"><span class="live"><i></i>Film line</span><span>photographic · cast + portal</span><button type="button" class="copy-btn" data-target="suffix">Copy</button></div>
+<pre class="prompt" id="suffix">cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--style raw --no text, typography, letters, logo, watermark, signage</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="reel">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">Home · <code>/</code> · Frame 02 “Seven scenes we'll shoot for you” · <code>src/app/page.tsx</code> ReelCard</p>
+      <h2>The reel: seven service cards, seven <em>storyboard</em> frames.</h2>
+      <p class="note">
+        These cards have no image element; the blank is the card's own top half. A photograph was tried here and
+        read as stock: on this site photos are evidence (portfolio, gallery, cutting room) and everything else is
+        typeset or drawn. So the reel is drawn. “Seven scenes we'll shoot for you” is future tense, and a scene not
+        yet shot is a storyboard; the portfolio is the footage.
+      </p>
+      <p class="note">
+        <b>One file, both grounds.</b> Generate every frame as ink on <b>clean white paper</b>. The card blends it
+        with <code>mix-blend-mode: multiply</code> on the ivory section (dark theme) so the paper disappears, and
+        <code>invert + hue-rotate(180deg)</code> then <code>screen</code> on the graphite section (light theme) so
+        the same drawing prints as ivory ink on graphite with the amber accent intact. The card copy keeps the
+        section's own ink. A mask fades the drawing out toward the lower left, so keep the subject in the upper
+        right as every prompt asks. All seven from one <code>--sref</code>; shoot 001 first.
+      </p>
+    </div>
+
+    <!-- 001 -->
+    <article class="shot" id="reel-001">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 001</span>
+        <h3>Brand Identity</h3>
+        <span class="lbl scene">Int. Studio — Day · “the core frame”</span>
+        <span class="chip">--ar 5:4 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 867 / 692;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 001</span><span class="tr">Int. Studio — Day</span>
+          <div class="zone" style="left: 0; right: 30%; bottom: 0; top: 46%;"></div>
+          <div class="copy"><div class="sub">/ the core frame</div><div class="ttl" style="font-size: 34px;">Brand Identity</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>678 × 671 at 1280 · <b>867 × 692</b> at ≥ 1728 (ratio drifts from 1:1 to 1.25:1)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 5:4</span> · keep the drawing in the upper right so the 1:1 laptop crop still holds</dd>
+          <dt>Export</dt><dd>≥ 1760 × 1408 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~70% wide × 54% tall. The headline is 88 px serif; the drawing fades out under it.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/001-brand-identity.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 001</span><button type="button" class="copy-btn" data-target="p-001">Copy</button></div>
+<pre class="prompt" id="p-001">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a set of business cards fanned across a desk beside a swatch fan, a small notebook and a brass ruler, seen from a high three-quarter angle, the objects gathered in the upper right two-thirds of the frame, one leaf of the swatch fan filled burnt amber, the lower left of the paper left empty <span class="p">--ar 5:4 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Shot · live.</b> The keeper is in place at <code class="mono">public/home/reel/001-brand-identity.webp</code> and verified on both grounds — use its Midjourney URL as the <code class="mono">--sref</code> for the other ten drawn frames. Its paper came out light grey rather than white; the card's filters absorb that, so a similar tone on the next frames is fine. It is 1200 × 960 (1×): upscale in Midjourney and re-export before launch.</p>
+      </div>
+    </article>
+    <!-- 002 -->
+    <article class="shot" id="reel-002">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 002</span>
+        <h3>Websites</h3>
+        <span class="lbl scene">Ext. Web — Continuous · “the main stage”</span>
+        <span class="chip">--ar 16:9 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 613 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 002</span><span class="tr">Ext. Web — Continuous</span>
+          <div class="zone" style="left: 0; right: 22%; bottom: 0; top: 38%;"></div>
+          <div class="copy"><div class="sub">/ the main stage</div><div class="ttl" style="font-size: 22px;">Websites</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>478 × 325 at 1280 · <b>613 × 336</b> at ≥ 1728 (1.47:1 → 1.82:1)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 16:9</span></dd>
+          <dt>Export</dt><dd>≥ 1240 × 700 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~78% × 62%. Most of this card is copy; the drawing lives in the top-right corner.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/002-websites.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 002</span><button type="button" class="copy-btn" data-target="p-002">Copy</button></div>
+<pre class="prompt" id="p-002">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a desktop monitor drawn in perspective on a desk, angled slightly, its screen showing a simple wireframe layout of empty rectangles with one rectangle filled burnt amber, a keyboard in front, the monitor placed in the upper right, the lower left of the paper left empty <span class="p">--ar 16:9 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Why this frame.</b> A wireframe is the honest way to draw a website — and it can't hallucinate text the way a rendered screen does.</p>
+      </div>
+    </article>
+    <!-- 003 -->
+    <article class="shot" id="reel-003">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 003</span>
+        <h3>Logo Design</h3>
+        <span class="lbl scene">Int. Studio — Insert · “the signature shot”</span>
+        <span class="chip">--ar 16:9 · retake</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 613 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 003</span><span class="tr">Int. Studio — Insert</span>
+          <div class="zone" style="left: 0; right: 22%; bottom: 0; top: 38%;"></div>
+          <div class="copy"><div class="sub">/ the signature shot</div><div class="ttl" style="font-size: 22px;">Logo Design</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>478 × 325 at 1280 · <b>613 × 336</b> at ≥ 1728</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 16:9</span></dd>
+          <dt>Export</dt><dd>≥ 1240 × 700 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~78% × 62%.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/003-logo-design.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 003</span><button type="button" class="copy-btn" data-target="p-003">Copy</button></div>
+<pre class="prompt" id="p-003">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a logo exploration sheet drawn flat and straight-on, filling the frame edge to edge with no desk or table visible: rows of small abstract geometric brand-mark sketches, a few crossed out, one circled in pencil, the chosen mark redrawn large at the right with one bold stroke filled burnt amber, everything gathered toward the upper right, the lower left of the paper left empty <span class="p">--ar 16:9 --style raw --no text, typography, letters, logo, watermark, photo, photograph, realistic, 3d render, paper texture, vignette, border, frame lines, hand, fingers, compass, ruler, drafting tools, architecture, blueprint, wood, desk, table, perspective, depth of field, drop shadow</span></pre>
+        </div>
+        <p class="notes"><b>Prompt · v3 — retake.</b> v1 (compass construction circles) read as an architecture firm; v2's pick came back as a <b>photograph</b> of sketch sheets — angled perspective, wood desk corner, photoreal pencil, drop shadows — the only frame in the reel that breaks the drawn medium. v3 forces the flat storyboard read: straight-on, paper edge to edge, no desk, no tools, with photography vocabulary banned. A stand-in from v2 is live on the card until the retake lands. Still reject anything resembling a real company's mark.</p>
+      </div>
+    </article>
+    <!-- 004 -->
+    <article class="shot" id="reel-004">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 004</span>
+        <h3>Social Media</h3>
+        <span class="lbl scene">Ext. Feed — Continuous · “the daily rushes”</span>
+        <span class="chip">--ar 3:2 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 487 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 004</span><span class="tr">Ext. Feed — Continuous</span>
+          <div class="zone" style="left: 0; right: 16%; bottom: 0; top: 40%;"></div>
+          <div class="copy"><div class="sub">/ the daily rushes</div><div class="ttl" style="font-size: 20px;">Social Media</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>379 × 325 at 1280 · <b>487 × 336</b> at ≥ 1728 (1.17:1 → 1.45:1)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 3:2</span> · nearly square on laptops, keep the drawing in the upper right third</dd>
+          <dt>Export</dt><dd>≥ 980 × 680 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~84% × 60%.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/004-social-media.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 004</span><button type="button" class="copy-btn" data-target="p-004">Copy</button></div>
+<pre class="prompt" id="p-004">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a cinema camera on a professional tripod aimed at a café counter with a cup and a pastry, a softbox light on a stand behind it, a smartphone propped in the foreground replaying the same shot as a tall vertical clip, the camera's record indicator filled burnt amber, the scene in the upper right, the lower left of the paper left empty <span class="p">--ar 3:2 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Prompt · v2.</b> The first version put a phone on a tabletop tripod with a ring light — hobbyist gear for a studio that shoots on cinema equipment. Now the camera is the real thing and the phone appears only where it belongs: showing the vertical cut destined for the feed, which is what keeps this frame social and separates it from 005's street shoot. The amber record dot echoes the ember REC dot in the site's own slate strip.</p>
+      </div>
+    </article>
+    <!-- 005 -->
+    <article class="shot" id="reel-005">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 005</span>
+        <h3>Video &amp; Photo</h3>
+        <span class="lbl scene">Ext. Location — Golden Hr · “principal photography”</span>
+        <span class="chip">--ar 3:2 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 487 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 005</span><span class="tr">Ext. Location — Golden Hr</span>
+          <div class="zone" style="left: 0; right: 16%; bottom: 0; top: 40%;"></div>
+          <div class="copy"><div class="sub">/ principal photography</div><div class="ttl" style="font-size: 20px;">Video &amp; Photo</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>379 × 325 at 1280 · <b>487 × 336</b> at ≥ 1728</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 3:2</span></dd>
+          <dt>Export</dt><dd>≥ 980 × 680 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~84% × 60%.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/005-video-photo.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 005</span><button type="button" class="copy-btn" data-target="p-005">Copy</button></div>
+<pre class="prompt" id="p-005">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a camera operator seen from behind with a cinema camera on a shoulder rig, standing on a street with a low sun drawn as a circle with a few rays, the sun filled burnt amber, the figure in the upper right third, the lower left of the paper left empty <span class="p">--ar 3:2 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Why this frame.</b> Golden hour drawn as a sun, not lit as one. No face, no model.</p>
+      </div>
+    </article>
+    <!-- 006 -->
+    <article class="shot" id="reel-006">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 006</span>
+        <h3>Ad Management</h3>
+        <span class="lbl scene">Int. War Room — Night · “the wide release”</span>
+        <span class="chip">--ar 3:2 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 487 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 006</span><span class="tr">Int. War Room — Night</span>
+          <div class="zone" style="left: 0; right: 16%; bottom: 0; top: 40%;"></div>
+          <div class="copy"><div class="sub">/ the wide release</div><div class="ttl" style="font-size: 20px;">Ad Management</div></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>379 × 325 at 1280 · <b>487 × 336</b> at ≥ 1728</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 3:2</span></dd>
+          <dt>Export</dt><dd>≥ 980 × 680 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left, ~84% × 60%.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/006-ad-management.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 006</span><button type="button" class="copy-btn" data-target="p-006">Copy</button></div>
+<pre class="prompt" id="p-006">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: two monitors on a desk showing simple rising line charts, one chart line filled burnt amber, a coffee cup, a window behind with a crescent moon and a few rooftop outlines, the desk in the upper right, the lower left of the paper left empty <span class="p">--ar 3:2 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Why this frame.</b> The night slug becomes a moon and rooftops — three lines, legible at 487 px. Ask for “simple” charts or it will fill them with fake numbers.</p>
+      </div>
+    </article>
+    <!-- 007 -->
+    <article class="shot" id="reel-007">
+      <div class="shot-head">
+        <span class="lbl id">Frame · 007</span>
+        <h3>Web &amp; Mobile Apps</h3>
+        <span class="lbl scene">Int. Dev Bay — Day · “the sequel”</span>
+        <span class="chip">--ar 9:2 · shot</span>
+      </div>
+      <div class="pv-wrap" style="grid-column: 1 / -1;">
+        <div class="pv wide" style="--ar: 1500 / 336;">
+          <div class="inset"></div>
+          <span class="tl">Frame · 007</span><span class="tr">Int. Dev Bay — Day</span>
+          <div class="zone" style="left: 0; right: 62%; bottom: 0; top: 40%;"></div>
+          <div class="copy"><div class="sub">/ the sequel</div><div class="ttl" style="font-size: 22px;">Web &amp; Mobile Apps</div></div>
+        </div>
+        <dl class="specs" style="grid-template-columns: 112px minmax(0, 1fr) 112px minmax(0, 1fr);">
+          <dt>Measured</dt><dd>1176 × 325 at 1280 · <b>1500 × 336</b> at ≥ 1728 (3.6:1 → 4.46:1)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 9:2</span> · if the composition falls apart at this width, generate <code>--ar 21:9</code> and extend both sides in Editor</dd>
+          <dt>Export</dt><dd>≥ 3000 × 680 px WebP</dd>
+          <dt>Text zone</dt><dd>Bottom-left ~38% wide; the right 60% of the banner is free.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/reel/007-web-mobile-apps.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col" style="grid-column: 1 / -1;">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>reel · 007</span><button type="button" class="copy-btn" data-target="p-007">Copy</button></div>
+<pre class="prompt" id="p-007">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a long shared desk running across the whole width of the frame with three open laptops and a phone on a stand, each screen showing a simple wireframe of empty rectangles with one rectangle filled burnt amber, a tall window at the far right, the left third of the desk empty and the lower left of the paper left empty <span class="p">--ar 9:2 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Why this frame.</b> A 4.5:1 slot needs a lateral line; the desk carries the eye from the empty left (copy) to the window on the right.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="storyboard">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">Home · <code>/</code> · Frame 03 “How a brand gets made” · <code>src/app/page.tsx</code> storyboard panels</p>
+      <h2>The storyboard: four <em>drawn</em> panels, not photographs.</h2>
+      <p class="note">
+        These are real image slots (<code>aspect-[4/3]</code>, dashed inner frame, Roman numeral overlay). They sit
+        under the process copy, so a second row of photos would fight the reel above. Storyboards on a real set are pencil and ink, so these share the reel's ink line exactly. Note this section sits on <code>bg-surface</code>, the opposite ground to the reel: the blend mapping flips (screen + invert in dark theme, multiply in light). The Roman numeral and the “Panel 01 / cued” labels stay on top, so leave the centre
+        of each drawing relatively open. All four share one style line, and after the first one is approved,
+        the other three should run with its <code>--sref</code>.
+      </p>
+    </div>
+
+    <!-- I -->
+    <article class="shot" id="sb-1">
+      <div class="shot-head">
+        <span class="lbl id">Panel · 01 · Act I</span>
+        <h3>Table Read</h3>
+        <span class="lbl scene">Discovery &amp; strategy</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3;">
+          <div class="inset"></div>
+          <span class="tl">Panel 01</span><span class="br">023s</span>
+          <div class="num" style="font-size: 72px;">I</div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>276 × 207 at 1280 · <b>357 × 268</b> at ≥ 1728 (fixed 4:3)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 720 × 540 px WebP (small slot: one 2× upscale is plenty)</dd>
+          <dt>Overlay</dt><dd>Numeral centred at ~180 px, labels in all four corners. Keep the middle quiet.</dd>
+          <dt>Suggested file</dt><dd><code>public/home/storyboard/01-table-read.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>storyboard · I</span><button type="button" class="copy-btn" data-target="p-sb1">Copy</button></div>
+<pre class="prompt" id="p-sb1">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: four people around a long table seen from a high three-quarter angle, open notebooks and coffee cups, one person mid-gesture, tall windows behind, the centre of the table left open, cinematic 4:3 framing, no lettering <span class="p">--ar 4:3 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Style line.</b> The clause before the colon is identical on all eleven drawn frames (seven reel cards, four panels); only the scene changes. Run these with the reel's <code class="mono">--sref</code>.</p>
+      </div>
+    </article>
+
+    <!-- II -->
+    <article class="shot" id="sb-2">
+      <div class="shot-head">
+        <span class="lbl id">Panel · 02 · Act II</span>
+        <h3>Blocking</h3>
+        <span class="lbl scene">Design &amp; scoping</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3;">
+          <div class="inset"></div>
+          <span class="tl">Panel 02</span><span class="br">046s</span>
+          <div class="num" style="font-size: 72px;">II</div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>276 × 207 → <b>357 × 268</b></dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 720 × 540 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/home/storyboard/02-blocking.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>storyboard · II</span><button type="button" class="copy-btn" data-target="p-sb2">Copy</button></div>
+<pre class="prompt" id="p-sb2">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a studio wall pinned with blank wireframe sheets and a floor plan, a person kneeling to lay amber tape marks on the floor, a curved arrow showing a planned camera move, the centre of the floor left open, cinematic 4:3 framing, no lettering <span class="p">--ar 4:3 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Why this shot.</b> “Blocking” is the film term for planning where everything goes; tape marks and a camera arrow are its literal icons, and they double as a picture of scoping.</p>
+      </div>
+    </article>
+
+    <!-- III -->
+    <article class="shot" id="sb-3">
+      <div class="shot-head">
+        <span class="lbl id">Panel · 03 · Act III</span>
+        <h3>Rolling</h3>
+        <span class="lbl scene">Production</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3;">
+          <div class="inset"></div>
+          <span class="tl">Panel 03</span><span class="br">069s</span>
+          <div class="num" style="font-size: 72px;">III</div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>276 × 207 → <b>357 × 268</b></dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 720 × 540 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/home/storyboard/03-rolling.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>storyboard · III</span><button type="button" class="copy-btn" data-target="p-sb3">Copy</button></div>
+<pre class="prompt" id="p-sb3">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: a camera operator on a dolly mid-shot at the right of frame, a clapperboard snapping shut in the near foreground at the left, short motion lines on the dolly, a softly sketched set behind, the centre of the frame left open, cinematic 4:3 framing, no lettering <span class="p">--ar 4:3 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines</span></pre>
+        </div>
+        <p class="notes"><b>Watch for.</b> Clapperboards invite Midjourney to write “SCENE / TAKE” on them. If it does, use Editor › erase on the board face, or regenerate with <code class="mono">--no clapperboard writing</code> appended.</p>
+      </div>
+    </article>
+
+    <!-- IV -->
+    <article class="shot" id="sb-4">
+      <div class="shot-head">
+        <span class="lbl id">Panel · 04 · Act IV</span>
+        <h3>Final Cut</h3>
+        <span class="lbl scene">Delivery &amp; beyond</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3;">
+          <div class="inset"></div>
+          <span class="tl">Panel 04</span><span class="br">092s</span>
+          <div class="num" style="font-size: 72px;">IV</div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>276 × 207 → <b>357 × 268</b></dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 720 × 540 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/home/storyboard/04-final-cut.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>storyboard · IV</span><button type="button" class="copy-btn" data-target="p-sb4">Copy</button></div>
+<pre class="prompt" id="p-sb4">hand-drawn film storyboard frame, loose confident graphite pencil and black ink linework with light crosshatch shading, a single burnt-amber marker accent and no other colour, clean flat white paper background, no paper texture, no vignette: an edit suite with a wide monitor showing an abstract timeline of stacked bars, an editor's hand resting on a jog wheel, a short stack of round film canister tins on the desk at the right with the top canister's rim filled burnt amber, the centre of the desk left open, cinematic 4:3 framing, no lettering <span class="p">--ar 4:3 --style raw --no text, typography, letters, logo, watermark, photo, photograph, 3d render, paper texture, vignette, border, frame lines, gift, gift box, ribbon, bow, present, wrapping paper</span></pre>
+        </div>
+        <p class="notes"><b>Prompt · v2.</b> “Sealed box tied with amber ribbon” came back as a bow-tied gift box in every variant — ribbon is present-wrapping vocabulary to Midjourney. Delivery is now a stack of film canister tins, the industry's own hand-off object, with the amber accent on the top rim; gift vocabulary is banned outright. The timeline stays as the ongoing edit. Both shapes survive at 357 px.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="cast">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">About · <code>/about</code> · Frame 02 “The Cast” · <code>src/app/about/page.tsx</code> portrait slates</p>
+      <h2>The cast: four portrait slates that should be <em>real</em> people.</h2>
+      <p class="note">
+        Four <code>aspect-[4/5]</code> slots on a graphite band, one per named team member (Baran D., Yiğit P., Kübra B.,
+        Bartu H.), currently showing initials. A generated face under a real person's name is a trust problem on an
+        About page, so this prompt is written as a <b>lighting and framing reference</b> for the actual portrait
+        session, with a stand-in variant that shows a figure at work from behind if you need the slots filled
+        before the shoot. Either way, all four must come from one session so the band reads as a set.
+      </p>
+    </div>
+
+    <article class="shot" id="cast-ref">
+      <div class="shot-head">
+        <span class="lbl id">Cast · 01 – 04</span>
+        <h3>Portrait direction</h3>
+        <span class="lbl scene">Int. Studio — Day · one setup, four sitters</span>
+        <span class="chip">--ar 4:5</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv dark" style="--ar: 4 / 5; max-width: 300px;">
+          <div class="inset"></div>
+          <span class="tl">Cast 01</span><span class="tr">● on set</span><span class="bl">Int. Studio — Day</span>
+          <div class="num" style="font-size: 96px;">BD</div>
+          <div class="zone" style="left: 0; right: 0; bottom: 0; top: 84%;"></div>
+        </div>
+        <dl class="specs">
+          <dt>Measured</dt><dd>274 × 343 at 1280 · <b>355 × 444</b> at ≥ 1728 (fixed 4:5)</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:5</span> · same for the real shoot: crop every portrait to 4:5 at waist-up</dd>
+          <dt>Export</dt><dd>≥ 720 × 900 px WebP each</dd>
+          <dt>Overlay</dt><dd>“Cast 01” top-left, “on set” top-right, scene slug bottom-left. Keep a dark, quiet edge around the frame.</dd>
+          <dt>Suggested files</dt><dd><code>public/about/cast/01-baran.webp</code> … <code>04-bartu.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>cast · reference</span><button type="button" class="copy-btn" data-target="p-cast">Copy</button></div>
+<pre class="prompt" id="p-cast">studio portrait lighting reference, waist-up figure placed slightly left of centre looking just past the lens, plain charcoal graphite seamless backdrop, one large soft key light from camera left, a faint burnt-amber rim light tracing the shoulder and hair, 85mm lens, shallow depth of field, calm confident expression, minimal wardrobe in charcoal or ivory, dark quiet edges, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, quiet editorial mood <span class="p">--ar 4:5 --style raw --no text, typography, letters, logo, watermark, props, busy background</span></pre>
+        </div>
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>cast · interim stand-in (no face)</span><button type="button" class="copy-btn" data-target="p-cast2">Copy</button></div>
+<pre class="prompt" id="p-cast2">a figure seen from behind at work in a dim studio, seated at a desk facing a single warm monitor glow, charcoal graphite backdrop, one soft key light from camera left and a faint burnt-amber rim on the shoulder, 85mm lens, dark quiet edges, no face visible, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 4:5 --style raw --no text, typography, letters, logo, watermark, face</span></pre>
+        </div>
+        <p class="notes"><b>For the stand-in set:</b> run it four times with <code class="mono">--sref</code> from the first keeper and vary one word per person to match their slate on the page: “desk” → Baran (Int. Studio), “two monitors and a keyboard” → Yiğit (Int. Dev Bay), “phone on a tripod” → Kübra (Ext. Feed), “edit console at night” → Bartu (Int. Edit Suite — Night).</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="portal">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">Portal · <code>/dashboard</code>, <code>/dashboard/approvals</code>, <code>/admin/media</code> · demo data</p>
+      <h2>The portal: five sample thumbnails for the <em>demo</em> data.</h2>
+      <p class="note">
+        The client dashboard and admin still run on mock data (Acadia Bakes, Meridian Foods…) and their post
+        previews are checkerboard SVGs. Optional, but if the portal is going to be screen-recorded or shown to a
+        prospect, real-looking thumbnails matter. Three post visuals cover the “Upcoming Posts” list
+        (40 × 40, 1:1), the Approvals preview (200 px wide, ~1:1) and the media grid (4:3) share the same set.
+        These are fictional clients, so anything goes; just keep the palette.
+      </p>
+    </div>
+
+    <article class="shot" id="portal-1">
+      <div class="shot-head">
+        <span class="lbl id">Post · Instagram</span>
+        <h3>Summer Menu Feature</h3>
+        <span class="lbl scene">Acadia Bakes · dashboard + approvals</span>
+        <span class="chip">--ar 1:1 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 1 / 1; max-width: 200px;"><div class="checker"></div></div>
+        <dl class="specs">
+          <dt>Slots</dt><dd>Upcoming Posts thumb 40 × 40 · Approvals preview 200 × ~200</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 1:1</span></dd>
+          <dt>Export</dt><dd>≥ 800 × 800 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/portal/demo/summer-menu.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>portal · 01</span><button type="button" class="copy-btn" data-target="p-pt1">Copy</button></div>
+<pre class="prompt" id="p-pt1">overhead flat lay of a summer bakery menu spread on a warm ivory linen cloth: a sliced peach galette, two croissants, a small bowl of berries and an iced coffee, morning window light, a sprig of thyme, styled for an Instagram square, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 1:1 --style raw --no text, typography, letters, logo, watermark, menu card</span></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="shot" id="portal-2">
+      <div class="shot-head">
+        <span class="lbl id">Post · Facebook</span>
+        <h3>Client Testimonial Carousel</h3>
+        <span class="lbl scene">Acadia Bakes · dashboard + approvals</span>
+        <span class="chip">--ar 1:1 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 1 / 1; max-width: 200px;"><div class="checker"></div></div>
+        <dl class="specs">
+          <dt>Generate</dt><dd><span class="ar">--ar 1:1</span></dd>
+          <dt>Export</dt><dd>≥ 800 × 800 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/portal/demo/testimonial.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>portal · 02</span><button type="button" class="copy-btn" data-target="p-pt2">Copy</button></div>
+<pre class="prompt" id="p-pt2">a ceramic coffee cup on a café table beside a blank warm-ivory notecard propped against it, a pen and a folded napkin, soft window light from the left, blurred bakery shelves behind, quiet and personal, styled for a social carousel square, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 1:1 --style raw --no text, typography, letters, handwriting, logo, watermark</span></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="shot" id="portal-3">
+      <div class="shot-head">
+        <span class="lbl id">Post · Instagram</span>
+        <h3>Behind the Scenes Reel</h3>
+        <span class="lbl scene">Acadia Bakes · dashboard + approvals</span>
+        <span class="chip">--ar 1:1 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 1 / 1; max-width: 200px;"><div class="checker"></div></div>
+        <dl class="specs">
+          <dt>Generate</dt><dd><span class="ar">--ar 1:1</span> (the reel itself is 9:16; this is only its cover)</dd>
+          <dt>Export</dt><dd>≥ 800 × 800 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/portal/demo/bts-reel.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>portal · 03</span><button type="button" class="copy-btn" data-target="p-pt3">Copy</button></div>
+<pre class="prompt" id="p-pt3">a baker's flour-dusted hands shaping dough on a wooden bench, flour hanging in a shaft of warm morning light, a phone on a small tripod filming at the edge of frame, steam from a proofing oven behind, candid documentary energy, styled as a reel cover square, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 1:1 --style raw --no text, typography, letters, logo, watermark, faces</span></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="shot" id="portal-4">
+      <div class="shot-head">
+        <span class="lbl id">Media · Image</span>
+        <h3>Summer Menu Photo 1.jpg</h3>
+        <span class="lbl scene">Acadia Bakes · /admin/media grid</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3; max-width: 240px;"><div class="checker"></div></div>
+        <dl class="specs">
+          <dt>Slot</dt><dd>Media card preview, <code>aspect-[4/3]</code>, ~280 px wide in a 4-up grid</dd>
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 800 × 600 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/portal/demo/summer-menu-photo-1.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>portal · 04</span><button type="button" class="copy-btn" data-target="p-pt4">Copy</button></div>
+<pre class="prompt" id="p-pt4">a single peach galette on a warm ivory ceramic plate at the edge of a bakery counter, crumbs and a fork, a pool of morning window light, blurred amber pastry case behind, three-quarter angle, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 4:3 --style raw --no text, typography, letters, logo, watermark</span></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="shot" id="portal-5">
+      <div class="shot-head">
+        <span class="lbl id">Media · Image</span>
+        <h3>Product Hero Shot.jpg</h3>
+        <span class="lbl scene">Meridian Foods · /admin/media grid</span>
+        <span class="chip">--ar 4:3 · shot</span>
+      </div>
+      <div class="pv-wrap">
+        <div class="pv" style="--ar: 4 / 3; max-width: 240px;"><div class="checker"></div></div>
+        <dl class="specs">
+          <dt>Generate</dt><dd><span class="ar">--ar 4:3</span></dd>
+          <dt>Export</dt><dd>≥ 800 × 600 px WebP</dd>
+          <dt>Suggested file</dt><dd><code>public/portal/demo/product-hero.webp</code></dd>
+        </dl>
+      </div>
+      <div class="prompt-col">
+        <div class="monitor">
+          <div class="chrome"><span class="live"><i></i>Prompt</span><span>portal · 05</span><button type="button" class="copy-btn" data-target="p-pt5">Copy</button></div>
+<pre class="prompt" id="p-pt5">product hero shot of a small unlabeled amber glass jar of preserves on a slab of dark slate, a wooden spoon and a scatter of whole spices beside it, single hard side light with a long shadow, charcoal backdrop, premium food-brand styling, cinematic film still, shot on 35mm, warm tungsten and late-afternoon light, restrained palette of charcoal graphite, warm ivory, burnt amber and ember orange, fine film grain, shallow depth of field, quiet editorial mood <span class="p">--ar 4:3 --style raw --no text, typography, letters, label, logo, watermark</span></pre>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="part" id="done">
+  <div class="wrap">
+    <div class="part-head">
+      <p class="lbl where">Scanned and full</p>
+      <h2>Already shot: nothing to generate here.</h2>
+      <p class="note">For completeness, the surfaces that were checked and already carry real work. Do not put generated images on these; they are the proof of the studio's own photography.</p>
+    </div>
+    <div class="done">
+      <div><b>Home · Hero</b>No image slot. Scanlines, dot grid and two colour orbs by design; the WebGL hero lives on the unmerged <span class="mono">feat/awwwards-motion</span> branch.</div>
+      <div><b>Home · Control Room</b>The monitor is built in HTML (stats, queue, bars). Not an image.</div>
+      <div><b>Services · Cutting Room + Scene List</b>All 7 folders fan real client frames from <span class="mono">src/data/serviceFolders.ts</span>. Scene 07 has one frame plus a note, on purpose.</div>
+      <div><b>Portfolio · index</b>All 16 clients have three marquee frames under <span class="mono">public/portfolio/_marquee</span>.</div>
+      <div><b>Portfolio · 16 case studies</b>Real deliverables throughout. Excluded from this brief.</div>
+      <div><b>Gallery</b>Real photography, thumbs + full + rotated derivatives.</div>
+      <div><b>Contact</b>Margin reels and the band sample <span class="mono">galleryPhotos</span>.</div>
+      <div><b>Login</b>Copy, list and auth card. No image slot.</div>
+      <div><b>Portal · avatars</b>Initials circles for the client (AB) and the admin team. Real people again; not for Midjourney.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap lbl">
+  <span>FrameFlow · shot list</span>
+  <span>Slots measured with headless Chrome at 1280 / 1440 / 1728 / 1920, DPR 1</span>
+  <span>Export sizes are 2× the widest measured slot</span>
+</footer>
+
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.copy-btn');
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    Array.prototype.forEach.call(buttons, function (btn) {
+      btn.addEventListener('click', function () {
+        var el = document.getElementById(btn.getAttribute('data-target'));
+        if (!el) return;
+        var text = el.textContent.replace(/\s+/g, ' ').trim();
+        var done = function () {
+          btn.textContent = 'Copied';
+          btn.setAttribute('data-done', '1');
+          setTimeout(function () { btn.textContent = 'Copy'; btn.removeAttribute('data-done'); }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+        } else {
+          fallbackCopy(text); done();
+        }
+      });
+    });
+  })();
+</script>

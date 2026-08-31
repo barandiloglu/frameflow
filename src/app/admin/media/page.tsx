@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 type FileCategory = "Image" | "Video" | "Document" | "Brand Asset";
@@ -14,17 +15,18 @@ interface MediaAsset {
   size: string;
   date: string;
   extension: string;
+  thumb?: string;
 }
 
 const assets: MediaAsset[] = [
   { id: 1, filename: "Acadia Logo Primary.svg", client: "Acadia Bakes", category: "Brand Asset", size: "245 KB", date: "Jun 15, 2025", extension: "SVG" },
-  { id: 2, filename: "Summer Menu Photo 1.jpg", client: "Acadia Bakes", category: "Image", size: "3.2 MB", date: "Jul 1, 2025", extension: "JPG" },
+  { id: 2, filename: "Summer Menu Photo 1.jpg", client: "Acadia Bakes", category: "Image", size: "3.2 MB", date: "Jul 1, 2025", extension: "JPG", thumb: "/portal/demo/summer-menu-photo-1.webp" },
   { id: 3, filename: "BTS Reel Raw.mp4", client: "Acadia Bakes", category: "Video", size: "128 MB", date: "Jun 28, 2025", extension: "MP4" },
   { id: 4, filename: "Brand Guidelines v2.pdf", client: "Velour Collective", category: "Document", size: "4.8 MB", date: "May 20, 2025", extension: "PDF" },
-  { id: 5, filename: "Product Hero Shot.jpg", client: "Meridian Foods", category: "Image", size: "5.1 MB", date: "Jun 22, 2025", extension: "JPG" },
+  { id: 5, filename: "Product Hero Shot.jpg", client: "Meridian Foods", category: "Image", size: "5.1 MB", date: "Jun 22, 2025", extension: "JPG", thumb: "/portal/demo/product-hero.webp" },
   { id: 6, filename: "Logo White.png", client: "Nomad Studio", category: "Brand Asset", size: "89 KB", date: "Mar 15, 2025", extension: "PNG" },
   { id: 7, filename: "Social Template.psd", client: "Sola Health", category: "Brand Asset", size: "12.4 MB", date: "Jun 1, 2025", extension: "PSD" },
-  { id: 8, filename: "Testimonial Graphic.jpg", client: "Acadia Bakes", category: "Image", size: "1.8 MB", date: "Jul 2, 2025", extension: "JPG" },
+  { id: 8, filename: "Testimonial Graphic.jpg", client: "Acadia Bakes", category: "Image", size: "1.8 MB", date: "Jul 2, 2025", extension: "JPG", thumb: "/portal/demo/testimonial.webp" },
   { id: 9, filename: "Recipe Video Final.mp4", client: "Acadia Bakes", category: "Video", size: "95 MB", date: "Jun 25, 2025", extension: "MP4" },
   { id: 10, filename: "Caf\u00e9 Interior.jpg", client: "Lune Caf\u00e9", category: "Image", size: "4.2 MB", date: "Jun 18, 2025", extension: "JPG" },
   { id: 11, filename: "Logo Refresh Draft.ai", client: "Apex Creative", category: "Brand Asset", size: "2.1 MB", date: "Jul 5, 2025", extension: "AI" },
@@ -216,11 +218,17 @@ export default function MediaLibraryPage() {
               className="rounded-[2px] border border-border-subtle bg-on-surface-05 overflow-hidden hover:border-amber transition group cursor-pointer"
             >
               {/* Preview area */}
-              <div className="aspect-[4/3] bg-surface flex flex-col items-center justify-center gap-2">
-                <CategoryIcon category={asset.category} />
-                <span className="text-[10px] font-body text-on-surface-10 uppercase tracking-wider">
-                  {asset.extension}
-                </span>
+              <div className="relative aspect-[4/3] bg-surface flex flex-col items-center justify-center gap-2 overflow-hidden">
+                {asset.thumb ? (
+                  <Image src={asset.thumb} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                ) : (
+                  <>
+                    <CategoryIcon category={asset.category} />
+                    <span className="text-[10px] font-body text-on-surface-10 uppercase tracking-wider">
+                      {asset.extension}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Info area */}

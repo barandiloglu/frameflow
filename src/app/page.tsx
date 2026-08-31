@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
@@ -30,6 +31,10 @@ type Scene = {
   scene: string;
   span: string;
   accent?: boolean;
+  /** A storyboard frame: ink on white paper. The card blends the paper away
+      on either ground (see .reel-still in globals.css), so one file serves
+      both themes. Cards without one stay as they are. */
+  image?: { src: string; alt: string };
 };
 
 const reel: Scene[] = [
@@ -41,6 +46,10 @@ const reel: Scene[] = [
     scene: "INT. STUDIO — DAY",
     span: "col-span-12 md:col-span-7 md:row-span-2",
     accent: true,
+    image: {
+      src: "/home/reel/001-brand-identity.webp",
+      alt: "Storyboard sketch: a stack of business cards, an amber swatch fan and a brass ruler on a desk",
+    },
   },
   {
     id: "002",
@@ -49,6 +58,10 @@ const reel: Scene[] = [
     copy: "Modern, responsive, SEO-native websites custom-built to convert the room.",
     scene: "EXT. WEB — CONTINUOUS",
     span: "col-span-12 md:col-span-5",
+    image: {
+      src: "/home/reel/002-websites.webp",
+      alt: "Storyboard sketch: a monitor showing a wireframe layout with one amber panel",
+    },
   },
   {
     id: "003",
@@ -57,6 +70,10 @@ const reel: Scene[] = [
     copy: "Marks engineered for instant recognition at every size, on every surface.",
     scene: "INT. STUDIO — INSERT",
     span: "col-span-12 md:col-span-5",
+    image: {
+      src: "/home/reel/003-logo-design.webp",
+      alt: "Storyboard sketch: a logo exploration sheet with one mark circled and redrawn large in amber",
+    },
   },
   {
     id: "004",
@@ -65,6 +82,10 @@ const reel: Scene[] = [
     copy: "Strategy-led campaigns that turn feeds into full scenes — not afterthoughts.",
     scene: "EXT. FEED — CONTINUOUS",
     span: "col-span-12 md:col-span-4",
+    image: {
+      src: "/home/reel/004-social-media.webp",
+      alt: "Storyboard sketch: a cinema camera and softbox filming a café counter, a phone showing the vertical clip",
+    },
   },
   {
     id: "005",
@@ -73,6 +94,10 @@ const reel: Scene[] = [
     copy: "Film and stills that capture the real texture of your brand, on location.",
     scene: "EXT. LOCATION — GOLDEN HR",
     span: "col-span-12 md:col-span-4",
+    image: {
+      src: "/home/reel/005-video-photo.webp",
+      alt: "Storyboard sketch: a camera operator from behind under an amber sun on a street",
+    },
   },
   {
     id: "006",
@@ -81,6 +106,10 @@ const reel: Scene[] = [
     copy: "Meta & Google campaigns engineered for real ROI. No wasted reel, no vanity metrics.",
     scene: "INT. WAR ROOM — NIGHT",
     span: "col-span-12 md:col-span-4",
+    image: {
+      src: "/home/reel/006-ad-management.webp",
+      alt: "Storyboard sketch: two monitors with rising amber charts at night, a coffee cup and a crescent moon",
+    },
   },
   {
     id: "007",
@@ -89,6 +118,10 @@ const reel: Scene[] = [
     copy: "End-to-end product work — concept, design, development, launch. Built for what comes next.",
     scene: "INT. DEV BAY — DAY",
     span: "col-span-12",
+    image: {
+      src: "/home/reel/007-web-mobile-apps.webp",
+      alt: "Storyboard sketch: a long desk of laptops and monitors showing wireframes, a window at the right",
+    },
   },
 ];
 
@@ -96,24 +129,32 @@ const storyboard = [
   {
     step: "I",
     title: "Table Read",
+    img: "/home/storyboard/01-table-read.webp",
+    alt: "Storyboard sketch: four people in discussion around a table, amber curtains behind",
     sub: "Discovery & strategy",
     body: "We meet, we listen, we dig into your goals, audience, and what's holding the story back.",
   },
   {
     step: "II",
     title: "Blocking",
+    img: "/home/storyboard/02-blocking.webp",
+    alt: "Storyboard sketch: a person laying amber tape marks below a wall of pinned wireframes",
     sub: "Design & scoping",
     body: "A clear shot list: milestones, deliverables, and the creative direction we'll follow.",
   },
   {
     step: "III",
     title: "Rolling",
+    img: "/home/storyboard/03-rolling.webp",
+    alt: "Storyboard sketch: a clapperboard in the foreground, a camera operator on a dolly behind",
     sub: "Production",
     body: "Iterative design, development, and content — each scene reviewed and approved on the portal.",
   },
   {
     step: "IV",
     title: "Final Cut",
+    img: "/home/storyboard/04-final-cut.webp",
+    alt: "Storyboard sketch: a hand on a jog wheel, timeline monitors and film canisters with an amber top",
     sub: "Delivery & beyond",
     body: "Polished launch, post-release support, and a dashboard that keeps every project moving forward.",
   },
@@ -439,8 +480,18 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: i * 0.12 }}
                 className="relative"
               >
-                {/* panel */}
-                <div className="relative aspect-[4/3] border border-amber/30 mb-7 overflow-hidden bg-on-surface-05">
+                {/* panel — bg-surface + isolate so the blended drawing composites
+                    against the panel's own ground even mid-reveal */}
+                <div className="relative aspect-[4/3] border border-amber/30 mb-7 overflow-hidden bg-surface isolate">
+                  <div aria-hidden className="sb-still pointer-events-none absolute inset-0">
+                    <Image
+                      src={step.img}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 25vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
                   <div className="absolute inset-[10px] border border-dashed border-amber/25" />
                   <span
                     className="absolute inset-0 flex items-center justify-center font-editorial italic font-[300] text-amber/55 leading-none select-none"
@@ -803,8 +854,24 @@ function ReelCard({ scene, index }: { scene: Scene; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.8, delay: index * 0.08 }}
-      className={`group relative ${scene.span} border border-border-subtle hover:border-amber/50 transition-colors duration-500 overflow-hidden`}
+      /* bg-surface + isolate: the still blends against the card's own ground,
+         so the reveal's opacity tween (a stacking context) can't show the
+         paper un-blended for its first second. */
+      className={`group relative ${scene.span} border border-border-subtle hover:border-amber/50 transition-colors duration-500 overflow-hidden bg-surface isolate`}
     >
+      {/* the storyboard frame, faded out where the copy sits */}
+      {scene.image && (
+        <div aria-hidden className="reel-still pointer-events-none absolute inset-0">
+          <Image
+            src={scene.image.src}
+            alt=""
+            fill
+            sizes="(min-width: 1728px) 867px, (min-width: 768px) 58vw, 100vw"
+            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.02]"
+          />
+        </div>
+      )}
+
       {/* dashed inner frame */}
       <div
         aria-hidden
