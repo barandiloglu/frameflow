@@ -122,6 +122,57 @@ body {
     stroke 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+/* ─── Reel stills ───
+   Storyboard frames are generated as ink on white paper. On the ivory reel
+   (dark theme) multiply drops the paper into the ground; on the graphite reel
+   (light theme) the drawing is inverted with its hue kept — graphite ink
+   becomes ivory, the amber accent stays amber — and screened, so the same
+   file prints on both. The mask thins the drawing toward the lower left,
+   where the card copy sits. */
+.reel-still {
+  mix-blend-mode: multiply;
+  /* Radial: thin the drawing toward the lower left, under the copy.
+     Linear: ease it off the top edge so the slate labels sit on clean paper. */
+  -webkit-mask-image: radial-gradient(125% 115% at 100% 0%, #000 42%, transparent 78%),
+    linear-gradient(to bottom, transparent, #000 13%);
+  mask-image: radial-gradient(125% 115% at 100% 0%, #000 42%, transparent 78%),
+    linear-gradient(to bottom, transparent, #000 13%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.reel-still img {
+  filter: contrast(1.12) brightness(1.04);
+}
+[data-theme="light"] .reel-still {
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+[data-theme="light"] .reel-still img {
+  /* Harder contrast than the light side: Midjourney's grey marker washes
+     invert into a pale haze on graphite, and this pushes them back down
+     while the ink lines stay ivory and the accent stays amber. */
+  filter: invert(1) hue-rotate(180deg) contrast(1.6) brightness(0.9);
+}
+
+/* ─── Storyboard panels ───
+   Same ink-on-white drawings as the reel, but this section sits on the
+   OPPOSITE ground (bg-surface: graphite in dark theme, ivory in light),
+   so the blend mapping flips relative to .reel-still. */
+.sb-still {
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+.sb-still img {
+  filter: invert(1) hue-rotate(180deg) contrast(1.6) brightness(0.9);
+}
+[data-theme="light"] .sb-still {
+  mix-blend-mode: multiply;
+  opacity: 1;
+}
+[data-theme="light"] .sb-still img {
+  filter: contrast(1.12) brightness(1.04);
+}
+
 /* Grain overlay */
 .grain {
   position: fixed;
