@@ -884,7 +884,14 @@ function ReelCard({ scene, index }: { scene: Scene; index: number }) {
         className="pointer-events-none absolute inset-0 bg-amber opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500"
       />
 
-      <div className="relative flex flex-col h-full p-8 md:p-10 min-h-[280px]">
+      <div
+        /* On phones a card with a drawing needs real room for its top band —
+           at the content-driven ~300px the sketch and the copy share the same
+           pixels, which is exactly what the client could not read. */
+        className={`relative flex flex-col h-full p-8 md:p-10 md:min-h-[280px] ${
+          scene.image ? "min-h-[440px]" : "min-h-[280px]"
+        }`}
+      >
         {/* top meta */}
         <div className="flex items-start justify-between gap-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">
