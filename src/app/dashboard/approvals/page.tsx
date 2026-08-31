@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 type Tab = "All" | "Pending" | "Approved" | "Needs Revision";
 
@@ -13,6 +14,7 @@ interface ApprovalCard {
   date: string;
   title: string;
   caption: string;
+  thumb: string;
   status: "Pending" | "Approved" | "Needs Revision";
 }
 
@@ -23,6 +25,7 @@ const cards: ApprovalCard[] = [
     platformColor: "bg-amber",
     date: "Jul 3",
     title: "Summer Menu Feature",
+    thumb: "/portal/demo/summer-menu.webp",
     caption:
       "New croissant drop this weekend! Flaky, buttery, and baked fresh every morning. Swing by and grab one before they're gone. #AcadiaBakes #CroissantSeason #FreshBaked",
     status: "Pending",
@@ -33,6 +36,7 @@ const cards: ApprovalCard[] = [
     platformColor: "bg-on-surface-30",
     date: "Jul 4",
     title: "Client Testimonial Carousel",
+    thumb: "/portal/demo/testimonial.webp",
     caption:
       "\"Acadia Bakes makes the best sourdough in town!\" — See what our customers are saying. Swipe through for more reviews from our community.",
     status: "Pending",
@@ -43,6 +47,7 @@ const cards: ApprovalCard[] = [
     platformColor: "bg-amber",
     date: "Jul 5",
     title: "Behind the Scenes Reel",
+    thumb: "/portal/demo/bts-reel.webp",
     caption:
       "Early mornings at the bakery. Watch our team prep, shape, and bake everything from scratch. Real food, real people, real good. #BehindTheScenes",
     status: "Pending",
@@ -140,17 +145,9 @@ export default function ApprovalsPage() {
 
             {/* Card body */}
             <div className="flex">
-              {/* Preview placeholder */}
-              <div className="w-[200px] shrink-0 bg-on-surface-05 flex items-center justify-center border-r border-border-subtle">
-                <svg width="64" height="64" viewBox="0 0 64 64" className="text-on-surface-10">
-                  <defs>
-                    <pattern id={`prev-${card.id}`} width="8" height="8" patternUnits="userSpaceOnUse">
-                      <rect width="8" height="8" fill="none" />
-                      <rect width="4" height="4" fill="currentColor" />
-                    </pattern>
-                  </defs>
-                  <rect width="64" height="64" rx="8" fill={`url(#prev-${card.id})`} />
-                </svg>
+              {/* Preview */}
+              <div className="relative w-[200px] shrink-0 bg-on-surface-05 border-r border-border-subtle overflow-hidden">
+                <Image src={card.thumb} alt="" fill sizes="200px" className="object-cover" />
               </div>
 
               {/* Info */}
