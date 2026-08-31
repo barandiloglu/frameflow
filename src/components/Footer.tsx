@@ -67,7 +67,6 @@ export function Footer() {
               { href: "/portfolio", label: "Portfolio" },
               { href: "/gallery", label: "Gallery" },
               { href: "/contact", label: "Contact" },
-              { href: "/login", label: "Client Login" },
             ].map((l) => (
               <li key={l.href}>
                 <Link
@@ -78,6 +77,15 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            {/* Not a Link while the portal is in production — the route is
+                proxied back to the homepage (src/proxy.ts), and the navbar's
+                entry points are disabled the same way. */}
+            <li>
+              <span className="text-[13.5px] font-light text-on-surface-30 cursor-not-allowed select-none">
+                Client Login{" "}
+                <span className="text-[10px] uppercase tracking-[0.14em]">· in production</span>
+              </span>
+            </li>
           </ul>
         </div>
 
