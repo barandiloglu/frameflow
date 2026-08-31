@@ -143,6 +143,21 @@ body {
 .reel-still img {
   filter: contrast(1.12) brightness(1.04);
 }
+
+/* On phones every card is col-span-12 and far shorter than the drawing's
+   frame, so the cover-crop lands the subject behind the copy and the
+   lower-left fade no longer clears it (client report: on mobile the text
+   rides on top of the drawings). Confine the drawing to the card's top
+   band and fade it out well above where the copy begins. */
+@media (max-width: 767px) {
+  .reel-still {
+    /* Fixed pixels, not percentages: a clear strip for the slate labels,
+       the drawing band, then fully clear before the subtitle ever starts.
+       Pairs with the 440px min-height the card gets on phones. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 34px, #000 68px, #000 160px, transparent 225px);
+    mask-image: linear-gradient(to bottom, transparent 34px, #000 68px, #000 160px, transparent 225px);
+  }
+}
 [data-theme="light"] .reel-still {
   mix-blend-mode: screen;
   opacity: 0.9;
