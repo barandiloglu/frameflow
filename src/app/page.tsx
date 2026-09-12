@@ -2,26 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { HeroMonitor } from "@/components/home/HeroMonitor";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
-
-const clients = [
-  "Acadia Bakes",
-  "Nomad Studio",
-  "Velour Collective",
-  "Sola Health",
-  "Birchfield Co.",
-  "Meridian Foods",
-  "Apex Creative",
-  "Lune Café",
-  "Trove Interiors",
-  "Harbor Digital",
-];
 
 type Scene = {
   id: string;
@@ -190,6 +179,8 @@ const fadeUp = {
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
+  const heroRef = useRef<HTMLElement>(null);
+
   return (
     <>
       <Navbar />
@@ -197,7 +188,7 @@ export default function Home() {
       {/* ============================================================ */}
       {/*  REEL 01 — HERO                                              */}
       {/* ============================================================ */}
-      <section className="relative min-h-screen w-full overflow-hidden bg-surface flex flex-col">
+      <section ref={heroRef} className="relative min-h-svh w-full overflow-hidden bg-surface flex flex-col">
         {/* Background: scanlines */}
         <div
           aria-hidden
@@ -280,117 +271,116 @@ export default function Home() {
 
         {/* Main content */}
         <div className="relative z-10 flex-1 flex items-center px-6 md:px-[52px] xl:px-[160px]">
-          <div className="relative w-full max-w-[1500px] mx-auto">
+          {/* Copy left, director's monitor right from lg. The corner brackets stay on
+              this wrapper so they frame the pair. */}
+          <div className="relative w-full max-w-[1500px] mx-auto lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-center lg:gap-x-12 xl:gap-x-16">
             {/* corner brackets */}
             <span aria-hidden className="pointer-events-none absolute -top-10 -left-3 md:-left-8 w-7 h-7 md:w-10 md:h-10 border-t border-l border-amber/50" />
             <span aria-hidden className="pointer-events-none absolute -top-10 -right-3 md:-right-8 w-7 h-7 md:w-10 md:h-10 border-t border-r border-amber/50" />
             <span aria-hidden className="pointer-events-none absolute -bottom-8 -left-3 md:-left-8 w-7 h-7 md:w-10 md:h-10 border-b border-l border-amber/50" />
             <span aria-hidden className="pointer-events-none absolute -bottom-8 -right-3 md:-right-8 w-7 h-7 md:w-10 md:h-10 border-b border-r border-amber/50" />
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
-            >
-              <span className="block h-px w-10 bg-amber" />
-              Frame · 01 — Title Card
-            </motion.p>
+            {/* @container: the headline sizes itself in cqw so it can never wrap
+                inside the column, whatever the split. */}
+            <div className="@container relative min-w-0">
 
-            <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
-              style={{ fontSize: "clamp(40px, 8.2vw, 132px)" }}
-            >
-              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
-                <motion.span
-                  custom={0}
-                  initial="hidden"
-                  animate="visible"
-                  variants={lineReveal}
-                  className="block"
-                >
-                  We roll cameras
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
-                <motion.span
-                  custom={1}
-                  initial="hidden"
-                  animate="visible"
-                  variants={lineReveal}
-                  className="block"
-                >
-                  on{" "}
-                  <em className="italic font-[400] text-amber">brands</em>
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
-                <motion.span
-                  custom={2}
-                  initial="hidden"
-                  animate="visible"
-                  variants={lineReveal}
-                  className="block"
-                >
-                  worth believing in.
-                </motion.span>
-              </span>
-            </h1>
-
-            <motion.p
-              custom={3}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className="mt-9 max-w-[560px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60"
-            >
-              A Toronto creative studio that scripts, shoots, and ships the story
-              of your business — from identity to campaigns, all on one reel.
-            </motion.p>
-
-            <motion.div
-              custom={4}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className="mt-10 flex flex-wrap items-center gap-5"
-            >
-              <Link
-                href="/contact"
-                className="group relative inline-flex items-center gap-3 bg-amber text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] pl-6 pr-7 no-underline transition-all duration-300 hover:bg-ember hover:text-ivory"
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
               >
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inset-0 rounded-full bg-graphite/40 animate-ping group-hover:bg-ivory/40" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-graphite group-hover:bg-ivory" />
+                <span className="block h-px w-10 bg-amber" />
+                Frame · 01 — Title Card
+              </motion.p>
+
+              <h1
+                className="font-editorial font-[700] leading-[0.9] tracking-[-0.035em] text-on-surface lg:whitespace-nowrap"
+                style={{ fontSize: "clamp(40px, min(8.2vw, 11.4cqw), 132px)" }}
+              >
+                <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
+                  <motion.span
+                    custom={0}
+                    initial="hidden"
+                    animate="visible"
+                    variants={lineReveal}
+                    className="block"
+                  >
+                    We roll cameras
+                  </motion.span>
                 </span>
-                Roll Camera
-                <span className="font-editorial not-italic text-[18px] leading-none translate-y-[-1px] transition-transform duration-300 group-hover:translate-x-1">
-                  →
+                <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
+                  <motion.span
+                    custom={1}
+                    initial="hidden"
+                    animate="visible"
+                    variants={lineReveal}
+                    className="block"
+                  >
+                    on{" "}
+                    <em className="italic text-amber">brands</em>
+                  </motion.span>
                 </span>
-              </Link>
-              <Link
-                href="/portfolio"
-                className="group inline-flex items-center gap-3 text-on-surface font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-2 no-underline"
-              >
-                <span className="h-[1px] w-8 bg-on-surface-30 transition-all duration-300 group-hover:w-14 group-hover:bg-amber" />
-                See the reel
-              </Link>
-            </motion.div>
-          </div>
-        </div>
+                <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
+                  <motion.span
+                    custom={2}
+                    initial="hidden"
+                    animate="visible"
+                    variants={lineReveal}
+                    className="block"
+                  >
+                    worth believing in.
+                  </motion.span>
+                </span>
+              </h1>
 
-        {/* Bottom client ticker */}
-        <div className="relative z-20 overflow-hidden border-t border-border-subtle bg-surface-alt py-4">
-          <div className="flex w-max animate-ticker items-center">
-            {[...clients, ...clients, ...clients].map((c, i) => (
-              <span
-                key={i}
-                className="flex items-center gap-6 whitespace-nowrap px-8 font-mono text-[11px] uppercase tracking-[0.22em] text-on-alt"
+              <motion.p
+                custom={3}
+                initial="hidden"
+                animate="visible"
+                variants={fadeUp}
+                className="mt-9 max-w-[560px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60"
               >
-                <span className="text-ember">✦</span>
-                {c}
-              </span>
-            ))}
+                A Toronto creative studio that scripts, shoots, and ships the story
+                of your business — from identity to campaigns, all on one reel.
+              </motion.p>
+
+              <motion.div
+                custom={4}
+                initial="hidden"
+                animate="visible"
+                variants={fadeUp}
+                className="mt-10 flex flex-wrap items-center gap-5"
+              >
+                <Link
+                  href="/contact"
+                  className="group relative inline-flex items-center gap-3 bg-amber text-graphite font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] pl-6 pr-7 no-underline transition-all duration-300 hover:bg-ember hover:text-ivory"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inset-0 rounded-full bg-graphite/40 animate-ping group-hover:bg-ivory/40" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-graphite group-hover:bg-ivory" />
+                  </span>
+                  Roll Camera
+                  <span className="font-editorial not-italic text-[18px] leading-none translate-y-[-1px] transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href="/portfolio"
+                  className="group inline-flex items-center gap-3 text-on-surface font-mono text-[12px] font-medium tracking-[0.22em] uppercase py-[16px] px-2 no-underline"
+                >
+                  <span className="h-[1px] w-8 bg-on-surface-30 transition-all duration-300 group-hover:w-14 group-hover:bg-amber" />
+                  See the reel
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Hidden on phones: with the copy alone at ~600px the monitor would
+                push the hero past one screen. Stacks under the CTAs from md,
+                takes the right column from lg. */}
+            <div className="hidden md:block mt-12 max-w-[440px] lg:mt-0 lg:max-w-none lg:min-w-0 lg:w-full">
+              <HeroMonitor heroRef={heroRef} />
+            </div>
           </div>
         </div>
       </section>
@@ -419,7 +409,7 @@ export default function Home() {
                 Frame · 02 — The Reel
               </p>
               <h2
-                className="font-editorial font-[300] text-on-surface leading-[0.92] tracking-[-0.03em]"
+                className="font-editorial font-[700] text-on-surface leading-[0.92] tracking-[-0.03em]"
                 style={{ fontSize: "clamp(48px, 7vw, 120px)" }}
               >
                 Seven{" "}
@@ -457,7 +447,7 @@ export default function Home() {
               Frame · 03 — Storyboard
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1000px]"
+              className="font-editorial font-[700] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1000px]"
               style={{ fontSize: "clamp(44px, 6vw, 98px)" }}
             >
               How a brand gets <em className="italic text-amber">made</em>.
@@ -494,7 +484,7 @@ export default function Home() {
                   </div>
                   <div className="absolute inset-[10px] border border-dashed border-amber/25" />
                   <span
-                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[300] text-amber/55 leading-none select-none"
+                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[700] text-amber/55 leading-none select-none"
                     style={{ fontSize: "clamp(96px, 11vw, 180px)" }}
                   >
                     {step.step}
@@ -517,7 +507,7 @@ export default function Home() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ember mb-3">
                     Act {step.step} · {step.sub}
                   </p>
-                  <h3 className="font-editorial font-[400] text-on-surface text-[28px] md:text-[30px] leading-tight mb-3">
+                  <h3 className="font-editorial font-[700] text-on-surface text-[28px] md:text-[30px] leading-tight mb-3">
                     {step.title}
                   </h3>
                   <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-surface-60">
@@ -556,7 +546,7 @@ export default function Home() {
               Frame · 04 — Action
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
+              className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(48px, 6.8vw, 112px)" }}
             >
               Ready when you are.
@@ -698,7 +688,7 @@ function ReelCard({ scene, index }: { scene: Scene; index: number }) {
             / {scene.subtitle}
           </p>
           <h3
-            className="font-editorial font-[300] text-on-surface leading-[0.95] tracking-[-0.02em] mb-5"
+            className="font-editorial font-[700] text-on-surface leading-[0.95] tracking-[-0.02em] mb-5"
             style={{
               fontSize: scene.accent
                 ? "clamp(44px, 5vw, 88px)"

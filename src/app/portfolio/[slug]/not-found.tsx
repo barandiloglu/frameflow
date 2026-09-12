@@ -13,7 +13,7 @@ export default function NotFound() {
             FF#404 · Scene unrecorded
           </p>
           <h1
-            className="font-editorial font-[300] italic leading-[0.95] tracking-[-0.03em] text-on-surface mb-8"
+            className="font-editorial font-[700] italic leading-[0.95] tracking-[-0.03em] text-on-surface mb-8"
             style={{ fontSize: "clamp(48px, 7vw, 120px)" }}
           >
             That title isn&apos;t on the reel.

@@ -387,7 +387,7 @@ export default function ContactPage() {
         .ct-sentence > p {
           margin: 0 0 0.24em;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(24px, 3.3vw, 50px);
           line-height: 1.36;
           letter-spacing: -0.02em;
@@ -536,7 +536,7 @@ export default function ContactPage() {
         .ct-sent p {
           margin: 0;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(24px, 3.3vw, 50px);
           line-height: 1.36;
           letter-spacing: -0.02em;

@@ -98,7 +98,7 @@ export default function LoginPage() {
             </motion.p>
 
             <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-ivory"
+              className="font-editorial font-[700] leading-[0.9] tracking-[-0.035em] text-ivory"
               style={{ fontSize: "clamp(48px, 7vw, 112px)" }}
             >
               <span className="block overflow-hidden">
@@ -209,7 +209,7 @@ export default function LoginPage() {
                     Client access
                   </p>
                   <h2
-                    className="font-editorial font-[300] leading-[0.95] tracking-[-0.02em] text-ivory mb-3"
+                    className="font-editorial font-[700] leading-[0.95] tracking-[-0.02em] text-ivory mb-3"
                     style={{ fontSize: "clamp(30px, 3vw, 42px)" }}
                   >
                     Welcome <em className="italic text-amber">back</em>.

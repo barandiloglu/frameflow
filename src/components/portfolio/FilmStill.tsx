@@ -43,7 +43,7 @@ export function FilmStill({ client, frameNumber, size = "default" }: Props) {
       />
 
       <span
-        className="absolute bottom-[-8%] left-[-2%] font-editorial italic font-[300] text-ivory/15 leading-none select-none"
+        className="absolute bottom-[-8%] left-[-2%] font-editorial italic font-[700] text-ivory/15 leading-none select-none"
         style={{
           fontSize:
             size === "large"
@@ -72,7 +72,7 @@ export function FilmStill({ client, frameNumber, size = "default" }: Props) {
           / {genreShort}
         </p>
         <h3
-          className="font-editorial font-[300] italic text-ivory leading-[0.9] tracking-[-0.02em]"
+          className="font-editorial font-[700] italic text-ivory leading-[0.9] tracking-[-0.02em]"
           style={{
             fontSize:
               size === "large"

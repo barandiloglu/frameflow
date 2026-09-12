@@ -114,7 +114,7 @@ export default function PortfolioPage() {
             </motion.p>
 
             <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
+              className="font-editorial font-[700] leading-[0.9] tracking-[-0.035em] text-on-surface"
               style={{ fontSize: "clamp(56px, 10.2vw, 172px)" }}
             >
               <span className="block overflow-hidden">
@@ -164,7 +164,7 @@ export default function PortfolioPage() {
                 Frame · 01 — The Index
               </p>
               <h2
-                className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-on-alt"
+                className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-on-alt"
                 style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
               >
                 Every client,
@@ -223,7 +223,7 @@ export default function PortfolioPage() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-on-alt-60 mb-3">
                   {service}
                 </p>
-                <p className="font-editorial font-[300] text-on-alt leading-none tracking-[-0.02em] text-[56px]">
+                <p className="font-editorial font-[700] text-on-alt leading-none tracking-[-0.02em] text-[56px]">
                   {String(count).padStart(2, "0")}
                 </p>
               </motion.div>
@@ -251,7 +251,7 @@ export default function PortfolioPage() {
               Your title, next on the reel?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
+              className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6.2vw, 104px)" }}
             >
               Let&apos;s shoot the
@@ -413,7 +413,7 @@ function IndexRow({ client, frameNumber }: { client: Client; frameNumber: string
 
       <div className="md:col-span-1">
         <h3
-          className="font-editorial font-[300] italic leading-[1.02] tracking-[-0.01em] text-on-alt group-hover:text-amber transition-colors"
+          className="font-editorial font-[700] italic leading-[1.02] tracking-[-0.01em] text-on-alt group-hover:text-amber transition-colors"
           style={{ fontSize: "clamp(28px, 3.4vw, 52px)" }}
         >
           {client.name}

@@ -94,7 +94,8 @@
 @theme {
   --font-display: var(--ff-display), sans-serif;
   --font-body: inherit;
-  --font-editorial: var(--ff-editorial), "Times New Roman", serif;
+  /* Titles share one face: the editorial token now resolves to Quicksand too. */
+  --font-editorial: var(--ff-display), sans-serif;
   --font-warm: var(--ff-warm), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--ff-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -298,4 +299,51 @@ body {
 
 .theme-icon-animate {
   animation: theme-icon-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ─── Hero monitor ───
+   The director's monitor in the home hero. The screen powers on as a CRT line
+   that opens, the live slot pushes in over its hold, and a cut is a hard opacity
+   flip — deliberately no transition, so it reads as an edit rather than a
+   slideshow. Chrome, readout and caption fade in once the screen is on. */
+@keyframes hm-crt-on {
+  0%   { transform: scaleY(0.004) scaleX(0.6); opacity: 0; }
+  25%  { transform: scaleY(0.004) scaleX(1.02); opacity: 1; }
+  60%  { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes hm-flash { from { opacity: 0.85; } to { opacity: 0; } }
+@keyframes hm-push  { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+.hm-slot { opacity: 0; }
+.hm-slot[data-live="true"] { opacity: 1; z-index: 1; }
+.hm-slot[data-live="true"] img {
+  animation: hm-push 2400ms linear forwards;
+  will-change: transform;
+}
+.hm-screen[data-on="false"] .hm-slot,
+.hm-screen[data-on="false"] .hm-vf,
+.hm-screen[data-on="false"] .hm-mark { opacity: 0; }
+.hm-screen[data-on="true"] { animation: hm-crt-on 550ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.hm-screen[data-on="true"] .hm-flash { animation: hm-flash 600ms ease-out both; }
+
+/* Viewfinder: rule-of-thirds grid plus a faint scanline so the feed reads as video. */
+.hm-vf {
+  z-index: 2;
+  background-image:
+    linear-gradient(var(--color-ivory-10) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-ivory-10) 1px, transparent 1px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 235, 0.05) 0 1px, transparent 1px 3px);
+  background-size: 100% 33.333%, 33.333% 100%, 100% 100%;
+  background-position: 0 -1px, -1px 0, 0 0;
+}
+
+.hm-chrome { opacity: 0; transition: opacity 400ms ease 300ms; }
+.hm-chrome[data-on="true"] { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-screen[data-on="true"],
+  .hm-screen[data-on="true"] .hm-flash,
+  .hm-slot[data-live="true"] img { animation: none; }
+  .hm-chrome { transition: none; }
 }

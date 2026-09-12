@@ -125,7 +125,7 @@ public/
 
 Amber only clears 2.68:1 on ivory, so light theme substitutes a burnt `#a06210` for text while keeping `--color-amber` for fills and rules.
 
-**Type** — Fraunces for editorial display, Plus Jakarta Sans for headings, Inter for body, DM Sans as the warm UI face, JetBrains Mono for labels and metadata. All loaded through `next/font/google`.
+**Type** — Quicksand for every title (both the editorial and display tokens resolve to it), Inter for body, DM Sans as the warm UI face, JetBrains Mono for labels and metadata. All loaded through `next/font/google`.
 
 ## Gallery pipeline
 
