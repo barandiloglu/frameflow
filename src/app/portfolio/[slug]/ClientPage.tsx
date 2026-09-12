@@ -76,7 +76,7 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
             </p>
 
             <h1
-              className="font-editorial font-[300] italic leading-[0.9] tracking-[-0.03em] text-on-surface mb-8"
+              className="font-editorial font-[700] italic leading-[0.9] tracking-[-0.03em] text-on-surface mb-8"
               style={{ fontSize: "clamp(48px, 8vw, 140px)" }}
             >
               {client.name}
@@ -218,7 +218,7 @@ export function ClientPage({ client, frameNumber, prev, next }: Props) {
               Your title, next on the reel?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-graphite"
+              className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-graphite"
               style={{ fontSize: "clamp(44px, 6.2vw, 104px)" }}
             >
               Let&apos;s shoot the
@@ -283,7 +283,7 @@ function InPostPanel() {
         Currently in post
       </p>
       <h2
-        className="font-editorial font-[300] italic leading-[0.95] tracking-[-0.025em] text-on-surface mb-6"
+        className="font-editorial font-[700] italic leading-[0.95] tracking-[-0.025em] text-on-surface mb-6"
         style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
       >
         Stills, scenes, and the full cut — coming soon.

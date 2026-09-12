@@ -740,7 +740,7 @@ export default function GalleryPage() {
           margin: 0;
           text-align: center;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(30px, 3.4vw, 52px);
           line-height: 0.92;
           letter-spacing: -0.02em;
@@ -922,7 +922,7 @@ export default function GalleryPage() {
         .gl-title h2 {
           margin: 0;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(24px, 3.2vw, 44px);
           line-height: 1;
           letter-spacing: -0.02em;

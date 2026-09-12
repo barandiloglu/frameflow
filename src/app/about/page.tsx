@@ -117,7 +117,7 @@ export default function AboutPage() {
             </motion.p>
 
             <h1
-              className="font-editorial font-[300] leading-[0.9] tracking-[-0.035em] text-on-surface"
+              className="font-editorial font-[700] leading-[0.9] tracking-[-0.035em] text-on-surface"
               style={{ fontSize: "clamp(54px, 10vw, 168px)" }}
             >
               <span className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
@@ -214,7 +214,7 @@ export default function AboutPage() {
               Frame · 01 — Director&apos;s Notes
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1100px]"
+              className="font-editorial font-[700] leading-[0.95] tracking-[-0.025em] text-on-surface max-w-[1100px]"
               style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
             >
               Six <em className="italic text-amber">directions</em> we shoot by.
@@ -233,7 +233,7 @@ export default function AboutPage() {
               >
                 <div className="flex items-start justify-between gap-6 mb-8">
                   <span
-                    className="font-editorial italic font-[300] text-amber leading-none"
+                    className="font-editorial italic font-[700] text-amber leading-none"
                     style={{ fontSize: "clamp(48px, 5vw, 76px)" }}
                   >
                     {v.num}
@@ -242,7 +242,7 @@ export default function AboutPage() {
                     Note {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="font-editorial font-[400] text-on-surface text-[26px] leading-tight mb-4">
+                <h3 className="font-editorial font-[700] text-on-surface text-[26px] leading-tight mb-4">
                   {v.title}
                 </h3>
                 <p className="font-warm text-[13px] font-[300] leading-[1.75] text-on-surface-60">
@@ -281,7 +281,7 @@ export default function AboutPage() {
               Frame · 02 — The Cast
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.95] tracking-[-0.025em] text-on-alt"
+              className="font-editorial font-[700] leading-[0.95] tracking-[-0.025em] text-on-alt"
               style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
             >
               The people <em className="italic text-amber">behind</em>
@@ -315,7 +315,7 @@ export default function AboutPage() {
                   <div className="absolute inset-3 border border-dashed border-amber/30" />
 
                   <span
-                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[300] text-ivory/20 leading-none select-none"
+                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[700] text-ivory/20 leading-none select-none"
                     style={{ fontSize: "clamp(140px, 14vw, 220px)" }}
                   >
                     {m.initials}
@@ -346,7 +346,7 @@ export default function AboutPage() {
                       {m.role}
                     </p>
                   ) : null}
-                  <h3 className="font-editorial font-[400] text-on-alt text-[30px] leading-none mb-4">
+                  <h3 className="font-editorial font-[700] text-on-alt text-[30px] leading-none mb-4">
                     {m.name}
                   </h3>
                   {m.bio ? (
@@ -382,7 +382,7 @@ export default function AboutPage() {
               Ready for your close-up?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
+              className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6vw, 96px)" }}
             >
               Let&apos;s grow <em className="italic">together</em>.

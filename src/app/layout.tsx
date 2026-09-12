@@ -1,27 +1,21 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter, Fraunces, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Quicksand, Inter, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const jakarta = Plus_Jakarta_Sans({
+// Quicksand is a variable font (300-700), so no weight list is needed. It carries
+// every title on the site: --font-display and --font-editorial both resolve to it.
+const quicksand = Quicksand({
   variable: "--ff-display",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
-});
-
-const fraunces = Fraunces({
-  variable: "--ff-editorial",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
 });
 
 const dmSans = DM_Sans({
@@ -52,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className} ${jakarta.variable} ${fraunces.variable} ${dmSans.variable} ${jetMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.className} ${quicksand.variable} ${dmSans.variable} ${jetMono.variable}`} suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script

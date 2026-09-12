@@ -424,7 +424,7 @@ export function CuttingRoom({ services }: { services: readonly Service[] }) {
         .cr-name {
           margin: 0;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(34px, 4.4vw, 68px);
           line-height: 0.98;
           letter-spacing: -0.035em;
@@ -433,7 +433,7 @@ export function CuttingRoom({ services }: { services: readonly Service[] }) {
           margin: 12px 0 0;
           font-family: var(--font-editorial);
           font-style: italic;
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(15px, 1.5vw, 23px);
           line-height: 1.25;
           color: var(--accent-ink);

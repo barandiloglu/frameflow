@@ -193,7 +193,7 @@ export function Navbar() {
                   Frame · Index
                 </p>
                 <h2
-                  className="font-editorial font-[300] italic text-on-surface leading-none tracking-[-0.02em]"
+                  className="font-editorial font-[700] italic text-on-surface leading-none tracking-[-0.02em]"
                   style={{ fontSize: "clamp(26px, 7vw, 36px)" }}
                 >
                   Choose a <span className="text-amber">scene</span>.
@@ -257,7 +257,7 @@ export function Navbar() {
                           </span>
                           <div className="min-w-0">
                             <span
-                              className={`block font-editorial font-[300] italic leading-[0.95] tracking-[-0.02em] transition-colors duration-300 ${
+                              className={`block font-editorial font-[700] italic leading-[0.95] tracking-[-0.02em] transition-colors duration-300 ${
                                 isActive
                                   ? "text-amber"
                                   : "text-on-surface group-hover:text-amber"

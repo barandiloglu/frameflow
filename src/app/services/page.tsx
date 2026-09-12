@@ -179,7 +179,7 @@ export default function ServicesPage() {
               Not sure which scene?
             </p>
             <h2
-              className="font-editorial font-[300] leading-[0.92] tracking-[-0.025em] text-ivory"
+              className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-ivory"
               style={{ fontSize: "clamp(44px, 6vw, 98px)" }}
             >
               Let&apos;s write it

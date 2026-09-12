@@ -151,7 +151,7 @@ export function SceneList({ services }: { services: readonly Service[] }) {
         .sl-name {
           margin: 0 0 6px;
           font-family: var(--font-editorial);
-          font-weight: 300;
+          font-weight: 700;
           font-size: clamp(26px, 3vw, 44px);
           line-height: 1;
           letter-spacing: -0.03em;
