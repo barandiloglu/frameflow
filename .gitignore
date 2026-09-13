@@ -44,3 +44,6 @@ next-env.d.ts
 
 # remotion
 /remotion-demo/
+
+# Gallery originals (925 MB). Only the WebP derivatives under public/gallery are committed.
+/photos-source/

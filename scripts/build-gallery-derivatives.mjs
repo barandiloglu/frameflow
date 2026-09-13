@@ -7,10 +7,15 @@
  *
  *   node scripts/build-gallery-derivatives.mjs [outDir]
  *
- * thumb: 400w WebP q72  — the shuffle pool. Every one of these is preloaded
- *                         behind the reveal overlay, so the whole set has to
- *                         stay around 1 MB.
- * full:  1600w WebP q80 — loaded only when a photo is opened.
+ * thumb: 400w WebP q72  — what the grid loads. These are lazy, one per frame
+ *                         as it scrolls into view, so what matters is the
+ *                         weight of a single thumb rather than the set total.
+ *                         (The reveal overlay that used to preload all of them
+ *                         is gone.)
+ * mid:   800w WebP q72  — the middle srcset step. A landscape frame renders up
+ *                         to ~700 CSS px wide in the justified grid, so a 400w
+ *                         thumb was visibly soft on a retina screen.
+ * full:  1600w WebP q80 — opened frames, and the top srcset step.
  *
  * withoutEnlargement matters: 16 originals are 700–900px wide and upscaling
  * them would only inflate the file while making them look worse.
@@ -37,28 +42,47 @@ const rows = [...manifestSrc.matchAll(
 if (!rows.length) throw new Error("no rows parsed from src/data/gallery.ts");
 
 await fs.mkdir(path.join(OUT, "thumb"), { recursive: true });
+await fs.mkdir(path.join(OUT, "mid"), { recursive: true });
 await fs.mkdir(path.join(OUT, "full"), { recursive: true });
 
+const perThumb = [];
 let thumbBytes = 0;
+let midBytes = 0;
 let fullBytes = 0;
 
 for (const r of rows) {
-  const src = path.join(ROOT, "public", r.src);
-  const [thumb, full] = await Promise.all([
+  /* A leading slash means the original sits under public/ (the case-study
+     photographs). Anything else is relative to the repo root — the gallery
+     originals live in photos-source/, which is gitignored. */
+  const src = r.src.startsWith("/")
+    ? path.join(ROOT, "public", r.src)
+    : path.join(ROOT, r.src);
+  const [thumb, mid, full] = await Promise.all([
     sharp(src).resize({ width: 400, withoutEnlargement: true }).webp({ quality: 72 }).toBuffer(),
+    sharp(src).resize({ width: 800, withoutEnlargement: true }).webp({ quality: 72 }).toBuffer(),
     sharp(src).resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer(),
   ]);
+  /* mid shares the thumb's basename; the page derives its URL by swapping the
+     directory rather than carrying a third path on every record. */
   await fs.writeFile(path.join(OUT, "thumb", path.basename(r.thumb)), thumb);
+  await fs.writeFile(path.join(OUT, "mid", path.basename(r.thumb)), mid);
   await fs.writeFile(path.join(OUT, "full", path.basename(r.full)), full);
+  perThumb.push([path.basename(r.thumb), thumb.length]);
   thumbBytes += thumb.length;
+  midBytes += mid.length;
   fullBytes += full.length;
 }
 
 const mb = (b) => (b / 1024 / 1024).toFixed(2);
 console.log(`${rows.length} photos -> ${OUT}`);
-console.log(`  thumb  ${mb(thumbBytes)} MB  (preloaded; budget 2 MB)`);
-console.log(`  full   ${mb(fullBytes)} MB  (lazy, on open)`);
-if (thumbBytes > 2 * 1024 * 1024) {
-  console.error("thumb set exceeds the preload budget — lower quality and re-run");
-  process.exitCode = 1;
+console.log(`  thumb  ${mb(thumbBytes)} MB  (400w, lazy)`);
+console.log(`  mid    ${mb(midBytes)} MB  (800w, lazy)`);
+console.log(`  full   ${mb(fullBytes)} MB  (1600w, on open)`);
+/* Nothing preloads the set any more, so the total is informational. A single
+   fat thumb is still worth knowing about: at 400w, anything past ~80 KB means
+   the source had detail WebP could not compress and is worth a look. */
+const heavy = perThumb.filter(([, b]) => b > 80 * 1024);
+if (heavy.length) {
+  console.warn(`${heavy.length} thumb(s) over 80 KB:`);
+  for (const [name, b] of heavy.slice(0, 10)) console.warn(`  ${(b / 1024).toFixed(0)} KB  ${name}`);
 }

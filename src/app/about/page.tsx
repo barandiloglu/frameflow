@@ -48,14 +48,17 @@ const cast: {
   name: string;
   initials: string;
   scene: string;
+  /* Studio portrait, 2:3. The slate below matches that ratio so nobody is
+     cropped; the initials stay as the fallback for anyone without one yet. */
+  photo?: string;
   role?: string;
   credit?: string;
   bio?: string;
 }[] = [
-  { name: "Baran D.",  initials: "BD", scene: "INT. STUDIO — DAY" },
-  { name: "Yiğit P.",  initials: "YP", scene: "INT. DEV BAY — DAY" },
-  { name: "Kübra B.",  initials: "KB", scene: "EXT. FEED — CONTINUOUS" },
-  { name: "Bartu H.",  initials: "BH", scene: "INT. EDIT SUITE — NIGHT" },
+  { name: "Baran D.",  initials: "BD", scene: "INT. STUDIO — DAY",        photo: "/team/baran.webp" },
+  { name: "Yiğit P.",  initials: "YP", scene: "INT. DEV BAY — DAY",       photo: "/team/yigit.webp" },
+  { name: "Kübra B.",  initials: "KB", scene: "EXT. FEED — CONTINUOUS",   photo: "/team/kubra.webp" },
+  { name: "Bartu H.",  initials: "BH", scene: "INT. EDIT SUITE — NIGHT",  photo: "/team/bartu.webp" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -301,25 +304,59 @@ export default function AboutPage() {
                 className="group relative border border-on-alt-10 bg-surface-alt overflow-hidden"
               >
                 {/* portrait slate */}
-                <div className="relative aspect-[4/5] bg-graphite border-b border-on-alt-10 overflow-hidden">
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 opacity-[0.06]"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(rgba(255,255,235,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,235,1) 1px, transparent 1px)",
-                      backgroundSize: "40px 40px",
-                    }}
-                  />
+                <div className="relative aspect-[2/3] bg-graphite border-b border-on-alt-10 overflow-hidden">
+                  {m.photo ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={m.photo}
+                        alt={m.name}
+                        width={800}
+                        height={1201}
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                      {/* The slate meta sits on top of the portrait, so the top
+                          and bottom edges are darkened enough to read against. */}
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-0 top-0 h-24"
+                        style={{
+                          background:
+                            "linear-gradient(rgba(20,16,14,0.55), rgba(20,16,14,0))",
+                        }}
+                      />
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
+                        style={{
+                          background:
+                            "linear-gradient(rgba(20,16,14,0), rgba(20,16,14,0.6))",
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 opacity-[0.06]"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(rgba(255,255,235,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,235,1) 1px, transparent 1px)",
+                          backgroundSize: "40px 40px",
+                        }}
+                      />
+                      <span
+                        className="absolute inset-0 flex items-center justify-center font-editorial italic font-[700] text-ivory/20 leading-none select-none"
+                        style={{ fontSize: "clamp(140px, 14vw, 220px)" }}
+                      >
+                        {m.initials}
+                      </span>
+                    </>
+                  )}
 
                   <div className="absolute inset-3 border border-dashed border-amber/30" />
-
-                  <span
-                    className="absolute inset-0 flex items-center justify-center font-editorial italic font-[700] text-ivory/20 leading-none select-none"
-                    style={{ fontSize: "clamp(140px, 14vw, 220px)" }}
-                  >
-                    {m.initials}
-                  </span>
 
                   {/* slate meta */}
                   <div className="absolute top-4 left-4 font-mono text-[9px] uppercase tracking-[0.22em] text-amber">

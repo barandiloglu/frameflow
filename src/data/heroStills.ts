@@ -35,6 +35,10 @@ export const heroStills: readonly HeroStill[] = (() => {
   const byClient = new Map<string, GalleryPhoto[]>();
   for (const p of galleryPhotos) {
     if (p.w <= p.h) continue;
+    /* The monitor cites a roster frame number per cut, so it can only show work
+       that has a client behind it. The gallery also carries personal
+       photographs, which have no roster entry to cite. */
+    if (!p.client) continue;
     const list = byClient.get(p.client);
     if (list) list.push(p);
     else byClient.set(p.client, [p]);
@@ -45,13 +49,14 @@ export const heroStills: readonly HeroStill[] = (() => {
   for (let take = 0; groups.some((g) => take < g.length); take++) {
     for (const g of groups) {
       const p = g[take];
-      if (!p) continue;
-      const roster = rosterFor(p.client);
+      if (!p || !p.client) continue;
+      const slug = p.client;
+      const roster = rosterFor(slug);
       out.push({
         src: p.full,
         alt: p.alt,
         slate: p.slate,
-        client: roster?.name ?? titleize(p.client),
+        client: roster?.name ?? titleize(slug),
         clip: `A${roster ? getFrameNumber(roster) : "000"}_C${String(take + 1).padStart(3, "0")}`,
         w: p.w,
         h: p.h,

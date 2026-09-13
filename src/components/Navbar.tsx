@@ -10,7 +10,7 @@ import { useTheme } from "./ThemeProvider";
 
 const links = [
   { href: "/", label: "Home", frame: "00", tagline: "the title card" },
-  { href: "/services", label: "Services", frame: "01", tagline: "seven scenes" },
+  { href: "/services", label: "Services", frame: "01", tagline: "eight scenes" },
   { href: "/about", label: "About", frame: "02", tagline: "the cast & crew" },
   { href: "/portfolio", label: "Portfolio", frame: "03", tagline: "the archive" },
   { href: "/gallery", label: "Gallery", frame: "04", tagline: "the darkroom" },
