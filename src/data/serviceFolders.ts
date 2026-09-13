@@ -21,19 +21,9 @@ export type FolderFrame = {
   client: string;
 };
 
-/** The timeline's tracks, in render order. */
-export const TRACKS = [
-  { code: "V1", name: "Brand" },
-  { code: "V2", name: "Digital" },
-  { code: "V3", name: "Content" },
-  { code: "A1", name: "Growth" },
-] as const;
-
 export type ServiceFolder = {
   /** Matches the `id` in the services list on the page. */
   id: number;
-  /** Index into TRACKS. Clips sit end to end along their own track. */
-  track: number;
   /** Roster `services` tag(s) this folder counts clients from. */
   tags: readonly string[];
   /** Live client count from src/data/clients.ts. Re-audited 2026-08-03 with a
@@ -44,12 +34,16 @@ export type ServiceFolder = {
   frames: readonly FolderFrame[];
   /** Shown instead of frames when there is no honest image to fan. */
   note?: string;
+  /** The storyboard drawing for this service — the same ink-on-paper frame the
+   *  homepage reel uses, so the two pages draw from one set. Absent where no
+   *  frame has been drawn yet (SEO). */
+  board?: { src: string; alt: string; w: number; h: number };
 };
 
 export const serviceFolders: readonly ServiceFolder[] = [
   {
     id: 1,
-    track: 0,
+    board: { src: "/home/reel/003-logo-design.webp", alt: "Storyboard sketch: a logo exploration sheet with one mark circled and redrawn large in amber", w: 1456, h: 816 },
     tags: ["Logo"],
     clients: 5,
     frames: [
@@ -72,7 +66,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 2,
-    track: 0,
+    board: { src: "/home/reel/001-brand-identity.webp", alt: "Storyboard sketch: a stack of business cards, an amber swatch fan and a brass ruler on a desk", w: 1200, h: 960 },
     tags: ["Branding"],
     clients: 3,
     frames: [
@@ -95,7 +89,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 3,
-    track: 1,
+    board: { src: "/home/reel/002-websites.webp", alt: "Storyboard sketch: a monitor showing a wireframe layout with one amber panel", w: 1456, h: 816 },
     tags: ["Website Design"],
     clients: 10,
     frames: [
@@ -118,7 +112,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 4,
-    track: 2,
+    board: { src: "/home/reel/004-social-media.webp", alt: "Storyboard sketch: a cinema camera and softbox filming a café counter, a phone showing the vertical clip", w: 1344, h: 896 },
     tags: ["Social Media"],
     clients: 15,
     frames: [
@@ -141,7 +135,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 5,
-    track: 2,
+    board: { src: "/home/reel/005-video-photo.webp", alt: "Storyboard sketch: a camera operator from behind under an amber sun on a street", w: 1344, h: 896 },
     tags: ["Videography", "Photography"],
     clients: 11,
     frames: [
@@ -164,7 +158,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 6,
-    track: 3,
+    board: { src: "/home/reel/006-ad-management.webp", alt: "Storyboard sketch: two monitors with rising amber charts at night, a coffee cup and a crescent moon", w: 1344, h: 896 },
     tags: ["Ad Management"],
     clients: 5,
     frames: [
@@ -187,7 +181,7 @@ export const serviceFolders: readonly ServiceFolder[] = [
   },
   {
     id: 7,
-    track: 1,
+    board: { src: "/home/reel/007-web-mobile-apps.webp", alt: "Storyboard sketch: a long desk of laptops and monitors showing wireframes, a window at the right", w: 2304, h: 512 },
     tags: ["App", "Web Application"],
     clients: 3,
     /* IYN is tagged "App" in the roster — a second tag for the same service
@@ -206,17 +200,17 @@ export const serviceFolders: readonly ServiceFolder[] = [
     ],
     note: "Three builds on the desk · one still in production",
   },
-];
-
-/* Rotation is randomised per hover in the source (gsap.utils.random). A
-   render-time Math.random() would desync SSR and client markup, so the tilts
-   are fixed per slot and per folder index instead — same scatter, stable DOM. */
-export const FRAME_TILT: readonly (readonly [number, number, number])[] = [
-  [-16, 4, 14],
-  [-12, -3, 18],
-  [-19, 6, 11],
-  [-14, 2, 16],
-  [-17, -5, 13],
-  [-11, 7, 19],
-  [-15, 3, 12],
+  {
+    id: 8,
+    tags: ["SEO"],
+    /* EduPathways and Fidan Construction, both tagged SEO in the roster. */
+    clients: 2,
+    /* Deliberately empty. SEO's output is rankings, audits and traffic — there
+       is no photograph of it. Fidan's directory holds construction site shots
+       and a mirrored page dump, none of which show the work, so pinning one
+       would be decoration pretending to be evidence. The row opens with the
+       note instead. */
+    frames: [],
+    note: "The work here is audits, rankings and traffic — nothing that photographs.",
+  },
 ];

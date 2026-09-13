@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CuttingRoom } from "@/components/services/CuttingRoom";
-import { SceneList } from "@/components/services/SceneList";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Slates, type Service } from "@/components/services/Slates";
+import { clients } from "@/data/clients";
 
 /* ------------------------------------------------------------------ */
-/*  Data                                                               */
+/*  Services: the hero chrome every page shares, then eight            */
+/*  clapperboards. See components/services/Slates.tsx.                 */
 /* ------------------------------------------------------------------ */
 
-const services = [
+const services: readonly Service[] = [
   {
     id: 1,
     name: "Logo Design",
@@ -124,11 +125,25 @@ const services = [
       "Ongoing maintenance, updates & support",
     ],
   },
+  {
+    /* DRAFT — the deliverables are a guess at what is actually sold and need
+       Baran's sign-off before this ships. */
+    id: 8,
+    name: "SEO",
+    category: "Growth",
+    subtitle: "the long game",
+    scene: "EXT. SEARCH — DAY",
+    tagline: "Be the answer when someone searches.",
+    description:
+      "Ranking is not luck. We fix what search engines struggle with, write pages that answer the questions your customers actually type, and build the technical base so your site keeps earning traffic after the ads stop.",
+    features: [
+      "Technical audit: speed, crawlability, structured data",
+      "Keyword and competitor research",
+      "On-page optimisation and content structure",
+      "Monthly ranking and traffic reporting",
+    ],
+  },
 ];
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                               */
-/* ------------------------------------------------------------------ */
 
 export default function ServicesPage() {
   return (
@@ -138,28 +153,157 @@ export default function ServicesPage() {
       {/* ============================================================ */}
       {/*  HERO                                                        */}
       {/* ============================================================ */}
-      <div className="pt-[76px] bg-surface lg:h-[100svh] lg:flex lg:flex-col">
-        {/* Slate strip — the page's own header furniture, kept from the
-            previous design because it is brand, not layout. */}
-        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em]"
-             style={{ color: "var(--quiet-ink)" }}>
-          <span className="flex items-center gap-2 font-semibold" style={{ color: "var(--accent-ink)" }}>
-            <span className="w-2 h-2 rounded-full bg-amber animate-pulse-dot" />
-            SERVICES
+      <section className="relative bg-surface overflow-hidden pt-[76px]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-overlay animate-scan opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(0deg, var(--color-ivory) 0 1px, transparent 1px 4px)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage: "radial-gradient(var(--color-amber-10) 1px, transparent 1px)",
+            backgroundSize: "38px 38px",
+            maskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
+          }}
+        />
+        <div className="pointer-events-none absolute top-[15%] right-[6%] h-[360px] w-[360px] rounded-full bg-ember-10 blur-[140px]" />
+        <div className="pointer-events-none absolute bottom-[8%] left-[4%] h-[280px] w-[280px] rounded-full bg-amber-10 blur-[120px]" />
+
+        {/* REC strip */}
+        <div className="relative z-20 border-y border-border-subtle bg-surface/50 backdrop-blur-sm px-6 md:px-[52px] py-3 flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.28em] text-on-surface-60">
+          <span className="flex items-center gap-2 text-ember font-semibold">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inset-0 rounded-full bg-ember animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-ember" />
+            </span>
+            ROLLING
           </span>
           <span>FF_DOC_SVC</span>
-          <span className="hidden sm:inline opacity-50">/</span>
-          <span className="hidden sm:inline">The cutting room</span>
-          <span className="ml-auto hidden md:inline">07 SCENES · 4 TRACKS</span>
+          <span className="hidden sm:inline text-on-surface-30">/</span>
+          <span className="hidden sm:inline">{services.length} SCENES · 1 STUDIO</span>
+          <span className="ml-auto hidden md:flex items-center gap-2">
+            <span className="text-on-surface-30">SLATE</span>
+            <span className="text-amber">A001</span>
+          </span>
         </div>
 
-        <CuttingRoom services={services} />
-      </div>
+        <div className="relative z-10 px-6 md:px-[52px] pt-24 md:pt-32 pb-24">
+          <div className="relative max-w-[1500px] mx-auto">
+            <span aria-hidden className="pointer-events-none absolute -top-10 -left-3 md:-left-8 w-8 h-8 md:w-10 md:h-10 border-t border-l border-amber/50" />
+            <span aria-hidden className="pointer-events-none absolute -top-10 -right-3 md:-right-8 w-8 h-8 md:w-10 md:h-10 border-t border-r border-amber/50" />
 
-      <SceneList services={services} />
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber mb-7 flex items-center gap-3"
+            >
+              <span className="block h-px w-10 bg-amber" />
+              <span>
+                <Link href="/" className="text-on-surface-60 hover:text-amber transition-colors">
+                  Home
+                </Link>
+                <span className="mx-2 text-on-surface-30">/</span>
+                Services
+              </span>
+            </motion.p>
+
+            <h1
+              className="font-editorial font-[700] leading-[0.9] tracking-[-0.035em] text-on-surface"
+              style={{ fontSize: "clamp(56px, 10.2vw, 172px)" }}
+            >
+              <span className="block overflow-hidden">
+                <motion.span
+                  initial={{ y: "108%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.95, delay: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
+                  className="block"
+                >
+                  Eight scenes.
+                </motion.span>
+              </span>
+              <span className="block overflow-hidden">
+                <motion.span
+                  initial={{ y: "108%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.95, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                  className="block"
+                >
+                  One <em className="italic text-amber">studio</em>.
+                </motion.span>
+              </span>
+            </h1>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="mt-12 flex flex-col md:flex-row md:items-end justify-between gap-10 border-t border-border-subtle pt-10"
+            >
+              <p className="max-w-[560px] font-warm text-[15px] font-[300] leading-[1.75] text-on-surface-60">
+                Brand, web, content and growth — the whole production, or just the scene
+                you&apos;re missing. Every slate below opens on the storyboard we&apos;d
+                draw for that shot.
+              </p>
+              <div className="flex gap-12">
+                {[
+                  { k: "Scenes", v: String(services.length).padStart(2, "0") },
+                  { k: "Clients", v: String(clients.length).padStart(2, "0") },
+                ].map((st) => (
+                  <div key={st.k}>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-on-surface-30 mb-2">
+                      {st.k}
+                    </p>
+                    <p className="font-editorial font-[700] text-[44px] leading-none text-amber tracking-[-0.02em]">
+                      {st.v}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* ============================================================ */}
-      {/*  CTA — Clapperboard                                          */}
+      {/*  Frame · 02 — THE SLATES                                     */}
+      {/* ============================================================ */}
+      <section className="relative bg-surface-alt border-y border-on-alt-10 px-6 md:px-[52px] py-[140px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+            <div>
+              <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-ember flex items-center gap-3">
+                <span className="block h-px w-10 bg-ember" />
+                Frame · 02 — The Slates
+              </p>
+              <h2
+                className="font-editorial font-[700] leading-[0.92] tracking-[-0.025em] text-on-alt max-w-[1100px]"
+                style={{ fontSize: "clamp(44px, 6vw, 100px)" }}
+              >
+                Slate the
+                <br />
+                <em className="italic">scene</em>.
+              </h2>
+            </div>
+            <p className="max-w-[380px] font-warm text-[13px] font-[300] leading-[1.75] text-on-alt-80 md:text-right">
+              Click a slate to clap it. Each one opens on the storyboard frame for that scene,
+              with what we deliver. Every clap is a take.
+            </p>
+          </div>
+
+          <Slates services={services} />
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  CTA — Clapperboard (unchanged from the live page)           */}
       {/* ============================================================ */}
       <section className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative flex flex-col justify-between overflow-hidden bg-ember text-ivory px-6 md:px-[60px] pt-16 pb-20 lg:pt-20 lg:pb-[100px]">
@@ -167,8 +311,7 @@ export default function ServicesPage() {
             aria-hidden
             className="absolute top-0 left-0 right-0 h-9"
             style={{
-              background:
-                "repeating-linear-gradient(-68deg, #ffffeb 0 28px, #353230 28px 56px)",
+              background: "repeating-linear-gradient(-68deg, #ffffeb 0 28px, #353230 28px 56px)",
             }}
           />
           <div aria-hidden className="absolute top-9 left-0 right-0 h-[2px] bg-ivory/70" />
