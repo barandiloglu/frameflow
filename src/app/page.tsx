@@ -668,8 +668,8 @@ function ReelCard({ scene, index }: { scene: Scene; index: number }) {
         /* On phones a card with a drawing needs real room for its top band —
            at the content-driven ~300px the sketch and the copy share the same
            pixels, which is exactly what the client could not read. */
-        className={`relative flex flex-col h-full p-8 md:p-10 md:min-h-[280px] ${
-          scene.image ? "min-h-[440px]" : "min-h-[280px]"
+        className={`relative flex flex-col h-full p-8 md:p-10 ${
+          scene.image ? "min-h-[440px] md:min-h-[380px]" : "min-h-[280px] md:min-h-[280px]"
         }`}
       >
         {/* top meta */}
@@ -682,8 +682,18 @@ function ReelCard({ scene, index }: { scene: Scene; index: number }) {
           </span>
         </div>
 
-        {/* body */}
-        <div className="mt-auto pt-14">
+        {/* body — on its own paper. The backing fades in above the copy and is
+            solid beneath it, so the drawing can never run under the words no
+            matter how tall the card is or how many lines the copy takes. */}
+        <div className="relative isolate mt-auto pt-14">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-10 -top-6 -bottom-10 -z-10"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 0, var(--surface) 72px, var(--surface) 100%)",
+            }}
+          />
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ember mb-4">
             / {scene.subtitle}
           </p>
