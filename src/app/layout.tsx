@@ -31,6 +31,7 @@ const jetMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.frameflow.ca"),
   title: "FrameFlow — Your Sincere Growth Partner",
   description:
     "FrameFlow is a Toronto-based creative agency specializing in brand identity, web design, social media, and digital marketing for small and medium-sized businesses.",
